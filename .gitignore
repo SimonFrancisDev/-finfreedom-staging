@@ -1,0 +1,49 @@
+# Environment secrets
+.env
+.env.*
+!.env.example
+WORKER.env
+*.local
+
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+dist-ssr/
+build/
+coverage/
+coverage.json
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Framework/platform state
+.vercel/
+.render/
+
+# Hardhat/generated files
+cache/
+artifacts/
+typechain/
+typechain-types/
+ignition/deployments/chain-31337/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+env-files/

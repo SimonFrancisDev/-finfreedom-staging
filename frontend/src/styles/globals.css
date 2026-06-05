@@ -1,0 +1,441 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  color-scheme: dark light;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: auto;
+  background-color: var(--bg-primary);
+  overflow-x: clip;
+}
+
+/* html,
+body,
+#root {
+  min-height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-primary);
+} */
+
+
+html,
+body,
+#root {
+  min-height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  background-color: var(--bg-primary);
+}
+
+#root {
+  background: transparent;
+}
+
+/* body {
+  min-width: 320px;
+  min-height: 100vh;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--text-primary);
+  overflow-x: clip;
+  position: relative;
+  background-color: var(--bg-primary);
+
+  background-image:
+    radial-gradient(circle at top, var(--space-depth), transparent 42%),
+    linear-gradient(145deg, rgba(7, 17, 31, 0.58), rgba(11, 23, 48, 0.76) 42%, rgba(15, 31, 61, 0.9) 100%),
+    url('/images/app-grid-bg.png');
+
+  background-size: cover, cover, cover;
+  background-position: center, center, center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+} */
+
+
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--text-primary);
+  overflow-x: clip;
+  position: relative;
+  background-color: var(--bg-primary);
+
+  background-image:
+    radial-gradient(circle at 50% 35%, rgba(0, 194, 255, 0.16), transparent 38%),
+    linear-gradient(rgba(2, 6, 23, 0.52), rgba(2, 6, 23, 0.88)),
+    url('/images/app-grid-bg.png');
+
+  background-size: cover, cover, cover;
+  background-position: center, center, center;
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-attachment: fixed, fixed, fixed;
+
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body.ffn-scroll-locked {
+  overscroll-behavior: contain;
+}
+
+[data-theme="dark"] body {
+  background-image:
+    radial-gradient(circle at 50% 35%, rgba(0, 194, 255, 0.14), transparent 38%),
+    linear-gradient(rgba(2, 6, 23, 0.56), rgba(2, 6, 23, 0.86)),
+    url('/images/app-grid-bg.png');
+}
+
+[data-theme="light"] body {
+  background-image:
+    linear-gradient(rgba(247, 251, 248, 0.74), rgba(239, 245, 242, 0.88)),
+    url('/images/app-grid-bg.png');
+
+  background-size: cover, cover;
+  background-position: center, center;
+  background-repeat: no-repeat;
+}
+
+/* REMOVE GLOBAL FX LAYERS THAT CAN CAUSE REPAINT/WHITE FLASH */
+body::before,
+body::after,
+#root::before,
+#root::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* SAFE MEDIA DEFAULTS */
+img,
+svg,
+video,
+canvas,
+picture {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+video,
+canvas {
+  width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  border: none;
+  background: none;
+  color: inherit;
+  padding: 0;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+/* ROOT APP SAFETY */
+#root {
+  isolation: isolate;
+  width: 100%;
+}
+
+/* SHARED PAGE CONTAINER */
+/* .app-container {
+  width: 100%;
+  max-width: min(100%, var(--container-width));
+  margin-inline: auto;
+  padding-inline: clamp(16px, 3vw, 28px);
+} */
+
+.app-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding-inline: clamp(16px, 3vw, 28px);
+}
+
+
+/* @media (min-width: 768px) {
+  .app-container {
+    padding-inline: clamp(24px, 3.4vw, 40px);
+  }
+} */
+
+
+@media (min-width: 768px) {
+  .app-container {
+    padding-inline: clamp(24px, 3.4vw, 40px);
+  }
+}
+
+/* FULL-BLEED HELPER */
+.full-bleed {
+  width: 100%;
+  max-width: 100%;
+  margin-inline: 0;
+}
+
+/* SHARED TEXT UTILS */
+.soft-text {
+  color: var(--text-secondary);
+}
+
+.muted-text {
+  color: var(--text-muted);
+}
+
+/* SHARED SECTION SPACING */
+.section-stack {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(18px, 2.2vw, 28px);
+}
+
+.section-pad {
+  padding-block: clamp(18px, 3vw, 36px);
+}
+
+/* THEME SWITCH SAFETY */
+.theme-transition,
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* PREMIUM SURFACE SYSTEM */
+.glass-panel {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: var(--radius-lg);
+  background-clip: padding-box;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* CARD BASE */
+.surface-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-shadow);
+}
+
+/* IMPROVE SCROLL STABILITY */
+.scroll-stable {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* FOCUS ACCESSIBILITY */
+:focus-visible {
+  outline: 2px solid var(--glow-blue);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+
+/* REDUCED MOTION */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0s !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* MOBILE SAFETY
+@media (max-width: 768px) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  body {
+    background-attachment: scroll;
+    background-size: cover;
+    background-position: center top;
+  }
+
+  .glass-panel,
+  .surface-card {
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+  }
+} */
+
+/* @media (max-width: 768px) {
+  html {
+    scroll-behavior: auto;
+    background-color: #020817;
+  }
+
+  body,
+  [data-theme="dark"] body,
+  [data-theme="light"] body {
+    background-color: #020817 !important;
+    background-image: none !important;
+    background-attachment: scroll !important;
+    background-size: auto !important;
+    background-position: initial !important;
+    background-repeat: no-repeat !important;
+  }
+} */
+
+
+
+@media (max-width: 768px) {
+  html {
+    scroll-behavior: auto;
+    background-color: #020817;
+  }
+
+  body {
+    background-color: #020817 !important;
+    background-image:
+      radial-gradient(circle at 50% 25%, rgba(0, 194, 255, 0.14), transparent 42%),
+      linear-gradient(rgba(2, 6, 23, 0.58), rgba(2, 6, 23, 0.9)),
+      url('/images/app-grid-bg.png') !important;
+    background-size: cover, cover, cover !important;
+    background-position: center top, center top, center top !important;
+    background-repeat: no-repeat, no-repeat, no-repeat !important;
+    background-attachment: scroll, scroll, scroll !important;
+  }
+
+  [data-theme="light"] body {
+    background-color: #f3f7f4 !important;
+    background-image:
+      linear-gradient(rgba(247, 251, 248, 0.78), rgba(239, 245, 242, 0.9)),
+      url('/images/app-grid-bg.png') !important;
+    background-size: cover, cover !important;
+    background-position: center top, center top !important;
+    background-repeat: no-repeat, no-repeat !important;
+    background-attachment: scroll, scroll !important;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+/* =========================================================
+   STRICT FIX 3: MOBILE BODY BACKGROUND IMAGE
+   ========================================================= */
+
+@media (max-width: 768px) {
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  [data-theme="dark"] body {
+    background-color: #020817 !important;
+    background-image:
+      radial-gradient(circle at 50% 18%, rgba(0, 194, 255, 0.16), transparent 42%),
+      linear-gradient(rgba(2, 6, 23, 0.46), rgba(2, 6, 23, 0.86)),
+      url("/images/app-grid-bg.png") !important;
+
+    background-size: cover, cover, 920px auto !important;
+    background-position: center top, center top, center top !important;
+    background-repeat: no-repeat, no-repeat, repeat-y !important;
+    background-attachment: scroll, scroll, scroll !important;
+  }
+
+  [data-theme="light"] body {
+    background-color: #f3f7f4 !important;
+    background-image:
+      linear-gradient(rgba(247, 251, 248, 0.62), rgba(239, 245, 242, 0.86)),
+      url("/images/app-grid-bg.png") !important;
+
+    background-size: cover, 760px auto !important;
+    background-position: center top, center top !important;
+    background-repeat: no-repeat, repeat-y !important;
+    background-attachment: scroll, scroll !important;
+  }
+}
+
+@media (max-width: 640px) {
+  html,
+  body,
+  #root {
+    width: 100%;
+    overflow-x: clip;
+  }
+
+  .app-container,
+  .full-bleed,
+  main,
+  section {
+    min-width: 0;
+  }
+
+  .app-container {
+    padding-inline: 10px;
+  }
+
+  input,
+  textarea,
+  select {
+    max-width: 100%;
+  }
+}

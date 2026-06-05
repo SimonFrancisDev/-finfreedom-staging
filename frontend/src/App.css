@@ -1,0 +1,262 @@
+/* App-level styles are intentionally kept in shared style modules. */
+
+.launch-gate {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: clamp(20px, 4vw, 44px);
+  position: relative;
+  overflow: hidden;
+  color: #f8fbff;
+  background:
+    linear-gradient(145deg, rgba(3, 7, 18, 0.38), rgba(5, 22, 38, 0.72)),
+    radial-gradient(circle at 22% 18%, rgba(94, 234, 212, 0.18), transparent 30%),
+    radial-gradient(circle at 76% 14%, rgba(250, 204, 21, 0.12), transparent 28%),
+    radial-gradient(circle at 58% 86%, rgba(59, 130, 246, 0.18), transparent 36%),
+    linear-gradient(135deg, #020617 0%, #07182a 52%, #03111f 100%);
+}
+
+.launch-gate::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 54px 54px;
+  mask-image: radial-gradient(circle at center, black, transparent 74%);
+  pointer-events: none;
+}
+
+.launch-gate::after {
+  content: '';
+  position: absolute;
+  width: min(720px, 84vw);
+  height: min(720px, 84vw);
+  border-radius: 999px;
+  border: 1px solid rgba(94, 234, 212, 0.12);
+  box-shadow:
+    inset 0 0 80px rgba(94, 234, 212, 0.045),
+    0 0 120px rgba(59, 130, 246, 0.08);
+  pointer-events: none;
+  animation: launchHaloPulse 7s ease-in-out infinite;
+}
+
+.launch-gate__card {
+  position: relative;
+  z-index: 1;
+  width: min(680px, 100%);
+  padding: clamp(30px, 5vw, 58px);
+  text-align: center;
+  border: 1px solid rgba(191, 219, 254, 0.2);
+  border-radius: 30px;
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.78), rgba(2, 8, 23, 0.72));
+  box-shadow:
+    0 36px 100px rgba(0, 0, 0, 0.42),
+    0 0 52px rgba(94, 234, 212, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  animation: launchCardFloat 8s ease-in-out infinite;
+}
+
+.launch-gate__logo-wrap {
+  width: clamp(130px, 22vw, 210px);
+  height: clamp(96px, 16vw, 150px);
+  margin: 0 auto 18px;
+  display: grid;
+  place-items: center;
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.16), transparent 54%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(94, 234, 212, 0.05));
+  border: 1px solid rgba(191, 219, 254, 0.18);
+  box-shadow:
+    0 18px 54px rgba(0, 0, 0, 0.26),
+    0 0 42px rgba(94, 234, 212, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  animation: launchLogoGlow 5s ease-in-out infinite;
+}
+
+.launch-gate__logo {
+  width: 86%;
+  max-height: 118px;
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 18px 26px rgba(0, 0, 0, 0.28));
+}
+
+.launch-gate__eyebrow {
+  margin: 0 0 16px;
+  color: #a7f3d0;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.launch-gate__title {
+  margin: 0;
+  font-size: clamp(2.8rem, 9vw, 6rem);
+  font-weight: 950;
+  line-height: 0.94;
+  letter-spacing: 0;
+  text-shadow: 0 18px 54px rgba(59, 130, 246, 0.2);
+  display: grid;
+  gap: 2px;
+}
+
+.launch-gate__title span,
+.launch-gate__title strong {
+  display: block;
+  animation: launchTitleDrift 4.8s ease-in-out infinite;
+}
+
+.launch-gate__title span {
+  color: #ffffff;
+}
+
+.launch-gate__title strong {
+  color: transparent;
+  background: linear-gradient(90deg, #fef3c7, #5eead4, #93c5fd, #fef3c7);
+  background-size: 260% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation:
+    launchGradientText 3.8s linear infinite,
+    launchTitleDrift 4.8s ease-in-out infinite reverse;
+}
+
+.launch-gate__text {
+  margin: 22px auto 0;
+  max-width: 520px;
+  color: rgba(226, 232, 240, 0.86);
+  font-size: clamp(1rem, 2vw, 1.18rem);
+  line-height: 1.6;
+}
+
+.launch-gate__countdown {
+  margin: 26px auto 0;
+  width: fit-content;
+  max-width: 100%;
+  padding: 16px 24px;
+  border: 1px solid rgba(253, 224, 71, 0.28);
+  border-radius: 20px;
+  color: #fef9c3;
+  background:
+    linear-gradient(135deg, rgba(15, 23, 42, 0.84), rgba(8, 47, 73, 0.44));
+  box-shadow:
+    0 0 36px rgba(250, 204, 21, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  font-size: clamp(1.12rem, 4vw, 1.92rem);
+  font-weight: 950;
+  line-height: 1.2;
+  letter-spacing: 0;
+  animation: launchCountdownPulse 2.8s ease-in-out infinite;
+}
+
+.launch-gate__note {
+  margin: 20px 0 0;
+  color: rgba(191, 219, 254, 0.78);
+  font-size: 0.92rem;
+}
+
+@media (max-width: 560px) {
+  .launch-gate__card {
+    border-radius: 24px;
+  }
+
+  .launch-gate__logo-wrap {
+    width: 142px;
+    height: 104px;
+    border-radius: 24px;
+  }
+}
+
+@keyframes launchCardFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes launchHaloPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+
+  50% {
+    transform: scale(1.06);
+    opacity: 0.55;
+  }
+}
+
+@keyframes launchLogoGlow {
+  0%,
+  100% {
+    box-shadow:
+      0 18px 54px rgba(0, 0, 0, 0.26),
+      0 0 42px rgba(94, 234, 212, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  }
+
+  50% {
+    box-shadow:
+      0 20px 64px rgba(0, 0, 0, 0.32),
+      0 0 66px rgba(250, 204, 21, 0.16),
+      0 0 56px rgba(94, 234, 212, 0.16),
+      inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  }
+}
+
+@keyframes launchTitleDrift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes launchGradientText {
+  from {
+    background-position: 0% 50%;
+  }
+
+  to {
+    background-position: 260% 50%;
+  }
+}
+
+@keyframes launchCountdownPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    border-color: rgba(253, 224, 71, 0.28);
+  }
+
+  50% {
+    transform: scale(1.018);
+    border-color: rgba(94, 234, 212, 0.38);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .launch-gate::after,
+  .launch-gate__card,
+  .launch-gate__logo-wrap,
+  .launch-gate__title span,
+  .launch-gate__title strong,
+  .launch-gate__countdown {
+    animation: none;
+  }
+}

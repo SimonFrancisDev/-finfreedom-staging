@@ -1,0 +1,555 @@
+/* =========================================================
+   ACCOUNT MODAL WRAPPER - Matching NotificationDropdown
+   ========================================================= */
+
+.account-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  isolation: isolate;
+}
+
+.account-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(3, 8, 20, 0.62);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.account-modal__dialog {
+  position: relative;
+  z-index: 1;
+  width: 360px;
+  max-width: 92vw;
+  max-height: min(88dvh, 600px);
+  padding: 14px;
+  border-radius: 22px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--dropdown-bg, rgba(10, 15, 30, 0.98));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-strong);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.4),
+    0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+/* Dark theme */
+[data-theme="dark"] .account-modal__dialog {
+  --dropdown-bg: rgba(10, 15, 30, 0.98);
+}
+
+/* Light theme */
+[data-theme="light"] .account-modal__dialog {
+  --dropdown-bg: rgba(255, 255, 255, 0.98);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.15),
+    0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* Override glass-panel */
+.account-modal__dialog.glass-panel {
+  background: var(--dropdown-bg, rgba(10, 15, 30, 0.98));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* =========================================================
+   DESKTOP POSITIONING
+   ========================================================= */
+@media (min-width: 768px) {
+  .account-modal {
+    display: block;
+    padding: 0;
+    pointer-events: none;
+  }
+
+  .account-modal__backdrop {
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    pointer-events: auto;
+  }
+
+  .account-modal__dialog {
+    position: fixed;
+    width: 340px;
+    max-width: min(340px, calc(100vw - 24px));
+    max-height: min(560px, calc(100vh - 100px));
+    pointer-events: auto;
+  }
+}
+
+/* =========================================================
+   MOBILE POSITIONING - Centered modal
+   ========================================================= */
+@media (max-width: 767px) {
+  .account-modal {
+    align-items: center;
+    justify-content: center;
+    padding:
+      max(12px, env(safe-area-inset-top))
+      12px
+      max(12px, env(safe-area-inset-bottom));
+  }
+
+  .account-modal__dialog {
+    width: min(92vw, 360px);
+    max-width: min(92vw, 360px);
+    max-height: calc(100dvh - max(24px, env(safe-area-inset-top)) - max(24px, env(safe-area-inset-bottom)));
+    padding: 12px;
+    border-radius: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .account-modal {
+    padding:
+      max(10px, env(safe-area-inset-top))
+      10px
+      max(10px, env(safe-area-inset-bottom));
+  }
+
+  .account-modal__dialog {
+    width: calc(100vw - 20px);
+    max-width: calc(100vw - 20px);
+    padding: 10px;
+    border-radius: 18px;
+  }
+}
+
+/* =========================================================
+   HEADER STYLES
+   ========================================================= */
+.account-dropdown__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-soft);
+  flex-shrink: 0;
+}
+
+.account-dropdown__title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.account-dropdown__title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.account-dropdown__subtitle {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.account-dropdown__close {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.account-dropdown__close:hover {
+  background: var(--surface-2);
+  color: var(--text-primary);
+  transform: scale(1.02);
+}
+
+.account-dropdown__close:active {
+  transform: scale(0.98);
+}
+
+/* =========================================================
+   BODY - Scrollable content
+   ========================================================= */
+.account-dropdown__profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 14px;
+  flex-shrink: 0;
+}
+
+.account-dropdown__avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--glow-blue), var(--glow-purple));
+  border: 1px solid var(--border-strong);
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+}
+
+.account-dropdown__identity {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.account-dropdown__name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.account-dropdown__meta {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  word-break: break-word;
+  margin: 0;
+}
+
+.account-dropdown__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 14px;
+  flex-shrink: 0;
+}
+
+.account-dropdown__chip {
+  min-height: 30px;
+  padding: 0 12px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.account-dropdown__chip.admin-chip {
+  background: rgba(29, 233, 182, 0.15);
+  border-color: rgba(29, 233, 182, 0.3);
+  color: var(--glow-teal);
+}
+
+[data-theme="light"] .account-dropdown__chip.admin-chip {
+  background: rgba(29, 233, 182, 0.1);
+  color: #0a6b5c;
+}
+
+/* =========================================================
+   MENU - Scrollable
+   ========================================================= */
+.account-dropdown__menu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 14px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  flex: 1;
+  min-height: 0;
+}
+
+.account-dropdown__menu::-webkit-scrollbar {
+  width: 4px;
+}
+
+.account-dropdown__menu::-webkit-scrollbar-track {
+  background: var(--border-soft);
+  border-radius: 10px;
+}
+
+.account-dropdown__menu::-webkit-scrollbar-thumb {
+  background: var(--glow-teal);
+  border-radius: 10px;
+}
+
+.account-dropdown__item {
+  min-height: 48px;
+  width: 100%;
+  padding: 0 14px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.account-dropdown__item:hover {
+  background: var(--surface-2);
+  border-color: var(--border-strong);
+  transform: translateX(2px);
+}
+
+.account-dropdown__item:active {
+  transform: scale(0.99);
+}
+
+.account-dropdown__item-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.account-dropdown__item-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  flex-shrink: 0;
+  font-size: 14px;
+}
+
+.account-dropdown__item-text {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.account-dropdown__item-arrow {
+  font-size: 20px;
+  line-height: 1;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.account-dropdown__item--danger {
+  color: #ef4444;
+}
+
+.account-dropdown__item--danger:hover {
+  color: #dc2626;
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+[data-theme="light"] .account-dropdown__item--danger {
+  color: #dc2626;
+}
+
+.admin-item {
+  border-color: rgba(29, 233, 182, 0.25);
+}
+
+.admin-item:hover {
+  background: rgba(29, 233, 182, 0.1);
+  border-color: rgba(29, 233, 182, 0.35);
+}
+
+.admin-item .account-dropdown__item-icon {
+  background: rgba(29, 233, 182, 0.15);
+  border-color: rgba(29, 233, 182, 0.25);
+}
+
+/* =========================================================
+   LIGHT MODE BORDERS
+   ========================================================= */
+[data-theme="light"] .account-modal__dialog {
+  border: 1px solid rgba(100, 120, 150, 0.35);
+}
+
+[data-theme="light"] .account-dropdown__item,
+[data-theme="light"] .account-dropdown__close,
+[data-theme="light"] .account-dropdown__chip,
+[data-theme="light"] .account-dropdown__item-icon {
+  border-color: rgba(100, 120, 150, 0.25);
+}
+
+/* =========================================================
+   HEIGHT CONSTRAINTS
+   ========================================================= */
+@media (max-height: 600px) {
+  .account-dropdown__menu {
+    max-height: 280px;
+  }
+}
+
+@media (max-height: 500px) {
+  .account-dropdown__menu {
+    max-height: 200px;
+  }
+}
+
+/* Ensure desktop dropdowns don't take full width */
+/* @media (min-width: 768px) {
+  .language-modal__dialog,
+  .account-modal__dialog,
+  .notification-modal__dialog,
+  .wallet-modal__dialog {
+    width: auto !important;
+    min-width: 280px;
+    max-width: min(360px, calc(100vw - 24px));
+  }
+} */
+
+
+
+
+
+/* =========================================================
+   LAPTOP ONLY — HARD ISOLATED ACCOUNT DROPDOWN
+   Does not touch mobile behavior.
+========================================================= */
+
+@media (min-width: 768px) {
+  .account-modal--desktop {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 2147483000 !important;
+
+    display: block !important;
+    align-items: initial !important;
+    justify-content: initial !important;
+
+    width: auto !important;
+    height: auto !important;
+    padding: 0 !important;
+    background: transparent !important;
+
+    pointer-events: none !important;
+    isolation: isolate !important;
+  }
+
+  .account-modal--desktop .account-modal__backdrop {
+    display: none !important;
+  }
+
+  .account-modal--desktop .account-modal__dialog--desktop {
+    position: fixed !important;
+
+    width: 340px !important;
+    min-width: 340px !important;
+    max-width: 340px !important;
+
+    max-height: min(560px, calc(100dvh - 96px)) !important;
+    margin: 0 !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    pointer-events: auto !important;
+
+    opacity: 1;
+    transform-origin: top right;
+    animation: accountLaptopDropdownIn 160ms ease both;
+  }
+}
+
+@keyframes accountLaptopDropdownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+
+
+/* =========================================================
+   ACCOUNT DROPDOWN — MATCH NAVBAR DROPDOWN BACKGROUND
+   Uses the same visual system as About + Services dropdowns.
+========================================================= */
+
+.account-modal__dialog,
+.account-modal__dialog.glass-panel {
+  background:
+    radial-gradient(circle at top left, rgba(0, 194, 255, 0.18), transparent 34%),
+    radial-gradient(circle at bottom right, rgba(76, 255, 154, 0.1), transparent 34%),
+    linear-gradient(135deg, rgba(2, 6, 23, 0.98), rgba(10, 42, 108, 0.86)) !important;
+
+  border: 1px solid rgba(0, 194, 255, 0.2) !important;
+
+  box-shadow:
+    0 34px 90px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+
+  backdrop-filter: blur(26px) !important;
+  -webkit-backdrop-filter: blur(26px) !important;
+}
+
+[data-theme='light'] .account-modal__dialog,
+[data-theme='light'] .account-modal__dialog.glass-panel {
+  background:
+    radial-gradient(circle at top left, rgba(77, 163, 255, 0.16), transparent 34%),
+    radial-gradient(circle at bottom right, rgba(29, 233, 182, 0.12), transparent 34%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(244, 247, 252, 0.98)) !important;
+
+  border-color: var(--glass-border, rgba(0, 114, 188, 0.18)) !important;
+
+  box-shadow:
+    0 34px 80px rgba(15, 23, 42, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Inner account cards should feel like the Services dropdown inner panels */
+.account-dropdown__item,
+.account-dropdown__chip,
+.account-dropdown__close,
+.account-dropdown__item-icon {
+  background: rgba(255, 255, 255, 0.045);
+  border-color: rgba(255, 255, 255, 0.075);
+}
+
+.account-dropdown__item:hover,
+.account-dropdown__close:hover {
+  color: #ffffff;
+  background: rgba(0, 194, 255, 0.1);
+  border-color: rgba(0, 194, 255, 0.18);
+}
+
+[data-theme='light'] .account-dropdown__item,
+[data-theme='light'] .account-dropdown__chip,
+[data-theme='light'] .account-dropdown__close,
+[data-theme='light'] .account-dropdown__item-icon {
+  background: rgba(255, 255, 255, 0.72);
+  border-color: rgba(0, 114, 188, 0.12);
+}
+
+[data-theme='light'] .account-dropdown__item:hover,
+[data-theme='light'] .account-dropdown__close:hover {
+  color: #020617;
+  background: rgba(0, 194, 255, 0.08);
+  border-color: rgba(0, 114, 188, 0.14);
+}

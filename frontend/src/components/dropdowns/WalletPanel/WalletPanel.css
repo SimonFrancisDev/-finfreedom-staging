@@ -1,0 +1,528 @@
+/* =========================================================
+   WALLET MODAL WRAPPER - Matching NotificationDropdown
+   ========================================================= */
+
+.wallet-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  isolation: isolate;
+}
+
+.wallet-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(3, 8, 20, 0.62);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.wallet-modal__dialog {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 340px);
+  max-width: calc(100% - 24px);
+  max-height: min(85dvh, 560px);
+  padding: 14px;
+  border-radius: 22px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--dropdown-bg, rgba(10, 15, 30, 0.98));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-strong);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.4),
+    0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+/* Dark theme */
+[data-theme="dark"] .wallet-modal__dialog {
+  --dropdown-bg: rgba(10, 15, 30, 0.98);
+}
+
+/* Light theme */
+[data-theme="light"] .wallet-modal__dialog {
+  --dropdown-bg: rgba(255, 255, 255, 0.98);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.15),
+    0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* Override glass-panel */
+.wallet-modal__dialog.glass-panel {
+  background: var(--dropdown-bg, rgba(10, 15, 30, 0.98));
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* =========================================================
+   DESKTOP POSITIONING
+   ========================================================= */
+@media (min-width: 768px) {
+  .wallet-modal {
+    display: block;
+    padding: 0;
+    pointer-events: none;
+  }
+
+  .wallet-modal__backdrop {
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    pointer-events: auto;
+  }
+
+  .wallet-modal__dialog {
+    position: fixed;
+    width: 340px;
+    max-width: min(340px, calc(100vw - 24px));
+    max-height: min(500px, calc(100vh - 100px));
+    pointer-events: auto;
+  }
+}
+
+/* =========================================================
+   MOBILE POSITIONING - Centered modal
+   ========================================================= */
+@media (max-width: 767px) {
+  .wallet-modal {
+    align-items: center;
+    justify-content: center;
+    padding:
+      max(12px, env(safe-area-inset-top))
+      12px
+      max(12px, env(safe-area-inset-bottom));
+  }
+
+  .wallet-modal__dialog {
+    width: min(92vw, 400px);
+    max-width: min(92vw, 400px);
+    max-height: calc(100dvh - max(24px, env(safe-area-inset-top)) - max(24px, env(safe-area-inset-bottom)));
+    padding: 12px;
+    border-radius: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .wallet-modal {
+    padding:
+      max(10px, env(safe-area-inset-top))
+      10px
+      max(10px, env(safe-area-inset-bottom));
+  }
+
+  .wallet-modal__dialog {
+    width: calc(100vw - 20px);
+    max-width: calc(100vw - 20px);
+    padding: 10px;
+    border-radius: 18px;
+  }
+}
+
+/* =========================================================
+   HEADER STYLES
+   ========================================================= */
+.wallet-panel__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-soft);
+  flex-shrink: 0;
+}
+
+.wallet-panel__title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.wallet-panel__title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.wallet-panel__subtitle {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.wallet-panel__close {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.wallet-panel__close:hover {
+  background: var(--surface-2);
+  color: var(--text-primary);
+  transform: scale(1.02);
+}
+
+.wallet-panel__close:active {
+  transform: scale(0.98);
+}
+
+/* =========================================================
+   SUMMARY - Scrollable content
+   ========================================================= */
+.wallet-panel__summary {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 12px;
+  min-height: 0;
+}
+
+.wallet-panel__summary::-webkit-scrollbar {
+  width: 4px;
+}
+
+.wallet-panel__summary::-webkit-scrollbar-track {
+  background: var(--border-soft);
+  border-radius: 10px;
+}
+
+.wallet-panel__summary::-webkit-scrollbar-thumb {
+  background: var(--glow-teal);
+  border-radius: 10px;
+}
+
+.wallet-panel__status-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.wallet-panel__status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: var(--success);
+  box-shadow: 0 0 14px rgba(34, 197, 94, 0.45);
+}
+
+.wallet-panel__status-dot.is-disconnected {
+  background: var(--danger);
+  box-shadow: 0 0 14px rgba(239, 68, 68, 0.45);
+}
+
+.wallet-panel__status-dot.is-loading {
+  background: var(--warning);
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.45);
+}
+
+.wallet-panel__status-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.wallet-panel__address-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px;
+  border-radius: 18px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  flex-shrink: 0;
+}
+
+.wallet-panel__label {
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  color: var(--text-secondary);
+}
+
+.wallet-panel__value {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-primary);
+  word-break: break-all;
+  margin: 0;
+}
+
+.wallet-panel__meta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.wallet-panel__meta-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px;
+  border-radius: 18px;
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+}
+
+.wallet-panel__meta-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.wallet-panel__meta-value {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.wallet-panel__meta-card--full {
+  grid-column: 1 / -1;
+}
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+.wallet-panel__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 12px;
+  flex-shrink: 0;
+}
+
+.wallet-panel__action-btn {
+  min-height: 42px;
+  width: 100%;
+  padding: 0 14px;
+  border-radius: 16px;
+  text-align: left;
+  background: var(--surface-1);
+  border: 1px solid var(--border-soft);
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.wallet-panel__action-btn:hover {
+  background: var(--surface-2);
+  border-color: var(--border-strong);
+  transform: translateX(2px);
+}
+
+.wallet-panel__action-btn:active {
+  transform: scale(0.99);
+}
+
+.wallet-panel__action-btn--primary {
+  color: #07111f;
+  background: linear-gradient(135deg, var(--glow-teal), var(--glow-blue));
+  box-shadow: 0 10px 24px rgba(77, 163, 255, 0.22);
+  text-align: center;
+}
+
+.wallet-panel__action-btn--danger {
+  color: #ef4444;
+}
+
+.wallet-panel__action-btn--danger:hover {
+  color: #dc2626;
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+[data-theme="light"] .wallet-panel__action-btn--danger {
+  color: #dc2626;
+}
+
+.wallet-panel__action-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   LIGHT MODE BORDERS
+   ========================================================= */
+[data-theme="light"] .wallet-modal__dialog {
+  border: 1px solid rgba(100, 120, 150, 0.35);
+}
+
+[data-theme="light"] .wallet-panel__address-block,
+[data-theme="light"] .wallet-panel__meta-card,
+[data-theme="light"] .wallet-panel__action-btn,
+[data-theme="light"] .wallet-panel__close {
+  border-color: rgba(100, 120, 150, 0.25);
+}
+
+/* =========================================================
+   HEIGHT CONSTRAINTS
+   ========================================================= */
+@media (max-height: 700px) {
+  .wallet-panel__summary {
+    max-height: 220px;
+  }
+}
+
+@media (max-height: 600px) {
+  .wallet-panel__summary {
+    max-height: 180px;
+  }
+}
+
+@media (max-height: 500px) {
+  .wallet-panel__summary {
+    max-height: 140px;
+  }
+}
+
+
+
+
+/* =========================================================
+   LAPTOP ONLY — HARD ISOLATED WALLET DROPDOWN
+   Same behavior pattern as Account/Language/Notification.
+   Does not touch mobile behavior.
+========================================================= */
+
+@media (min-width: 768px) {
+  .wallet-modal--desktop {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 2147483000 !important;
+
+    display: block !important;
+    align-items: initial !important;
+    justify-content: initial !important;
+
+    width: auto !important;
+    height: auto !important;
+    padding: 0 !important;
+    background: transparent !important;
+
+    pointer-events: none !important;
+    isolation: isolate !important;
+  }
+
+  .wallet-modal--desktop .wallet-modal__backdrop {
+    display: none !important;
+  }
+
+  .wallet-modal--desktop .wallet-modal__dialog--desktop {
+    position: fixed !important;
+
+    width: 340px !important;
+    min-width: 340px !important;
+    max-width: 340px !important;
+
+    max-height: min(560px, calc(100dvh - 96px)) !important;
+    margin: 0 !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    pointer-events: auto !important;
+
+    opacity: 1;
+    transform-origin: top right;
+    animation: walletLaptopDropdownIn 160ms ease both;
+  }
+}
+
+@keyframes walletLaptopDropdownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* =========================================================
+   WALLET DROPDOWN — MATCH NAVBAR DROPDOWN BACKGROUND
+========================================================= */
+
+.wallet-modal__dialog,
+.wallet-modal__dialog.glass-panel {
+  background:
+    radial-gradient(circle at top left, rgba(0, 194, 255, 0.18), transparent 34%),
+    radial-gradient(circle at bottom right, rgba(76, 255, 154, 0.1), transparent 34%),
+    linear-gradient(135deg, rgba(2, 6, 23, 0.98), rgba(10, 42, 108, 0.86)) !important;
+
+  border: 1px solid rgba(0, 194, 255, 0.2) !important;
+
+  box-shadow:
+    0 34px 90px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+
+  backdrop-filter: blur(26px) !important;
+  -webkit-backdrop-filter: blur(26px) !important;
+}
+
+[data-theme='light'] .wallet-modal__dialog,
+[data-theme='light'] .wallet-modal__dialog.glass-panel {
+  background:
+    radial-gradient(circle at top left, rgba(77, 163, 255, 0.16), transparent 34%),
+    radial-gradient(circle at bottom right, rgba(29, 233, 182, 0.12), transparent 34%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(244, 247, 252, 0.98)) !important;
+
+  border-color: var(--glass-border, rgba(0, 114, 188, 0.18)) !important;
+
+  box-shadow:
+    0 34px 80px rgba(15, 23, 42, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Inner wallet panels should match the Services dropdown inner panels */
+.wallet-panel__address-block,
+.wallet-panel__meta-card,
+.wallet-panel__action-btn,
+.wallet-panel__close {
+  background: rgba(255, 255, 255, 0.045);
+  border-color: rgba(255, 255, 255, 0.075);
+}
+
+.wallet-panel__action-btn:hover,
+.wallet-panel__close:hover {
+  color: #ffffff;
+  background: rgba(0, 194, 255, 0.1);
+  border-color: rgba(0, 194, 255, 0.18);
+}
+
+[data-theme='light'] .wallet-panel__address-block,
+[data-theme='light'] .wallet-panel__meta-card,
+[data-theme='light'] .wallet-panel__action-btn,
+[data-theme='light'] .wallet-panel__close {
+  background: rgba(255, 255, 255, 0.72);
+  border-color: rgba(0, 114, 188, 0.12);
+}
+
+[data-theme='light'] .wallet-panel__action-btn:hover,
+[data-theme='light'] .wallet-panel__close:hover {
+  color: #020617;
+  background: rgba(0, 194, 255, 0.08);
+  border-color: rgba(0, 114, 188, 0.14);
+}
