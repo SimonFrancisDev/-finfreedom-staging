@@ -47,3 +47,9 @@ Thumbs.db
 *.sw?
 
 env-files/
+
+# Staging repo must not commit env examples or production deployment records
+*.env.example
+smart-contract/deployments-mainnet/
+smart-contract/deployments/
+smart-contract/.openzeppelin/polygon.json
