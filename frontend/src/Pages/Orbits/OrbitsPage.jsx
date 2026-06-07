@@ -2244,7 +2244,7 @@ const OrbitsPage = () => {
     )
   }
 
- if (contractsLoading) {
+ if (contractsLoading && isLoadingOrbits) {
   return (
     <section className="orbits-page">
       <div className="loading-container">
