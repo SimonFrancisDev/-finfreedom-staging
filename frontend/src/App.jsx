@@ -90,6 +90,7 @@ const TELEGRAM_PROMPT_DISMISSED_KEY = 'finfreedom_telegram_prompt_dismissed_v1'
 const TELEGRAM_PROMPT_SESSION_KEY = 'finfreedom_telegram_prompt_seen_v1'
 const TESTNET_REMINDER_SEEN_KEY = 'finfreedom_testnet_reminder_seen_v1'
 const EARLY_ACCESS_STORAGE_KEY = 'finfreedom_early_access_v1'
+const WALLET_RETURN_ROUTE_KEY = 'finfreedom_wallet_return_route_v1'
 const LAUNCH_GATE_MODE = String(import.meta.env.VITE_LAUNCH_GATE_MODE || 'open').toLowerCase()
 const EARLY_ACCESS_CODE = String(import.meta.env.VITE_EARLY_ACCESS_CODE || '').trim()
 const PUBLIC_LAUNCH_AT = String(import.meta.env.VITE_PUBLIC_LAUNCH_AT || '').trim()
@@ -166,6 +167,27 @@ const FLOW_ONLY_PAGES = new Set([
 
 const isInternalNavigationState = (state) => {
   return Boolean(state?.ffnInternalNavigation)
+}
+
+const readWalletReturnRoute = () => {
+  if (typeof window === 'undefined') return null
+
+  try {
+    const raw = window.sessionStorage.getItem(WALLET_RETURN_ROUTE_KEY)
+    if (!raw) return null
+
+    const parsed = JSON.parse(raw)
+    const expiresAt = Number(parsed?.expiresAt || 0)
+    if (!parsed?.path || !expiresAt || Date.now() > expiresAt) {
+      window.sessionStorage.removeItem(WALLET_RETURN_ROUTE_KEY)
+      return null
+    }
+
+    return parsed
+  } catch {
+    window.sessionStorage.removeItem(WALLET_RETURN_ROUTE_KEY)
+    return null
+  }
 }
 
 const getInitialNotifications = () => {
@@ -776,6 +798,24 @@ function App() {
     },
     [closeAllUtilities, location.pathname, navigate]
   )
+
+  useEffect(() => {
+    const returnRoute = readWalletReturnRoute()
+    if (!returnRoute?.path || location.pathname === returnRoute.path) return
+
+    window.sessionStorage.removeItem(WALLET_RETURN_ROUTE_KEY)
+    navigate(returnRoute.path, {
+      replace: true,
+      state: {
+        ffnInternalNavigation: true,
+        fromPath: location.pathname,
+        fromPage: resolveCurrentPage(location.pathname),
+        restoredAfterWalletAction: true,
+        walletAction: returnRoute.action || '',
+        openedAt: Date.now(),
+      },
+    })
+  }, [location.pathname, navigate])
 
   const handleToggleTheme = () => {
     setTheme((current) => (current === 'dark' ? 'light' : 'dark'))

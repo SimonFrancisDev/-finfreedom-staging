@@ -58,6 +58,32 @@ const TIMEZONES = [
   'Australia/Sydney',
 ]
 
+const WALLET_RETURN_ROUTE_KEY = 'finfreedom_wallet_return_route_v1'
+
+const setWalletReturnRoute = (action) => {
+  if (typeof window === 'undefined') return
+
+  try {
+    window.sessionStorage.setItem(WALLET_RETURN_ROUTE_KEY, JSON.stringify({
+      action,
+      path: '/preferences',
+      expiresAt: Date.now() + 2 * 60 * 1000,
+    }))
+  } catch {
+    // Session restoration is best-effort only.
+  }
+}
+
+const clearWalletReturnRoute = () => {
+  if (typeof window === 'undefined') return
+
+  try {
+    window.sessionStorage.removeItem(WALLET_RETURN_ROUTE_KEY)
+  } catch {
+    // Ignore storage failures.
+  }
+}
+
 const applyTheme = (theme) => {
   const resolved = theme === 'system'
     ? (window.matchMedia?.('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
@@ -221,6 +247,7 @@ const PreferencesPage = ({
     }
     const timestamp = Date.now()
     const message = buildTelegramWalletMessage(action, account, timestamp)
+    setWalletReturnRoute(action)
     const signature = await provider.request({
       method: 'personal_sign',
       params: [message, account],
@@ -261,6 +288,8 @@ const PreferencesPage = ({
     } catch (error) {
       setSaveStatus({ show: true, message: error.message, type: 'error' })
       toast.danger(error.message || preferencesT('notifications.telegramLinkFailed', 'Unable to start Telegram linking.'), { dedupeKey: 'preferences-telegram-link-failed' })
+    } finally {
+      clearWalletReturnRoute()
     }
   }, [account, language, preferencesT, signTelegramAction, toast])
 
@@ -276,6 +305,8 @@ const PreferencesPage = ({
     } catch (error) {
       setSaveStatus({ show: true, message: error.message, type: 'error' })
       toast.danger(error.message || preferencesT('notifications.telegramUnsubscribeFailed', 'Unable to unsubscribe Telegram alerts.'), { dedupeKey: 'preferences-telegram-unsubscribe-failed' })
+    } finally {
+      clearWalletReturnRoute()
     }
   }, [account, preferencesT, signTelegramAction, toast])
 
