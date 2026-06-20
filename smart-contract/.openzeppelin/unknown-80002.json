@@ -28414,7 +28414,7 @@
             "slot": "0",
             "type": "t_contract(IERC20)1382",
             "contract": "LevelManager",
-            "src": "contracts\\LevelManager.sol:94"
+            "src": "contracts\\LevelManager.sol:95"
           },
           {
             "label": "registration",
@@ -28422,7 +28422,7 @@
             "slot": "1",
             "type": "t_contract(IRegistration)6775",
             "contract": "LevelManager",
-            "src": "contracts\\LevelManager.sol:95"
+            "src": "contracts\\LevelManager.sol:96"
           },
           {
             "label": "escrow",
@@ -28430,7 +28430,7 @@
             "slot": "2",
             "type": "t_address",
             "contract": "LevelManager",
-            "src": "contracts\\LevelManager.sol:96"
+            "src": "contracts\\LevelManager.sol:97"
           },
           {
             "label": "p4Orbit",
@@ -28438,7 +28438,7 @@
             "slot": "3",
             "type": "t_contract(IManagedOrbit)2223",
             "contract": "LevelManager",
-            "src": "contracts\\LevelManager.sol:98"
+            "src": "contracts\\LevelManager.sol:99"
           },
           {
             "label": "p12Orbit",
@@ -28446,7 +28446,7 @@
             "slot": "4",
             "type": "t_contract(IManagedOrbit)2223",
             "contract": "LevelManager",
-            "src": "contracts\\LevelManager.sol:99"
+            "src": "contracts\\LevelManager.sol:100"
           },
           {
             "label": "p39Orbit",
@@ -28454,7 +28454,7 @@
             "slot": "5",
             "type": "t_contract(IManagedOrbit)2223",
             "contract": "LevelManager",
-            "src": "contracts\\LevelManager.sol:100"
+            "src": "contracts\\LevelManager.sol:101"
           },
           {
             "label": "tokenController",
@@ -28462,7 +28462,7 @@
             "slot": "6",
             "type": "t_address",
             "contract": "LevelManager",
-            "src": "contracts\\LevelManager.sol:102"
+            "src": "contracts\\LevelManager.sol:103"
           },
           {
             "label": "guardian",
@@ -28470,7 +28470,7 @@
             "slot": "7",
             "type": "t_address",
             "contract": "LevelManager",
-            "src": "contracts\\LevelManager.sol:103"
+            "src": "contracts\\LevelManager.sol:104"
           },
           {
             "label": "settlementRouter",
@@ -28478,7 +28478,7 @@
             "slot": "8",
             "type": "t_contract(ILevelSettlementRouter)6715",
             "contract": "LevelManager",
-            "src": "contracts\\LevelManager.sol:104"
+            "src": "contracts\\LevelManager.sol:105"
           },
           {
             "label": "__deprecatedLevelToOrbitType",
@@ -28486,7 +28486,7 @@
             "slot": "9",
             "type": "t_mapping(t_uint8,t_string_storage)",
             "contract": "LevelManager",
-            "src": "contracts\\LevelManager.sol:106"
+            "src": "contracts\\LevelManager.sol:107"
           },
           {
             "label": "__deprecatedLevelPrices",
@@ -28494,7 +28494,7 @@
             "slot": "10",
             "type": "t_mapping(t_uint8,t_uint256)",
             "contract": "LevelManager",
-            "src": "contracts\\LevelManager.sol:107"
+            "src": "contracts\\LevelManager.sol:108"
           },
           {
             "label": "nftPool",
@@ -28502,7 +28502,7 @@
             "slot": "11",
             "type": "t_address",
             "contract": "LevelManager",
-            "src": "contracts\\LevelManager.sol:109"
+            "src": "contracts\\LevelManager.sol:110"
           },
           {
             "label": "operationsWallet",
@@ -28510,7 +28510,7 @@
             "slot": "12",
             "type": "t_address",
             "contract": "LevelManager",
-            "src": "contracts\\LevelManager.sol:110"
+            "src": "contracts\\LevelManager.sol:111"
           },
           {
             "label": "founderWallets",
@@ -28518,7 +28518,7 @@
             "slot": "13",
             "type": "t_array(t_address)dyn_storage",
             "contract": "LevelManager",
-            "src": "contracts\\LevelManager.sol:112"
+            "src": "contracts\\LevelManager.sol:113"
           },
           {
             "label": "founderRatios",
@@ -28526,7 +28526,7 @@
             "slot": "14",
             "type": "t_array(t_uint256)dyn_storage",
             "contract": "LevelManager",
-            "src": "contracts\\LevelManager.sol:113"
+            "src": "contracts\\LevelManager.sol:114"
           },
           {
             "label": "founderRepresentative",
@@ -28534,7 +28534,7 @@
             "slot": "15",
             "type": "t_mapping(t_address,t_bool)",
             "contract": "LevelManager",
-            "src": "contracts\\LevelManager.sol:115"
+            "src": "contracts\\LevelManager.sol:116"
           },
           {
             "label": "founderRepUsed",
@@ -28542,7 +28542,7 @@
             "slot": "16",
             "type": "t_mapping(t_address,t_bool)",
             "contract": "LevelManager",
-            "src": "contracts\\LevelManager.sol:116"
+            "src": "contracts\\LevelManager.sol:117"
           },
           {
             "label": "founderRepLevelsActivated",
@@ -28550,7 +28550,7 @@
             "slot": "17",
             "type": "t_mapping(t_address,t_uint8)",
             "contract": "LevelManager",
-            "src": "contracts\\LevelManager.sol:117"
+            "src": "contracts\\LevelManager.sol:118"
           },
           {
             "label": "founderRepAllLevelsCompleted",
@@ -28558,7 +28558,7 @@
             "slot": "18",
             "type": "t_mapping(t_address,t_bool)",
             "contract": "LevelManager",
-            "src": "contracts\\LevelManager.sol:118"
+            "src": "contracts\\LevelManager.sol:119"
           },
           {
             "label": "id1Wallet",
@@ -28566,7 +28566,7 @@
             "slot": "19",
             "type": "t_address",
             "contract": "LevelManager",
-            "src": "contracts\\LevelManager.sol:120"
+            "src": "contracts\\LevelManager.sol:121"
           },
           {
             "label": "isID1Downline",
@@ -28574,7 +28574,7 @@
             "slot": "20",
             "type": "t_mapping(t_address,t_bool)",
             "contract": "LevelManager",
-            "src": "contracts\\LevelManager.sol:121"
+            "src": "contracts\\LevelManager.sol:122"
           },
           {
             "label": "userLevelActivated",
@@ -28582,7 +28582,7 @@
             "slot": "21",
             "type": "t_mapping(t_address,t_mapping(t_uint8,t_bool))",
             "contract": "LevelManager",
-            "src": "contracts\\LevelManager.sol:123"
+            "src": "contracts\\LevelManager.sol:124"
           },
           {
             "label": "nextActivationId",
@@ -28590,7 +28590,7 @@
             "slot": "22",
             "type": "t_uint256",
             "contract": "LevelManager",
-            "src": "contracts\\LevelManager.sol:160"
+            "src": "contracts\\LevelManager.sol:161"
           },
           {
             "label": "founderRepWallets",
@@ -28598,7 +28598,7 @@
             "slot": "23",
             "type": "t_array(t_address)dyn_storage",
             "contract": "LevelManager",
-            "src": "contracts\\LevelManager.sol:1649"
+            "src": "contracts\\LevelManager.sol:1579"
           },
           {
             "label": "autoUpgradeExecutionDepth",
@@ -28606,7 +28606,7 @@
             "slot": "24",
             "type": "t_uint256",
             "contract": "LevelManager",
-            "src": "contracts\\LevelManager.sol:1650"
+            "src": "contracts\\LevelManager.sol:1580"
           },
           {
             "label": "__gap",
@@ -28614,7 +28614,7 @@
             "slot": "25",
             "type": "t_array(t_uint256)47_storage",
             "contract": "LevelManager",
-            "src": "contracts\\LevelManager.sol:1652"
+            "src": "contracts\\LevelManager.sol:1582"
           }
         ],
         "types": {
@@ -28760,6 +28760,2382 @@
               "slot": "0"
             }
           ],
+          "erc7201:openzeppelin.storage.Pausable": [
+            {
+              "contract": "PausableUpgradeable",
+              "label": "_paused",
+              "type": "t_bool",
+              "src": "@openzeppelin\\contracts-upgradeable\\utils\\PausableUpgradeable.sol:21",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "593facc27f12bbb81b7591eee198a09b9f7afd2525ef49c1fd2164d226bf6776": {
+      "address": "0x8C0357d086229D99e9f944998a7874fcB67b59eE",
+      "txHash": "0xed671249ed3c30333c05c196793fab94d537f9d945daa8eb5122079ad0548ece",
+      "layout": {
+        "solcVersion": "0.8.24",
+        "storage": [
+          {
+            "label": "usdt",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_contract(IERC20)1382",
+            "contract": "LevelManager",
+            "src": "contracts\\LevelManager.sol:94"
+          },
+          {
+            "label": "registration",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_contract(IRegistration)6762",
+            "contract": "LevelManager",
+            "src": "contracts\\LevelManager.sol:95"
+          },
+          {
+            "label": "escrow",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_address",
+            "contract": "LevelManager",
+            "src": "contracts\\LevelManager.sol:96"
+          },
+          {
+            "label": "p4Orbit",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_contract(IManagedOrbit)2223",
+            "contract": "LevelManager",
+            "src": "contracts\\LevelManager.sol:98"
+          },
+          {
+            "label": "p12Orbit",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_contract(IManagedOrbit)2223",
+            "contract": "LevelManager",
+            "src": "contracts\\LevelManager.sol:99"
+          },
+          {
+            "label": "p39Orbit",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_contract(IManagedOrbit)2223",
+            "contract": "LevelManager",
+            "src": "contracts\\LevelManager.sol:100"
+          },
+          {
+            "label": "tokenController",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_address",
+            "contract": "LevelManager",
+            "src": "contracts\\LevelManager.sol:102"
+          },
+          {
+            "label": "guardian",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_address",
+            "contract": "LevelManager",
+            "src": "contracts\\LevelManager.sol:103"
+          },
+          {
+            "label": "settlementRouter",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_contract(ILevelSettlementRouter)6702",
+            "contract": "LevelManager",
+            "src": "contracts\\LevelManager.sol:104"
+          },
+          {
+            "label": "__deprecatedLevelToOrbitType",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_uint8,t_string_storage)",
+            "contract": "LevelManager",
+            "src": "contracts\\LevelManager.sol:106"
+          },
+          {
+            "label": "__deprecatedLevelPrices",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_mapping(t_uint8,t_uint256)",
+            "contract": "LevelManager",
+            "src": "contracts\\LevelManager.sol:107"
+          },
+          {
+            "label": "nftPool",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_address",
+            "contract": "LevelManager",
+            "src": "contracts\\LevelManager.sol:109"
+          },
+          {
+            "label": "operationsWallet",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_address",
+            "contract": "LevelManager",
+            "src": "contracts\\LevelManager.sol:110"
+          },
+          {
+            "label": "founderWallets",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "LevelManager",
+            "src": "contracts\\LevelManager.sol:112"
+          },
+          {
+            "label": "founderRatios",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_array(t_uint256)dyn_storage",
+            "contract": "LevelManager",
+            "src": "contracts\\LevelManager.sol:113"
+          },
+          {
+            "label": "founderRepresentative",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LevelManager",
+            "src": "contracts\\LevelManager.sol:115"
+          },
+          {
+            "label": "founderRepUsed",
+            "offset": 0,
+            "slot": "16",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LevelManager",
+            "src": "contracts\\LevelManager.sol:116"
+          },
+          {
+            "label": "founderRepLevelsActivated",
+            "offset": 0,
+            "slot": "17",
+            "type": "t_mapping(t_address,t_uint8)",
+            "contract": "LevelManager",
+            "src": "contracts\\LevelManager.sol:117"
+          },
+          {
+            "label": "founderRepAllLevelsCompleted",
+            "offset": 0,
+            "slot": "18",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LevelManager",
+            "src": "contracts\\LevelManager.sol:118"
+          },
+          {
+            "label": "id1Wallet",
+            "offset": 0,
+            "slot": "19",
+            "type": "t_address",
+            "contract": "LevelManager",
+            "src": "contracts\\LevelManager.sol:120"
+          },
+          {
+            "label": "isID1Downline",
+            "offset": 0,
+            "slot": "20",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "LevelManager",
+            "src": "contracts\\LevelManager.sol:121"
+          },
+          {
+            "label": "userLevelActivated",
+            "offset": 0,
+            "slot": "21",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_bool))",
+            "contract": "LevelManager",
+            "src": "contracts\\LevelManager.sol:123"
+          },
+          {
+            "label": "nextActivationId",
+            "offset": 0,
+            "slot": "22",
+            "type": "t_uint256",
+            "contract": "LevelManager",
+            "src": "contracts\\LevelManager.sol:160"
+          },
+          {
+            "label": "founderRepWallets",
+            "offset": 0,
+            "slot": "23",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "LevelManager",
+            "src": "contracts\\LevelManager.sol:1648"
+          },
+          {
+            "label": "autoUpgradeExecutionDepth",
+            "offset": 0,
+            "slot": "24",
+            "type": "t_uint256",
+            "contract": "LevelManager",
+            "src": "contracts\\LevelManager.sol:1649"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "25",
+            "type": "t_array(t_uint256)47_storage",
+            "contract": "LevelManager",
+            "src": "contracts\\LevelManager.sol:1651"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_struct(InitializableStorage)73_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)13_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(PausableStorage)219_storage": {
+            "label": "struct PausableUpgradeable.PausableStorage",
+            "members": [
+              {
+                "label": "_paused",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(ReentrancyGuardStorage)283_storage": {
+            "label": "struct ReentrancyGuardUpgradeable.ReentrancyGuardStorage",
+            "members": [
+              {
+                "label": "_status",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)47_storage": {
+            "label": "uint256[47]",
+            "numberOfBytes": "1504"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]",
+            "numberOfBytes": "32"
+          },
+          "t_contract(IERC20)1382": {
+            "label": "contract IERC20",
+            "numberOfBytes": "20"
+          },
+          "t_contract(ILevelSettlementRouter)6702": {
+            "label": "contract ILevelSettlementRouter",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IManagedOrbit)2223": {
+            "label": "contract IManagedOrbit",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IRegistration)6762": {
+            "label": "contract IRegistration",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_bool))": {
+            "label": "mapping(address => mapping(uint8 => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint8)": {
+            "label": "mapping(address => uint8)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_bool)": {
+            "label": "mapping(uint8 => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_string_storage)": {
+            "label": "mapping(uint8 => string)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_uint256)": {
+            "label": "mapping(uint8 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.ReentrancyGuard": [
+            {
+              "contract": "ReentrancyGuardUpgradeable",
+              "label": "_status",
+              "type": "t_uint256",
+              "src": "@openzeppelin\\contracts-upgradeable\\utils\\ReentrancyGuardUpgradeable.sol:40",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Pausable": [
+            {
+              "contract": "PausableUpgradeable",
+              "label": "_paused",
+              "type": "t_bool",
+              "src": "@openzeppelin\\contracts-upgradeable\\utils\\PausableUpgradeable.sol:21",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "7aafee11d69c2a194eccff7a4965016181c9c868cbdebb66f9c1ba0f2a65be94": {
+      "address": "0xFef6BE6d868947ED6d76925b53DccfeaA704cD11",
+      "txHash": "0x3413cbe8ac3f3e5669a43cde0d7c87b87fb50a3dbad4c113259d435462c00f6f",
+      "layout": {
+        "solcVersion": "0.8.24",
+        "storage": [
+          {
+            "label": "levelManager",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:38"
+          },
+          {
+            "label": "escrow",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:39"
+          },
+          {
+            "label": "registration",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_address",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:40"
+          },
+          {
+            "label": "guardian",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:41"
+          },
+          {
+            "label": "userOrbits",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_struct(OrbitData)14548_storage))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:43"
+          },
+          {
+            "label": "levelConfig",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_uint8,t_struct(OrbitConfig)14563_storage)",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:44"
+          },
+          {
+            "label": "founderRepActivated",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:45"
+          },
+          {
+            "label": "historicalCyclePositions",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_struct(Position)14520_storage))))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:47"
+          },
+          {
+            "label": "historicalCycleStored",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_bool)))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:48"
+          },
+          {
+            "label": "linePaymentCounts",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint8,t_uint8)))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:51"
+          },
+          {
+            "label": "positionLineArrivalNumber",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint8,t_uint8)))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:54"
+          },
+          {
+            "label": "historicalPositionLineArrivalNumber",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_uint8))))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:57"
+          },
+          {
+            "label": "positionActivationId",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint8,t_uint256)))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:60"
+          },
+          {
+            "label": "positionIsMirror",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint8,t_bool)))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:61"
+          },
+          {
+            "label": "historicalPositionActivationId",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_uint256))))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:63"
+          },
+          {
+            "label": "historicalPositionIsMirror",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_bool))))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:64"
+          },
+          {
+            "label": "storedRuleSnapshots",
+            "offset": 0,
+            "slot": "16",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint8,t_struct(StoredRuleSnapshot)2298_storage)))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:136"
+          },
+          {
+            "label": "historicalStoredRuleSnapshots",
+            "offset": 0,
+            "slot": "17",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_struct(StoredRuleSnapshot)2298_storage))))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:139"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "18",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:1658"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "67",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "P4Orbit",
+            "src": "contracts\\P4Orbit.sol:106"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_struct(InitializableStorage)73_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)13_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(PausableStorage)219_storage": {
+            "label": "struct PausableUpgradeable.PausableStorage",
+            "members": [
+              {
+                "label": "_paused",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_bool)))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint256 => bool)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_bool))))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint256 => mapping(uint8 => bool))))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_struct(Position)14520_storage))))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint256 => mapping(uint8 => struct IOrbitState.Position))))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_struct(StoredRuleSnapshot)2298_storage))))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint256 => mapping(uint8 => struct BaseOrbit.StoredRuleSnapshot))))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_uint256))))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint256 => mapping(uint8 => uint256))))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_uint8))))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint256 => mapping(uint8 => uint8))))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint8,t_bool)))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint8 => bool)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint8,t_struct(StoredRuleSnapshot)2298_storage)))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint8 => struct BaseOrbit.StoredRuleSnapshot)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint8,t_uint256)))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint8 => uint256)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint8,t_uint8)))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint8 => uint8)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_struct(OrbitData)14548_storage))": {
+            "label": "mapping(address => mapping(uint8 => struct IOrbitState.OrbitData))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_bool)": {
+            "label": "mapping(uint256 => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint8,t_bool))": {
+            "label": "mapping(uint256 => mapping(uint8 => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint8,t_struct(Position)14520_storage))": {
+            "label": "mapping(uint256 => mapping(uint8 => struct IOrbitState.Position))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint8,t_struct(StoredRuleSnapshot)2298_storage))": {
+            "label": "mapping(uint256 => mapping(uint8 => struct BaseOrbit.StoredRuleSnapshot))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint8,t_uint256))": {
+            "label": "mapping(uint256 => mapping(uint8 => uint256))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint8,t_uint8))": {
+            "label": "mapping(uint256 => mapping(uint8 => uint8))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_address)": {
+            "label": "mapping(uint8 => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_bool)": {
+            "label": "mapping(uint8 => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint256,t_bool))": {
+            "label": "mapping(uint8 => mapping(uint256 => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_bool)))": {
+            "label": "mapping(uint8 => mapping(uint256 => mapping(uint8 => bool)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_struct(Position)14520_storage)))": {
+            "label": "mapping(uint8 => mapping(uint256 => mapping(uint8 => struct IOrbitState.Position)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_struct(StoredRuleSnapshot)2298_storage)))": {
+            "label": "mapping(uint8 => mapping(uint256 => mapping(uint8 => struct BaseOrbit.StoredRuleSnapshot)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_uint256)))": {
+            "label": "mapping(uint8 => mapping(uint256 => mapping(uint8 => uint256)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_uint8)))": {
+            "label": "mapping(uint8 => mapping(uint256 => mapping(uint8 => uint8)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint8,t_bool))": {
+            "label": "mapping(uint8 => mapping(uint8 => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint8,t_struct(StoredRuleSnapshot)2298_storage))": {
+            "label": "mapping(uint8 => mapping(uint8 => struct BaseOrbit.StoredRuleSnapshot))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint8,t_uint256))": {
+            "label": "mapping(uint8 => mapping(uint8 => uint256))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint8,t_uint8))": {
+            "label": "mapping(uint8 => mapping(uint8 => uint8))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_struct(OrbitConfig)14563_storage)": {
+            "label": "mapping(uint8 => struct IOrbitState.OrbitConfig)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_struct(OrbitData)14548_storage)": {
+            "label": "mapping(uint8 => struct IOrbitState.OrbitData)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_struct(Position)14520_storage)": {
+            "label": "mapping(uint8 => struct IOrbitState.Position)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_struct(StoredRuleSnapshot)2298_storage)": {
+            "label": "mapping(uint8 => struct BaseOrbit.StoredRuleSnapshot)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_uint256)": {
+            "label": "mapping(uint8 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_uint8)": {
+            "label": "mapping(uint8 => uint8)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(OrbitConfig)14563_storage": {
+            "label": "struct IOrbitState.OrbitConfig",
+            "members": [
+              {
+                "label": "totalPositions",
+                "type": "t_uint8",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "lines",
+                "type": "t_uint8",
+                "offset": 1,
+                "slot": "0"
+              },
+              {
+                "label": "line1Size",
+                "type": "t_uint8",
+                "offset": 2,
+                "slot": "0"
+              },
+              {
+                "label": "line2Size",
+                "type": "t_uint8",
+                "offset": 3,
+                "slot": "0"
+              },
+              {
+                "label": "line3Size",
+                "type": "t_uint8",
+                "offset": 4,
+                "slot": "0"
+              },
+              {
+                "label": "levelPrice",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "upgradeRequirement",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(OrbitData)14548_storage": {
+            "label": "struct IOrbitState.OrbitData",
+            "members": [
+              {
+                "label": "currentPosition",
+                "type": "t_uint8",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "escrowBalance",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "autoUpgradeCompleted",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "isActive",
+                "type": "t_bool",
+                "offset": 1,
+                "slot": "2"
+              },
+              {
+                "label": "positions",
+                "type": "t_mapping(t_uint8,t_struct(Position)14520_storage)",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "positionAbove",
+                "type": "t_mapping(t_uint8,t_address)",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "positionsInLine1",
+                "type": "t_uint8",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "positionsInLine2",
+                "type": "t_uint8",
+                "offset": 1,
+                "slot": "5"
+              },
+              {
+                "label": "positionsInLine3",
+                "type": "t_uint8",
+                "offset": 2,
+                "slot": "5"
+              },
+              {
+                "label": "totalCycles",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "totalEarned",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "7"
+              }
+            ],
+            "numberOfBytes": "256"
+          },
+          "t_struct(Position)14520_storage": {
+            "label": "struct IOrbitState.Position",
+            "members": [
+              {
+                "label": "user",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "amount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "referrer",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "isActive",
+                "type": "t_bool",
+                "offset": 20,
+                "slot": "3"
+              }
+            ],
+            "numberOfBytes": "128"
+          },
+          "t_struct(StoredRuleSnapshot)2298_storage": {
+            "label": "struct BaseOrbit.StoredRuleSnapshot",
+            "members": [
+              {
+                "label": "exists",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "line",
+                "type": "t_uint8",
+                "offset": 1,
+                "slot": "0"
+              },
+              {
+                "label": "linePaymentNumber",
+                "type": "t_uint8",
+                "offset": 2,
+                "slot": "0"
+              },
+              {
+                "label": "autoUpgradeEnabled",
+                "type": "t_bool",
+                "offset": 3,
+                "slot": "0"
+              },
+              {
+                "label": "isFounderNoReferrerPath",
+                "type": "t_bool",
+                "offset": 4,
+                "slot": "0"
+              },
+              {
+                "label": "toOwner",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "toSpillover1",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "toSpillover2",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "toEscrow",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "toRecycle",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "spillover1Recipient",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "spillover2Recipient",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "7"
+              }
+            ],
+            "numberOfBytes": "256"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.Pausable": [
+            {
+              "contract": "PausableUpgradeable",
+              "label": "_paused",
+              "type": "t_bool",
+              "src": "@openzeppelin\\contracts-upgradeable\\utils\\PausableUpgradeable.sol:21",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "46e38c9e9e316bb6346555dd2dbcf6e3506557892b88f74700a28fe40222fc9a": {
+      "address": "0x04444C73D1e1C9c06F253992353486A1f6D8209C",
+      "txHash": "0x5c3fbe6e9fecf7b4835738d8c5d3b1036ec38c37804e49f8d8d68bdedd2a888b",
+      "layout": {
+        "solcVersion": "0.8.24",
+        "storage": [
+          {
+            "label": "levelManager",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:38"
+          },
+          {
+            "label": "escrow",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:39"
+          },
+          {
+            "label": "registration",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_address",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:40"
+          },
+          {
+            "label": "guardian",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:41"
+          },
+          {
+            "label": "userOrbits",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_struct(OrbitData)14548_storage))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:43"
+          },
+          {
+            "label": "levelConfig",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_uint8,t_struct(OrbitConfig)14563_storage)",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:44"
+          },
+          {
+            "label": "founderRepActivated",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:45"
+          },
+          {
+            "label": "historicalCyclePositions",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_struct(Position)14520_storage))))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:47"
+          },
+          {
+            "label": "historicalCycleStored",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_bool)))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:48"
+          },
+          {
+            "label": "linePaymentCounts",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint8,t_uint8)))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:51"
+          },
+          {
+            "label": "positionLineArrivalNumber",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint8,t_uint8)))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:54"
+          },
+          {
+            "label": "historicalPositionLineArrivalNumber",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_uint8))))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:57"
+          },
+          {
+            "label": "positionActivationId",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint8,t_uint256)))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:60"
+          },
+          {
+            "label": "positionIsMirror",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint8,t_bool)))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:61"
+          },
+          {
+            "label": "historicalPositionActivationId",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_uint256))))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:63"
+          },
+          {
+            "label": "historicalPositionIsMirror",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_bool))))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:64"
+          },
+          {
+            "label": "storedRuleSnapshots",
+            "offset": 0,
+            "slot": "16",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint8,t_struct(StoredRuleSnapshot)2298_storage)))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:136"
+          },
+          {
+            "label": "historicalStoredRuleSnapshots",
+            "offset": 0,
+            "slot": "17",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_struct(StoredRuleSnapshot)2298_storage))))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:139"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "18",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:1658"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "67",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "P12Orbit",
+            "src": "contracts\\P12Orbit.sol:230"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_struct(InitializableStorage)73_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)13_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(PausableStorage)219_storage": {
+            "label": "struct PausableUpgradeable.PausableStorage",
+            "members": [
+              {
+                "label": "_paused",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_bool)))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint256 => bool)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_bool))))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint256 => mapping(uint8 => bool))))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_struct(Position)14520_storage))))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint256 => mapping(uint8 => struct IOrbitState.Position))))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_struct(StoredRuleSnapshot)2298_storage))))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint256 => mapping(uint8 => struct BaseOrbit.StoredRuleSnapshot))))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_uint256))))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint256 => mapping(uint8 => uint256))))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_uint8))))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint256 => mapping(uint8 => uint8))))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint8,t_bool)))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint8 => bool)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint8,t_struct(StoredRuleSnapshot)2298_storage)))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint8 => struct BaseOrbit.StoredRuleSnapshot)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint8,t_uint256)))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint8 => uint256)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint8,t_uint8)))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint8 => uint8)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_struct(OrbitData)14548_storage))": {
+            "label": "mapping(address => mapping(uint8 => struct IOrbitState.OrbitData))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_bool)": {
+            "label": "mapping(uint256 => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint8,t_bool))": {
+            "label": "mapping(uint256 => mapping(uint8 => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint8,t_struct(Position)14520_storage))": {
+            "label": "mapping(uint256 => mapping(uint8 => struct IOrbitState.Position))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint8,t_struct(StoredRuleSnapshot)2298_storage))": {
+            "label": "mapping(uint256 => mapping(uint8 => struct BaseOrbit.StoredRuleSnapshot))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint8,t_uint256))": {
+            "label": "mapping(uint256 => mapping(uint8 => uint256))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint8,t_uint8))": {
+            "label": "mapping(uint256 => mapping(uint8 => uint8))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_address)": {
+            "label": "mapping(uint8 => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_bool)": {
+            "label": "mapping(uint8 => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint256,t_bool))": {
+            "label": "mapping(uint8 => mapping(uint256 => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_bool)))": {
+            "label": "mapping(uint8 => mapping(uint256 => mapping(uint8 => bool)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_struct(Position)14520_storage)))": {
+            "label": "mapping(uint8 => mapping(uint256 => mapping(uint8 => struct IOrbitState.Position)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_struct(StoredRuleSnapshot)2298_storage)))": {
+            "label": "mapping(uint8 => mapping(uint256 => mapping(uint8 => struct BaseOrbit.StoredRuleSnapshot)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_uint256)))": {
+            "label": "mapping(uint8 => mapping(uint256 => mapping(uint8 => uint256)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_uint8)))": {
+            "label": "mapping(uint8 => mapping(uint256 => mapping(uint8 => uint8)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint8,t_bool))": {
+            "label": "mapping(uint8 => mapping(uint8 => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint8,t_struct(StoredRuleSnapshot)2298_storage))": {
+            "label": "mapping(uint8 => mapping(uint8 => struct BaseOrbit.StoredRuleSnapshot))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint8,t_uint256))": {
+            "label": "mapping(uint8 => mapping(uint8 => uint256))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint8,t_uint8))": {
+            "label": "mapping(uint8 => mapping(uint8 => uint8))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_struct(OrbitConfig)14563_storage)": {
+            "label": "mapping(uint8 => struct IOrbitState.OrbitConfig)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_struct(OrbitData)14548_storage)": {
+            "label": "mapping(uint8 => struct IOrbitState.OrbitData)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_struct(Position)14520_storage)": {
+            "label": "mapping(uint8 => struct IOrbitState.Position)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_struct(StoredRuleSnapshot)2298_storage)": {
+            "label": "mapping(uint8 => struct BaseOrbit.StoredRuleSnapshot)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_uint256)": {
+            "label": "mapping(uint8 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_uint8)": {
+            "label": "mapping(uint8 => uint8)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(OrbitConfig)14563_storage": {
+            "label": "struct IOrbitState.OrbitConfig",
+            "members": [
+              {
+                "label": "totalPositions",
+                "type": "t_uint8",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "lines",
+                "type": "t_uint8",
+                "offset": 1,
+                "slot": "0"
+              },
+              {
+                "label": "line1Size",
+                "type": "t_uint8",
+                "offset": 2,
+                "slot": "0"
+              },
+              {
+                "label": "line2Size",
+                "type": "t_uint8",
+                "offset": 3,
+                "slot": "0"
+              },
+              {
+                "label": "line3Size",
+                "type": "t_uint8",
+                "offset": 4,
+                "slot": "0"
+              },
+              {
+                "label": "levelPrice",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "upgradeRequirement",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(OrbitData)14548_storage": {
+            "label": "struct IOrbitState.OrbitData",
+            "members": [
+              {
+                "label": "currentPosition",
+                "type": "t_uint8",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "escrowBalance",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "autoUpgradeCompleted",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "isActive",
+                "type": "t_bool",
+                "offset": 1,
+                "slot": "2"
+              },
+              {
+                "label": "positions",
+                "type": "t_mapping(t_uint8,t_struct(Position)14520_storage)",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "positionAbove",
+                "type": "t_mapping(t_uint8,t_address)",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "positionsInLine1",
+                "type": "t_uint8",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "positionsInLine2",
+                "type": "t_uint8",
+                "offset": 1,
+                "slot": "5"
+              },
+              {
+                "label": "positionsInLine3",
+                "type": "t_uint8",
+                "offset": 2,
+                "slot": "5"
+              },
+              {
+                "label": "totalCycles",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "totalEarned",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "7"
+              }
+            ],
+            "numberOfBytes": "256"
+          },
+          "t_struct(Position)14520_storage": {
+            "label": "struct IOrbitState.Position",
+            "members": [
+              {
+                "label": "user",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "amount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "referrer",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "isActive",
+                "type": "t_bool",
+                "offset": 20,
+                "slot": "3"
+              }
+            ],
+            "numberOfBytes": "128"
+          },
+          "t_struct(StoredRuleSnapshot)2298_storage": {
+            "label": "struct BaseOrbit.StoredRuleSnapshot",
+            "members": [
+              {
+                "label": "exists",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "line",
+                "type": "t_uint8",
+                "offset": 1,
+                "slot": "0"
+              },
+              {
+                "label": "linePaymentNumber",
+                "type": "t_uint8",
+                "offset": 2,
+                "slot": "0"
+              },
+              {
+                "label": "autoUpgradeEnabled",
+                "type": "t_bool",
+                "offset": 3,
+                "slot": "0"
+              },
+              {
+                "label": "isFounderNoReferrerPath",
+                "type": "t_bool",
+                "offset": 4,
+                "slot": "0"
+              },
+              {
+                "label": "toOwner",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "toSpillover1",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "toSpillover2",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "toEscrow",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "toRecycle",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "spillover1Recipient",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "spillover2Recipient",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "7"
+              }
+            ],
+            "numberOfBytes": "256"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.Pausable": [
+            {
+              "contract": "PausableUpgradeable",
+              "label": "_paused",
+              "type": "t_bool",
+              "src": "@openzeppelin\\contracts-upgradeable\\utils\\PausableUpgradeable.sol:21",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "eda6beecf0b4fdbaf0aee3e5be13501fcd9a4ec76d6626ac835baa700258c37f": {
+      "address": "0x83734deb9bCc1BDAfFE58A337E6dD9571515447d",
+      "txHash": "0xbef41a222d605cff852032531878fbff3e34c816fc27523d1d77692a2194e58d",
+      "layout": {
+        "solcVersion": "0.8.24",
+        "storage": [
+          {
+            "label": "levelManager",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:38"
+          },
+          {
+            "label": "escrow",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:39"
+          },
+          {
+            "label": "registration",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_address",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:40"
+          },
+          {
+            "label": "guardian",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:41"
+          },
+          {
+            "label": "userOrbits",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_struct(OrbitData)14548_storage))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:43"
+          },
+          {
+            "label": "levelConfig",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_uint8,t_struct(OrbitConfig)14563_storage)",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:44"
+          },
+          {
+            "label": "founderRepActivated",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:45"
+          },
+          {
+            "label": "historicalCyclePositions",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_struct(Position)14520_storage))))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:47"
+          },
+          {
+            "label": "historicalCycleStored",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_bool)))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:48"
+          },
+          {
+            "label": "linePaymentCounts",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint8,t_uint8)))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:51"
+          },
+          {
+            "label": "positionLineArrivalNumber",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint8,t_uint8)))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:54"
+          },
+          {
+            "label": "historicalPositionLineArrivalNumber",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_uint8))))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:57"
+          },
+          {
+            "label": "positionActivationId",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint8,t_uint256)))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:60"
+          },
+          {
+            "label": "positionIsMirror",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint8,t_bool)))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:61"
+          },
+          {
+            "label": "historicalPositionActivationId",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_uint256))))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:63"
+          },
+          {
+            "label": "historicalPositionIsMirror",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_bool))))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:64"
+          },
+          {
+            "label": "storedRuleSnapshots",
+            "offset": 0,
+            "slot": "16",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint8,t_struct(StoredRuleSnapshot)2298_storage)))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:136"
+          },
+          {
+            "label": "historicalStoredRuleSnapshots",
+            "offset": 0,
+            "slot": "17",
+            "type": "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_struct(StoredRuleSnapshot)2298_storage))))",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:139"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "18",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "BaseOrbit",
+            "src": "contracts\\BaseOrbit.sol:1658"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "67",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "P39Orbit",
+            "src": "contracts\\P39Orbit.sol:273"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_struct(InitializableStorage)73_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)13_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(PausableStorage)219_storage": {
+            "label": "struct PausableUpgradeable.PausableStorage",
+            "members": [
+              {
+                "label": "_paused",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_bool)))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint256 => bool)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_bool))))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint256 => mapping(uint8 => bool))))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_struct(Position)14520_storage))))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint256 => mapping(uint8 => struct IOrbitState.Position))))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_struct(StoredRuleSnapshot)2298_storage))))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint256 => mapping(uint8 => struct BaseOrbit.StoredRuleSnapshot))))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_uint256))))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint256 => mapping(uint8 => uint256))))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_uint8))))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint256 => mapping(uint8 => uint8))))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint8,t_bool)))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint8 => bool)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint8,t_struct(StoredRuleSnapshot)2298_storage)))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint8 => struct BaseOrbit.StoredRuleSnapshot)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint8,t_uint256)))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint8 => uint256)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_mapping(t_uint8,t_uint8)))": {
+            "label": "mapping(address => mapping(uint8 => mapping(uint8 => uint8)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_uint8,t_struct(OrbitData)14548_storage))": {
+            "label": "mapping(address => mapping(uint8 => struct IOrbitState.OrbitData))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_bool)": {
+            "label": "mapping(uint256 => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint8,t_bool))": {
+            "label": "mapping(uint256 => mapping(uint8 => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint8,t_struct(Position)14520_storage))": {
+            "label": "mapping(uint256 => mapping(uint8 => struct IOrbitState.Position))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint8,t_struct(StoredRuleSnapshot)2298_storage))": {
+            "label": "mapping(uint256 => mapping(uint8 => struct BaseOrbit.StoredRuleSnapshot))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint8,t_uint256))": {
+            "label": "mapping(uint256 => mapping(uint8 => uint256))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_mapping(t_uint8,t_uint8))": {
+            "label": "mapping(uint256 => mapping(uint8 => uint8))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_address)": {
+            "label": "mapping(uint8 => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_bool)": {
+            "label": "mapping(uint8 => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint256,t_bool))": {
+            "label": "mapping(uint8 => mapping(uint256 => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_bool)))": {
+            "label": "mapping(uint8 => mapping(uint256 => mapping(uint8 => bool)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_struct(Position)14520_storage)))": {
+            "label": "mapping(uint8 => mapping(uint256 => mapping(uint8 => struct IOrbitState.Position)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_struct(StoredRuleSnapshot)2298_storage)))": {
+            "label": "mapping(uint8 => mapping(uint256 => mapping(uint8 => struct BaseOrbit.StoredRuleSnapshot)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_uint256)))": {
+            "label": "mapping(uint8 => mapping(uint256 => mapping(uint8 => uint256)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint256,t_mapping(t_uint8,t_uint8)))": {
+            "label": "mapping(uint8 => mapping(uint256 => mapping(uint8 => uint8)))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint8,t_bool))": {
+            "label": "mapping(uint8 => mapping(uint8 => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint8,t_struct(StoredRuleSnapshot)2298_storage))": {
+            "label": "mapping(uint8 => mapping(uint8 => struct BaseOrbit.StoredRuleSnapshot))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint8,t_uint256))": {
+            "label": "mapping(uint8 => mapping(uint8 => uint256))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_mapping(t_uint8,t_uint8))": {
+            "label": "mapping(uint8 => mapping(uint8 => uint8))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_struct(OrbitConfig)14563_storage)": {
+            "label": "mapping(uint8 => struct IOrbitState.OrbitConfig)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_struct(OrbitData)14548_storage)": {
+            "label": "mapping(uint8 => struct IOrbitState.OrbitData)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_struct(Position)14520_storage)": {
+            "label": "mapping(uint8 => struct IOrbitState.Position)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_struct(StoredRuleSnapshot)2298_storage)": {
+            "label": "mapping(uint8 => struct BaseOrbit.StoredRuleSnapshot)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_uint256)": {
+            "label": "mapping(uint8 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint8,t_uint8)": {
+            "label": "mapping(uint8 => uint8)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(OrbitConfig)14563_storage": {
+            "label": "struct IOrbitState.OrbitConfig",
+            "members": [
+              {
+                "label": "totalPositions",
+                "type": "t_uint8",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "lines",
+                "type": "t_uint8",
+                "offset": 1,
+                "slot": "0"
+              },
+              {
+                "label": "line1Size",
+                "type": "t_uint8",
+                "offset": 2,
+                "slot": "0"
+              },
+              {
+                "label": "line2Size",
+                "type": "t_uint8",
+                "offset": 3,
+                "slot": "0"
+              },
+              {
+                "label": "line3Size",
+                "type": "t_uint8",
+                "offset": 4,
+                "slot": "0"
+              },
+              {
+                "label": "levelPrice",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "upgradeRequirement",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(OrbitData)14548_storage": {
+            "label": "struct IOrbitState.OrbitData",
+            "members": [
+              {
+                "label": "currentPosition",
+                "type": "t_uint8",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "escrowBalance",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "autoUpgradeCompleted",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "isActive",
+                "type": "t_bool",
+                "offset": 1,
+                "slot": "2"
+              },
+              {
+                "label": "positions",
+                "type": "t_mapping(t_uint8,t_struct(Position)14520_storage)",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "positionAbove",
+                "type": "t_mapping(t_uint8,t_address)",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "positionsInLine1",
+                "type": "t_uint8",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "positionsInLine2",
+                "type": "t_uint8",
+                "offset": 1,
+                "slot": "5"
+              },
+              {
+                "label": "positionsInLine3",
+                "type": "t_uint8",
+                "offset": 2,
+                "slot": "5"
+              },
+              {
+                "label": "totalCycles",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "totalEarned",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "7"
+              }
+            ],
+            "numberOfBytes": "256"
+          },
+          "t_struct(Position)14520_storage": {
+            "label": "struct IOrbitState.Position",
+            "members": [
+              {
+                "label": "user",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "amount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "timestamp",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "referrer",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "isActive",
+                "type": "t_bool",
+                "offset": 20,
+                "slot": "3"
+              }
+            ],
+            "numberOfBytes": "128"
+          },
+          "t_struct(StoredRuleSnapshot)2298_storage": {
+            "label": "struct BaseOrbit.StoredRuleSnapshot",
+            "members": [
+              {
+                "label": "exists",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "line",
+                "type": "t_uint8",
+                "offset": 1,
+                "slot": "0"
+              },
+              {
+                "label": "linePaymentNumber",
+                "type": "t_uint8",
+                "offset": 2,
+                "slot": "0"
+              },
+              {
+                "label": "autoUpgradeEnabled",
+                "type": "t_bool",
+                "offset": 3,
+                "slot": "0"
+              },
+              {
+                "label": "isFounderNoReferrerPath",
+                "type": "t_bool",
+                "offset": 4,
+                "slot": "0"
+              },
+              {
+                "label": "toOwner",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "toSpillover1",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "toSpillover2",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "toEscrow",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "toRecycle",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "spillover1Recipient",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "spillover2Recipient",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "7"
+              }
+            ],
+            "numberOfBytes": "256"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        },
+        "namespaces": {
           "erc7201:openzeppelin.storage.Pausable": [
             {
               "contract": "PausableUpgradeable",

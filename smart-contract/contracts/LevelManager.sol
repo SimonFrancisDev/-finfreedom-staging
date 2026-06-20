@@ -434,7 +434,6 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
     }
 
     function setSettlementRouter(address _settlementRouter) external onlyOwner {
-        if (address(settlementRouter) != address(0)) revert InvalidContract();
         _requireContract(_settlementRouter);
         if (!ILevelSettlementRouter(_settlementRouter).validatesConfig(address(this), address(usdt))) revert InvalidContract();
         address oldRouter = address(settlementRouter);

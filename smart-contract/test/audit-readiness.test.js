@@ -194,6 +194,42 @@ function findEvent(receipt, contract, name) {
     .find((event) => event?.name === name);
 }
 
+function parseEvents(receipt, contract, name) {
+  return receipt.logs
+    .map((log) => {
+      try {
+        return contract.interface.parseLog(log);
+      } catch {
+        return null;
+      }
+    })
+    .filter((event) => event?.name === name);
+}
+
+async function balanceDeltas(usdt, accounts, action) {
+  const before = await Promise.all(accounts.map((account) => usdt.balanceOf(account.address)));
+  const tx = await action();
+  const receipt = await tx.wait();
+  const after = await Promise.all(accounts.map((account) => usdt.balanceOf(account.address)));
+  return {
+    receipt,
+    deltas: after.map((balance, index) => balance - before[index]),
+  };
+}
+
+async function createFundedWallets(funder, count) {
+  const wallets = [];
+  for (let index = 0; index < count; index += 1) {
+    const wallet = ethers.Wallet.createRandom().connect(ethers.provider);
+    await funder.sendTransaction({
+      to: wallet.address,
+      value: ethers.parseEther("1"),
+    });
+    wallets.push(wallet);
+  }
+  return wallets;
+}
+
 describe("Audit readiness contract invariants", function () {
   this.timeout(240000);
 
@@ -340,7 +376,24 @@ describe("Audit readiness contract invariants", function () {
     const replacementRouter = await Router.deploy(levelManager.target, usdt.target);
     await replacementRouter.waitForDeployment();
     await expect(levelManager.setSettlementRouter(replacementRouter.target))
+      .to.emit(levelManager, "SettlementRouterUpdated")
+      .withArgs(validRouter.target, replacementRouter.target);
+  });
+
+  it("allows the owner to replace the settlement router only with a config-matched router", async function () {
+    const { users, usdt, levelManager, router } = await deployCoreSystem();
+    const Router = await ethers.getContractFactory("LevelSettlementRouter");
+
+    const wrongRouter = await Router.deploy(users[0].address, usdt.target);
+    await wrongRouter.waitForDeployment();
+    await expect(levelManager.setSettlementRouter(wrongRouter.target))
       .to.be.revertedWithCustomError(levelManager, "InvalidContract");
+
+    const replacementRouter = await Router.deploy(levelManager.target, usdt.target);
+    await replacementRouter.waitForDeployment();
+    await expect(levelManager.setSettlementRouter(replacementRouter.target))
+      .to.emit(levelManager, "SettlementRouterUpdated")
+      .withArgs(router.target, replacementRouter.target);
   });
 
   it("releases only the required escrow amount and leaves surplus locked", async function () {
@@ -781,6 +834,7 @@ describe("Audit readiness contract invariants", function () {
     const orbitOwner = users[8];
     const fillers = users.slice(9, 19);
     const recycleTrigger = users[19];
+    const finalRecycleTrigger = users[20];
 
     await register(orbitOwner, ethers.ZeroAddress);
     await activateToLevel(orbitOwner, 2);
@@ -803,6 +857,12 @@ describe("Audit readiness contract invariants", function () {
     const recycledPosition = await p12.getPosition(orbitOwner.address, 2, 11);
     expect(recycledPosition.occupant).to.equal(recycleTrigger.address);
 
+    await register(finalRecycleTrigger, orbitOwner.address);
+    await registration.connect(finalRecycleTrigger).activateLevel(2);
+
+    const finalCounts = await p12.getLinePaymentCounts(orbitOwner.address, 2);
+    expect(finalCounts.line2Count).to.equal(0);
+
     const id1Mirror = await p12.getPosition(owner.address, 2, 2);
     expect(id1Mirror.occupant).to.equal(orbitOwner.address);
 
@@ -811,6 +871,63 @@ describe("Audit readiness contract invariants", function () {
 
     const recycleEvent = findEvent(receipt, p12, "PositionFilled");
     expect(recycleEvent).to.not.equal(undefined);
+  });
+
+  it("reserves the first P12 recycle fill and releases both fills through the normal 40/50 split", async function () {
+    const { users, registration, levelManager, router, usdt, register, activateToLevel } = await deployCoreSystem();
+    const founderWallets = users.slice(0, 8);
+    const sponsor = users[8];
+    const orbitOwner = users[9];
+    const fillers = users.slice(10, 20);
+    const recycleTrigger = users[20];
+    const finalRecycleTrigger = users[21];
+
+    await register(sponsor);
+    await activateToLevel(sponsor, 2);
+
+    await register(orbitOwner, sponsor.address);
+    await activateToLevel(orbitOwner, 2);
+
+    for (const filler of fillers) {
+      await register(filler, orbitOwner.address);
+      await activateToLevel(filler, 2);
+    }
+
+    await register(recycleTrigger, orbitOwner.address);
+    await register(finalRecycleTrigger, orbitOwner.address);
+
+    const firstObserved = await balanceDeltas(
+      usdt,
+      [sponsor, ...founderWallets],
+      () => registration.connect(recycleTrigger).activateLevel(2)
+    );
+
+    const firstReserveEvent = findEvent(firstObserved.receipt, router, "RecycleReserveUpdated");
+    expect(firstObserved.deltas.every((delta) => delta === 0n)).to.equal(true);
+    expect(firstReserveEvent.args.reservedAmount).to.equal(usdtUnits(18));
+    expect(firstReserveEvent.args.fills).to.equal(1);
+    expect(firstReserveEvent.args.released).to.equal(false);
+
+    const observed = await balanceDeltas(
+      usdt,
+      [sponsor, ...founderWallets],
+      () => registration.connect(finalRecycleTrigger).activateLevel(2)
+    );
+
+    const releaseEvent = findEvent(observed.receipt, router, "RecycleReserveUpdated");
+    const recycleReceipts = parseEvents(observed.receipt, levelManager, "DetailedPayoutReceiptRecorded")
+      .filter((event) => event.args.receiptType === 4n);
+
+    const sponsorDelta = observed.deltas[0];
+    const founderDelta = observed.deltas.slice(1).reduce((total, delta) => total + delta, 0n);
+
+    expect(releaseEvent.args.reservedAmount).to.equal(usdtUnits(36));
+    expect(releaseEvent.args.fills).to.equal(2);
+    expect(releaseEvent.args.released).to.equal(true);
+    expect(sponsorDelta).to.equal(usdtUnits(16));
+    expect(founderDelta).to.equal(usdtUnits(20));
+    expect(recycleReceipts.reduce((total, event) => total + event.args.grossAmount, 0n)).to.equal(usdtUnits(36));
+    expect(recycleReceipts.some((event) => event.args.grossAmount === usdtUnits(36))).to.equal(false);
   });
 
   it("does not count a reused non-recycle mirror position as a new qualifying arrival", async function () {
@@ -906,6 +1023,64 @@ describe("Audit readiness contract invariants", function () {
     expect(recycleReentry.position).to.equal(4);
     expect(recycleReentry.mirrorOwnerLiquidAmount).to.equal(0);
     expect(recycleReentry.mirrorEscrowLockAmount).to.equal(mirrorAmount);
+  });
+
+  it("reserves the first P39 recycle fill and releases both fills through the normal 20/20/50 split", async function () {
+    const { owner, users, registration, levelManager, router, usdt, register, activateToLevel } = await deployCoreSystem();
+    const founderWallets = users.slice(0, 8);
+    const sponsor = users[8];
+    const orbitOwner = users[9];
+    const generated = await createFundedWallets(owner, 39);
+    const fillers = generated.slice(0, 37);
+    const recycleTrigger = generated[37];
+    const finalRecycleTrigger = generated[38];
+
+    await register(sponsor);
+    await activateToLevel(sponsor, 3);
+
+    await register(orbitOwner, sponsor.address);
+    await activateToLevel(orbitOwner, 3);
+
+    for (const filler of fillers) {
+      await register(filler, orbitOwner.address);
+      await activateToLevel(filler, 3);
+    }
+
+    await register(recycleTrigger, orbitOwner.address);
+    await registration.connect(recycleTrigger).activateLevel(2);
+    await register(finalRecycleTrigger, orbitOwner.address);
+    await registration.connect(finalRecycleTrigger).activateLevel(2);
+
+    const firstObserved = await balanceDeltas(
+      usdt,
+      [sponsor, ...founderWallets],
+      () => registration.connect(recycleTrigger).activateLevel(3)
+    );
+
+    const firstReserveEvent = findEvent(firstObserved.receipt, router, "RecycleReserveUpdated");
+    expect(firstObserved.deltas.every((delta) => delta === 0n)).to.equal(true);
+    expect(firstReserveEvent.args.reservedAmount).to.equal(usdtUnits(36));
+    expect(firstReserveEvent.args.fills).to.equal(1);
+    expect(firstReserveEvent.args.released).to.equal(false);
+
+    const observed = await balanceDeltas(
+      usdt,
+      [sponsor, ...founderWallets],
+      () => registration.connect(finalRecycleTrigger).activateLevel(3)
+    );
+
+    const releaseEvent = findEvent(observed.receipt, router, "RecycleReserveUpdated");
+    const recycleReceipts = parseEvents(observed.receipt, levelManager, "DetailedPayoutReceiptRecorded")
+      .filter((event) => event.args.receiptType === 4n);
+
+    const recycleGrosses = recycleReceipts.map((event) => event.args.grossAmount).sort((a, b) => Number(a - b));
+
+    expect(releaseEvent.args.reservedAmount).to.equal(usdtUnits(72));
+    expect(releaseEvent.args.fills).to.equal(2);
+    expect(releaseEvent.args.released).to.equal(true);
+    expect(recycleGrosses).to.deep.equal([usdtUnits(16), usdtUnits(16), usdtUnits(40)]);
+    expect(recycleReceipts.reduce((total, event) => total + event.args.grossAmount, 0n)).to.equal(usdtUnits(72));
+    expect(recycleReceipts.some((event) => event.args.grossAmount === usdtUnits(72))).to.equal(false);
   });
 
   it("bounds sponsor resolution before deep inactive referral chains can exhaust gas", async function () {
@@ -1157,6 +1332,36 @@ describe("Audit readiness contract invariants", function () {
 
     expect(await usdt.balanceOf(recipient.address)).to.equal(usdtUnits(10));
     expect(await usdt.balanceOf(vault.target)).to.equal(usdtUnits(90));
+  });
+
+  it("allows an approved proposal submitter to submit but not vote or execute", async function () {
+    const [owner, secondOwner, submitter, target] = await ethers.getSigners();
+    const MultiSig = await ethers.getContractFactory("SimpleMultiSig");
+    const multisig = await MultiSig.deploy([owner.address, secondOwner.address], 2, 1);
+
+    const setSubmitterData = multisig.interface.encodeFunctionData("setProposalSubmitter", [
+      submitter.address,
+      true,
+    ]);
+
+    await multisig.submitTransaction(multisig.target, 0, setSubmitterData);
+    await multisig.approveTransaction(0);
+    await multisig.connect(secondOwner).approveTransaction(0);
+    await ethers.provider.send("evm_increaseTime", [2]);
+    await ethers.provider.send("evm_mine", []);
+    await multisig.executeTransaction(0);
+
+    expect(await multisig.isProposalSubmitter(submitter.address)).to.equal(true);
+
+    const txId = await multisig
+      .connect(submitter)
+      .submitTransaction.staticCall(target.address, 0, "0x");
+    await expect(multisig.connect(submitter).submitTransaction(target.address, 0, "0x"))
+      .to.emit(multisig, "Submit")
+      .withArgs(txId);
+
+    await expect(multisig.connect(submitter).approveTransaction(txId)).to.be.revertedWith("Not owner");
+    await expect(multisig.connect(submitter).executeTransaction(txId)).to.be.revertedWith("Not owner");
   });
 
   it("keeps NFT pool USDT distribution controlled by multisig-owned vault rules", async function () {

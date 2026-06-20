@@ -19,6 +19,7 @@ contract SimpleMultiSig {
     event OwnerRemoved(address owner);
     event OwnerReplaced(address oldOwner, address newOwner);
     event RequirementChanged(uint256 newRequirement);
+    event ProposalSubmitterUpdated(address indexed submitter, bool allowed);
 
     /*//////////////////////////////////////////////////////////////
                                 STRUCTS
@@ -41,6 +42,7 @@ contract SimpleMultiSig {
 
     address[] public owners;
     mapping(address => bool) public isOwner;
+    mapping(address => bool) public isProposalSubmitter;
 
     uint256 public requiredConfirmations;
     uint256 public timelockDelay;
@@ -55,6 +57,11 @@ contract SimpleMultiSig {
 
     modifier onlyOwner() {
         require(isOwner[msg.sender], "Not owner");
+        _;
+    }
+
+    modifier onlyOwnerOrSubmitter() {
+        require(isOwner[msg.sender] || isProposalSubmitter[msg.sender], "Not owner or submitter");
         _;
     }
 
@@ -122,7 +129,7 @@ contract SimpleMultiSig {
         address to,
         uint256 value,
         bytes memory data
-    ) external onlyOwner returns (uint256 txId) {
+    ) external onlyOwnerOrSubmitter returns (uint256 txId) {
         txId = transactions.length;
 
         uint256 executeAfter = block.timestamp + timelockDelay;
@@ -189,6 +196,12 @@ contract SimpleMultiSig {
     {
         transactions[txId].cancelled = true;
         emit Cancel(txId);
+    }
+
+    function setProposalSubmitter(address submitter, bool allowed) external onlySelf {
+        require(submitter != address(0), "Invalid submitter");
+        isProposalSubmitter[submitter] = allowed;
+        emit ProposalSubmitterUpdated(submitter, allowed);
     }
 
     function revokeConfirmation(uint256 txId)

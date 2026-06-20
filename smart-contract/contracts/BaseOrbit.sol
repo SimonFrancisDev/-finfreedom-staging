@@ -1452,6 +1452,127 @@ returns (MirrorPositionDetailedResult memory result)
     }
 }
 
+function recyclePositionDetailed(
+    address orbitOwner,
+    uint8 level,
+    address newUser,
+    uint256 amount,
+    uint256 ruleBaseAmount,
+    uint256 activationId
+) external whenNotPaused onlyLevelManager onlyValidLevel(level)
+returns (FillPositionDetailedResult memory result)
+{
+    if (orbitOwner == address(0) || newUser == address(0)) revert InvalidAddress();
+
+    OrbitConfig memory config = levelConfig[level];
+    result.sourcePosition = _placeReentryInOrbitDetailed(
+        orbitOwner,
+        level,
+        newUser,
+        newUser,
+        amount,
+        activationId,
+        true
+    );
+
+    OrbitData storage orbit = userOrbits[orbitOwner][level];
+    result.sourceCycle = uint32(orbit.totalCycles + 1);
+
+    uint8 line = _getLineFromPosition(result.sourcePosition, config);
+    uint8 linePaymentNumber = _trackQualifyingArrival(
+        orbitOwner,
+        level,
+        result.sourcePosition,
+        line,
+        amount > 0
+    );
+
+    bool autoUpgradeEnabled = _isAutoUpgradeEnabled(orbitOwner, level);
+    PayoutPercentages memory pct = _calculatePayoutPercentages(
+        level,
+        result.sourcePosition,
+        line,
+        linePaymentNumber,
+        autoUpgradeEnabled
+    );
+
+    (result.spillover1Recipient, result.spillover2Recipient) = _resolveRecipients(
+        orbitOwner,
+        level,
+        result.sourcePosition
+    );
+
+    (
+        result.toOwner,
+        result.toSpillover1,
+        result.toSpillover2,
+        result.toEscrow,
+        result.toRecycle
+    ) = _calculateActualAmounts(
+        ruleBaseAmount,
+        pct,
+        result.spillover1Recipient,
+        result.spillover2Recipient
+    );
+
+    _storeRuleSnapshot(RuleSnapshotData({
+        orbitOwner: orbitOwner,
+        level: level,
+        position: result.sourcePosition,
+        line: line,
+        linePaymentNumber: linePaymentNumber,
+        autoUpgradeEnabled: autoUpgradeEnabled,
+        isFounderNoReferrerPath: false,
+        toOwner: result.toOwner,
+        toSpillover1: result.toSpillover1,
+        toSpillover2: result.toSpillover2,
+        toEscrow: result.toEscrow,
+        toRecycle: result.toRecycle,
+        spillover1Recipient: result.spillover1Recipient,
+        spillover2Recipient: result.spillover2Recipient
+    }));
+
+    orbit.totalEarned += (result.toOwner + result.toEscrow);
+
+    if (result.toEscrow > 0) {
+        uint256 newEscrowBalance = orbit.escrowBalance + result.toEscrow;
+        orbit.escrowBalance = newEscrowBalance;
+        emit EscrowUpdated(orbitOwner, level, newEscrowBalance);
+
+        if (newEscrowBalance >= config.upgradeRequirement && !orbit.autoUpgradeCompleted) {
+            orbit.autoUpgradeCompleted = true;
+            emit AutoUpgradeTriggered(orbitOwner, level, level + 1, newEscrowBalance);
+        }
+    }
+
+    emit PaymentRuleApplied(
+        orbitOwner,
+        level,
+        result.sourcePosition,
+        line,
+        linePaymentNumber,
+        result.toOwner,
+        result.toSpillover1,
+        result.toSpillover2,
+        result.toEscrow,
+        result.toRecycle
+    );
+
+    emit PositionFilled(orbitOwner, newUser, level, result.sourcePosition, amount, block.timestamp);
+
+    if (result.toSpillover1 > 0 && result.spillover1Recipient != address(0)) {
+        emit SpilloverPaid(newUser, result.spillover1Recipient, level, result.toSpillover1);
+    }
+
+    if (result.toSpillover2 > 0 && result.spillover2Recipient != address(0)) {
+        emit SpilloverPaid(newUser, result.spillover2Recipient, level, result.toSpillover2);
+    }
+
+    if (orbit.currentPosition > config.totalPositions) {
+        _handleOrbitFull(orbitOwner, level);
+    }
+}
+
 
 
     function setFounderRepActivated(address user, bool status) external onlyLevelManager {
