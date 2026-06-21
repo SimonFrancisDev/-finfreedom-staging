@@ -21,7 +21,8 @@ interface ISettlementOrbitDetailed {
             uint8 position,
             uint32 cycleNumber,
             uint256 mirrorOwnerLiquidAmount,
-            uint256 mirrorEscrowLockAmount
+            uint256 mirrorEscrowLockAmount,
+            uint256 mirrorRecycleAmount
         );
 
     function recyclePositionDetailed(
@@ -253,7 +254,8 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
         if (recipient == sponsor) return (0, 0, routedAmount, 0);
 
         uint256 mirrorOwnerLiquid;
-        (mirroredPosition, mirroredCycle, mirrorOwnerLiquid, escrowLocked) = _mirrorFill(
+        uint256 recycleAmount;
+        (mirroredPosition, mirroredCycle, mirrorOwnerLiquid, escrowLocked, recycleAmount) = _mirrorFill(
             orbitType,
             p4Orbit,
             p12Orbit,
@@ -266,9 +268,13 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
             ruleBaseAmount,
             activationId
         );
-        liquidAmount = mirrorOwnerLiquid > 0
-            ? mirrorOwnerLiquid
-            : (routedAmount >= escrowLocked ? routedAmount - escrowLocked : 0);
+        if (recycleAmount > 0) {
+            liquidAmount = 0;
+        } else {
+            liquidAmount = mirrorOwnerLiquid > 0
+                ? mirrorOwnerLiquid
+                : (routedAmount >= escrowLocked ? routedAmount - escrowLocked : 0);
+        }
     }
 
     function _resolveRecycleMirror(
@@ -300,7 +306,7 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
 
         if (upline != address(0)) {
             uint256 mirrorOwnerLiquid;
-            (mirroredPosition, mirroredCycle, mirrorOwnerLiquid, recycleEscrowLocked) = _mirrorFill(
+            (mirroredPosition, mirroredCycle, mirrorOwnerLiquid, recycleEscrowLocked, ) = _mirrorFill(
                 orbitType,
                 p4Orbit,
                 p12Orbit,
@@ -828,7 +834,8 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
             uint8 position,
             uint32 cycleNumber,
             uint256 mirrorOwnerLiquidAmount,
-            uint256 mirrorEscrowAmount
+            uint256 mirrorEscrowAmount,
+            uint256 mirrorRecycleAmount
         )
     {
         if (orbitType == 4) {

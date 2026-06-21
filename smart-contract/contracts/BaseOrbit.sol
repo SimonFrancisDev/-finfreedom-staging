@@ -130,6 +130,7 @@ abstract contract BaseOrbit is Initializable, OwnableUpgradeable, UUPSUpgradeabl
         uint32 cycleNumber;
         uint256 mirrorOwnerLiquidAmount;
         uint256 mirrorEscrowLockAmount;
+        uint256 mirrorRecycleAmount;
     }
 
     // live snapshots
@@ -1407,9 +1408,12 @@ returns (MirrorPositionDetailedResult memory result)
 
     uint256 mirrorOwnerLiquidAmount;
     uint256 mirrorEscrowAmount;
+    uint256 mirrorRecycleAmount;
 
     if (pct.toEscrow > 0) {
         mirrorEscrowAmount = amount;
+    } else if (pct.toRecycle > 0) {
+        mirrorRecycleAmount = amount;
     } else if (pct.toOwner > 0) {
         mirrorOwnerLiquidAmount = amount;
     }
@@ -1426,13 +1430,14 @@ returns (MirrorPositionDetailedResult memory result)
         toSpillover1: 0,
         toSpillover2: 0,
         toEscrow: mirrorEscrowAmount,
-        toRecycle: 0,
+        toRecycle: mirrorRecycleAmount,
         spillover1Recipient: address(0),
         spillover2Recipient: address(0)
     }));
 
     result.mirrorOwnerLiquidAmount = mirrorOwnerLiquidAmount;
     result.mirrorEscrowLockAmount = mirrorEscrowAmount;
+    result.mirrorRecycleAmount = mirrorRecycleAmount;
 
     emit PaymentRuleApplied(
         orbitOwner,
@@ -1444,7 +1449,7 @@ returns (MirrorPositionDetailedResult memory result)
         0,
         0,
         result.mirrorEscrowLockAmount,
-        0
+        result.mirrorRecycleAmount
     );
 
     if (orbit.currentPosition > config.totalPositions) {

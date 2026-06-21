@@ -930,6 +930,57 @@ describe("Audit readiness contract invariants", function () {
     expect(recycleReceipts.some((event) => event.args.grossAmount === usdtUnits(20))).to.equal(false);
   });
 
+  it("reserves mirrored P12 arrivals that land on the recycle window instead of paying them liquid", async function () {
+    const { users, registration, levelManager, router, p12, usdt, register, activateToLevel } = await deployCoreSystem();
+    const sponsor = users[8];
+    const orbitOwner = users[9];
+    const fillers = users.slice(10, 20);
+    const mirrorTrigger = users[20];
+
+    await register(sponsor);
+    await activateToLevel(sponsor, 2);
+
+    await register(orbitOwner, sponsor.address);
+    await activateToLevel(orbitOwner, 2);
+
+    for (const filler of fillers) {
+      await register(filler, orbitOwner.address);
+      await activateToLevel(filler, 2);
+    }
+
+    const countsBefore = await p12.getLinePaymentCounts(orbitOwner.address, 2);
+    expect(countsBefore.line2Count).to.equal(7);
+
+    const line1ParentPosition = await p12.getPosition(orbitOwner.address, 2, 3);
+    const line1Parent = fillers.find(
+      (filler) => filler.address.toLowerCase() === line1ParentPosition.occupant.toLowerCase()
+    );
+    expect(line1Parent).to.not.equal(undefined);
+
+    await register(mirrorTrigger, line1Parent.address);
+
+    const observed = await balanceDeltas(
+      usdt,
+      [orbitOwner],
+      () => registration.connect(mirrorTrigger).activateLevel(2)
+    );
+
+    const reserveEvent = findEvent(observed.receipt, router, "RecycleReserveUpdated");
+    const mirroredFill = parseEvents(observed.receipt, p12, "PositionFilled")
+      .find((event) => event.args.orbitOwner === orbitOwner.address && event.args.user === mirrorTrigger.address);
+    const rule = await p12.getPositionRuleView(orbitOwner.address, 2, mirroredFill.args.position);
+
+    expect(observed.deltas[0]).to.equal(0n);
+    expect(reserveEvent.args.orbitOwner).to.equal(orbitOwner.address);
+    expect(reserveEvent.args.reservedAmount).to.equal(usdtUnits(10));
+    expect(reserveEvent.args.fills).to.equal(1);
+    expect(reserveEvent.args.released).to.equal(false);
+    expect(rule.linePaymentNumber).to.equal(8);
+    expect(rule.toRecycle).to.equal(usdtUnits(10));
+    expect(rule.toOwner).to.equal(0n);
+    expect(rule.toEscrow).to.equal(0n);
+  });
+
   it("does not count a reused non-recycle mirror position as a new qualifying arrival", async function () {
     const { owner, users, levelManager, p12, register, activateToLevel } = await deployCoreSystem();
     const levelManagerSigner = await impersonateLevelManager(levelManager);

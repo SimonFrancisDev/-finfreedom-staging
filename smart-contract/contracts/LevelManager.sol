@@ -963,46 +963,32 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
             REASON_FOUNDER_ROUTE
         );
 
+        if (routedAmountA > 0 && splitA.mirroredPosition > 0 && splitA.liquidAmount == 0 && splitA.escrowLocked == 0) {
+            _handleRecycle(
+                routedRecipientA,
+                level,
+                routedAmountA,
+                activationId,
+                user,
+                splitA.mirroredPosition,
+                splitA.mirroredCycle
+            );
+        }
+
+        if (routedAmountB > 0 && splitB.mirroredPosition > 0 && splitB.liquidAmount == 0 && splitB.escrowLocked == 0) {
+            _handleRecycle(
+                routedRecipientB,
+                level,
+                routedAmountB,
+                activationId,
+                user,
+                splitB.mirroredPosition,
+                splitB.mirroredCycle
+            );
+        }
+
         result.liquidPaid = splitA.liquidAmount + splitB.liquidAmount;
         result.escrowLocked = splitA.escrowLocked + splitB.escrowLocked;
-
-        if (splitA.escrowLocked > 0) {
-            _emitPayoutNotDelivered(
-                routedRecipientA,
-                user,
-                level,
-                orbitType,
-                sourcePosition,
-                sourceCycle,
-                routedAmountA,
-                routedRecipientA,
-                splitA.liquidAmount,
-                RECEIPT_ROUTED_SPILLOVER,
-                ROLE_SPILLOVER1_CODE,
-                REASON_ESCROW_INSTEAD_OF_LIQUID,
-                    ACTION_NO_ACTION,
-                activationId
-            );
-        }
-
-        if (splitB.escrowLocked > 0) {
-            _emitPayoutNotDelivered(
-                routedRecipientB,
-                user,
-                level,
-                orbitType,
-                sourcePosition,
-                sourceCycle,
-                routedAmountB,
-                routedRecipientB,
-                splitB.liquidAmount,
-                RECEIPT_ROUTED_SPILLOVER,
-                ROLE_SPILLOVER2_CODE,
-                REASON_ESCROW_INSTEAD_OF_LIQUID,
-                    ACTION_NO_ACTION,
-                activationId
-            );
-        }
 
         if (routedRecipientA != address(0) && routedAmountA > 0) {
             _recordPayoutReceipt(
