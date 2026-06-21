@@ -64,7 +64,7 @@ contract P12Orbit is BaseOrbit {
      * line2 is arrival-based:
      * - first 4 paid arrivals in line 2 => 50 escrow, 40 spill1
      * - arrivals 5,6,7 in line 2 => 50 owner, 40 spill1
-     * - arrivals 8 and 9 in line 2 => recycle
+     * - arrivals 8 and 9 in line 2 => 50 recycle, 40 spill1
      *
      * This depends on payment arrival number in line 2,
      * not fixed slot numbers.
@@ -91,7 +91,8 @@ contract P12Orbit is BaseOrbit {
 
         // line 2
         if (linePaymentNumber == 8 || linePaymentNumber == 9) {
-            pct.toRecycle = 90;
+            pct.toRecycle = 50;
+            pct.toSpillover1 = 40;
             return pct;
         }
 

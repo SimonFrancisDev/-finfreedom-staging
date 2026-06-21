@@ -98,7 +98,7 @@ contract P39Orbit is BaseOrbit {
      * line 3:
      * - arrivals #1..#2 => 50 escrow, 20 spill1, 20 spill2
      * - arrivals #3..#25 => 50 owner, 20 spill1, 20 spill2
-     * - arrivals #26 and #27 => recycle
+     * - arrivals #26 and #27 => 50 recycle, 20 spill1, 20 spill2
      *
      * This is based on line arrival number, not slot number.
      */
@@ -148,7 +148,9 @@ contract P39Orbit is BaseOrbit {
 
         // line 3
         if (linePaymentNumber == 26 || linePaymentNumber == 27) {
-            pct.toRecycle = 90;
+            pct.toRecycle = 50;
+            pct.toSpillover1 = 20;
+            pct.toSpillover2 = 20;
             return pct;
         }
 

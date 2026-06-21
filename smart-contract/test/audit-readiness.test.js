@@ -904,7 +904,7 @@ describe("Audit readiness contract invariants", function () {
 
     const firstReserveEvent = findEvent(firstObserved.receipt, router, "RecycleReserveUpdated");
     expect(firstObserved.deltas.every((delta) => delta === 0n)).to.equal(true);
-    expect(firstReserveEvent.args.reservedAmount).to.equal(usdtUnits(18));
+    expect(firstReserveEvent.args.reservedAmount).to.equal(usdtUnits(10));
     expect(firstReserveEvent.args.fills).to.equal(1);
     expect(firstReserveEvent.args.released).to.equal(false);
 
@@ -921,13 +921,13 @@ describe("Audit readiness contract invariants", function () {
     const sponsorDelta = observed.deltas[0];
     const founderDelta = observed.deltas.slice(1).reduce((total, delta) => total + delta, 0n);
 
-    expect(releaseEvent.args.reservedAmount).to.equal(usdtUnits(36));
+    expect(releaseEvent.args.reservedAmount).to.equal(usdtUnits(20));
     expect(releaseEvent.args.fills).to.equal(2);
     expect(releaseEvent.args.released).to.equal(true);
-    expect(sponsorDelta).to.equal(usdtUnits(16));
-    expect(founderDelta).to.equal(usdtUnits(20));
-    expect(recycleReceipts.reduce((total, event) => total + event.args.grossAmount, 0n)).to.equal(usdtUnits(36));
-    expect(recycleReceipts.some((event) => event.args.grossAmount === usdtUnits(36))).to.equal(false);
+    expect(sponsorDelta).to.equal(usdtUnits(8));
+    expect(founderDelta).to.equal(usdtUnits(10));
+    expect(recycleReceipts.reduce((total, event) => total + event.args.grossAmount, 0n)).to.equal(usdtUnits(18));
+    expect(recycleReceipts.some((event) => event.args.grossAmount === usdtUnits(20))).to.equal(false);
   });
 
   it("does not count a reused non-recycle mirror position as a new qualifying arrival", async function () {
@@ -1059,7 +1059,7 @@ describe("Audit readiness contract invariants", function () {
 
     const firstReserveEvent = findEvent(firstObserved.receipt, router, "RecycleReserveUpdated");
     expect(firstObserved.deltas.every((delta) => delta === 0n)).to.equal(true);
-    expect(firstReserveEvent.args.reservedAmount).to.equal(usdtUnits(36));
+    expect(firstReserveEvent.args.reservedAmount).to.equal(usdtUnits(20));
     expect(firstReserveEvent.args.fills).to.equal(1);
     expect(firstReserveEvent.args.released).to.equal(false);
 
@@ -1075,12 +1075,12 @@ describe("Audit readiness contract invariants", function () {
 
     const recycleGrosses = recycleReceipts.map((event) => event.args.grossAmount).sort((a, b) => Number(a - b));
 
-    expect(releaseEvent.args.reservedAmount).to.equal(usdtUnits(72));
+    expect(releaseEvent.args.reservedAmount).to.equal(usdtUnits(40));
     expect(releaseEvent.args.fills).to.equal(2);
     expect(releaseEvent.args.released).to.equal(true);
-    expect(recycleGrosses).to.deep.equal([usdtUnits(16), usdtUnits(16), usdtUnits(40)]);
-    expect(recycleReceipts.reduce((total, event) => total + event.args.grossAmount, 0n)).to.equal(usdtUnits(72));
-    expect(recycleReceipts.some((event) => event.args.grossAmount === usdtUnits(72))).to.equal(false);
+    expect(recycleGrosses).to.deep.equal([usdtUnits(8), usdtUnits(8), usdtUnits(20)]);
+    expect(recycleReceipts.reduce((total, event) => total + event.args.grossAmount, 0n)).to.equal(usdtUnits(36));
+    expect(recycleReceipts.some((event) => event.args.grossAmount === usdtUnits(40))).to.equal(false);
   });
 
   it("bounds sponsor resolution before deep inactive referral chains can exhaust gas", async function () {

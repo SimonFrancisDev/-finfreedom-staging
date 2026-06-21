@@ -50,6 +50,11 @@ interface ISettlementOrbitEarnings {
     function recordExternalEarning(address user, uint8 level, uint256 amount) external;
 }
 
+interface ISettlementChargeRecipients {
+    function nftPool() external view returns (address);
+    function operationsWallet() external view returns (address);
+}
+
 contract LevelSettlementRouter is ILevelSettlementRouter {
     using SafeERC20 for IERC20;
 
@@ -521,7 +526,33 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
         )
     {
         recycleReceiver = _resolveActiveUpline(input.registration, input.id1Wallet, input.orbitOwner, input.level);
-        uint256 ruleBaseAmount = (input.amount * 100) / 90;
+        uint256 ruleBaseAmount = input.amount;
+        uint256 systemCharge = (input.amount * 10) / 100;
+        uint256 nftPoolAmount = (systemCharge * 80) / 100;
+        uint256 operationsAmount = systemCharge - nftPoolAmount;
+        ISettlementChargeRecipients chargeRecipients = ISettlementChargeRecipients(address(this));
+        address nftPool = chargeRecipients.nftPool();
+        address operationsWallet = chargeRecipients.operationsWallet();
+
+        if (nftPoolAmount > 0) {
+            usdt.safeTransfer(nftPool, nftPoolAmount);
+        }
+        if (operationsAmount > 0) {
+            usdt.safeTransfer(operationsWallet, operationsAmount);
+        }
+        if (systemCharge > 0) {
+            emit SystemChargeDistributedDetailed(
+                input.activationId,
+                input.fromUser,
+                input.level,
+                systemCharge,
+                nftPoolAmount,
+                operationsAmount,
+                nftPool,
+                operationsWallet
+            );
+        }
+
         address orbitAddress = input.orbitType == 12 ? input.p12Orbit : input.p39Orbit;
         uint256 toOwner;
         uint256 toSpillover1;
