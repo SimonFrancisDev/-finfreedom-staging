@@ -97,10 +97,10 @@ const env = {
   ),
   SYNC_CONFIRMATIONS: clamp(optionalInteger('SYNC_CONFIRMATIONS', 2), 0, 100, 2),
   SYNC_BLOCK_CHUNK_SIZE: clamp(
-    optionalInteger('SYNC_BLOCK_CHUNK_SIZE', 5),
+    optionalInteger('SYNC_BLOCK_CHUNK_SIZE', 100),
     1,
     100,
-    5
+    100
   ),
   SYNC_POLL_INTERVAL_MS: clamp(
     optionalInteger('SYNC_POLL_INTERVAL_MS', 15000),
