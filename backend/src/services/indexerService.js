@@ -215,6 +215,10 @@ function isTargetCoolingDown(targetKey) {
 function getTargetChunkSize(targetKey, syncChunkSize) {
   const safeBase = Math.max(1, Number(syncChunkSize) || 1);
 
+  if (safeBase > 10) {
+    return safeBase;
+  }
+
   const preferred = {
     registration: 10,
     levelManager: 6,
