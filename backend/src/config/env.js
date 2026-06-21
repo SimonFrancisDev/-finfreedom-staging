@@ -37,8 +37,14 @@ function clamp(value, min, max, fallback) {
   return value;
 }
 
+const nodeEnv = optional('NODE_ENV', 'production');
+const isStaging = nodeEnv === 'staging';
+const syncChunkSize = isStaging
+  ? clamp(optionalInteger('SYNC_BLOCK_CHUNK_SIZE', 5000), 1000, 5000, 5000)
+  : clamp(optionalInteger('SYNC_BLOCK_CHUNK_SIZE', 100), 1, 100, 100);
+
 const env = {
-  NODE_ENV: optional('NODE_ENV', 'production'),
+  NODE_ENV: nodeEnv,
   PORT: clamp(optionalInteger('PORT', 5000), 1, 65535, 5000),
 
   MONGODB_URI: required('MONGODB_URI'),
@@ -96,12 +102,7 @@ const env = {
     optionalInteger('START_BLOCK_FGTR_TOKEN', 0)
   ),
   SYNC_CONFIRMATIONS: clamp(optionalInteger('SYNC_CONFIRMATIONS', 2), 0, 100, 2),
-  SYNC_BLOCK_CHUNK_SIZE: clamp(
-    optionalInteger('SYNC_BLOCK_CHUNK_SIZE', 100),
-    1,
-    100,
-    100
-  ),
+  SYNC_BLOCK_CHUNK_SIZE: syncChunkSize,
   SYNC_POLL_INTERVAL_MS: clamp(
     optionalInteger('SYNC_POLL_INTERVAL_MS', 15000),
     500,
