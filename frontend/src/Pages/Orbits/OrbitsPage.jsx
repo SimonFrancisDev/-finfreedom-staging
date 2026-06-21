@@ -4,11 +4,12 @@ import { useTranslation } from 'react-i18next'
 import { useWallet } from '../../hooks/useWallet'
 import { useContracts } from '../../hooks/useContracts'
 import { useTxFlow } from '../../hooks/useTxFlow'
+import { useSpace } from '../../context/SpaceContext'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { ethers } from 'ethers'
 import { InlineAlert, Skeleton } from '../../components/ui'
 import { TransactionStatus, useToast } from '../../components/feedback'
-import { resolveIdentity } from '../../utils/identityResolver'
+import { buildIdentityRouteState, resolveIdentity } from '../../utils/identityResolver'
 import { getApiUrl } from '../../Services/apiConfig'
 import {
   fetchOrbitLevelsApi,
@@ -236,6 +237,7 @@ const OrbitsPage = () => {
   const { isConnected, account, connect } = useWallet()
   const { contracts, isLoading: contractsLoading, error: contractsError, loadContracts } = useContracts()
   const { txState: orbitTxState } = useTxFlow()
+  const { switchToVisitor } = useSpace()
   const location = useLocation()
   const navigate = useNavigate()
   const routedLevel = Number(location.state?.level || 0)
@@ -450,10 +452,104 @@ const OrbitsPage = () => {
     return []
   }, [])
 
+  const isZeroWallet = useCallback((address) => {
+    if (!address || !ethers.isAddress(address)) return false
+    return address.toLowerCase() === ethers.ZeroAddress.toLowerCase()
+  }, [])
+
+  const extractEmbeddedIdentityLabels = useCallback((source) => {
+    const labels = {}
+    const visit = (value) => {
+      if (!value || typeof value !== 'object') return
+
+      if (Array.isArray(value)) {
+        value.forEach(visit)
+        return
+      }
+
+      if (value.identities && typeof value.identities === 'object') {
+        Object.entries(value.identities).forEach(([address, identity]) => {
+          const walletAddress = identity?.walletAddress || address
+          const referralId = identity?.referralId || identity?.shortCode
+
+          if (walletAddress && referralId && ethers.isAddress(walletAddress)) {
+            labels[walletAddress.toLowerCase()] = referralId
+          }
+        })
+      }
+
+      Object.entries(value).forEach(([key, item]) => {
+        if (key.endsWith('Identity') && item && typeof item === 'object') {
+          const walletAddress = item.walletAddress
+          const referralId = item.referralId || item.shortCode
+
+          if (walletAddress && referralId && ethers.isAddress(walletAddress)) {
+            labels[walletAddress.toLowerCase()] = referralId
+          }
+          return
+        }
+
+        if (item && typeof item === 'object') {
+          visit(item)
+        }
+      })
+    }
+
+    visit(source)
+    return labels
+  }, [])
+
   const getMemberLabel = useCallback((address) => {
-    if (!address || address === ethers.ZeroAddress) return orbitsT('modal.memberIdUnavailable', 'ID unavailable')
-    return resolvedMemberIds[address?.toLowerCase?.()] || shortAddress(address)
-  }, [orbitsT, resolvedMemberIds, shortAddress])
+    if (!address) return orbitsT('modal.memberIdUnavailable', 'ID unavailable')
+    if (!ethers.isAddress(address)) return orbitsT('modal.memberIdUnavailable', 'ID unavailable')
+    if (isZeroWallet(address)) return 'FIN-FREEDOM'
+    return resolvedMemberIds[address.toLowerCase()] || orbitsT('identity.resolvingId', 'Resolving ID...')
+  }, [isZeroWallet, orbitsT, resolvedMemberIds])
+
+  const openParticipantAccount = useCallback((address) => {
+    if (!address || !ethers.isAddress(address) || isZeroWallet(address)) return
+
+    const checksumAddress = ethers.getAddress(address)
+    const referralId = getMemberLabel(checksumAddress)
+    switchToVisitor?.(checksumAddress)
+    navigate('/account', {
+      state: buildIdentityRouteState(
+        {
+          type: 'wallet',
+          walletAddress: checksumAddress,
+          referralId,
+          input: referralId,
+        },
+        {
+          source: 'orbit-participant-id',
+        }
+      ),
+    })
+  }, [getMemberLabel, isZeroWallet, navigate, switchToVisitor])
+
+  const ParticipantIdentity = useCallback(({ address, className = '' }) => {
+    if (!address || !ethers.isAddress(address)) {
+      return <span>{orbitsT('modal.memberIdUnavailable', 'ID unavailable')}</span>
+    }
+
+    if (isZeroWallet(address)) {
+      return <span>{getMemberLabel(address)}</span>
+    }
+
+    return (
+      <button
+        type="button"
+        className={`orbit-participant-id ${className}`.trim()}
+        onClick={(event) => {
+          event.stopPropagation()
+          openParticipantAccount(address)
+        }}
+        title={address}
+      >
+        {getMemberLabel(address)}
+      </button>
+    )
+  }, [getMemberLabel, isZeroWallet, openParticipantAccount, orbitsT])
 
   const handleOrbitPointerDown = useCallback((event) => {
     if (orbitZoom <= 1) return
@@ -784,7 +880,13 @@ const OrbitsPage = () => {
   }, [orbitsT])
 
   const fetchMemberId = useCallback(async (address) => {
-    if (!address || !ethers.isAddress(address)) return '—'
+    if (!address || !ethers.isAddress(address)) {
+      return orbitsT('modal.memberIdUnavailable', 'ID unavailable')
+    }
+
+    if (isZeroWallet(address)) {
+      return 'FIN-FREEDOM'
+    }
 
     const key = address.toLowerCase()
     if (memberIdCacheRef.current.has(key)) {
@@ -792,17 +894,20 @@ const OrbitsPage = () => {
     }
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '') || ''}/api/referral/code/${address}`)
-      const data = await res.json()
+      const res = await fetch(getApiUrl(`/api/referral/code/${address}`))
+      const data = await res.json().catch(() => null)
 
-      const displayId = data?.shortCode || shortAddress(address)
+      if (!res.ok || data?.success === false || !data?.shortCode) {
+        throw new Error(data?.message || 'Referral ID unavailable')
+      }
+
+      const displayId = data.shortCode
       memberIdCacheRef.current.set(key, displayId)
       return displayId
     } catch {
-      memberIdCacheRef.current.set(key, shortAddress(address))
-      return shortAddress(address)
+      return ''
     }
-  }, [shortAddress])
+  }, [isZeroWallet, orbitsT])
 
   const getExecutedEscrowLocked = useCallback((position) => {
     if (!position) return 0
@@ -1855,37 +1960,78 @@ const OrbitsPage = () => {
   // Effect to resolve member IDs for display
   useEffect(() => {
     const run = async () => {
+      const embeddedLabels = extractEmbeddedIdentityLabels(orbitData)
       const addresses = new Set()
+      const addAddress = (address) => {
+        if (address && ethers.isAddress(address) && !isZeroWallet(address)) {
+          addresses.add(address.toLowerCase())
+        }
+      }
+      const addPositionAddresses = (position) => {
+        addAddress(position?.occupant)
+        addAddress(position?.referrer)
+        addAddress(position?.originalReferrer)
+        addAddress(position?.occupantReferrer)
+
+        ;(position?.indexedReceipts || []).forEach((receipt) => addAddress(receipt.receiver))
+        ;(position?.activationFinancialEvents || []).forEach((event) => {
+          addAddress(event.receiver)
+          addAddress(event.recycleReceiver)
+          addAddress(event.owner)
+          addAddress(event.orbitOwner)
+          addAddress(event.spillover1Recipient)
+          addAddress(event.spillover2Recipient)
+        })
+
+        const info = position?.positionInfo || {}
+        addAddress(info.orbitOwner)
+        addAddress(info.spillover1Recipient)
+        addAddress(info.spillover2Recipient)
+        addAddress(info.referrer)
+        addAddress(info.originalReferrer)
+        addAddress(info.occupantReferrer)
+      }
 
       Object.values(orbitData).forEach((levelData) => {
-        ;(levelData?.positions || []).forEach((p) => {
-          if (p?.occupant && ethers.isAddress(p.occupant)) {
-            addresses.add(p.occupant.toLowerCase())
-          }
-        })
+        ;(levelData?.positions || []).forEach(addPositionAddresses)
       })
 
       const next = {}
+      Object.entries(embeddedLabels).forEach(([addr, label]) => {
+        if (label && resolvedMemberIds[addr] !== label) {
+          next[addr] = label
+        }
+      })
+
+      const missing = [...addresses].filter((addr) => (
+        !embeddedLabels[addr] &&
+        !resolvedMemberIds[addr] &&
+        !memberIdCacheRef.current.has(addr)
+      ))
 
       await Promise.all(
-        [...addresses].map(async (addr) => {
-          next[addr] = await fetchMemberId(addr)
+        missing.map(async (addr) => {
+          const label = await fetchMemberId(addr)
+          if (label) next[addr] = label
         })
       )
 
-      setResolvedMemberIds(next)
+      if (Object.keys(next).length) {
+        setResolvedMemberIds((prev) => ({ ...prev, ...next }))
+      }
     }
 
     run()
-  }, [orbitData, fetchMemberId])
+  }, [extractEmbeddedIdentityLabels, fetchMemberId, isZeroWallet, orbitData, resolvedMemberIds])
 
   useEffect(() => {
     if (!selectedPosition) return
 
     let cancelled = false
+    const embeddedLabels = extractEmbeddedIdentityLabels(selectedPosition)
     const addresses = new Set()
     const addAddress = (address) => {
-      if (address && ethers.isAddress(address) && address !== ethers.ZeroAddress) {
+      if (address && ethers.isAddress(address) && !isZeroWallet(address)) {
         addresses.add(address.toLowerCase())
       }
     }
@@ -1911,14 +2057,30 @@ const OrbitsPage = () => {
       info.occupantReferrer
     ].forEach(addAddress)
 
-    const missing = [...addresses].filter((addr) => !resolvedMemberIds[addr])
+    const embeddedUpdates = {}
+    Object.entries(embeddedLabels).forEach(([addr, label]) => {
+      if (label && resolvedMemberIds[addr] !== label) {
+        embeddedUpdates[addr] = label
+      }
+    })
+
+    if (Object.keys(embeddedUpdates).length) {
+      setResolvedMemberIds((prev) => ({ ...prev, ...embeddedUpdates }))
+    }
+
+    const missing = [...addresses].filter((addr) => (
+      !embeddedLabels[addr] &&
+      !resolvedMemberIds[addr] &&
+      !memberIdCacheRef.current.has(addr)
+    ))
     if (!missing.length) return
 
     const run = async () => {
       const next = {}
       await Promise.all(
         missing.map(async (addr) => {
-          next[addr] = await fetchMemberId(addr)
+          const label = await fetchMemberId(addr)
+          if (label) next[addr] = label
         })
       )
 
@@ -1932,7 +2094,7 @@ const OrbitsPage = () => {
     return () => {
       cancelled = true
     }
-  }, [selectedPosition, resolvedMemberIds, fetchMemberId])
+  }, [extractEmbeddedIdentityLabels, fetchMemberId, isZeroWallet, resolvedMemberIds, selectedPosition])
 
   useEffect(() => {
     if (focusedOnly && routedLevel >= 1 && routedLevel <= 10) {
@@ -2152,10 +2314,9 @@ const OrbitsPage = () => {
       receiptEscrowLocked: 0
     }
 
-    // Get display name for occupant (ID if available, otherwise shortened address)
     const occupantDisplay = position.occupant && ethers.isAddress(position.occupant)
-      ? resolvedMemberIds[position.occupant.toLowerCase()] || shortAddress(position.occupant)
-      : shortAddress(position.occupant)
+      ? getMemberLabel(position.occupant)
+      : orbitsT('modal.memberIdUnavailable', 'ID unavailable')
 
     if (!position.occupant) {
       return (
@@ -2244,7 +2405,7 @@ const OrbitsPage = () => {
     )
   }
 
- if (contractsLoading && isLoadingOrbits) {
+ if (contractsLoading) {
   return (
     <section className="orbits-page">
       <div className="loading-container">
@@ -2328,8 +2489,7 @@ const OrbitsPage = () => {
 
   const focusedMemberLabel =
     routedDisplayId ||
-    resolvedMemberIds[viewAddress?.toLowerCase?.()] ||
-    shortAddress(viewAddress)
+    getMemberLabel(viewAddress)
 
   const activeFinancialSummary = buildOrbitFinancialSummary({
     level: activeLevelNumber,
@@ -2654,11 +2814,9 @@ const OrbitsPage = () => {
             {[...activeDownlines, ...activeSpillovers].slice(0, 8).map((item, index) => {
               const address = item?.occupant || item?.user || ''
               const key = address?.toLowerCase?.() || `${index}`
-              const displayId = resolvedMemberIds[key] || shortAddress(address)
-
               return (
                 <div key={`${key}-${index}`} className="ffn-orbit-cockpit__list-item">
-                  <strong>{displayId}</strong>
+                  <strong><ParticipantIdentity address={address} /></strong>
                   <span>{orbitsT('cockpit.members.position', 'Position {{position}}', { position: item?.number || item?.position || '-' })}</span>
                 </div>
               )
@@ -2693,7 +2851,6 @@ const OrbitsPage = () => {
     const distributionRows = getPositionDistributionRows(selectedPosition)
     const totalDistributed = distributionRows.reduce((sum, row) => sum + toFiniteNumber(row.amount), 0)
     const holderAddress = selectedPosition.occupant || ''
-    const holderId = holderAddress ? getMemberLabel(holderAddress) : ''
 
     return (
       <div className="orbit-earnings-summary orbit-earnings-summary--simple">
@@ -2705,11 +2862,11 @@ const OrbitsPage = () => {
           <>
             <div className="modal-detail">
               <span className="modal-label">{orbitsT('modal.positionHolderId', 'Position Holder ID')}</span>
-              <span>{holderId}</span>
+              <span><ParticipantIdentity address={holderAddress} /></span>
             </div>
             <div className="modal-detail">
               <span className="modal-label">{orbitsT('modal.positionHolderWallet', 'Position Holder Wallet')}</span>
-              <span>{holderAddress}</span>
+              <span title={holderAddress}>{shortAddress(holderAddress)}</span>
             </div>
           </>
         ) : (
@@ -2725,12 +2882,12 @@ const OrbitsPage = () => {
               <div className="modal-beneficiary-row" key={row.key}>
                 <div className="modal-beneficiary-row__top">
                   <strong>{row.label}</strong>
-                  <span>{row.address ? getMemberLabel(row.address) : orbitsT('modal.systemWallet', 'System')}</span>
+                  <span title={row.address || ''}>{row.address ? <ParticipantIdentity address={row.address} /> : orbitsT('modal.systemWallet', 'System')}</span>
                 </div>
                 {row.address && (
                   <div className="modal-detail">
                     <span className="modal-label">{orbitsT('modal.wallet', 'Wallet')}</span>
-                    <span>{row.address}</span>
+                    <span title={row.address}>{shortAddress(row.address)}</span>
                   </div>
                 )}
                 <div className="modal-beneficiary-row__amounts">
@@ -3309,7 +3466,7 @@ const OrbitsPage = () => {
                                   style={{ width: coreSize, height: coreSize }}
                                 >
                                   <span className="core-label">{isLevelActive ? orbitsT('core.orbit', 'ORBIT') : orbitsT('states.inactive', 'INACTIVE')}</span>
-                                  <span className="core-value">{isLevelActive ? (isViewingSelf ? orbitsT('core.you', 'YOU') : (resolvedMemberIds[viewAddress?.toLowerCase()] || shortAddress(viewAddress))) : orbitsT('states.locked', 'LOCKED')}</span>
+                                  <span className="core-value">{isLevelActive ? (isViewingSelf ? orbitsT('core.you', 'YOU') : getMemberLabel(viewAddress)) : orbitsT('states.locked', 'LOCKED')}</span>
                                 </div>
 
                                 {structure.lines.map(lineNum => {
@@ -3373,7 +3530,7 @@ const OrbitsPage = () => {
 
                                   const badgeValue = getPlanetBadgeValue(pos)
                                   const occupantDisplay = pos.occupant && ethers.isAddress(pos.occupant)
-                                    ? resolvedMemberIds[pos.occupant.toLowerCase()] || shortAddress(pos.occupant)
+                                    ? getMemberLabel(pos.occupant)
                                     : null
 
                                   return (
@@ -3711,7 +3868,7 @@ const OrbitsPage = () => {
                       {selectedPosition.indexedReceipts.slice(0, 8).map((receipt) => (
                         <div key={`${receipt.txHash}-${receipt.logIndex}`} className="modal-record-item">
                           <div><strong>{getReceiptTypeLabel(receipt)}</strong> - {shortTx(receipt.txHash)}</div>
-                          <div>{orbitsT('modal.receiver', 'Receiver')}: {resolvedMemberIds[receipt.receiver?.toLowerCase?.()] || shortAddress(receipt.receiver)}</div>
+                          <div>{orbitsT('modal.receiver', 'Receiver')}: <ParticipantIdentity address={receipt.receiver} /></div>
                           <div>{orbitsT('modal.activationId', 'Activation ID')}: #{receipt.activationId || selectedPosition.activationId || '—'}</div>
                           <div>{orbitsT('modal.sourcePosition', 'Source Position')}: {receipt.sourcePosition || selectedPosition.number || '—'}</div>
                           {Number(receipt.receiptType || 0) === 3 && (
@@ -3767,14 +3924,14 @@ const OrbitsPage = () => {
                   <>
                     <div className="modal-detail">
                       <span className="modal-label">{orbitsT('modal.occupant', 'Position Holder')}</span>
-                      <span>{resolvedMemberIds[selectedPosition.occupant?.toLowerCase()] || shortAddress(selectedPosition.occupant)}</span>
+                      <span><ParticipantIdentity address={selectedPosition.occupant} /></span>
                     </div>
 
                     {(selectedPosition.referrer || selectedPosition.originalReferrer || selectedPosition.occupantReferrer) &&
                       (selectedPosition.referrer || selectedPosition.originalReferrer || selectedPosition.occupantReferrer) !== ethers.ZeroAddress && (
                         <div className="modal-detail">
                           <span className="modal-label">{orbitsT('modal.referrer', 'Referrer')}</span>
-                          <span>{shortAddress(selectedPosition.referrer || selectedPosition.originalReferrer || selectedPosition.occupantReferrer)}</span>
+                          <span><ParticipantIdentity address={selectedPosition.referrer || selectedPosition.originalReferrer || selectedPosition.occupantReferrer} /></span>
                         </div>
                       )}
 
@@ -3926,7 +4083,7 @@ const OrbitsPage = () => {
                       {selectedPosition.indexedReceipts.slice(0, 6).map((receipt) => (
                         <div key={`${receipt.txHash}-${receipt.logIndex}`} className="modal-record-item">
                           <div><strong>{receipt.rawEventName || orbitsT('cockpit.receipts.receipt', 'Receipt')}</strong> • {shortTx(receipt.txHash)}</div>
-                          <div>{orbitsT('modal.receiver', 'Receiver')}: {shortAddress(receipt.receiver)}</div>
+                          <div>{orbitsT('modal.receiver', 'Receiver')}: <ParticipantIdentity address={receipt.receiver} /></div>
                           {Number(receipt.receiptType || 0) === 3 && (
                             <div>{orbitsT('modal.spilloverReceiver', 'Spillover Receiver')}: {getMemberLabel(receipt.receiver)}</div>
                           )}
@@ -3946,7 +4103,7 @@ const OrbitsPage = () => {
                       {selectedPosition.indexedEvents.slice(0, 6).map((event) => (
                         <div key={`${event.txHash}-${event.logIndex}`} className="modal-record-item">
                           <div><strong>{event.eventName}</strong> • {shortTx(event.txHash)}</div>
-                          {event.user && <div>{orbitsT('modal.user', 'User')}: {shortAddress(event.user)}</div>}
+                          {event.user && <div>{orbitsT('modal.user', 'User')}: <ParticipantIdentity address={event.user} /></div>}
                           {Number(event.position || 0) > 0 && <div>{orbitsT('modal.position', 'Position')}: {event.position}</div>}
                           {Number(event.line || 0) > 0 && <div>{orbitsT('modal.line', 'Line')}: {event.line}</div>}
                         </div>
