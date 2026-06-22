@@ -55,7 +55,8 @@ interface IOrbitDetailed {
             uint8 position,
             uint32 cycleNumber,
             uint256 mirrorOwnerLiquidAmount,
-            uint256 mirrorEscrowLockAmount
+            uint256 mirrorEscrowLockAmount,
+            uint256 mirrorRecycleAmount
         );
 }
 
@@ -182,6 +183,7 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
         uint32 mirroredCycle;
         uint256 liquidAmount;
         uint256 escrowLocked;
+        uint256 recycleAmount;
     }
 
     struct SpilloverSettlementResult {
@@ -856,11 +858,6 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
         address spillover2Recipient,
         uint256 toSpillover2
     ) internal returns (SpilloverSettlementResult memory result) {
-        // These are real earnings from the CURRENT activation, already decided
-        // by _fillOrbitPosition(...) from the sponsor's orbit.
-        _recordRoutedEarning(orbitType, spillover1Recipient, level, toSpillover1);
-        _recordRoutedEarning(orbitType, spillover2Recipient, level, toSpillover2);
-
         address routedRecipientA = spillover1Recipient;
         uint256 routedAmountA = toSpillover1;
 
@@ -912,9 +909,10 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
             );
         }
 
-        // IMPORTANT:
-        // We still create mirrored positions for structure/recycle/history,
-        // but mirror must NOT reinterpret current activation economics.
+        uint256 mirrorRuleBaseAmount = (orbitType == 12 || orbitType == 39)
+            ? activationAmount
+            : routedAmountA;
+
         MirrorSplitResult memory splitA = _applyMirrorEscrowSplit(
             orbitType,
             level,
@@ -923,15 +921,19 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
             sponsor,
             routedRecipientA,
             routedAmountA,
-            orbitType == 39 ? activationAmount : routedAmountA,
+            mirrorRuleBaseAmount,
             activationId
         );
 
-        uint256 splitAEntitlement = splitA.liquidAmount + splitA.escrowLocked;
+        uint256 splitAEntitlement = splitA.liquidAmount + splitA.escrowLocked + splitA.recycleAmount;
         if (splitAEntitlement > routedAmountA && routedAmountB > 0) {
             uint256 extraEntitlement = splitAEntitlement - routedAmountA;
             routedAmountB = routedAmountB > extraEntitlement ? routedAmountB - extraEntitlement : 0;
         }
+
+        uint256 mirrorRuleBaseAmountB = (orbitType == 12 || orbitType == 39)
+            ? activationAmount
+            : routedAmountB;
 
         MirrorSplitResult memory splitB = _applyMirrorEscrowSplit(
             orbitType,
@@ -941,11 +943,10 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
             sponsor,
             routedRecipientB,
             routedAmountB,
-            routedAmountB,
+            mirrorRuleBaseAmountB,
             activationId
         );
 
-        // Pay exactly what the source orbit already decided.
         _sendPayoutWithContext(
             routedRecipientA,
             splitA.liquidAmount,
@@ -963,11 +964,17 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
             REASON_FOUNDER_ROUTE
         );
 
-        if (routedAmountA > 0 && splitA.mirroredPosition > 0 && splitA.liquidAmount == 0 && splitA.escrowLocked == 0) {
+        uint256 splitAGross = splitA.liquidAmount + splitA.escrowLocked + splitA.recycleAmount;
+        uint256 splitBGross = splitB.liquidAmount + splitB.escrowLocked + splitB.recycleAmount;
+
+        _recordRoutedEarning(orbitType, routedRecipientA, level, splitAGross);
+        _recordRoutedEarning(orbitType, routedRecipientB, level, splitBGross);
+
+        if (splitA.recycleAmount > 0 && splitA.mirroredPosition > 0) {
             _handleRecycle(
                 routedRecipientA,
                 level,
-                routedAmountA,
+                splitA.recycleAmount,
                 activationId,
                 user,
                 splitA.mirroredPosition,
@@ -975,11 +982,11 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
             );
         }
 
-        if (routedAmountB > 0 && splitB.mirroredPosition > 0 && splitB.liquidAmount == 0 && splitB.escrowLocked == 0) {
+        if (splitB.recycleAmount > 0 && splitB.mirroredPosition > 0) {
             _handleRecycle(
                 routedRecipientB,
                 level,
-                routedAmountB,
+                splitB.recycleAmount,
                 activationId,
                 user,
                 splitB.mirroredPosition,
@@ -997,7 +1004,7 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
                 level,
                 user,
                 sponsor,
-                routedAmountA,
+                splitAGross,
                 splitA.escrowLocked,
                 splitA.liquidAmount
             );
@@ -1014,7 +1021,7 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
                 splitA.mirroredPosition,
                 splitA.mirroredCycle,
                 ROUTED_ROLE_SPILLOVER1,
-                routedAmountA,
+                splitAGross,
                 splitA.escrowLocked,
                 splitA.liquidAmount
             );
@@ -1027,7 +1034,7 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
                 level,
                 user,
                 sponsor,
-                routedAmountB,
+                splitBGross,
                 splitB.escrowLocked,
                 splitB.liquidAmount
             );
@@ -1044,7 +1051,7 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
                 splitB.mirroredPosition,
                 splitB.mirroredCycle,
                 ROUTED_ROLE_SPILLOVER2,
-                routedAmountB,
+                splitBGross,
                 splitB.escrowLocked,
                 splitB.liquidAmount
             );
@@ -1075,7 +1082,8 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
             result.mirroredPosition,
             result.mirroredCycle,
             result.liquidAmount,
-            result.escrowLocked
+            result.escrowLocked,
+            result.recycleAmount
         ) = abi.decode(_delegateToSettlementRouterWithResult(abi.encodeCall(
             ILevelSettlementRouter.applyMirrorEscrowSplit,
             (
@@ -1092,7 +1100,7 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
                 ruleBaseAmount,
                 activationId
             )
-        )), (uint8, uint32, uint256, uint256));
+        )), (uint8, uint32, uint256, uint256, uint256));
 
         if (result.escrowLocked > 0) {
             _handleLock(recipient, level, result.escrowLocked);

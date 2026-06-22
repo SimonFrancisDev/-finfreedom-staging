@@ -249,12 +249,21 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
         uint256 routedAmount,
         uint256 ruleBaseAmount,
         uint256 activationId
-    ) external onlyDelegateCall returns (uint8 mirroredPosition, uint32 mirroredCycle, uint256 liquidAmount, uint256 escrowLocked) {
-        if (recipient == address(0) || routedAmount == 0) return (0, 0, 0, 0);
-        if (recipient == sponsor) return (0, 0, routedAmount, 0);
+    )
+        external
+        onlyDelegateCall
+        returns (
+            uint8 mirroredPosition,
+            uint32 mirroredCycle,
+            uint256 liquidAmount,
+            uint256 escrowLocked,
+            uint256 recycleAmount
+        )
+    {
+        if (recipient == address(0) || routedAmount == 0) return (0, 0, 0, 0, 0);
+        if (recipient == sponsor) return (0, 0, routedAmount, 0, 0);
 
         uint256 mirrorOwnerLiquid;
-        uint256 recycleAmount;
         (mirroredPosition, mirroredCycle, mirrorOwnerLiquid, escrowLocked, recycleAmount) = _mirrorFill(
             orbitType,
             p4Orbit,
@@ -270,10 +279,10 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
         );
         if (recycleAmount > 0) {
             liquidAmount = 0;
+        } else if (mirrorOwnerLiquid == 0 && escrowLocked == 0) {
+            liquidAmount = routedAmount;
         } else {
-            liquidAmount = mirrorOwnerLiquid > 0
-                ? mirrorOwnerLiquid
-                : (routedAmount >= escrowLocked ? routedAmount - escrowLocked : 0);
+            liquidAmount = mirrorOwnerLiquid;
         }
     }
 

@@ -17,7 +17,15 @@ interface ILevelSettlementRouter {
         uint256 routedAmount,
         uint256 ruleBaseAmount,
         uint256 activationId
-    ) external returns (uint8 mirroredPosition, uint32 mirroredCycle, uint256 liquidAmount, uint256 escrowLocked);
+    )
+        external
+        returns (
+            uint8 mirroredPosition,
+            uint32 mirroredCycle,
+            uint256 liquidAmount,
+            uint256 escrowLocked,
+            uint256 recycleAmount
+        );
 
     function settleRecycle(
         uint8 orbitType,

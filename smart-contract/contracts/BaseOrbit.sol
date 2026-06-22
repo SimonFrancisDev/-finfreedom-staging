@@ -1326,7 +1326,7 @@ function mirrorPositionDetailed(
     address newUser,
     address referrer,
     uint256 amount,
-    uint256,
+    uint256 ruleBaseAmount,
     uint256 activationId
 ) external whenNotPaused onlyLevelManager onlyValidLevel(level)
 returns (MirrorPositionDetailedResult memory result)
@@ -1394,8 +1394,6 @@ returns (MirrorPositionDetailedResult memory result)
         !isTrueNoReferrer && amount > 0
     );
 
-    emit PositionFilled(orbitOwner, newUser, level, result.position, amount, block.timestamp);
-
     bool autoUpgradeEnabled = _isAutoUpgradeEnabled(orbitOwner, level);
 
     PayoutPercentages memory pct = _calculatePayoutPercentages(
@@ -1410,13 +1408,29 @@ returns (MirrorPositionDetailedResult memory result)
     uint256 mirrorEscrowAmount;
     uint256 mirrorRecycleAmount;
 
-    if (pct.toEscrow > 0) {
-        mirrorEscrowAmount = amount;
-    } else if (pct.toRecycle > 0) {
-        mirrorRecycleAmount = amount;
-    } else if (pct.toOwner > 0) {
-        mirrorOwnerLiquidAmount = amount;
+    mirrorOwnerLiquidAmount = (ruleBaseAmount * pct.toOwner) / 100;
+    mirrorEscrowAmount = (ruleBaseAmount * pct.toEscrow) / 100;
+    mirrorRecycleAmount = (ruleBaseAmount * pct.toRecycle) / 100;
+
+    uint256 mirrorGrossAmount = mirrorOwnerLiquidAmount + mirrorEscrowAmount + mirrorRecycleAmount;
+    if (amount > mirrorGrossAmount) {
+        if (pct.toEscrow > 0) {
+            mirrorOwnerLiquidAmount = 0;
+            mirrorEscrowAmount = amount;
+            mirrorRecycleAmount = 0;
+        } else if (pct.toRecycle > 0) {
+            mirrorOwnerLiquidAmount = 0;
+            mirrorEscrowAmount = 0;
+            mirrorRecycleAmount = amount;
+        } else {
+            mirrorOwnerLiquidAmount = amount;
+            mirrorEscrowAmount = 0;
+            mirrorRecycleAmount = 0;
+        }
+        mirrorGrossAmount = amount;
     }
+
+    orbit.positions[result.position].amount = mirrorGrossAmount;
 
     _storeRuleSnapshot(RuleSnapshotData({
         orbitOwner: orbitOwner,
@@ -1438,6 +1452,15 @@ returns (MirrorPositionDetailedResult memory result)
     result.mirrorOwnerLiquidAmount = mirrorOwnerLiquidAmount;
     result.mirrorEscrowLockAmount = mirrorEscrowAmount;
     result.mirrorRecycleAmount = mirrorRecycleAmount;
+
+    emit PositionFilled(
+        orbitOwner,
+        newUser,
+        level,
+        result.position,
+        mirrorGrossAmount,
+        block.timestamp
+    );
 
     emit PaymentRuleApplied(
         orbitOwner,

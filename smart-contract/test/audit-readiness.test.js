@@ -615,12 +615,10 @@ describe("Audit readiness contract invariants", function () {
     expect(mirroredRule.linePaymentNumber).to.equal(1);
     expect(mirroredRule.autoUpgradeEnabled).to.equal(true);
 
-    // Mirrored arrivals settle the already-routed amount. They must not create
-    // an additional full-price line-3 entitlement from an 8 USDT route.
-    expect(mirroredRule.toEscrow).to.equal(usdtUnits(8));
+    expect(mirroredRule.toEscrow).to.equal(usdtUnits(20));
 
     const lockedAfterMirror = await escrow.getLockedAmount(destinationOwner.address, 3, 4);
-    expect(lockedAfterMirror - lockedBeforeMirror).to.equal(usdtUnits(8));
+    expect(lockedAfterMirror - lockedBeforeMirror).to.equal(usdtUnits(20));
 
     const summaryEvent = mirrorReceipt.logs
       .map((log) => {
@@ -635,8 +633,8 @@ describe("Audit readiness contract invariants", function () {
     expect(summaryEvent).to.not.equal(undefined);
     expect(summaryEvent.args.activationAmount).to.equal(usdtUnits(40));
     expect(summaryEvent.args.systemCharge).to.equal(usdtUnits(4));
-    expect(summaryEvent.args.totalLiquidPaid).to.equal(usdtUnits(28));
-    expect(summaryEvent.args.totalEscrowLocked).to.equal(usdtUnits(8));
+    expect(summaryEvent.args.totalLiquidPaid).to.equal(usdtUnits(16));
+    expect(summaryEvent.args.totalEscrowLocked).to.equal(usdtUnits(20));
     expect(summaryEvent.args.totalRecycleAllocated).to.equal(0);
     expect(
       summaryEvent.args.totalLiquidPaid +
