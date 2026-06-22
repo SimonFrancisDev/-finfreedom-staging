@@ -1375,6 +1375,7 @@ async function processLogsForContract({
         [
           'PayoutNotDelivered',
           'RecycleCompletedDetailed',
+          'RecycleReserveUpdated',
           'AutoUpgradeCompleted',
           'FounderDistributionDetailed',
           'SystemChargeDistributedDetailed',
