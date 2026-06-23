@@ -472,7 +472,8 @@ abstract contract BaseOrbit is Initializable, OwnableUpgradeable, UUPSUpgradeabl
     function _findPlacementPosition(
         address orbitOwner,
         uint8 level,
-        address newUser
+        address newUser,
+        address placementReferrer
     ) internal view returns (uint8) {
         OrbitData storage orbit = userOrbits[orbitOwner][level];
         OrbitConfig memory config = levelConfig[level];
@@ -483,7 +484,7 @@ abstract contract BaseOrbit is Initializable, OwnableUpgradeable, UUPSUpgradeabl
             return seq;
         }
 
-        address current = IRegistration(registration).getReferrer(newUser);
+        address current = placementReferrer;
         uint8 depth = 0;
 
         while (current != address(0) && current != orbitOwner) {
@@ -552,7 +553,11 @@ abstract contract BaseOrbit is Initializable, OwnableUpgradeable, UUPSUpgradeabl
             return existingPosition;
         }
 
-        position = _findPlacementPosition(orbitOwner, level, newUser);
+        address placementReferrer = isMirror
+            ? referrer
+            : IRegistration(registration).getReferrer(newUser);
+
+        position = _findPlacementPosition(orbitOwner, level, newUser, placementReferrer);
 
         orbit.positions[position] = Position({
             user: newUser,
@@ -605,7 +610,12 @@ abstract contract BaseOrbit is Initializable, OwnableUpgradeable, UUPSUpgradeabl
     // IMPORTANT:
     // Re-entry must NOT reuse old position.
     // It must occupy a fresh available slot in the orbit.
-    position = _findPlacementPosition(orbitOwner, level, newUser);
+    position = _findPlacementPosition(
+        orbitOwner,
+        level,
+        newUser,
+        IRegistration(registration).getReferrer(newUser)
+    );
 
     if (orbit.positions[position].user != address(0)) revert ReentryTargetNotEmpty();
 

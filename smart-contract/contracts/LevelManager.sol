@@ -913,11 +913,15 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
             ? activationAmount
             : routedAmountA;
 
+        address routedParent = (orbitType != 4 && sourcePosition > 3 && routedRecipientA != address(0))
+            ? routedRecipientA
+            : sponsor;
+
         MirrorSplitResult memory splitA = _applyMirrorEscrowSplit(
             orbitType,
             level,
             user,
-            sponsor,
+            routedParent,
             sponsor,
             routedRecipientA,
             routedAmountA,
@@ -939,7 +943,7 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
             orbitType,
             level,
             user,
-            sponsor,
+            routedParent,
             sponsor,
             routedRecipientB,
             routedAmountB,
@@ -1202,7 +1206,7 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
                 receiver,
                 liquidPaid,
                 receiptType,
-                _receiptRoleCode(receiptType),
+                bytes32(0),
                 receiver == address(0) ? REASON_ZERO_RECEIVER : REASON_ZERO_AMOUNT,
                 ACTION_SUPPORT_REVIEW,
                 0
@@ -1562,7 +1566,7 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
                 receiver,
                 liquidPaid,
                 receiptType,
-                _routedRoleCode(routedRole),
+                bytes32(0),
                 receiver == address(0) ? REASON_ZERO_RECEIVER : REASON_ZERO_AMOUNT,
                 ACTION_SUPPORT_REVIEW,
                 activationId
@@ -1620,23 +1624,6 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
             actionCode,
             activationId
         );
-    }
-
-    function _receiptRoleCode(uint8 receiptType) internal pure returns (bytes32) {
-        if (receiptType == RECEIPT_FOUNDER_PATH) return ROLE_FOUNDER_PATH_CODE;
-        if (receiptType == RECEIPT_DIRECT_OWNER) return ROLE_OWNER_CODE;
-        if (receiptType == RECEIPT_ROUTED_SPILLOVER) return ROLE_SPILLOVER1_CODE;
-        if (receiptType == RECEIPT_RECYCLE) return ROLE_RECYCLE_CODE;
-        return bytes32(0);
-    }
-
-    function _routedRoleCode(uint8 routedRole) internal pure returns (bytes32) {
-        if (routedRole == ROUTED_ROLE_OWNER) return ROLE_OWNER_CODE;
-        if (routedRole == ROUTED_ROLE_SPILLOVER1) return ROLE_SPILLOVER1_CODE;
-        if (routedRole == ROUTED_ROLE_SPILLOVER2) return ROLE_SPILLOVER2_CODE;
-        if (routedRole == ROUTED_ROLE_RECYCLE) return ROLE_RECYCLE_CODE;
-        if (routedRole == ROUTED_ROLE_FOUNDER_PATH) return ROLE_FOUNDER_PATH_CODE;
-        return bytes32(0);
     }
 
     address[] public founderRepWallets;

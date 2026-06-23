@@ -110,7 +110,6 @@ contract P39Orbit is BaseOrbit {
         bool autoUpgradeEnabled
     ) internal pure override returns (PayoutPercentages memory pct) {
         if (!_isSupportedP39Level(level)) revert UnsupportedP39Level();
-        if (line < 1 || line > LINES) revert InvalidP39Line();
 
         if (line == 1) {
             if (linePaymentNumber < 1 || linePaymentNumber > LINE1_SIZE) revert InvalidLinePayment();
@@ -197,6 +196,37 @@ contract P39Orbit is BaseOrbit {
         return 3; // 6,9,12
     }
 
+    function _matrixParentOf(address user, uint8 level) internal view returns (address) {
+        address id1 = ILevelManagerReader(levelManager).id1Wallet();
+        address current = IRegistration(registration).getReferrer(user);
+
+        for (uint8 depth; current != address(0); ) {
+            if (depth >= MAX_UPLINE_SEARCH_DEPTH) revert UplineSearchTooDeep(user, level);
+
+            uint8 userPosition = _findUserPosition(current, level, user);
+            if (userPosition != 0) {
+                if (userPosition <= 3) return current;
+
+                OrbitData storage parentOrbit = userOrbits[current][level];
+
+                if (userPosition <= 12) {
+                    address line1Parent = parentOrbit.positions[_line2ParentPosition(userPosition)].user;
+                    return line1Parent != address(0) ? line1Parent : id1;
+                }
+
+                address line2Parent = parentOrbit.positions[_line3ParentPosition(userPosition)].user;
+                return line2Parent != address(0) ? line2Parent : id1;
+            }
+
+            current = IRegistration(registration).getReferrer(current);
+            unchecked {
+                ++depth;
+            }
+        }
+
+        return id1;
+    }
+
     function _resolveRecipients(
         address orbitOwner,
         uint8 level,
@@ -208,33 +238,26 @@ contract P39Orbit is BaseOrbit {
         OrbitData storage orbit = userOrbits[orbitOwner][level];
         address id1 = ILevelManagerReader(levelManager).id1Wallet();
 
-        // Line 1 landing → bubble up to sponsor's orbit
+        // Line 1 landing: user -> orbitOwner -> matrix parent -> matrix grandparent
         if (position <= 3) {
-            address sponsorLine2 = IRegistration(registration).getReferrer(orbitOwner);
-            address sponsorLine1 = sponsorLine2 != address(0)
-                ? IRegistration(registration).getReferrer(sponsorLine2)
-                : address(0);
-
-            spillover1Recipient = sponsorLine2 != address(0) ? sponsorLine2 : id1;
-            spillover2Recipient = sponsorLine1 != address(0) ? sponsorLine1 : id1;
+            spillover1Recipient = _matrixParentOf(orbitOwner, level);
+            spillover2Recipient = _matrixParentOf(spillover1Recipient, level);
             return (spillover1Recipient, spillover2Recipient);
         }
 
-        // Line 2 landing → Spill1 = current Line 1, Spill2 = sponsor's Line 2
+        // Line 2 landing: user -> line1 parent -> orbitOwner -> matrix parent
         if (position >= 4 && position <= 12) {
             uint8 parentLine1Pos = _line2ParentPosition(position);
             address line1Parent = orbit.positions[parentLine1Pos].user != address(0)
                 ? orbit.positions[parentLine1Pos].user
                 : id1;
 
-            address sponsorLine2 = IRegistration(registration).getReferrer(orbitOwner);
-
             spillover1Recipient = line1Parent;
-            spillover2Recipient = sponsorLine2 != address(0) ? sponsorLine2 : id1;
+            spillover2Recipient = _matrixParentOf(orbitOwner, level);
             return (spillover1Recipient, spillover2Recipient);
         }
 
-        // Line 3 landing → stay inside current orbit
+        // Line 3 landing: user -> line2 parent -> line1 grandparent -> orbitOwner
         uint8 parentLine2Pos = _line3ParentPosition(position);
         uint8 grandLine1Pos = _line3GrandParentLine1Position(position);
 

@@ -230,6 +230,24 @@ async function createFundedWallets(funder, count) {
   return wallets;
 }
 
+async function findOrbitPosition(orbit, orbitOwner, level, occupant, maxPosition) {
+  for (let position = 1; position <= maxPosition; position += 1) {
+    const row = await orbit.getPosition(orbitOwner.address, level, position);
+    if (row.occupant === occupant.address) {
+      const rule = await orbit.getPositionRuleView(orbitOwner.address, level, position);
+      const activation = await orbit.getPositionActivationData(orbitOwner.address, level, position);
+      return {
+        position,
+        line: Number(rule.line),
+        arrival: Number(rule.linePaymentNumber),
+        isMirror: activation.isMirror,
+      };
+    }
+  }
+
+  return null;
+}
+
 describe("Audit readiness contract invariants", function () {
   this.timeout(240000);
 
@@ -633,8 +651,8 @@ describe("Audit readiness contract invariants", function () {
     expect(summaryEvent).to.not.equal(undefined);
     expect(summaryEvent.args.activationAmount).to.equal(usdtUnits(40));
     expect(summaryEvent.args.systemCharge).to.equal(usdtUnits(4));
-    expect(summaryEvent.args.totalLiquidPaid).to.equal(usdtUnits(16));
-    expect(summaryEvent.args.totalEscrowLocked).to.equal(usdtUnits(20));
+    expect(summaryEvent.args.totalLiquidPaid).to.equal(usdtUnits(8));
+    expect(summaryEvent.args.totalEscrowLocked).to.equal(usdtUnits(28));
     expect(summaryEvent.args.totalRecycleAllocated).to.equal(0);
     expect(
       summaryEvent.args.totalLiquidPaid +
@@ -1272,6 +1290,66 @@ describe("Audit readiness contract invariants", function () {
     for (let index = 7; index < 11; index += 1) {
       expect(rows[index].directEscrow).to.equal(0n);
     }
+  });
+
+  it("uses the connected P39 matrix parent instead of the raw referrer for line-1 spillovers", async function () {
+    const { owner, users, registration, levelManager, p39, register, activateToLevel } = await deployCoreSystem();
+
+    const X = users[8];
+    const P = users[9];
+    const Q = users[10];
+    const R = users[11];
+    const A = users[12];
+    const B = users[13];
+
+    await register(X, owner.address);
+    await activateToLevel(X, 3);
+
+    for (const line1User of [P, Q, R]) {
+      await register(line1User, X.address);
+      await activateToLevel(line1User, 3);
+    }
+
+    await register(A, X.address);
+    await activateToLevel(A, 3);
+
+    const aInX = await findOrbitPosition(p39, X, 3, A, 39);
+    expect(aInX).to.deep.include({
+      position: 4,
+      line: 2,
+      isMirror: false,
+    });
+
+    await register(B, A.address);
+    await registration.connect(B).activateLevel(2);
+    const tx = await registration.connect(B).activateLevel(3);
+    const receipt = await tx.wait();
+
+    const bInA = await findOrbitPosition(p39, A, 3, B, 39);
+    const bInX = await findOrbitPosition(p39, X, 3, B, 39);
+    const receipts = parseEvents(receipt, levelManager, "DetailedPayoutReceiptRecorded");
+
+    const directReceipt = receipts.find((event) => event.args.routedRole === 1n);
+    const spill1Receipt = receipts.find((event) => event.args.routedRole === 2n);
+    const spill2Receipt = receipts.find((event) => event.args.routedRole === 3n);
+
+    expect(bInA).to.deep.include({
+      position: 1,
+      line: 1,
+      isMirror: false,
+    });
+    expect(bInX).to.deep.include({
+      position: 13,
+      line: 3,
+      isMirror: true,
+    });
+
+    expect(directReceipt.args.receiver).to.equal(A.address);
+    expect(directReceipt.args.grossAmount).to.equal(usdtUnits(8));
+    expect(spill1Receipt.args.receiver).to.equal(P.address);
+    expect(spill1Receipt.args.grossAmount).to.equal(usdtUnits(8));
+    expect(spill2Receipt.args.receiver).to.equal(X.address);
+    expect(spill2Receipt.args.grossAmount).to.equal(usdtUnits(20));
   });
 
   it("validates the described P39 chain where H is referred by C and appears under C in A's line 2", async function () {
