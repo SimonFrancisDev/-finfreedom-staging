@@ -275,9 +275,9 @@ const getActivationOrbitNodeType = (position, viewer) => {
 
 const getMiniOrbitRadius = (orbitType, line) => {
   const radii = {
-    P4: { 1: 35 },
-    P12: { 1: 25, 2: 39 },
-    P39: { 1: 20, 2: 32, 3: 44 },
+    P4: { 1: 72 },
+    P12: { 1: 46, 2: 78 },
+    P39: { 1: 36, 2: 64, 3: 92 },
   }
 
   return radii[orbitType]?.[line] || 34
@@ -289,58 +289,103 @@ const getMiniOrbitNodeSize = (orbitType, line) => {
   return 'standard'
 }
 
-const ActivationLevelOrbitPreview = ({ level, orbitType, activationT }) => {
+const ActivationLevelOrbitPreview = ({ level, orbitType, levelName, price, status, activationT }) => {
   const structure = getOrbitStructure(orbitType)
   const copy = orbitStructureCopy[orbitType]
+  const center = 110
 
   if (!structure || !copy) return null
+
+  const nodes = structure.lines.flatMap((line) => {
+    const radius = getMiniOrbitRadius(orbitType, line)
+    const positions = structure.positions[line] || []
+
+    return positions.map((position) => {
+      const angle = structure.customAngles?.[line]?.[position] ?? structure.startAngles[line] ?? -90
+      const point = getPositionOnAngle(angle, radius, center, center)
+      return { line, position, x: point.x, y: point.y }
+    })
+  })
 
   return (
     <div className={`level-orbit-preview level-orbit-preview--${orbitType.toLowerCase()}`}>
       <div className="level-orbit-preview__stage" aria-hidden="true">
-        {structure.lines.map((line) => {
-          const radius = getMiniOrbitRadius(orbitType, line)
-          return (
-            <div
-              key={`ring-${line}`}
-              className={`level-orbit-preview__ring line-${line}`}
-              style={{
-                width: `${radius * 2}%`,
-                height: `${radius * 2}%`,
-              }}
+        <svg className="level-orbit-preview__svg" viewBox="0 0 220 220" role="img">
+          <defs>
+            <radialGradient id={`activation-core-${level}`} cx="30%" cy="28%" r="75%">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+              <stop offset="28%" stopColor="#4da3ff" />
+              <stop offset="72%" stopColor="#163f99" />
+              <stop offset="100%" stopColor="#061733" />
+            </radialGradient>
+            <filter id={`activation-glow-${level}`} x="-60%" y="-60%" width="220%" height="220%">
+              <feGaussianBlur stdDeviation="4" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+
+          <g className="level-orbit-preview__particles">
+            <circle cx="38" cy="42" r="1.4" />
+            <circle cx="180" cy="44" r="1.1" />
+            <circle cx="190" cy="166" r="1.3" />
+            <circle cx="48" cy="178" r="1" />
+          </g>
+
+          {structure.lines.map((line) => (
+            <circle
+              key={`svg-ring-${line}`}
+              className={`level-orbit-preview__svg-ring line-${line}`}
+              cx={center}
+              cy={center}
+              r={getMiniOrbitRadius(orbitType, line)}
             />
-          )
-        })}
+          ))}
 
-        <div className="level-orbit-preview__core">
-          <span>{activationT('levels.preview.coreLabel', 'Level')}</span>
-          <strong>{level}</strong>
-        </div>
+          <g className="level-orbit-preview__connectors">
+            {nodes.map((node) => (
+              <line
+                key={`connector-${node.line}-${node.position}`}
+                className={`line-${node.line}`}
+                x1={center}
+                y1={center}
+                x2={node.x}
+                y2={node.y}
+              />
+            ))}
+          </g>
 
-        {structure.lines.flatMap((line) => {
-          const radius = getMiniOrbitRadius(orbitType, line)
-          const positions = structure.positions[line] || []
-          return positions.map((position) => {
-            const angle = structure.customAngles?.[line]?.[position] ?? structure.startAngles[line] ?? -90
-            const point = getPositionOnAngle(angle, radius, 50, 50)
+          <g className="level-orbit-preview__nodes">
+            {nodes.map((node) => {
+              const nodeSize = getMiniOrbitNodeSize(orbitType, node.line)
+              const radius = nodeSize === 'tiny' ? 5 : nodeSize === 'small' ? 7 : 9
+              return (
+                <g key={`node-${node.line}-${node.position}`} className={`level-orbit-preview__svg-node line-${node.line} ${nodeSize}`}>
+                  <circle cx={node.x} cy={node.y} r={radius} />
+                  {nodeSize !== 'tiny' && (
+                    <text x={node.x} y={node.y + 3}>{node.position}</text>
+                  )}
+                </g>
+              )
+            })}
+          </g>
 
-            return (
-              <span
-                key={`${line}-${position}`}
-                className={`level-orbit-preview__node line-${line} ${getMiniOrbitNodeSize(orbitType, line)}`}
-                style={{ left: `${point.x}%`, top: `${point.y}%` }}
-              >
-                {position}
-              </span>
-            )
-          })
-        })}
+          <g className="level-orbit-preview__svg-core" filter={`url(#activation-glow-${level})`}>
+            <circle cx={center} cy={center} r="25" fill={`url(#activation-core-${level})`} />
+            <circle cx={center} cy={center} r="29" />
+            <text x={center} y={center - 4}>{activationT('levels.preview.coreLabel', 'Level')}</text>
+            <text className="level-orbit-preview__svg-core-level" x={center} y={center + 14}>{level}</text>
+          </g>
+        </svg>
       </div>
 
       <div className="level-orbit-preview__content">
         <div className="level-orbit-preview__headline">
-          <strong>{copy.headline}</strong>
-          <span>{copy.positions} · {copy.linePattern}</span>
+          <span className="level-orbit-preview__kicker">{status}</span>
+          <strong>{levelName} · {copy.headline}</strong>
+          <span>{copy.positions} · {copy.linePattern} · {price} USDT</span>
         </div>
 
         <div className="level-orbit-preview__rules">
@@ -351,6 +396,25 @@ const ActivationLevelOrbitPreview = ({ level, orbitType, activationT }) => {
               <em>{line.positions}</em>
             </div>
           ))}
+        </div>
+
+        <div className="level-orbit-preview__metrics">
+          <div>
+            <span>{activationT('levels.preview.metrics.type', 'Orbit Type')}</span>
+            <strong>{orbitType}</strong>
+          </div>
+          <div>
+            <span>{activationT('levels.preview.metrics.positions', 'Positions')}</span>
+            <strong>{orbitTypeConfig[orbitType]?.positions}</strong>
+          </div>
+          <div>
+            <span>{activationT('levels.preview.metrics.lines', 'Lines')}</span>
+            <strong>{orbitTypeConfig[orbitType]?.lines}</strong>
+          </div>
+          <div>
+            <span>{activationT('levels.preview.metrics.charge', 'Charge')}</span>
+            <strong>10%</strong>
+          </div>
         </div>
       </div>
     </div>
@@ -2148,6 +2212,11 @@ const ActivationCenterPage = () => {
             const combinedRequired = isFounderRepFree ? 0 : level === 1 && !isRegistered ? 10 : price
             const hasEnoughBalance = isFounderRepFree || parseFloat(usdtBalance) >= combinedRequired
             const isOpen = !!openLevelDetails[level]
+            const levelStatusLabel = isActive
+              ? activationT('levels.status.activated', 'Activated')
+              : isNext
+                ? activationT('levels.status.ready', 'Ready to Activate')
+                : activationT('levels.status.locked', 'Locked')
 
             return (
               <div
@@ -2167,7 +2236,7 @@ const ActivationCenterPage = () => {
                 </div>
 
                 <div className={`compact-level-card__status ${isActive ? 'is-active' : isNext ? 'is-ready' : 'is-locked'}`}>
-                  {isActive ? activationT('levels.status.activated', 'Activated') : isNext ? activationT('levels.status.ready', 'Ready to Activate') : activationT('levels.status.locked', 'Locked')}
+                  {levelStatusLabel}
                 </div>
 
                 <div className={`compact-level-card__price ${hasEnoughBalance ? 'is-sufficient' : 'is-insufficient'}`}>
@@ -2181,6 +2250,9 @@ const ActivationCenterPage = () => {
                 <ActivationLevelOrbitPreview
                   level={level}
                   orbitType={orbitTypeForLevel}
+                  levelName={levelProgramName}
+                  price={price}
+                  status={levelStatusLabel}
                   activationT={activationT}
                 />
 
