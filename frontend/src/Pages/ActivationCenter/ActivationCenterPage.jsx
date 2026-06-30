@@ -81,6 +81,49 @@ const orbitTypeConfig = {
   P39: { positions: 39, lines: 3, levels: [3, 6, 9], image: 'p39-image.png' },
 }
 
+const levelProgramNames = {
+  1: 'Entry',
+  2: 'Growth',
+  3: 'Expansion',
+  4: 'Momentum',
+  5: 'Elevation',
+  6: 'Scale',
+  7: 'Influence',
+  8: 'Leadership',
+  9: 'Mastery',
+  10: 'Zenith',
+}
+
+const orbitStructureCopy = {
+  P4: {
+    headline: 'Single-line orbit',
+    positions: '4 positions',
+    linePattern: 'Line 1',
+    lines: [
+      { line: 1, label: 'Line 1', positions: '4 positions', payout: '90%', note: 'Position 4 recycles' },
+    ],
+  },
+  P12: {
+    headline: 'Two-line orbit',
+    positions: '12 positions',
+    linePattern: '3 + 9',
+    lines: [
+      { line: 1, label: 'Line 1', positions: '3 positions', payout: '40%', note: 'First receiver layer' },
+      { line: 2, label: 'Line 2', positions: '9 positions', payout: '50%', note: 'Second receiver layer' },
+    ],
+  },
+  P39: {
+    headline: 'Three-line orbit',
+    positions: '39 positions',
+    linePattern: '3 + 9 + 27',
+    lines: [
+      { line: 1, label: 'Line 1', positions: '3 positions', payout: '20%', note: 'First receiver layer' },
+      { line: 2, label: 'Line 2', positions: '9 positions', payout: '20%', note: 'Second receiver layer' },
+      { line: 3, label: 'Line 3', positions: '27 positions', payout: '50%', note: 'Third receiver layer' },
+    ],
+  },
+}
+
 const upgradeRequirements = {
   1: 20,
   2: 40,
@@ -228,6 +271,90 @@ const getActivationOrbitNodeType = (position, viewer) => {
 
   if (viewer && ref?.toLowerCase?.() === viewer.toLowerCase()) return 'downline'
   return 'other'
+}
+
+const getMiniOrbitRadius = (orbitType, line) => {
+  const radii = {
+    P4: { 1: 35 },
+    P12: { 1: 25, 2: 39 },
+    P39: { 1: 20, 2: 32, 3: 44 },
+  }
+
+  return radii[orbitType]?.[line] || 34
+}
+
+const getMiniOrbitNodeSize = (orbitType, line) => {
+  if (orbitType === 'P39' && line === 3) return 'tiny'
+  if (orbitType === 'P39') return 'small'
+  return 'standard'
+}
+
+const ActivationLevelOrbitPreview = ({ level, orbitType, activationT }) => {
+  const structure = getOrbitStructure(orbitType)
+  const copy = orbitStructureCopy[orbitType]
+
+  if (!structure || !copy) return null
+
+  return (
+    <div className={`level-orbit-preview level-orbit-preview--${orbitType.toLowerCase()}`}>
+      <div className="level-orbit-preview__stage" aria-hidden="true">
+        {structure.lines.map((line) => {
+          const radius = getMiniOrbitRadius(orbitType, line)
+          return (
+            <div
+              key={`ring-${line}`}
+              className={`level-orbit-preview__ring line-${line}`}
+              style={{
+                width: `${radius * 2}%`,
+                height: `${radius * 2}%`,
+              }}
+            />
+          )
+        })}
+
+        <div className="level-orbit-preview__core">
+          <span>{activationT('levels.preview.coreLabel', 'Level')}</span>
+          <strong>{level}</strong>
+        </div>
+
+        {structure.lines.flatMap((line) => {
+          const radius = getMiniOrbitRadius(orbitType, line)
+          const positions = structure.positions[line] || []
+          return positions.map((position) => {
+            const angle = structure.customAngles?.[line]?.[position] ?? structure.startAngles[line] ?? -90
+            const point = getPositionOnAngle(angle, radius, 50, 50)
+
+            return (
+              <span
+                key={`${line}-${position}`}
+                className={`level-orbit-preview__node line-${line} ${getMiniOrbitNodeSize(orbitType, line)}`}
+                style={{ left: `${point.x}%`, top: `${point.y}%` }}
+              >
+                {position}
+              </span>
+            )
+          })
+        })}
+      </div>
+
+      <div className="level-orbit-preview__content">
+        <div className="level-orbit-preview__headline">
+          <strong>{copy.headline}</strong>
+          <span>{copy.positions} · {copy.linePattern}</span>
+        </div>
+
+        <div className="level-orbit-preview__rules">
+          {copy.lines.map((line) => (
+            <div key={line.label} className={`level-orbit-preview__rule line-${line.line}`}>
+              <span>{line.label}</span>
+              <strong>{line.payout}</strong>
+              <em>{line.positions}</em>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
 }
 
 const ActivationCenterPage = () => {
@@ -1996,6 +2123,7 @@ const ActivationCenterPage = () => {
             const canActivate = canActivateLevel(level)
             const price = Number(levelPrices[level] || 0)
             const orbitTypeForLevel = levelToOrbitType[level]
+            const levelProgramName = levelProgramNames[level]
             const orbitData = orbitLevelData[level]
             // const earned = Number(
             //   orbitData?.totalEarned ??
@@ -2030,9 +2158,12 @@ const ActivationCenterPage = () => {
                 <div className="compact-level-card__header">
                   <div className="compact-level-card__header-left">
                     <span className={`status-dot ${isActive ? 'green' : isNext ? 'orange' : 'gray'}`}></span>
-                    <span className="compact-level-card__level">{activationT('levels.levelNumber', 'Level {{level}}', { level })}</span>
+                    <span className="compact-level-card__level">
+                      <span>{activationT('levels.levelNumber', 'Level {{level}}', { level })}</span>
+                      <strong>{levelProgramName}</strong>
+                    </span>
                   </div>
-                  <span className="level-orbit">{orbitTypeForLevel}</span>
+                  <span className="level-orbit">{orbitTypeForLevel} Orbit</span>
                 </div>
 
                 <div className={`compact-level-card__status ${isActive ? 'is-active' : isNext ? 'is-ready' : 'is-locked'}`}>
@@ -2046,6 +2177,12 @@ const ActivationCenterPage = () => {
                       ? activationT('levels.onboardingPrice', '10 USDT Onboarding')
                       : activationT('levels.price', '{{price}} USDT', { price })}
                 </div>
+
+                <ActivationLevelOrbitPreview
+                  level={level}
+                  orbitType={orbitTypeForLevel}
+                  activationT={activationT}
+                />
 
                 <div className="compact-level-card__actions">
                   {isActive ? (
