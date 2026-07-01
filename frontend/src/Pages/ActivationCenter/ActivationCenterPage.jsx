@@ -289,11 +289,15 @@ const getMiniOrbitNodeSize = (orbitType, line) => {
   return 'standard'
 }
 
-const ActivationLevelOrbitPreview = ({ level, orbitType, levelName, price, status, filledPositions = [], isLocked, activationT }) => {
+const ActivationLevelOrbitPreview = ({ level, orbitType, levelName, price, status, filledPositions = [], totalPositions = 0, isLocked, activationT }) => {
   const structure = getOrbitStructure(orbitType)
   const copy = orbitStructureCopy[orbitType]
   const center = 110
   const filledSet = new Set(filledPositions.map(Number))
+  const normalizedTotalPositions = totalPositions || orbitTypeConfig[orbitType]?.positions || 0
+  const nextPosition = !isLocked && filledSet.size < normalizedTotalPositions
+    ? Array.from({ length: normalizedTotalPositions }, (_, index) => index + 1).find((position) => !filledSet.has(position))
+    : null
 
   if (!structure || !copy) return null
 
@@ -304,7 +308,14 @@ const ActivationLevelOrbitPreview = ({ level, orbitType, levelName, price, statu
     return positions.map((position, index) => {
       const angle = -90 + (index * 360) / Math.max(positions.length, 1)
       const point = getPositionOnAngle(angle, radius, center, center)
-      return { line, position, x: point.x, y: point.y, isFilled: filledSet.has(Number(position)) }
+      return {
+        line,
+        position,
+        x: point.x,
+        y: point.y,
+        isFilled: filledSet.has(Number(position)),
+        isNext: Number(position) === Number(nextPosition),
+      }
     })
   })
 
@@ -349,7 +360,7 @@ const ActivationLevelOrbitPreview = ({ level, orbitType, levelName, price, statu
             {nodes.map((node) => (
               <line
                 key={`connector-${node.line}-${node.position}`}
-                className={`line-${node.line} ${node.isFilled ? 'is-filled' : 'is-empty'}`}
+                className={`line-${node.line} ${node.isFilled ? 'is-filled' : 'is-empty'} ${node.isNext ? 'is-next' : ''}`}
                 x1={center}
                 y1={center}
                 x2={node.x}
@@ -365,7 +376,7 @@ const ActivationLevelOrbitPreview = ({ level, orbitType, levelName, price, statu
               return (
                 <g
                   key={`node-${node.line}-${node.position}`}
-                  className={`level-orbit-preview__svg-node line-${node.line} ${nodeSize} ${node.isFilled ? 'is-filled' : 'is-empty'} ${isLocked ? 'is-locked' : ''}`}
+                  className={`level-orbit-preview__svg-node line-${node.line} ${nodeSize} ${node.isFilled ? 'is-filled' : 'is-empty'} ${node.isNext ? 'is-next' : ''} ${isLocked ? 'is-locked' : ''}`}
                 >
                   <circle cx={node.x} cy={node.y} r={radius} />
                   {nodeSize !== 'tiny' && (
@@ -2225,6 +2236,11 @@ const ActivationCenterPage = () => {
               : isNext
                 ? activationT('levels.status.ready', 'Ready to Activate')
                 : activationT('levels.status.locked', 'Locked')
+            const priceLabel = isFounderRepFree
+              ? activationT('levels.founderRepFree', 'Founder Rep Free')
+              : level === 1 && !isRegistered
+                ? activationT('levels.onboardingPrice', '10 USDT Onboarding')
+                : activationT('levels.price', '{{price}} USDT', { price })
 
             return (
               <div
@@ -2232,27 +2248,48 @@ const ActivationCenterPage = () => {
                 className={`activation-levels__card premium-card compact-level-card ${isActive ? 'activated' : ''} ${isNext ? 'next' : ''} ${!isActive && !isNext ? 'is-locked-level' : ''}`}
                 style={{ background: getLevelBackground(level) }}
               >
-                <div className="compact-level-card__header">
-                  <div className="compact-level-card__header-left">
-                    <span className={`status-dot ${isActive ? 'green' : isNext ? 'orange' : 'gray'}`}></span>
-                    <span className="compact-level-card__level">
-                      <span>{activationT('levels.levelNumber', 'Level {{level}}', { level })}</span>
-                      <strong>{levelProgramName}</strong>
-                    </span>
+                {!isActive && !isNext && (
+                  <div className="activation-level-locked-glass" aria-hidden="true">
+                    <FaLock />
                   </div>
-                  <span className="level-orbit">{orbitTypeForLevel} Orbit</span>
-                </div>
+                )}
 
-                <div className={`compact-level-card__status ${isActive ? 'is-active' : isNext ? 'is-ready' : 'is-locked'}`}>
-                  {levelStatusLabel}
-                </div>
+                <div className="activation-level-info-grid">
+                  <div className="activation-level-info-cell">
+                    <span>{activationT('levels.info.level', 'Level')}</span>
+                    <strong>{level}</strong>
+                  </div>
 
-                <div className={`compact-level-card__price ${hasEnoughBalance ? 'is-sufficient' : 'is-insufficient'}`}>
-                  {isFounderRepFree
-                    ? activationT('levels.founderRepFree', 'Founder Rep Free')
-                    : level === 1 && !isRegistered
-                      ? activationT('levels.onboardingPrice', '10 USDT Onboarding')
-                      : activationT('levels.price', '{{price}} USDT', { price })}
+                  <div className="activation-level-info-cell activation-level-info-cell--right">
+                    <span>{activationT('levels.info.name', 'Level Name')}</span>
+                    <strong>{levelProgramName}</strong>
+                  </div>
+
+                  <div className="activation-level-info-cell">
+                    <span>{activationT('levels.info.engine', 'Payout Engine')}</span>
+                    <strong>{orbitTypeForLevel} Orbit</strong>
+                  </div>
+
+                  <div className="activation-level-info-cell activation-level-info-cell--right">
+                    <span>{activationT('levels.info.status', 'Status')}</span>
+                    <strong className={`activation-level-status-inline ${isActive ? 'is-active' : isNext ? 'is-ready' : 'is-locked'}`}>
+                      {isActive ? <FaCheckCircle /> : <FaLock />}
+                      {levelStatusLabel}
+                    </strong>
+                  </div>
+
+                  <div className="activation-level-info-cell">
+                    <span>{activationT('levels.info.price', 'Price')}</span>
+                    <strong>{activationT('levels.info.priceLabel', 'Price')}</strong>
+                  </div>
+
+                  <div className="activation-level-info-cell activation-level-info-cell--right">
+                    <span>{activationT('levels.info.amount', 'Activation Amount')}</span>
+                    <strong className={`activation-level-price-token ${hasEnoughBalance ? 'is-sufficient' : 'is-insufficient'}`}>
+                      {!isFounderRepFree && <i aria-hidden="true">T</i>}
+                      {priceLabel}
+                    </strong>
+                  </div>
                 </div>
 
                 <ActivationLevelOrbitPreview
@@ -2262,6 +2299,7 @@ const ActivationCenterPage = () => {
                   price={price}
                   status={levelStatusLabel}
                   filledPositions={orbitData?.filledPositions || []}
+                  totalPositions={orbitData?.totalPositions || orbitTypeConfig[orbitTypeForLevel]?.positions || 0}
                   isLocked={!isActive && !isNext}
                   activationT={activationT}
                 />
