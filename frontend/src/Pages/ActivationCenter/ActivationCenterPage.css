@@ -602,8 +602,8 @@
   z-index: 2;
   pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(1, 4, 12, 0.38), rgba(1, 4, 12, 0.58)),
-    radial-gradient(circle at 50% 36%, rgba(255,255,255,0.045), transparent 28%);
+    linear-gradient(180deg, rgba(1, 4, 12, 0.68), rgba(1, 4, 12, 0.82)),
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,0.055), transparent 28%);
 }
 
 .premium-card.is-locked-level .compact-level-card__level,
@@ -615,28 +615,30 @@
 
 .activation-level-locked-glass {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: 50%;
+  left: 50%;
   z-index: 4;
-  width: 44px;
-  height: 44px;
-  border-radius: 16px;
+  width: 78px;
+  height: 78px;
+  transform: translate(-50%, -50%);
+  border-radius: 26px;
   display: grid;
   place-items: center;
-  color: rgba(255,255,255,0.78);
+  color: #fff;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.1), rgba(255,255,255,0.03)),
-    rgba(2, 6, 14, 0.72);
-  border: 1px solid rgba(255,255,255,0.14);
+    linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.035)),
+    rgba(2, 6, 14, 0.84);
+  border: 1px solid rgba(255,255,255,0.2);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.1),
-    0 16px 28px rgba(0,0,0,0.22);
+    0 22px 44px rgba(0,0,0,0.38),
+    0 0 34px rgba(255,255,255,0.08);
   pointer-events: none;
 }
 
 .activation-level-locked-glass svg {
-  width: 18px;
-  height: 18px;
+  width: 30px;
+  height: 30px;
 }
 
 .activation-level-info-grid {
@@ -847,9 +849,10 @@
   border-radius: 24px;
   border: 1px solid rgba(90,130,255,0.16);
   background:
-    radial-gradient(circle at 22% 24%, rgba(109, 91, 255, 0.18), transparent 31%),
-    radial-gradient(circle at 78% 72%, rgba(0, 212, 255, 0.12), transparent 28%),
-    linear-gradient(180deg, rgba(16, 24, 39, 0.68), rgba(5, 8, 22, 0.76));
+    radial-gradient(circle at 50% 50%, rgba(77, 163, 255, 0.16), transparent 34%),
+    radial-gradient(circle at 18% 22%, rgba(29, 233, 182, 0.09), transparent 28%),
+    radial-gradient(circle at 78% 18%, rgba(139, 92, 246, 0.1), transparent 30%),
+    linear-gradient(180deg, rgba(7, 17, 31, 0.94), rgba(2, 6, 23, 0.98));
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.05),
     0 18px 46px rgba(0, 0, 0, 0.24);
@@ -859,16 +862,18 @@
 
 .level-orbit-preview--p12 {
   background:
-    radial-gradient(circle at 24% 24%, rgba(0, 212, 255, 0.16), transparent 31%),
-    radial-gradient(circle at 78% 72%, rgba(22, 230, 161, 0.13), transparent 28%),
-    linear-gradient(180deg, rgba(16, 24, 39, 0.68), rgba(5, 8, 22, 0.76));
+    radial-gradient(circle at 50% 50%, rgba(77, 163, 255, 0.16), transparent 34%),
+    radial-gradient(circle at 18% 22%, rgba(29, 233, 182, 0.1), transparent 28%),
+    radial-gradient(circle at 78% 18%, rgba(245, 158, 11, 0.1), transparent 30%),
+    linear-gradient(180deg, rgba(7, 17, 31, 0.94), rgba(2, 6, 23, 0.98));
 }
 
 .level-orbit-preview--p39 {
   background:
-    radial-gradient(circle at 24% 24%, rgba(141, 91, 255, 0.2), transparent 32%),
-    radial-gradient(circle at 78% 72%, rgba(0, 212, 255, 0.13), transparent 29%),
-    linear-gradient(180deg, rgba(16, 24, 39, 0.68), rgba(5, 8, 22, 0.76));
+    radial-gradient(circle at 50% 50%, rgba(77, 163, 255, 0.16), transparent 34%),
+    radial-gradient(circle at 18% 22%, rgba(29, 233, 182, 0.09), transparent 28%),
+    radial-gradient(circle at 78% 18%, rgba(139, 92, 246, 0.14), transparent 30%),
+    linear-gradient(180deg, rgba(7, 17, 31, 0.94), rgba(2, 6, 23, 0.98));
 }
 
 .level-orbit-preview__stage {
@@ -1119,6 +1124,39 @@
 .level-orbit-preview__rules {
   display: grid;
   gap: 7px;
+}
+
+.level-orbit-preview__info-row {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.level-orbit-preview__info-button {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.82);
+  background: rgba(255,255,255,0.055);
+  border: 1px solid rgba(255,255,255,0.1);
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease;
+}
+
+.level-orbit-preview__info-button:hover {
+  transform: translateY(-1px);
+  background: rgba(77, 163, 255, 0.14);
+  border-color: rgba(77, 163, 255, 0.26);
+}
+
+.level-orbit-preview__info-button svg {
+  width: 14px;
+  height: 14px;
 }
 
 .level-orbit-preview__rule {
@@ -2328,11 +2366,11 @@ body.light-theme .compact-stat {
 }
 
 [data-theme="light"] .activation-level-locked-glass {
-  color: rgba(15, 23, 42, 0.58);
+  color: #fff;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.78), rgba(255,255,255,0.38)),
-    rgba(226, 232, 240, 0.42);
-  border-color: rgba(120, 144, 176, 0.24);
+    linear-gradient(180deg, rgba(255,255,255,0.11), rgba(255,255,255,0.035)),
+    rgba(2, 6, 14, 0.84);
+  border-color: rgba(255,255,255,0.2);
 }
 
 [data-theme="light"] .activation-level-info-cell {
@@ -2362,24 +2400,27 @@ body.light-theme .compact-stat {
 
 [data-theme="light"] .level-orbit-preview {
   background:
-    radial-gradient(circle at 23% 28%, rgba(77, 163, 255, 0.15), transparent 28%),
-    radial-gradient(circle at 74% 72%, rgba(29, 233, 182, 0.11), transparent 26%),
-    rgba(248, 250, 252, 0.9);
+    radial-gradient(circle at 50% 50%, rgba(77, 163, 255, 0.16), transparent 34%),
+    radial-gradient(circle at 18% 22%, rgba(29, 233, 182, 0.09), transparent 28%),
+    radial-gradient(circle at 78% 18%, rgba(139, 92, 246, 0.1), transparent 30%),
+    linear-gradient(180deg, rgba(7, 17, 31, 0.94), rgba(2, 6, 23, 0.98));
   border-color: rgba(120, 144, 176, 0.24);
 }
 
 [data-theme="light"] .level-orbit-preview--p12 {
   background:
-    radial-gradient(circle at 24% 28%, rgba(245, 158, 11, 0.14), transparent 28%),
-    radial-gradient(circle at 76% 70%, rgba(29, 233, 182, 0.1), transparent 26%),
-    rgba(248, 250, 252, 0.9);
+    radial-gradient(circle at 50% 50%, rgba(77, 163, 255, 0.16), transparent 34%),
+    radial-gradient(circle at 18% 22%, rgba(29, 233, 182, 0.1), transparent 28%),
+    radial-gradient(circle at 78% 18%, rgba(245, 158, 11, 0.1), transparent 30%),
+    linear-gradient(180deg, rgba(7, 17, 31, 0.94), rgba(2, 6, 23, 0.98));
 }
 
 [data-theme="light"] .level-orbit-preview--p39 {
   background:
-    radial-gradient(circle at 24% 28%, rgba(139, 92, 246, 0.14), transparent 30%),
-    radial-gradient(circle at 76% 70%, rgba(77, 163, 255, 0.11), transparent 28%),
-    rgba(248, 250, 252, 0.9);
+    radial-gradient(circle at 50% 50%, rgba(77, 163, 255, 0.16), transparent 34%),
+    radial-gradient(circle at 18% 22%, rgba(29, 233, 182, 0.09), transparent 28%),
+    radial-gradient(circle at 78% 18%, rgba(139, 92, 246, 0.14), transparent 30%),
+    linear-gradient(180deg, rgba(7, 17, 31, 0.94), rgba(2, 6, 23, 0.98));
 }
 
 [data-theme="light"] .level-orbit-preview__stage {
@@ -2395,24 +2436,30 @@ body.light-theme .compact-stat {
 }
 
 [data-theme="light"] .level-orbit-preview__headline strong {
-  color: #0f172a;
+  color: #fff;
 }
 
 [data-theme="light"] .level-orbit-preview__headline span,
 [data-theme="light"] .level-orbit-preview__rule span,
 [data-theme="light"] .level-orbit-preview__rule em,
 [data-theme="light"] .level-orbit-preview__metrics span {
-  color: #475569;
+  color: rgba(255,255,255,0.66);
 }
 
 [data-theme="light"] .level-orbit-preview__rule,
 [data-theme="light"] .level-orbit-preview__metrics > div {
-  background: rgba(255,255,255,0.78);
-  border-color: rgba(120, 144, 176, 0.22);
+  background: rgba(255,255,255,0.055);
+  border-color: rgba(255,255,255,0.08);
 }
 
 [data-theme="light"] .level-orbit-preview__metrics strong {
-  color: #0f172a;
+  color: #fff;
+}
+
+[data-theme="light"] .level-orbit-preview__info-button {
+  color: rgba(255,255,255,0.82);
+  background: rgba(255,255,255,0.055);
+  border-color: rgba(255,255,255,0.1);
 }
 
 [data-theme="light"] .level-orbit-preview__connectors line {

@@ -290,6 +290,7 @@ const getMiniOrbitNodeSize = (orbitType, line) => {
 }
 
 const ActivationLevelOrbitPreview = ({ level, orbitType, levelName, price, status, filledPositions = [], totalPositions = 0, isLocked, activationT }) => {
+  const [isRuleInfoOpen, setIsRuleInfoOpen] = useState(false)
   const structure = getOrbitStructure(orbitType)
   const copy = orbitStructureCopy[orbitType]
   const center = 110
@@ -410,15 +411,29 @@ const ActivationLevelOrbitPreview = ({ level, orbitType, levelName, price, statu
           <span>{copy.positions} · {copy.linePattern} · {price} USDT</span>
         </div>
 
-        <div className="level-orbit-preview__rules">
-          {copy.lines.map((line) => (
-            <div key={line.label} className={`level-orbit-preview__rule line-${line.line}`}>
-              <span>{line.label}</span>
-              <strong>{line.payout}</strong>
-              <em>{line.positions}</em>
-            </div>
-          ))}
+        <div className="level-orbit-preview__info-row">
+          <button
+            type="button"
+            className="level-orbit-preview__info-button"
+            onClick={() => setIsRuleInfoOpen((current) => !current)}
+            aria-expanded={isRuleInfoOpen}
+            aria-label={activationT('levels.preview.toggleRules', 'Show orbit payout distribution')}
+          >
+            <FaInfoCircle />
+          </button>
         </div>
+
+        {isRuleInfoOpen && (
+          <div className="level-orbit-preview__rules">
+            {copy.lines.map((line) => (
+              <div key={line.label} className={`level-orbit-preview__rule line-${line.line}`}>
+                <span>{line.label}</span>
+                <strong>{line.payout}</strong>
+                <em>{line.positions}</em>
+              </div>
+            ))}
+          </div>
+        )}
 
         <div className="level-orbit-preview__metrics">
           <div>
