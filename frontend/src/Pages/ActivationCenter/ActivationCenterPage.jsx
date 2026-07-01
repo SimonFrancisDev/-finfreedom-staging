@@ -906,11 +906,11 @@ const ActivationCenterPage = () => {
   }
 
   const fetchFullOrbitData = useCallback(
-    async (level) => {
+    async (level, sharedProfileReadHeaders = null) => {
       if (!viewer || !isRegistered) return null
 
       try {
-        const profileReadHeaders = await getProfileReadAuthIfLocked(viewer, account)
+        const profileReadHeaders = sharedProfileReadHeaders || await getProfileReadAuthIfLocked(viewer, account)
         const snapshot = await fetchOrbitLevelSnapshotApi(viewer, level, { headers: profileReadHeaders })
         if (!snapshot) return null
 
@@ -1110,6 +1110,17 @@ const ActivationCenterPage = () => {
 
     setOrbitDataLoading(true)
     try {
+      const profileReadHeaders = await getProfileReadAuthIfLocked(viewer, account)
+      const activeLevelNumbers = Array.from({ length: 10 }, (_, index) => index + 1)
+        .filter((level) => activeLevels[level])
+
+      const activeLevelResults = await Promise.all(
+        activeLevelNumbers.map(async (level) => ({
+          level,
+          data: await fetchFullOrbitData(level, profileReadHeaders),
+        }))
+      )
+
       const levelDataPromises = {}
       const downlinePromises = {}
       const spilloverPromises = {}
@@ -1118,20 +1129,17 @@ const ActivationCenterPage = () => {
       const rolePromises = {}
       const cyclePromises = {}
 
-      for (let level = 1; level <= 10; level += 1) {
-        if (activeLevels[level]) {
-          const data = await fetchFullOrbitData(level)
-          if (data) {
-            levelDataPromises[level] = data
-            downlinePromises[level] = data.downlinePositions
-            spilloverPromises[level] = data.otherOccupants
-            lineCountPromises[level] = data.lineCounts
-            lockPromises[level] = data.lockedForNextLevel
-            rolePromises[level] = data.viewerRole
-            cyclePromises[level] = { total: data.totalCycles, current: data.currentCycle }
-          }
-        }
-      }
+      activeLevelResults.forEach(({ level, data }) => {
+        if (!data) return
+
+        levelDataPromises[level] = data
+        downlinePromises[level] = data.downlinePositions
+        spilloverPromises[level] = data.otherOccupants
+        lineCountPromises[level] = data.lineCounts
+        lockPromises[level] = data.lockedForNextLevel
+        rolePromises[level] = data.viewerRole
+        cyclePromises[level] = { total: data.totalCycles, current: data.currentCycle }
+      })
 
       setOrbitLevelData(levelDataPromises)
       setDownlineData(downlinePromises)
