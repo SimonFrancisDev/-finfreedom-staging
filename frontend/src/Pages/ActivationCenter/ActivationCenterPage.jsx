@@ -275,9 +275,9 @@ const getActivationOrbitNodeType = (position, viewer) => {
 
 const getMiniOrbitRadius = (orbitType, line) => {
   const radii = {
-    P4: { 1: 72 },
-    P12: { 1: 46, 2: 78 },
-    P39: { 1: 36, 2: 64, 3: 92 },
+    P4: { 1: 82 },
+    P12: { 1: 52, 2: 88 },
+    P39: { 1: 42, 2: 72, 3: 100 },
   }
 
   return radii[orbitType]?.[line] || 34
@@ -379,6 +379,14 @@ const ActivationLevelOrbitPreview = ({ level, orbitType, levelName, price, statu
                   className={`level-orbit-preview__svg-node line-${node.line} ${nodeSize} ${node.isFilled ? 'is-filled' : 'is-empty'} ${node.isNext ? 'is-next' : ''} ${isLocked ? 'is-locked' : ''}`}
                 >
                   <circle cx={node.x} cy={node.y} r={radius} />
+                  {node.isFilled && (
+                    <circle
+                      className="level-orbit-preview__node-thread"
+                      cx={node.x}
+                      cy={node.y}
+                      r={radius + 4}
+                    />
+                  )}
                   {nodeSize !== 'tiny' && (
                     <text x={node.x} y={node.y + 3}>{node.position}</text>
                   )}
@@ -390,8 +398,7 @@ const ActivationLevelOrbitPreview = ({ level, orbitType, levelName, price, statu
           <g className="level-orbit-preview__svg-core" filter={`url(#activation-glow-${level})`}>
             <circle cx={center} cy={center} r="25" fill={`url(#activation-core-${level})`} />
             <circle cx={center} cy={center} r="29" />
-            <text x={center} y={center - 4}>{activationT('levels.preview.coreLabel', 'Level')}</text>
-            <text className="level-orbit-preview__svg-core-level" x={center} y={center + 14}>{level}</text>
+            <text className="level-orbit-preview__svg-core-you" x={center} y={center + 4}>{activationT('levels.preview.coreUser', 'You')}</text>
           </g>
         </svg>
       </div>
@@ -2280,7 +2287,7 @@ const ActivationCenterPage = () => {
 
                   <div className="activation-level-info-cell">
                     <span>{activationT('levels.info.price', 'Price')}</span>
-                    <strong>{activationT('levels.info.priceLabel', 'Price')}</strong>
+                    <strong>{activationT('levels.info.priceLabel', 'Level Price')}</strong>
                   </div>
 
                   <div className="activation-level-info-cell activation-level-info-cell--right">
