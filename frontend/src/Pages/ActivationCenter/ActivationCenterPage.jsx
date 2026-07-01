@@ -246,6 +246,20 @@ const getPositionOnAngle = (angle, radiusPx, centerX, centerY) => {
   }
 }
 
+const getMiniOrbitParentPosition = (orbitType, line, position) => {
+  if (line <= 1) return null
+
+  if (orbitType === 'P12' || orbitType === 'P39') {
+    if (line === 2) return Math.floor((Number(position) - 4) / 3) + 1
+  }
+
+  if (orbitType === 'P39' && line === 3) {
+    return Math.floor((Number(position) - 13) / 3) + 4
+  }
+
+  return null
+}
+
 const withGasBuffer = (estimate, bufferBps = GAS_BUFFER_BPS) => {
   try {
     return (BigInt(estimate) * bufferBps) / GAS_BUFFER_DENOMINATOR
@@ -308,17 +322,31 @@ const ActivationLevelOrbitPreview = ({ level, orbitType, levelName, price, statu
     const positions = structure.positions[line] || []
 
     return positions.map((position, index) => {
-      const angle = -90 + (index * 360) / Math.max(positions.length, 1)
+      const angle = structure.customAngles?.[line]?.[position] ?? (-90 + (index * 360) / Math.max(positions.length, 1))
       const point = getPositionOnAngle(angle, radius, center, center)
       return {
         line,
         position,
+        parentPosition: getMiniOrbitParentPosition(orbitType, line, position),
         x: point.x,
         y: point.y,
         isFilled: filledSet.has(Number(position)),
         isNext: Number(position) === Number(nextPosition),
       }
     })
+  })
+
+  const nodeByPosition = new Map(nodes.map((node) => [Number(node.position), node]))
+  const connectors = nodes.map((node) => {
+    const parentNode = node.parentPosition ? nodeByPosition.get(Number(node.parentPosition)) : null
+
+    return {
+      ...node,
+      x1: parentNode?.x ?? center,
+      y1: parentNode?.y ?? center,
+      x2: node.x,
+      y2: node.y,
+    }
   })
 
   return (
@@ -359,14 +387,14 @@ const ActivationLevelOrbitPreview = ({ level, orbitType, levelName, price, statu
           ))}
 
           <g className="level-orbit-preview__connectors">
-            {nodes.map((node) => (
+            {connectors.map((node) => (
               <line
                 key={`connector-${node.line}-${node.position}`}
                 className={`line-${node.line} ${node.isFilled ? 'is-filled' : node.isNext ? 'is-next' : hasCurrentCycleFills ? 'is-empty' : 'is-neutral'}`}
-                x1={center}
-                y1={center}
-                x2={node.x}
-                y2={node.y}
+                x1={node.x1}
+                y1={node.y1}
+                x2={node.x2}
+                y2={node.y2}
               />
             ))}
           </g>
