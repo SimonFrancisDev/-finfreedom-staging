@@ -249,12 +249,33 @@ const getPositionOnAngle = (angle, radiusPx, centerX, centerY) => {
 const getMiniOrbitParentPosition = (orbitType, line, position) => {
   if (line <= 1) return null
 
-  if (orbitType === 'P12' || orbitType === 'P39') {
-    if (line === 2) return Math.floor((Number(position) - 4) / 3) + 1
+  const numericPosition = Number(position)
+
+  if (orbitType === 'P12') {
+    const parentMap = {
+      4: 1, 7: 1, 10: 1,
+      5: 2, 8: 2, 11: 2,
+      6: 3, 9: 3, 12: 3,
+    }
+    return parentMap[numericPosition] || null
   }
 
-  if (orbitType === 'P39' && line === 3) {
-    return Math.floor((Number(position) - 13) / 3) + 4
+  if (orbitType === 'P39') {
+    const parentMap = {
+      4: 1, 7: 1, 10: 1,
+      5: 2, 8: 2, 11: 2,
+      6: 3, 9: 3, 12: 3,
+      13: 4, 22: 4, 31: 4,
+      14: 5, 23: 5, 32: 5,
+      15: 6, 24: 6, 33: 6,
+      16: 7, 25: 7, 34: 7,
+      17: 8, 26: 8, 35: 8,
+      18: 9, 27: 9, 36: 9,
+      19: 10, 28: 10, 37: 10,
+      20: 11, 29: 11, 38: 11,
+      21: 12, 30: 12, 39: 12,
+    }
+    return parentMap[numericPosition] || null
   }
 
   return null
@@ -267,8 +288,15 @@ const getMiniOrbitAngle = (orbitType, line, position, index, totalPositions) => 
     if (line === 1) return -90 + index * 120
 
     if (line === 2) {
-      const parentIndex = Math.floor((numericPosition - 4) / 3)
-      const childIndex = (numericPosition - 4) % 3
+      const line2ChildGroups = {
+        1: [4, 7, 10],
+        2: [5, 8, 11],
+        3: [6, 9, 12],
+      }
+      const parentPosition = getMiniOrbitParentPosition(orbitType, line, numericPosition)
+      const siblings = line2ChildGroups[parentPosition] || []
+      const parentIndex = parentPosition - 1
+      const childIndex = Math.max(siblings.indexOf(numericPosition), 0)
       const parentAngle = -90 + parentIndex * 120
       const ringStep = 360 / 9
 
@@ -277,11 +305,29 @@ const getMiniOrbitAngle = (orbitType, line, position, index, totalPositions) => 
   }
 
   if (orbitType === 'P39' && line === 3) {
+    const line2ChildGroups = {
+      1: [4, 7, 10],
+      2: [5, 8, 11],
+      3: [6, 9, 12],
+    }
+    const line3ChildGroups = {
+      4: [13, 22, 31],
+      5: [14, 23, 32],
+      6: [15, 24, 33],
+      7: [16, 25, 34],
+      8: [17, 26, 35],
+      9: [18, 27, 36],
+      10: [19, 28, 37],
+      11: [20, 29, 38],
+      12: [21, 30, 39],
+    }
     const parentPosition = getMiniOrbitParentPosition(orbitType, line, numericPosition)
-    const parentIndex = Math.floor((parentPosition - 4) / 3)
-    const parentChildIndex = (parentPosition - 4) % 3
+    const grandParentPosition = getMiniOrbitParentPosition(orbitType, 2, parentPosition)
+    const line2Siblings = line2ChildGroups[grandParentPosition] || []
+    const parentIndex = grandParentPosition - 1
+    const parentChildIndex = Math.max(line2Siblings.indexOf(parentPosition), 0)
     const parentAngle = (-90 + parentIndex * 120) + (parentChildIndex - 1) * (360 / 9)
-    const childIndex = (numericPosition - 13) % 3
+    const childIndex = Math.max((line3ChildGroups[parentPosition] || []).indexOf(numericPosition), 0)
     const ringStep = 360 / 27
 
     return parentAngle + (childIndex - 1) * ringStep
