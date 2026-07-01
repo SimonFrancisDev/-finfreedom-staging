@@ -260,6 +260,36 @@ const getMiniOrbitParentPosition = (orbitType, line, position) => {
   return null
 }
 
+const getMiniOrbitAngle = (orbitType, line, position, index, totalPositions) => {
+  const numericPosition = Number(position)
+
+  if (orbitType === 'P12' || orbitType === 'P39') {
+    if (line === 1) return -90 + index * 120
+
+    if (line === 2) {
+      const parentIndex = Math.floor((numericPosition - 4) / 3)
+      const childIndex = (numericPosition - 4) % 3
+      const parentAngle = -90 + parentIndex * 120
+      const ringStep = 360 / 9
+
+      return parentAngle + (childIndex - 1) * ringStep
+    }
+  }
+
+  if (orbitType === 'P39' && line === 3) {
+    const parentPosition = getMiniOrbitParentPosition(orbitType, line, numericPosition)
+    const parentIndex = Math.floor((parentPosition - 4) / 3)
+    const parentChildIndex = (parentPosition - 4) % 3
+    const parentAngle = (-90 + parentIndex * 120) + (parentChildIndex - 1) * (360 / 9)
+    const childIndex = (numericPosition - 13) % 3
+    const ringStep = 360 / 27
+
+    return parentAngle + (childIndex - 1) * ringStep
+  }
+
+  return -90 + (index * 360) / Math.max(totalPositions, 1)
+}
+
 const withGasBuffer = (estimate, bufferBps = GAS_BUFFER_BPS) => {
   try {
     return (BigInt(estimate) * bufferBps) / GAS_BUFFER_DENOMINATOR
@@ -322,7 +352,7 @@ const ActivationLevelOrbitPreview = ({ level, orbitType, levelName, price, statu
     const positions = structure.positions[line] || []
 
     return positions.map((position, index) => {
-      const angle = -90 + (index * 360) / Math.max(positions.length, 1)
+      const angle = getMiniOrbitAngle(orbitType, line, position, index, positions.length)
       const point = getPositionOnAngle(angle, radius, center, center)
       return {
         line,
@@ -2310,7 +2340,7 @@ const ActivationCenterPage = () => {
                   </div>
 
                   <div className="activation-level-info-cell activation-level-info-cell--right">
-                    <span>{activationT('levels.info.name', 'Level Name')}</span>
+                    <span>{activationT('levels.info.name', 'Stage')}</span>
                     <strong>{levelProgramName}</strong>
                   </div>
 
