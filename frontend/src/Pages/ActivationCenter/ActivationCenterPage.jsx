@@ -322,7 +322,7 @@ const ActivationLevelOrbitPreview = ({ level, orbitType, levelName, price, statu
     const positions = structure.positions[line] || []
 
     return positions.map((position, index) => {
-      const angle = structure.customAngles?.[line]?.[position] ?? (-90 + (index * 360) / Math.max(positions.length, 1))
+      const angle = -90 + (index * 360) / Math.max(positions.length, 1)
       const point = getPositionOnAngle(angle, radius, center, center)
       return {
         line,
