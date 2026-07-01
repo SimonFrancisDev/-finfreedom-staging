@@ -961,7 +961,7 @@ const ActivationCenterPage = () => {
           positionsFilled: positions.filter((p) => p.occupant).length,
           filledPositions: positions
             .filter((p) => p.occupant && p.occupant !== ethers.ZeroAddress)
-            .map((p) => Number(p.position || p.positionNumber || p.positionIndex || p.slot || p.slotIndex || 0))
+            .map((p) => Number(p.number || p.position || p.positionNumber || p.positionIndex || p.slot || p.slotIndex || 0))
             .filter(Boolean),
           totalPositions: orbitTypeConfig[levelToOrbitType[level]]?.positions || 4,
         }
