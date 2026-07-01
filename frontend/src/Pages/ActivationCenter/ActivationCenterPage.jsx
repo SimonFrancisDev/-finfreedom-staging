@@ -377,7 +377,7 @@ const ActivationLevelOrbitPreview = ({ level, orbitType, levelName, price, statu
               return (
                 <g
                   key={`node-${node.line}-${node.position}`}
-                  className={`level-orbit-preview__svg-node line-${node.line} ${nodeSize} ${node.isFilled ? 'is-filled' : 'is-empty'} ${node.isNext ? 'is-next' : ''} ${isLocked ? 'is-locked' : ''}`}
+                  className={`level-orbit-preview__svg-node line-${node.line} ${nodeSize} ${node.isFilled ? 'is-filled' : node.isNext ? 'is-next' : 'is-empty'} ${isLocked ? 'is-locked' : ''}`}
                 >
                   <circle cx={node.x} cy={node.y} r={radius} />
                   {node.isFilled && (
@@ -420,18 +420,26 @@ const ActivationLevelOrbitPreview = ({ level, orbitType, levelName, price, statu
             aria-label={activationT('levels.preview.toggleRules', 'Show orbit payout distribution')}
           >
             <FaInfoCircle />
+            <span>{activationT('levels.preview.infoButton', 'Orbit info')}</span>
           </button>
         </div>
 
         {isRuleInfoOpen && (
-          <div className="level-orbit-preview__rules">
-            {copy.lines.map((line) => (
-              <div key={line.label} className={`level-orbit-preview__rule line-${line.line}`}>
-                <span>{line.label}</span>
-                <strong>{line.payout}</strong>
-                <em>{line.positions}</em>
-              </div>
-            ))}
+          <div className="level-orbit-preview__info-panel">
+            <div className="level-orbit-preview__headline">
+              <strong>{levelName} · {copy.headline}</strong>
+              <span>{copy.positions} · {copy.linePattern} · {price} USDT</span>
+            </div>
+
+            <div className="level-orbit-preview__rules">
+              {copy.lines.map((line) => (
+                <div key={line.label} className={`level-orbit-preview__rule line-${line.line}`}>
+                  <span>{line.label}</span>
+                  <strong>{line.payout}</strong>
+                  <em>{line.positions}</em>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
