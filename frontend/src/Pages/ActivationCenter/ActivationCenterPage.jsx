@@ -435,24 +435,6 @@ const ActivationLevelOrbitPreview = ({ level, orbitType, levelName, price, statu
           </div>
         )}
 
-        <div className="level-orbit-preview__metrics">
-          <div>
-            <span>{activationT('levels.preview.metrics.type', 'Orbit Type')}</span>
-            <strong>{orbitType}</strong>
-          </div>
-          <div>
-            <span>{activationT('levels.preview.metrics.positions', 'Positions')}</span>
-            <strong>{orbitTypeConfig[orbitType]?.positions}</strong>
-          </div>
-          <div>
-            <span>{activationT('levels.preview.metrics.lines', 'Lines')}</span>
-            <strong>{orbitTypeConfig[orbitType]?.lines}</strong>
-          </div>
-          <div>
-            <span>{activationT('levels.preview.metrics.charge', 'Charge')}</span>
-            <strong>10%</strong>
-          </div>
-        </div>
       </div>
     </div>
   )
