@@ -289,10 +289,11 @@ const getMiniOrbitNodeSize = (orbitType, line) => {
   return 'standard'
 }
 
-const ActivationLevelOrbitPreview = ({ level, orbitType, levelName, price, status, activationT }) => {
+const ActivationLevelOrbitPreview = ({ level, orbitType, levelName, price, status, filledPositions = [], isLocked, activationT }) => {
   const structure = getOrbitStructure(orbitType)
   const copy = orbitStructureCopy[orbitType]
   const center = 110
+  const filledSet = new Set(filledPositions.map(Number))
 
   if (!structure || !copy) return null
 
@@ -300,10 +301,10 @@ const ActivationLevelOrbitPreview = ({ level, orbitType, levelName, price, statu
     const radius = getMiniOrbitRadius(orbitType, line)
     const positions = structure.positions[line] || []
 
-    return positions.map((position) => {
-      const angle = structure.customAngles?.[line]?.[position] ?? structure.startAngles[line] ?? -90
+    return positions.map((position, index) => {
+      const angle = -90 + (index * 360) / Math.max(positions.length, 1)
       const point = getPositionOnAngle(angle, radius, center, center)
-      return { line, position, x: point.x, y: point.y }
+      return { line, position, x: point.x, y: point.y, isFilled: filledSet.has(Number(position)) }
     })
   })
 
@@ -348,7 +349,7 @@ const ActivationLevelOrbitPreview = ({ level, orbitType, levelName, price, statu
             {nodes.map((node) => (
               <line
                 key={`connector-${node.line}-${node.position}`}
-                className={`line-${node.line}`}
+                className={`line-${node.line} ${node.isFilled ? 'is-filled' : 'is-empty'}`}
                 x1={center}
                 y1={center}
                 x2={node.x}
@@ -362,7 +363,10 @@ const ActivationLevelOrbitPreview = ({ level, orbitType, levelName, price, statu
               const nodeSize = getMiniOrbitNodeSize(orbitType, node.line)
               const radius = nodeSize === 'tiny' ? 5 : nodeSize === 'small' ? 7 : 9
               return (
-                <g key={`node-${node.line}-${node.position}`} className={`level-orbit-preview__svg-node line-${node.line} ${nodeSize}`}>
+                <g
+                  key={`node-${node.line}-${node.position}`}
+                  className={`level-orbit-preview__svg-node line-${node.line} ${nodeSize} ${node.isFilled ? 'is-filled' : 'is-empty'} ${isLocked ? 'is-locked' : ''}`}
+                >
                   <circle cx={node.x} cy={node.y} r={radius} />
                   {nodeSize !== 'tiny' && (
                     <text x={node.x} y={node.y + 3}>{node.position}</text>
@@ -931,6 +935,10 @@ const ActivationCenterPage = () => {
           lockedForNextLevel: snapshot.lockedForNextLevel || '0',
           viewerRole,
           positionsFilled: positions.filter((p) => p.occupant).length,
+          filledPositions: positions
+            .filter((p) => p.occupant && p.occupant !== ethers.ZeroAddress)
+            .map((p) => Number(p.position || p.positionNumber || p.positionIndex || p.slot || p.slotIndex || 0))
+            .filter(Boolean),
           totalPositions: orbitTypeConfig[levelToOrbitType[level]]?.positions || 4,
         }
       } catch (err) {
@@ -2221,7 +2229,7 @@ const ActivationCenterPage = () => {
             return (
               <div
                 key={level}
-                className={`activation-levels__card premium-card compact-level-card ${isActive ? 'activated' : ''} ${isNext ? 'next' : ''}`}
+                className={`activation-levels__card premium-card compact-level-card ${isActive ? 'activated' : ''} ${isNext ? 'next' : ''} ${!isActive && !isNext ? 'is-locked-level' : ''}`}
                 style={{ background: getLevelBackground(level) }}
               >
                 <div className="compact-level-card__header">
@@ -2253,6 +2261,8 @@ const ActivationCenterPage = () => {
                   levelName={levelProgramName}
                   price={price}
                   status={levelStatusLabel}
+                  filledPositions={orbitData?.filledPositions || []}
+                  isLocked={!isActive && !isNext}
                   activationT={activationT}
                 />
 

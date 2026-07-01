@@ -582,6 +582,26 @@
     0 0 0 1px rgba(245, 158, 11, 0.08);
 }
 
+.premium-card.is-locked-level {
+  border-color: rgba(120, 144, 176, 0.08);
+  box-shadow:
+    0 14px 30px rgba(2, 6, 23, 0.14),
+    inset 0 1px 0 rgba(255,255,255,0.025);
+}
+
+.premium-card.is-locked-level::before {
+  background:
+    linear-gradient(180deg, rgba(5, 10, 18, 0.58), rgba(5, 10, 18, 0.84)),
+    linear-gradient(135deg, rgba(255,255,255,0.015), rgba(255,255,255,0));
+}
+
+.premium-card.is-locked-level .compact-level-card__level,
+.premium-card.is-locked-level .compact-level-card__price,
+.premium-card.is-locked-level .level-orbit,
+.premium-card.is-locked-level .level-orbit-preview {
+  filter: saturate(0.62);
+}
+
 .compact-level-card {
   display: flex;
   flex-direction: column;
@@ -694,7 +714,7 @@
 
 .level-orbit-preview {
   display: grid;
-  grid-template-columns: minmax(158px, 1.05fr) minmax(0, 1fr);
+  grid-template-columns: 1fr;
   gap: 16px;
   align-items: center;
   min-height: 224px;
@@ -809,6 +829,15 @@
   stroke: rgba(141, 91, 255, 0.12);
 }
 
+.level-orbit-preview__connectors line.is-filled {
+  stroke-opacity: 1;
+  stroke-width: 1.15;
+}
+
+.level-orbit-preview__connectors line.is-empty {
+  stroke-opacity: 0.42;
+}
+
 .level-orbit-preview__svg-node {
   transition: transform 0.18s ease, opacity 0.18s ease;
   transform-origin: center;
@@ -830,6 +859,29 @@
 
 .level-orbit-preview__svg-node.line-3 circle {
   fill: #8d5bff;
+}
+
+.level-orbit-preview__svg-node.is-filled circle {
+  stroke: rgba(255,255,255,0.96);
+  stroke-width: 1.8;
+  filter:
+    drop-shadow(0 0 8px rgba(22, 230, 161, 0.42))
+    drop-shadow(0 5px 12px rgba(0,0,0,0.34));
+}
+
+.level-orbit-preview__svg-node.is-empty {
+  opacity: 0.38;
+}
+
+.level-orbit-preview__svg-node.is-empty circle {
+  fill: rgba(255,255,255,0.1);
+  stroke: rgba(255,255,255,0.42);
+  stroke-dasharray: 2 2;
+  filter: none;
+}
+
+.level-orbit-preview__svg-node.is-locked {
+  opacity: 0.24;
 }
 
 .level-orbit-preview__svg-node text {
@@ -958,7 +1010,7 @@
 
 .level-orbit-preview__metrics {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 7px;
 }
 
@@ -978,13 +1030,17 @@
   font-weight: 900;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  overflow-wrap: anywhere;
 }
 
 .level-orbit-preview__metrics strong {
   display: block;
   color: #fff;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 950;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 @keyframes activationParticleFloat {
