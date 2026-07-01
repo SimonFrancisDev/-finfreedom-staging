@@ -296,7 +296,8 @@ const ActivationLevelOrbitPreview = ({ level, orbitType, levelName, price, statu
   const center = 110
   const filledSet = new Set(filledPositions.map(Number))
   const normalizedTotalPositions = totalPositions || orbitTypeConfig[orbitType]?.positions || 0
-  const nextPosition = !isLocked && filledSet.size < normalizedTotalPositions
+  const hasCurrentCycleFills = filledSet.size > 0
+  const nextPosition = !isLocked && hasCurrentCycleFills && filledSet.size < normalizedTotalPositions
     ? Array.from({ length: normalizedTotalPositions }, (_, index) => index + 1).find((position) => !filledSet.has(position))
     : null
 
@@ -321,7 +322,7 @@ const ActivationLevelOrbitPreview = ({ level, orbitType, levelName, price, statu
   })
 
   return (
-    <div className={`level-orbit-preview level-orbit-preview--${orbitType.toLowerCase()}`}>
+    <div className={`level-orbit-preview level-orbit-preview--${orbitType.toLowerCase()} ${hasCurrentCycleFills ? 'has-current-cycle-fills' : 'is-empty-cycle'}`}>
       <div className="level-orbit-preview__stage" aria-hidden="true">
         <svg className="level-orbit-preview__svg" viewBox="0 0 220 220" role="img">
           <defs>
@@ -361,7 +362,7 @@ const ActivationLevelOrbitPreview = ({ level, orbitType, levelName, price, statu
             {nodes.map((node) => (
               <line
                 key={`connector-${node.line}-${node.position}`}
-                className={`line-${node.line} ${node.isFilled ? 'is-filled' : 'is-empty'} ${node.isNext ? 'is-next' : ''}`}
+                className={`line-${node.line} ${node.isFilled ? 'is-filled' : node.isNext ? 'is-next' : hasCurrentCycleFills ? 'is-empty' : 'is-neutral'}`}
                 x1={center}
                 y1={center}
                 x2={node.x}
@@ -377,7 +378,7 @@ const ActivationLevelOrbitPreview = ({ level, orbitType, levelName, price, statu
               return (
                 <g
                   key={`node-${node.line}-${node.position}`}
-                  className={`level-orbit-preview__svg-node line-${node.line} ${nodeSize} ${node.isFilled ? 'is-filled' : node.isNext ? 'is-next' : 'is-empty'} ${isLocked ? 'is-locked' : ''}`}
+                  className={`level-orbit-preview__svg-node line-${node.line} ${nodeSize} ${node.isFilled ? 'is-filled' : node.isNext ? 'is-next' : hasCurrentCycleFills ? 'is-empty' : 'is-neutral'} ${isLocked ? 'is-locked' : ''}`}
                 >
                   <circle cx={node.x} cy={node.y} r={radius} />
                   {node.isFilled && (

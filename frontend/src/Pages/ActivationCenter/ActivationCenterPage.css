@@ -964,6 +964,11 @@
   stroke-opacity: 0.42;
 }
 
+.level-orbit-preview__connectors line.is-neutral {
+  stroke: rgba(255,255,255,0.08);
+  stroke-opacity: 0.38;
+}
+
 .level-orbit-preview__svg-node circle {
   stroke: rgba(255,255,255,0.34);
   stroke-width: 0.85;
@@ -1004,6 +1009,10 @@
   opacity: 0.82;
 }
 
+.level-orbit-preview__svg-node.is-neutral {
+  opacity: 0.46;
+}
+
 .level-orbit-preview__svg-node.is-next {
   opacity: 1;
 }
@@ -1013,6 +1022,17 @@
   stroke: rgba(255,255,255,0.16);
   stroke-dasharray: none;
   filter: none;
+}
+
+.level-orbit-preview__svg-node.is-neutral circle {
+  fill: rgba(255,255,255,0.055);
+  stroke: rgba(255,255,255,0.18);
+  stroke-dasharray: none;
+  filter: none;
+}
+
+.level-orbit-preview__svg-node.is-neutral text {
+  fill: rgba(226, 232, 240, 0.54);
 }
 
 .level-orbit-preview__svg-node.is-locked {
