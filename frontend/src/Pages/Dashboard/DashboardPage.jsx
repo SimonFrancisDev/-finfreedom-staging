@@ -5,6 +5,7 @@ import { useWallet } from '../../hooks/useWallet'
 import { getApiUrl } from '../../Services/apiConfig'
 import { getProfileReadAuthIfLocked } from '../../Services/profilePrivacyApi'
 import { useToast } from '../../components/feedback'
+import { MetricSparkline } from '../../components/charts/InstitutionalCharts'
 import { CONTRACT_ADDRESSES, NETWORK_CONFIG } from '../../constants/addresses'
 import {
   Activity,
@@ -398,73 +399,14 @@ const AnimatedNumber = ({ value = 0, decimals = 0, prefix = '', suffix = '' }) =
 const DashboardLineChart = ({ series = [] }) => {
   const { t } = useTranslation()
 
-  if (!Array.isArray(series) || series.length === 0) {
-    return (
-      <div className="dashboard-progress__placeholder">
-        <span className="soft-text">{t('dashboardPage.chart.initializing', 'Growth data initializing...')}</span>
-      </div>
-    )
-  }
-
-  const points = series.slice(-7)
-  const values = points.map((item) => Number(item.registrations || 0))
-  const max = Math.max(...values, 1)
-  const width = 100
-  const height = 84
-  const stepX = points.length > 1 ? width / (points.length - 1) : width
-
-  const coordinates = points.map((item, index) => {
-    const value = Number(item.registrations || 0)
-    const x = points.length === 1 ? width / 2 : index * stepX
-    const y = height - (value / max) * (height - 10)
-    return { x, y, value, date: item.date }
-  })
-
-  const polylinePoints = coordinates.map((point) => `${point.x},${point.y}`).join(' ')
-
   return (
-    <div className="dashboard-line-chart">
-      <div className="dashboard-line-chart__svg-wrap">
-        <svg
-          viewBox={`0 0 ${width} ${height}`}
-          preserveAspectRatio="none"
-          className="dashboard-line-chart__svg"
-          aria-hidden="true"
-        >
-          <line x1="0" y1={height} x2={width} y2={height} className="dashboard-line-chart__axis" />
-          <polyline
-            fill="none"
-            stroke="var(--glow-blue)"
-            strokeWidth="5"
-            opacity="0.12"
-            points={polylinePoints}
-            className="dashboard-line-chart__pulse-glow"
-          />
-          <polyline
-            fill="none"
-            stroke="var(--glow-blue)"
-            strokeWidth="1.6"
-            strokeLinejoin="round"
-            strokeLinecap="round"
-            points={polylinePoints}
-            className="dashboard-line-chart__pulse-line"
-          />
-        </svg>
-      </div>
-
-      <div className="dashboard-line-chart__labels">
-        {points.map((item, index) => (
-          <div key={`${item.date || index}-${index}`} className="dashboard-line-chart__label-item">
-            <span className="dashboard-line-chart__label-text">
-              {item.date ? item.date.slice(5) : `#${index + 1}`}
-            </span>
-            <span className="dashboard-line-chart__label-value">
-              {Number(item.registrations || 0)}
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
+    <MetricSparkline
+      data={Array.isArray(series) ? series.slice(-7) : []}
+      valueKey="registrations"
+      labelKey="date"
+      emptyLabel={t('dashboardPage.chart.initializing', 'Growth data initializing...')}
+      ariaLabel={t('dashboardPage.chart.ariaLabel', 'Seven day registration trend')}
+    />
   )
 }
 

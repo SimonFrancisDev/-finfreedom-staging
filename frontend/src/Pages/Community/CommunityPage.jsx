@@ -9,6 +9,7 @@ import { getProfileReadAuthIfLocked } from '../../Services/profilePrivacyApi'
 import { resolveIdentity } from '../../utils/identityResolver'
 import { Modal } from '../../components/overlay'
 import { useToast } from '../../components/feedback'
+import { GrowthBarChart } from '../../components/charts/InstitutionalCharts'
 import { ethers } from 'ethers'
 import {
   ArrowRight,
@@ -1370,31 +1371,14 @@ const CommunityPage = ({ onNavigate }) => {
           <section className="community-growth">
             {communityGrowth.series.length ? (
               <>
-                <div className="growth-chart">
-                  {communityGrowth.series.map((item, idx) => {
-                    const registrations = Number(item.registrations || 0)
-                    const maxRegistrations = Math.max(
-                      ...communityGrowth.series.map((entry) => Number(entry.registrations || 0)),
-                      1
-                    )
-                    const height = `${Math.max((registrations / maxRegistrations) * 100, registrations > 0 ? 12 : 4)}%`
-
-                    return (
-                      <div
-                        key={item.date}
-                        className="chart-bar"
-                        style={{ height }}
-                        title={communityT('growth.barTitle', '{{date}} - {{count}} registrations - {{amount}} USDT', {
-                          date: item.date,
-                          count: registrations,
-                          amount: item.earningsLiquid || '0.00',
-                        })}
-                      >
-                        <span>{item.date.slice(5)}</span>
-                      </div>
-                    )
-                  })}
-                </div>
+                <GrowthBarChart
+                  data={communityGrowth.series}
+                  valueKey="registrations"
+                  labelKey="date"
+                  amountKey="earningsLiquid"
+                  emptyLabel={communityT('growth.syncing', 'Growth data syncing')}
+                  ariaLabel={communityT('growth.ariaLabel', 'Daily community registration trend')}
+                />
 
                 <p className="chart-note">
                   {communityT('growth.note', 'Daily registrations over the last {{count}} days', { count: communityGrowth.rangeDays })}
