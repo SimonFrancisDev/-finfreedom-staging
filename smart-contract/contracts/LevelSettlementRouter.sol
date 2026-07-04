@@ -51,6 +51,10 @@ interface ISettlementOrbitEarnings {
     function recordExternalEarning(address user, uint8 level, uint256 amount) external;
 }
 
+interface ISettlementMatrixParent {
+    function matrixParentOf(address user, uint8 level) external view returns (address);
+}
+
 interface ISettlementChargeRecipients {
     function nftPool() external view returns (address);
     function operationsWallet() external view returns (address);
@@ -540,7 +544,10 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
             uint32 mirrorCycle
         )
     {
-        recycleReceiver = _resolveActiveUpline(input.registration, input.id1Wallet, input.orbitOwner, input.level);
+        recycleReceiver = ISettlementMatrixParent(
+            input.orbitType == 12 ? input.p12Orbit : input.p39Orbit
+        ).matrixParentOf(input.orbitOwner, input.level);
+        if (recycleReceiver == address(0)) recycleReceiver = input.id1Wallet;
         uint256 ruleBaseAmount = input.amount;
         uint256 systemCharge = (input.amount * 10) / 100;
         uint256 nftPoolAmount = (systemCharge * 80) / 100;

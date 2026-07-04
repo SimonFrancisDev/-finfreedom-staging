@@ -31,7 +31,6 @@ import "./BaseOrbit.sol";
  */
 contract P39Orbit is BaseOrbit {
     error UnsupportedP39Level();
-    error InvalidP39Line();
     error InvalidLinePayment();
     error InvalidP39Position();
 
@@ -48,6 +47,8 @@ contract P39Orbit is BaseOrbit {
     uint256 public constant UPGRADE3_REQ = 80 * 10**6;
     uint256 public constant UPGRADE6_REQ = 640 * 10**6;
     uint256 public constant UPGRADE9_REQ = 5120 * 10**6;
+
+    mapping(address => mapping(uint8 => address)) internal matrixPlacementParent;
 
     function initialize(
         address _levelManager,
@@ -168,63 +169,44 @@ contract P39Orbit is BaseOrbit {
 
     function _line2ParentPosition(uint8 position) internal pure returns (uint8) {
         if (position < 4 || position > 12) revert InvalidP39Position();
-
-        if (position == 4 || position == 7 || position == 10) return 1;
-        if (position == 5 || position == 8 || position == 11) return 2;
-        return 3; // 6, 9, 12
+        return uint8(((position - 4) % 3) + 1);
     }
 
     function _line3ParentPosition(uint8 position) internal pure returns (uint8) {
         if (position < 13 || position > 39) revert InvalidP39Position();
-
-        if (position == 13 || position == 22 || position == 31) return 4;
-        if (position == 14 || position == 23 || position == 32) return 5;
-        if (position == 15 || position == 24 || position == 33) return 6;
-        if (position == 16 || position == 25 || position == 34) return 7;
-        if (position == 17 || position == 26 || position == 35) return 8;
-        if (position == 18 || position == 27 || position == 36) return 9;
-        if (position == 19 || position == 28 || position == 37) return 10;
-        if (position == 20 || position == 29 || position == 38) return 11;
-        return 12; // 21, 30, 39
+        return uint8(4 + ((position - 13) % 9));
     }
 
     function _line3GrandParentLine1Position(uint8 position) internal pure returns (uint8) {
         uint8 parent = _line3ParentPosition(position);
-
-        if (parent == 4 || parent == 7 || parent == 10) return 1;
-        if (parent == 5 || parent == 8 || parent == 11) return 2;
-        return 3; // 6,9,12
+        return uint8(((parent - 4) % 3) + 1);
     }
 
-    function _matrixParentOf(address user, uint8 level) internal view returns (address) {
-        address id1 = ILevelManagerReader(levelManager).id1Wallet();
-        address current = IRegistration(registration).getReferrer(user);
-
-        for (uint8 depth; current != address(0); ) {
-            if (depth >= MAX_UPLINE_SEARCH_DEPTH) revert UplineSearchTooDeep(user, level);
-
-            uint8 userPosition = _findUserPosition(current, level, user);
-            if (userPosition != 0) {
-                if (userPosition <= 3) return current;
-
-                OrbitData storage parentOrbit = userOrbits[current][level];
-
-                if (userPosition <= 12) {
-                    address line1Parent = parentOrbit.positions[_line2ParentPosition(userPosition)].user;
-                    return line1Parent != address(0) ? line1Parent : id1;
-                }
-
-                address line2Parent = parentOrbit.positions[_line3ParentPosition(userPosition)].user;
-                return line2Parent != address(0) ? line2Parent : id1;
-            }
-
-            current = IRegistration(registration).getReferrer(current);
-            unchecked {
-                ++depth;
-            }
+    function _afterPositionPlaced(
+        address orbitOwner,
+        uint8 level,
+        address user,
+        uint8 position
+    ) internal override {
+        address parent;
+        if (position <= 3) {
+            parent = orbitOwner;
+        } else if (position <= 12) {
+            uint8 parentPos = _line2ParentPosition(position);
+            parent = userOrbits[orbitOwner][level].positions[parentPos].user;
+        } else {
+            uint8 parentPos = _line3ParentPosition(position);
+            parent = userOrbits[orbitOwner][level].positions[parentPos].user;
         }
 
-        return id1;
+        if (parent == address(0)) parent = ILevelManagerReader(levelManager).id1Wallet();
+        matrixPlacementParent[user][level] = parent;
+    }
+
+    function matrixParentOf(address user, uint8 level) public view returns (address) {
+        address storedParent = matrixPlacementParent[user][level];
+        if (storedParent != address(0)) return storedParent;
+        return ILevelManagerReader(levelManager).id1Wallet();
     }
 
     function _resolveRecipients(
@@ -240,8 +222,8 @@ contract P39Orbit is BaseOrbit {
 
         // Line 1 landing: user -> orbitOwner -> matrix parent -> matrix grandparent
         if (position <= 3) {
-            spillover1Recipient = _matrixParentOf(orbitOwner, level);
-            spillover2Recipient = _matrixParentOf(spillover1Recipient, level);
+            spillover1Recipient = matrixParentOf(orbitOwner, level);
+            spillover2Recipient = matrixParentOf(spillover1Recipient, level);
             return (spillover1Recipient, spillover2Recipient);
         }
 
@@ -253,7 +235,7 @@ contract P39Orbit is BaseOrbit {
                 : id1;
 
             spillover1Recipient = line1Parent;
-            spillover2Recipient = _matrixParentOf(orbitOwner, level);
+            spillover2Recipient = matrixParentOf(orbitOwner, level);
             return (spillover1Recipient, spillover2Recipient);
         }
 
@@ -295,5 +277,5 @@ contract P39Orbit is BaseOrbit {
         return (address(0), address(0));
     }
 
-    uint256[50] private __gap;
+    uint256[49] private __gap;
 }

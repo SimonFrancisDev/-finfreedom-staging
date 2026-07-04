@@ -946,6 +946,69 @@ describe("Audit readiness contract invariants", function () {
     expect(recycleReceipts.some((event) => event.args.grossAmount === usdtUnits(20))).to.equal(false);
   });
 
+  it("routes P12 recycle release through placement parent, not raw referrer", async function () {
+    const { owner, users, registration, levelManager, router, p12, usdt, register, activateToLevel } = await deployCoreSystem();
+    const levelManagerSigner = await impersonateLevelManager(levelManager);
+    const founderWallets = users.slice(0, 8);
+    const rawReferrer = users[8];
+    const placementParent = users[9];
+    const orbitOwner = users[10];
+    const fillers = users.slice(11, 21);
+    const recycleTrigger = users[21];
+    const finalRecycleTrigger = users[22];
+
+    await register(rawReferrer, owner.address);
+    await activateToLevel(rawReferrer, 2);
+    await register(placementParent, owner.address);
+    await activateToLevel(placementParent, 2);
+
+    await register(orbitOwner, rawReferrer.address);
+    await activateToLevel(orbitOwner, 2);
+
+    await p12
+      .connect(levelManagerSigner)
+      .fillPositionDetailed(
+        placementParent.address,
+        2,
+        orbitOwner.address,
+        rawReferrer.address,
+        usdtUnits(20),
+        9901
+      );
+
+    for (const filler of fillers) {
+      await register(filler, orbitOwner.address);
+      await activateToLevel(filler, 2);
+    }
+
+    await register(recycleTrigger, orbitOwner.address);
+    await register(finalRecycleTrigger, orbitOwner.address);
+
+    await registration.connect(recycleTrigger).activateLevel(2);
+
+    const observed = await balanceDeltas(
+      usdt,
+      [rawReferrer, placementParent, ...founderWallets],
+      () => registration.connect(finalRecycleTrigger).activateLevel(2)
+    );
+
+    const releaseEvent = findEvent(observed.receipt, router, "RecycleReserveUpdated");
+    const recycleReceipts = parseEvents(observed.receipt, levelManager, "DetailedPayoutReceiptRecorded")
+      .filter((event) => event.args.receiptType === 4n);
+
+    const rawReferrerDelta = observed.deltas[0];
+    const placementParentDelta = observed.deltas[1];
+    const founderDelta = observed.deltas.slice(2).reduce((total, delta) => total + delta, 0n);
+
+    expect(releaseEvent.args.reservedAmount).to.equal(usdtUnits(20));
+    expect(releaseEvent.args.released).to.equal(true);
+    expect(rawReferrerDelta).to.equal(0n);
+    expect(placementParentDelta).to.equal(usdtUnits(8));
+    expect(founderDelta).to.equal(usdtUnits(10));
+    expect(recycleReceipts.some((event) => event.args.receiver === rawReferrer.address)).to.equal(false);
+    expect(recycleReceipts.some((event) => event.args.receiver === placementParent.address)).to.equal(true);
+  });
+
   it("reserves mirrored P12 arrivals that land on the recycle window instead of paying them liquid", async function () {
     const { users, registration, levelManager, router, p12, usdt, register, activateToLevel } = await deployCoreSystem();
     const sponsor = users[8];
@@ -1150,6 +1213,89 @@ describe("Audit readiness contract invariants", function () {
     expect(recycleReceipts.some((event) => event.args.grossAmount === usdtUnits(40))).to.equal(false);
   });
 
+  it("routes P39 recycle release through placement chain, not raw referrer", async function () {
+    const { owner, users, registration, levelManager, router, p39, usdt, register, activateToLevel } = await deployCoreSystem();
+    const levelManagerSigner = await impersonateLevelManager(levelManager);
+    const founderWallets = users.slice(0, 8);
+    const rawReferrer = users[8];
+    const matrixGrandParent = users[9];
+    const placementParent = users[10];
+    const orbitOwner = users[11];
+    const generated = await createFundedWallets(owner, 39);
+    const fillers = generated.slice(0, 37);
+    const recycleTrigger = generated[37];
+    const finalRecycleTrigger = generated[38];
+
+    await register(rawReferrer, owner.address);
+    await activateToLevel(rawReferrer, 3);
+    await register(matrixGrandParent, owner.address);
+    await activateToLevel(matrixGrandParent, 3);
+    await register(placementParent, rawReferrer.address);
+    await activateToLevel(placementParent, 3);
+
+    await p39
+      .connect(levelManagerSigner)
+      .fillPositionDetailed(
+        matrixGrandParent.address,
+        3,
+        placementParent.address,
+        rawReferrer.address,
+        usdtUnits(40),
+        9911
+      );
+
+    await register(orbitOwner, rawReferrer.address);
+    await activateToLevel(orbitOwner, 3);
+
+    await p39
+      .connect(levelManagerSigner)
+      .fillPositionDetailed(
+        placementParent.address,
+        3,
+        orbitOwner.address,
+        rawReferrer.address,
+        usdtUnits(40),
+        9912
+      );
+
+    for (const filler of fillers) {
+      await register(filler, orbitOwner.address);
+      await activateToLevel(filler, 3);
+    }
+
+    await register(recycleTrigger, orbitOwner.address);
+    await registration.connect(recycleTrigger).activateLevel(2);
+    await register(finalRecycleTrigger, orbitOwner.address);
+    await registration.connect(finalRecycleTrigger).activateLevel(2);
+
+    await registration.connect(recycleTrigger).activateLevel(3);
+
+    const observed = await balanceDeltas(
+      usdt,
+      [rawReferrer, placementParent, matrixGrandParent, ...founderWallets],
+      () => registration.connect(finalRecycleTrigger).activateLevel(3)
+    );
+
+    const releaseEvent = findEvent(observed.receipt, router, "RecycleReserveUpdated");
+    const recycleReceipts = parseEvents(observed.receipt, levelManager, "DetailedPayoutReceiptRecorded")
+      .filter((event) => event.args.receiptType === 4n);
+
+    const rawReferrerDelta = observed.deltas[0];
+    const placementParentDelta = observed.deltas[1];
+    const matrixGrandParentDelta = observed.deltas[2];
+    const founderDelta = observed.deltas.slice(3).reduce((total, delta) => total + delta, 0n);
+
+    expect(releaseEvent.args.reservedAmount).to.equal(usdtUnits(40));
+    expect(releaseEvent.args.released).to.equal(true);
+    expect(rawReferrerDelta).to.equal(0n);
+    expect(placementParentDelta).to.equal(usdtUnits(8));
+    expect(matrixGrandParentDelta).to.equal(usdtUnits(8));
+    expect(founderDelta).to.equal(usdtUnits(20));
+    expect(recycleReceipts.some((event) => event.args.receiver === rawReferrer.address)).to.equal(false);
+    expect(recycleReceipts.some((event) => event.args.receiver === placementParent.address)).to.equal(true);
+    expect(recycleReceipts.some((event) => event.args.receiver === matrixGrandParent.address)).to.equal(true);
+  });
+
   it("bounds sponsor resolution before deep inactive referral chains can exhaust gas", async function () {
     const { owner, registration, levelManager } = await deployLevelManagerWithMockRegistration();
     const start = ethers.Wallet.createRandom().address;
@@ -1350,6 +1496,209 @@ describe("Audit readiness contract invariants", function () {
     expect(spill1Receipt.args.grossAmount).to.equal(usdtUnits(8));
     expect(spill2Receipt.args.receiver).to.equal(X.address);
     expect(spill2Receipt.args.grossAmount).to.equal(usdtUnits(20));
+  });
+
+  it("walks the connected P12 matrix chain before falling back to ID1", async function () {
+    const { owner, users, levelManager, p12, register } = await deployCoreSystem();
+    const levelManagerSigner = await impersonateLevelManager(levelManager);
+
+    const inactiveRoot = users[8];
+    const visibleMatrixParent = users[9];
+    const orbitOwner = users[10];
+    const activatingUser = users[11];
+
+    await register(inactiveRoot, owner.address);
+    await register(visibleMatrixParent, inactiveRoot.address);
+    await register(orbitOwner, inactiveRoot.address);
+    await register(activatingUser, orbitOwner.address);
+
+    await p12
+      .connect(levelManagerSigner)
+      .fillPositionDetailed(
+        visibleMatrixParent.address,
+        2,
+        orbitOwner.address,
+        visibleMatrixParent.address,
+        usdtUnits(20),
+        9701
+      );
+
+    const orbitOwnerPosition = await p12.getPosition(visibleMatrixParent.address, 2, 1);
+    expect(orbitOwnerPosition.occupant).to.equal(orbitOwner.address);
+
+    await p12
+      .connect(levelManagerSigner)
+      .fillPositionDetailed(
+        orbitOwner.address,
+        2,
+        activatingUser.address,
+        orbitOwner.address,
+        usdtUnits(20),
+        9702
+      );
+
+    const rule = await p12.getPositionRuleView(orbitOwner.address, 2, 1);
+    expect(rule.line).to.equal(1);
+    expect(rule.toOwner).to.equal(usdtUnits(8));
+    expect(rule.toSpillover1).to.equal(usdtUnits(10));
+    expect(rule.spillover1Recipient).to.equal(visibleMatrixParent.address);
+    expect(rule.spillover1Recipient).to.not.equal(owner.address);
+  });
+
+  it("uses stored P12 placement parent when referrer chain and placement chain differ", async function () {
+    const { owner, users, levelManager, p12, register } = await deployCoreSystem();
+    const levelManagerSigner = await impersonateLevelManager(levelManager);
+
+    const rawReferrer = users[8];
+    const placementParent = users[9];
+    const orbitOwner = users[10];
+    const activatingUser = users[11];
+
+    await register(rawReferrer, owner.address);
+    await register(placementParent, owner.address);
+    await register(orbitOwner, rawReferrer.address);
+    await register(activatingUser, orbitOwner.address);
+
+    await p12
+      .connect(levelManagerSigner)
+      .fillPositionDetailed(
+        placementParent.address,
+        2,
+        orbitOwner.address,
+        rawReferrer.address,
+        usdtUnits(20),
+        9711
+      );
+
+    const orbitOwnerInPlacementParent = await p12.getPosition(placementParent.address, 2, 1);
+    expect(orbitOwnerInPlacementParent.occupant).to.equal(orbitOwner.address);
+
+    await p12
+      .connect(levelManagerSigner)
+      .fillPositionDetailed(
+        orbitOwner.address,
+        2,
+        activatingUser.address,
+        orbitOwner.address,
+        usdtUnits(20),
+        9712
+      );
+
+    const rule = await p12.getPositionRuleView(orbitOwner.address, 2, 1);
+    expect(rule.line).to.equal(1);
+    expect(rule.toOwner).to.equal(usdtUnits(8));
+    expect(rule.toSpillover1).to.equal(usdtUnits(10));
+    expect(rule.spillover1Recipient).to.equal(placementParent.address);
+    expect(rule.spillover1Recipient).to.not.equal(rawReferrer.address);
+    expect(rule.spillover1Recipient).to.not.equal(owner.address);
+  });
+
+  it("walks the connected P39 matrix chain before falling back to ID1", async function () {
+    const { owner, users, levelManager, p39, register } = await deployCoreSystem();
+    const levelManagerSigner = await impersonateLevelManager(levelManager);
+
+    const inactiveRoot = users[8];
+    const visibleMatrixParent = users[9];
+    const orbitOwner = users[10];
+    const activatingUser = users[11];
+
+    await register(inactiveRoot, owner.address);
+    await register(visibleMatrixParent, inactiveRoot.address);
+    await register(orbitOwner, inactiveRoot.address);
+    await register(activatingUser, orbitOwner.address);
+
+    await p39
+      .connect(levelManagerSigner)
+      .fillPositionDetailed(
+        visibleMatrixParent.address,
+        3,
+        orbitOwner.address,
+        visibleMatrixParent.address,
+        usdtUnits(40),
+        9801
+      );
+
+    const orbitOwnerPosition = await p39.getPosition(visibleMatrixParent.address, 3, 1);
+    expect(orbitOwnerPosition.occupant).to.equal(orbitOwner.address);
+
+    await p39
+      .connect(levelManagerSigner)
+      .fillPositionDetailed(
+        orbitOwner.address,
+        3,
+        activatingUser.address,
+        orbitOwner.address,
+        usdtUnits(40),
+        9802
+      );
+
+    const rule = await p39.getPositionRuleView(orbitOwner.address, 3, 1);
+    expect(rule.line).to.equal(1);
+    expect(rule.toOwner).to.equal(usdtUnits(8));
+    expect(rule.toSpillover1).to.equal(usdtUnits(8));
+    expect(rule.toSpillover2).to.equal(usdtUnits(20));
+    expect(rule.spillover1Recipient).to.equal(visibleMatrixParent.address);
+    expect(rule.spillover1Recipient).to.not.equal(owner.address);
+  });
+
+  it("uses stored P39 placement parents for line-1 spillovers when referrer chain differs", async function () {
+    const { owner, users, levelManager, p39, register } = await deployCoreSystem();
+    const levelManagerSigner = await impersonateLevelManager(levelManager);
+
+    const rawReferrer = users[8];
+    const matrixGrandParent = users[9];
+    const placementParent = users[10];
+    const orbitOwner = users[11];
+    const activatingUser = users[12];
+
+    await register(rawReferrer, owner.address);
+    await register(matrixGrandParent, owner.address);
+    await register(placementParent, rawReferrer.address);
+    await register(orbitOwner, rawReferrer.address);
+    await register(activatingUser, orbitOwner.address);
+
+    await p39
+      .connect(levelManagerSigner)
+      .fillPositionDetailed(
+        matrixGrandParent.address,
+        3,
+        placementParent.address,
+        rawReferrer.address,
+        usdtUnits(40),
+        9811
+      );
+
+    await p39
+      .connect(levelManagerSigner)
+      .fillPositionDetailed(
+        placementParent.address,
+        3,
+        orbitOwner.address,
+        rawReferrer.address,
+        usdtUnits(40),
+        9812
+      );
+
+    await p39
+      .connect(levelManagerSigner)
+      .fillPositionDetailed(
+        orbitOwner.address,
+        3,
+        activatingUser.address,
+        orbitOwner.address,
+        usdtUnits(40),
+        9813
+      );
+
+    const rule = await p39.getPositionRuleView(orbitOwner.address, 3, 1);
+    expect(rule.line).to.equal(1);
+    expect(rule.toOwner).to.equal(usdtUnits(8));
+    expect(rule.toSpillover1).to.equal(usdtUnits(8));
+    expect(rule.toSpillover2).to.equal(usdtUnits(20));
+    expect(rule.spillover1Recipient).to.equal(placementParent.address);
+    expect(rule.spillover2Recipient).to.equal(matrixGrandParent.address);
+    expect(rule.spillover1Recipient).to.not.equal(rawReferrer.address);
+    expect(rule.spillover2Recipient).to.not.equal(owner.address);
   });
 
   it("validates the described P39 chain where H is referred by C and appears under C in A's line 2", async function () {

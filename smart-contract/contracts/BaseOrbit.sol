@@ -469,6 +469,18 @@ abstract contract BaseOrbit is Initializable, OwnableUpgradeable, UUPSUpgradeabl
         return 0;
     }
 
+    function _afterPositionPlaced(
+        address orbitOwner,
+        uint8 level,
+        address user,
+        uint8 position
+    ) internal virtual {
+        orbitOwner;
+        level;
+        user;
+        position;
+    }
+
     function _findPlacementPosition(
         address orbitOwner,
         uint8 level,
@@ -567,6 +579,8 @@ abstract contract BaseOrbit is Initializable, OwnableUpgradeable, UUPSUpgradeabl
             isActive: true
         });
 
+        _afterPositionPlaced(orbitOwner, level, newUser, position);
+
         positionActivationId[orbitOwner][level][position] = activationId;
         positionIsMirror[orbitOwner][level][position] = isMirror;
 
@@ -626,6 +640,8 @@ abstract contract BaseOrbit is Initializable, OwnableUpgradeable, UUPSUpgradeabl
         referrer: referrer,
         isActive: true
     });
+
+    _afterPositionPlaced(orbitOwner, level, newUser, position);
 
     positionActivationId[orbitOwner][level][position] = activationId;
     positionIsMirror[orbitOwner][level][position] = isMirror;

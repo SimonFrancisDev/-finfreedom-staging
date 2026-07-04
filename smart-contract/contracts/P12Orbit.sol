@@ -18,6 +18,11 @@ import "./BaseOrbit.sol";
  * 6,9,12 => 3
  */
 contract P12Orbit is BaseOrbit {
+    error UnsupportedP12Level();
+    error InvalidP12Line();
+    error InvalidP12Position();
+    error InvalidLinePayment();
+
     uint8 public constant POSITIONS = 12;
     uint8 public constant LINES = 2;
     uint8 public constant LINE1_SIZE = 3;
@@ -30,6 +35,8 @@ contract P12Orbit is BaseOrbit {
     uint256 public constant UPGRADE2_REQ = 40 * 10**6;
     uint256 public constant UPGRADE5_REQ = 320 * 10**6;
     uint256 public constant UPGRADE8_REQ = 2560 * 10**6;
+
+    mapping(address => mapping(uint8 => address)) internal matrixPlacementParent;
 
     function initialize(
         address _levelManager,
@@ -53,7 +60,7 @@ contract P12Orbit is BaseOrbit {
     }
 
     function getOrbitConfig(uint8 level) external view override returns (OrbitConfig memory) {
-        require(_isSupportedP12Level(level), "Unsupported P12 level");
+        if (!_isSupportedP12Level(level)) revert UnsupportedP12Level();
         return levelConfig[level];
     }
 
@@ -76,11 +83,11 @@ contract P12Orbit is BaseOrbit {
         uint8 linePaymentNumber,
         bool autoUpgradeEnabled
     ) internal pure override returns (PayoutPercentages memory pct) {
-        require(_isSupportedP12Level(level), "Unsupported P12 level");
-        require(line == 1 || line == 2, "Invalid P12 line");
+        if (!_isSupportedP12Level(level)) revert UnsupportedP12Level();
+        if (line != 1 && line != 2) revert InvalidP12Line();
 
         if (line == 2) {
-            require(linePaymentNumber >= 1 && linePaymentNumber <= LINE2_SIZE, "Invalid line payment");
+            if (linePaymentNumber < 1 || linePaymentNumber > LINE2_SIZE) revert InvalidLinePayment();
         }
 
         if (line == 1) {
@@ -107,11 +114,36 @@ contract P12Orbit is BaseOrbit {
     }
 
     function _line2ParentPosition(uint8 position) internal pure returns (uint8) {
-        require(position >= 4 && position <= 12, "Invalid P12 line2 position");
+        if (position < 4 || position > 12) revert InvalidP12Position();
 
         if (position == 4 || position == 7 || position == 10) return 1;
         if (position == 5 || position == 8 || position == 11) return 2;
         return 3; // 6, 9, 12
+    }
+
+    function _afterPositionPlaced(
+        address orbitOwner,
+        uint8 level,
+        address user,
+        uint8 position
+    ) internal override {
+        address parent;
+        if (position <= 3) {
+            parent = orbitOwner;
+        } else {
+            uint8 parentPos = _line2ParentPosition(position);
+            parent = userOrbits[orbitOwner][level].positions[parentPos].user;
+            if (parent == address(0)) parent = ILevelManagerReader(levelManager).id1Wallet();
+        }
+
+        matrixPlacementParent[user][level] = parent;
+    }
+
+    function matrixParentOf(address user, uint8 level) public view returns (address) {
+        address id1 = ILevelManagerReader(levelManager).id1Wallet();
+        address storedParent = matrixPlacementParent[user][level];
+        if (storedParent != address(0)) return storedParent;
+        return id1;
     }
 
     function _resolveRecipients(
@@ -119,8 +151,8 @@ contract P12Orbit is BaseOrbit {
         uint8 level,
         uint8 position
     ) internal view override returns (address spillover1Recipient, address spillover2Recipient) {
-        require(_isSupportedP12Level(level), "Unsupported P12 level");
-        require(position >= 1 && position <= POSITIONS, "Invalid P12 position");
+        if (!_isSupportedP12Level(level)) revert UnsupportedP12Level();
+        if (position < 1 || position > POSITIONS) revert InvalidP12Position();
 
         OrbitData storage orbit = userOrbits[orbitOwner][level];
         address id1 = ILevelManagerReader(levelManager).id1Wallet();
@@ -129,34 +161,7 @@ contract P12Orbit is BaseOrbit {
         // LINE 1
         // ---------------------------
         if (position <= 3) {
-            address upperOrbitOwner = IRegistration(registration).getReferrer(orbitOwner);
-
-            if (upperOrbitOwner == address(0)) {
-                return (id1, address(0));
-            }
-
-            uint8 upperPosition = _findUserPosition(upperOrbitOwner, level, orbitOwner);
-
-            // If orbitOwner is not yet placed in the upper orbit, fallback
-            if (upperPosition == 0) {
-                return (id1, address(0));
-            }
-
-            // If orbitOwner sits on upper line 1, spillover goes to that upper orbit owner
-            if (upperPosition >= 1 && upperPosition <= 3) {
-                return (upperOrbitOwner, address(0));
-            }
-
-            // If orbitOwner sits on upper line 2, spillover goes to the parent above orbitOwner
-            if (upperPosition >= 4 && upperPosition <= 12) {
-                uint8 parentPos = _line2ParentPosition(upperPosition);
-                address parentUser = userOrbits[upperOrbitOwner][level].positions[parentPos].user;
-
-                spillover1Recipient = parentUser != address(0) ? parentUser : id1;
-                return (spillover1Recipient, address(0));
-            }
-
-            return (id1, address(0));
+            return (matrixParentOf(orbitOwner, level), address(0));
         }
 
         // ---------------------------
@@ -179,8 +184,8 @@ contract P12Orbit is BaseOrbit {
         uint256 cycleNumber,
         uint8 position
     ) internal view override returns (address spillover1Recipient, address spillover2Recipient) {
-        require(_isSupportedP12Level(level), "Unsupported P12 level");
-        require(position >= 1 && position <= POSITIONS, "Invalid P12 position");
+        if (!_isSupportedP12Level(level)) revert UnsupportedP12Level();
+        if (position < 1 || position > POSITIONS) revert InvalidP12Position();
 
         StoredRuleSnapshot memory snap = historicalStoredRuleSnapshots[orbitOwner][level][cycleNumber][position];
         if (snap.exists) {
@@ -228,5 +233,5 @@ contract P12Orbit is BaseOrbit {
         return (address(0), address(0));
     }
 
-    uint256[50] private __gap;
+    uint256[49] private __gap;
 }
