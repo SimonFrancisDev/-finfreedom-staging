@@ -2,6 +2,7 @@ import { ethers } from 'ethers';
 import { getContracts } from '../../blockchain/contracts.js';
 import { safeRpcCall } from '../../blockchain/provider.js';
 import IndexedReceipt from '../../models/IndexedReceipt.js';
+import IndexedActivationSummary from '../../models/IndexedActivationSummary.js';
 import IndexedRegistrationEvent from '../../models/IndexedRegistrationEvent.js';
 import IndexedOrbitEvent from '../../models/IndexedOrbitEvent.js'
 import IndexedEscrowEvent from '../../models/IndexedEscrowEvent.js';
@@ -122,14 +123,17 @@ async function tryRpc(fn, fallback) {
 }
 
 async function resolveHighestActiveLevel(registration, normalizedAddress) {
+  const normalizedLower = lower(normalizedAddress);
+
   if (typeof registration?.highestActiveLevel === 'function') {
     const direct = await tryRpc(
       () => registration.highestActiveLevel(normalizedAddress),
       null
     );
 
-    if (direct !== null && direct !== undefined) {
-      return Number(direct || 0);
+    const directLevel = Number(direct || 0);
+    if (direct !== null && direct !== undefined && directLevel > 0) {
+      return directLevel;
     }
   }
 
@@ -144,7 +148,31 @@ async function resolveHighestActiveLevel(registration, normalizedAddress) {
     if (levelStates[index]) highest = index + 1;
   }
 
-  return highest;
+  if (highest > 0) return highest;
+
+  const [latestActivation, latestRegistrationActivation] = await Promise.all([
+    IndexedActivationSummary.findOne({ user: normalizedLower })
+      .select('level')
+      .sort({ level: -1, blockNumber: -1, logIndex: -1 })
+      .lean()
+      .catch(() => null),
+    IndexedRegistrationEvent.findOne({
+      user: normalizedLower,
+      eventName: { $in: ['Registered', 'LevelActivated', 'FounderRepActivated'] },
+    })
+      .select('eventName level')
+      .sort({ level: -1, blockNumber: -1, logIndex: -1 })
+      .lean()
+      .catch(() => null),
+  ]);
+
+  return Math.max(
+    Number(latestActivation?.level || 0),
+    Number(
+      latestRegistrationActivation?.level ||
+        (latestRegistrationActivation?.eventName === 'Registered' ? 1 : 0)
+    )
+  );
 }
 
 async function readLockedBalance(tokenContract, normalizedAddress) {
@@ -231,6 +259,7 @@ export async function fetchCommunityMemberSummary(address) {
     const isProtocolId1Wallet = lower(id1WalletRaw) === normalizedLower;
     const highestActiveLevel = isProtocolId1Wallet ? 10 : Number(highestActiveLevelRaw || 0);
     const activeLevelsCount = highestActiveLevel;
+    const isRegistered = Boolean(isRegisteredRaw) || isProtocolId1Wallet || highestActiveLevel > 0;
 
     const totalLiquidPaidRaw = sumRawReceiptField(receiptRows, 'liquidPaid');
     const totalWalletCreditedRaw = totalLiquidPaidRaw + releasedEscrowRaw;
@@ -242,7 +271,7 @@ export async function fetchCommunityMemberSummary(address) {
 
     return {
       address: normalizedAddress,
-      isRegistered: Boolean(isRegisteredRaw) || isProtocolId1Wallet,
+      isRegistered,
       isProtocolId1Wallet,
       referrer: cleanReferrer,
       highestActiveLevel,

@@ -95,6 +95,103 @@ async function safeOptionalRpc(fn, fallback = null) {
   }
 }
 
+function hasIndexedLevelActivation(activationByLevel, level) {
+  return Boolean(activationByLevel?.has(Number(level)));
+}
+
+async function getIndexedActivationByLevel(normalizedAddress) {
+  const [activationSummaries, registrationEvents] = await Promise.all([
+    IndexedActivationSummary.find({ user: normalizedAddress })
+      .select('level timestamp blockNumber txHash logIndex isAutoUpgrade isFounderRepFreeActivation')
+      .sort({ timestamp: 1, blockNumber: 1, logIndex: 1 })
+      .lean()
+      .catch(() => []),
+    IndexedRegistrationEvent.find({
+      user: normalizedAddress,
+      eventName: { $in: ['Registered', 'LevelActivated', 'FounderRepActivated'] },
+    })
+      .select('eventName level timestamp blockNumber txHash logIndex')
+      .sort({ timestamp: 1, blockNumber: 1, logIndex: 1 })
+      .lean()
+      .catch(() => []),
+  ]);
+
+  const activationByLevel = new Map();
+
+  for (const summary of activationSummaries) {
+    const level = Number(summary.level || 0);
+    if (level > 0 && !activationByLevel.has(level)) {
+      activationByLevel.set(level, {
+        activatedAt: summary.timestamp,
+        activatedBlockNumber: summary.blockNumber,
+        activationTxHash: summary.txHash,
+        activationSource: summary.isAutoUpgrade
+          ? 'indexed_auto_upgrade_summary'
+          : summary.isFounderRepFreeActivation
+            ? 'indexed_founder_rep_summary'
+            : 'indexed_activation_summary',
+      });
+    }
+  }
+
+  for (const event of registrationEvents) {
+    const level = Number(event.level || (event.eventName === 'Registered' ? 1 : 0));
+    if (level > 0 && !activationByLevel.has(level)) {
+      activationByLevel.set(level, {
+        activatedAt: event.timestamp,
+        activatedBlockNumber: event.blockNumber,
+        activationTxHash: event.txHash,
+        activationSource: `indexed_registration_${event.eventName}`,
+      });
+    }
+  }
+
+  return activationByLevel;
+}
+
+async function resolveActiveLevels(normalizedAddress) {
+  const contracts = getContracts();
+  const activationByLevel = await getIndexedActivationByLevel(normalizedAddress);
+
+  const levels = await mapWithConcurrency(
+    Array.from({ length: 10 }, (_, index) => index + 1),
+    LEVELS_FETCH_CONCURRENCY,
+    async (level) => {
+      const contractActive = await safeOptionalRpc(() =>
+        contracts.registration.isLevelActivated(normalizedAddress, level)
+      );
+      const indexedActive = hasIndexedLevelActivation(activationByLevel, level);
+      const isActive = contractActive === true || (contractActive !== false && indexedActive) || indexedActive;
+
+      return {
+        level,
+        orbitType: levelToOrbitType[level],
+        isActive: Boolean(isActive),
+        activationTruthSource:
+          contractActive === true
+            ? indexedActive
+              ? 'contract_and_indexed_activation'
+              : 'contract_registration'
+            : indexedActive
+              ? 'indexed_activation_fallback'
+              : 'no_activation_found',
+        ...(activationByLevel.get(level) || {}),
+      };
+    }
+  );
+
+  const activeLevels = levels
+    .filter((item) => item.isActive)
+    .map((item) => item.level);
+
+  return {
+    activationByLevel,
+    levels,
+    activeLevels,
+    highestActiveLevel: activeLevels.length ? Math.max(...activeLevels) : 0,
+  };
+}
+
 function isDebugLoggingEnabled() {
   return String(env.LOG_LEVEL || 'info').toLowerCase() === 'debug';
 }
@@ -1290,81 +1387,13 @@ export const fetchOrbitLevels = safeApiResponse(async function fetchOrbitLevels(
   return cached(
     cacheKey,
     async () => {
-      const contracts = getContracts();
-      const [activationSummaries, registrationEvents] = await Promise.all([
-        IndexedActivationSummary.find({ user: normalizedAddress })
-          .select('level timestamp blockNumber txHash logIndex isAutoUpgrade isFounderRepFreeActivation')
-          .sort({ timestamp: 1, blockNumber: 1, logIndex: 1 })
-          .lean()
-          .catch(() => []),
-        IndexedRegistrationEvent.find({
-          user: normalizedAddress,
-          eventName: { $in: ['Registered', 'LevelActivated', 'FounderRepActivated'] },
-        })
-          .select('eventName level timestamp blockNumber txHash logIndex')
-          .sort({ timestamp: 1, blockNumber: 1, logIndex: 1 })
-          .lean()
-          .catch(() => []),
-      ]);
-
-      const activationByLevel = new Map();
-      for (const summary of activationSummaries) {
-        const level = Number(summary.level || 0);
-        if (level > 0 && !activationByLevel.has(level)) {
-          activationByLevel.set(level, {
-            activatedAt: summary.timestamp,
-            activatedBlockNumber: summary.blockNumber,
-            activationTxHash: summary.txHash,
-            activationSource: summary.isAutoUpgrade
-              ? 'indexed_auto_upgrade_summary'
-              : summary.isFounderRepFreeActivation
-                ? 'indexed_founder_rep_summary'
-                : 'indexed_activation_summary',
-          });
-        }
-      }
-
-      for (const event of registrationEvents) {
-        const level = Number(event.level || (event.eventName === 'Registered' ? 1 : 0));
-        if (level > 0 && !activationByLevel.has(level)) {
-          activationByLevel.set(level, {
-            activatedAt: event.timestamp,
-            activatedBlockNumber: event.blockNumber,
-            activationTxHash: event.txHash,
-            activationSource: `indexed_registration_${event.eventName}`,
-          });
-        }
-      }
-
-      const levels = await mapWithConcurrency(
-        Array.from({ length: 10 }, (_, index) => index + 1),
-        LEVELS_FETCH_CONCURRENCY,
-        async (level) => {
-          const isActive = await safeOptionalRpc(() =>
-            contracts.registration.isLevelActivated(normalizedAddress, level)
-          ) || false;
-
-          return {
-            level,
-            orbitType: levelToOrbitType[level],
-            isActive: Boolean(isActive),
-            ...(activationByLevel.get(level) || {}),
-          };
-        }
-      );
-
-      const activeLevels = levels
-        .filter((item) => item.isActive)
-        .map((item) => item.level);
-
-      const highestActiveLevel = activeLevels.length
-        ? Math.max(...activeLevels)
-        : 0;
+      const { levels, highestActiveLevel } = await resolveActiveLevels(normalizedAddress);
 
       return {
         address: normalizedAddress,
         levels,
         highestActiveLevel,
+        truthSource: 'contract_with_indexed_activation_fallback',
       };
     },
     5000
@@ -1429,6 +1458,34 @@ export const fetchOrbitLevelSnapshot = safeApiResponse(async function fetchOrbit
         }
       }
 
+      const activeResolution = await resolveActiveLevels(normalizedAddress);
+      const resolvedLevel = activeResolution.levels.find(
+        (item) => Number(item.level || 0) === Number(level)
+      );
+      const resolvedIsActive = Boolean(resolvedLevel?.isActive);
+
+      if (resolvedIsActive && !snapshot.isLevelActive) {
+        snapshot = {
+          ...snapshot,
+          isLevelActive: true,
+          activationTruthSource: resolvedLevel?.activationTruthSource,
+          activatedAt: resolvedLevel?.activatedAt,
+          activatedBlockNumber: resolvedLevel?.activatedBlockNumber,
+          activationTxHash: resolvedLevel?.activationTxHash,
+          activationSource: resolvedLevel?.activationSource,
+        };
+
+        OrbitLevelSnapshot.updateOne(
+          { address: normalizedAddress, level },
+          {
+            $set: {
+              isLevelActive: true,
+              'metadata.completeness.activationFlagsReady': true,
+            },
+          }
+        ).catch(() => {});
+      }
+
       if (isIncomplete || hasNewIndexedActivity || isStale) {
         refreshLevelSnapshotInBackground(normalizedAddress, level);
       }
@@ -1439,14 +1496,32 @@ export const fetchOrbitLevelSnapshot = safeApiResponse(async function fetchOrbit
         warmCycleSnapshotsInBackground(normalizedAddress, level, totalCycles);
       }
 
+      let lockedForNextLevel = snapshot.lockedForNextLevel || '0';
+      if (
+        resolvedIsActive &&
+        level < 10 &&
+        decimalStringToNumber(lockedForNextLevel) <= 0
+      ) {
+        const escrowMetrics = await fetchUserEscrowMetrics(normalizedAddress).catch(() => null);
+        const escrowLevel = escrowMetrics?.byFromLevel?.get(level);
+        if (escrowLevel?.currentLockedRaw > 0n) {
+          lockedForNextLevel = formatUsdt(escrowLevel.currentLockedRaw);
+        }
+      }
+
       const enriched = await enrichWalletIdentities({
         address: normalizedAddress,
         level,
         orbitType,
-        isLevelActive: snapshot.isLevelActive || false,
+        isLevelActive: resolvedIsActive || snapshot.isLevelActive || false,
+        activationTruthSource: resolvedLevel?.activationTruthSource,
+        activatedAt: resolvedLevel?.activatedAt,
+        activatedBlockNumber: resolvedLevel?.activatedBlockNumber,
+        activationTxHash: resolvedLevel?.activationTxHash,
+        activationSource: resolvedLevel?.activationSource,
         orbitSummary: snapshot.orbitSummary || {},
         linePaymentCounts: snapshot.linePaymentCounts || {},
-        lockedForNextLevel: snapshot.lockedForNextLevel || '0',
+        lockedForNextLevel,
         positions: snapshot.positions || [],
       });
 
@@ -1975,6 +2050,7 @@ async function fetchUserEscrowMetrics(address) {
 async function getCurrentEscrowLockSummary(address, escrowMetrics = null) {
   const normalizedAddress = normalizeAddress(address);
   const contracts = getContracts();
+  const activeResolution = await resolveActiveLevels(normalizedAddress);
 
   const snapshots = await OrbitLevelSnapshot.find({
     address: normalizedAddress,
@@ -1987,29 +2063,13 @@ async function getCurrentEscrowLockSummary(address, escrowMetrics = null) {
     })
     .lean();
 
+  const activeLevelSet = new Set(activeResolution.activeLevels);
+
   const activeSnapshots = snapshots
-    .filter((snapshot) => snapshot?.isLevelActive)
+    .filter((snapshot) => snapshot?.isLevelActive || activeLevelSet.has(Number(snapshot?.level || 0)))
     .sort((a, b) => Number(a.level || 0) - Number(b.level || 0));
 
-  const activeLevelsFromSnapshots = activeSnapshots.map((snapshot) =>
-    Number(snapshot.level || 0)
-  );
-
-  let activeLevels = activeLevelsFromSnapshots;
-
-  // Fallback if snapshots are not ready: ask Registration directly.
-  if (!activeLevels.length && contracts?.registration?.isLevelActivated) {
-    const checks = await Promise.all(
-      Array.from({ length: 10 }, (_, index) => index + 1).map(async (level) => {
-        const active = await safeOptionalRpc(() =>
-          contracts.registration.isLevelActivated(normalizedAddress, level)
-        );
-        return active ? level : null;
-      })
-    );
-
-    activeLevels = checks.filter(Boolean);
-  }
+  const activeLevels = activeResolution.activeLevels;
 
   const highestLevel = activeLevels.length ? Math.max(...activeLevels) : 0;
   const byLevel = [];

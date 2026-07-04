@@ -19,11 +19,14 @@ import { ethers } from 'ethers'
 // } from '../../Services/orbitsApi'
 
 import {
+  clearAddressScopedOrbitsApiCache,
   fetchAddressReceiptsApi,
+  fetchOrbitLevelsApi,
   fetchUserSummaryApi,
   fetchOrbitLevelSnapshotApi,
 } from '../../Services/orbitsApi'
 import { getProfileReadAuthIfLocked } from '../../Services/profilePrivacyApi'
+import { ProgressionLineChart } from '../../components/charts/InstitutionalCharts'
 
 import {
   FaCoins,
@@ -738,7 +741,7 @@ const ActivationCenterPage = () => {
   }, [location.pathname, location.search, refCode, isRegistered])
 
 
-   const fetchUserFinancialSummary = useCallback(async () => {
+   const fetchUserFinancialSummary = useCallback(async (forceRefresh = false) => {
     if (!viewer) {
       setFinancialByLevel({})
       return
@@ -746,7 +749,10 @@ const ActivationCenterPage = () => {
 
     try {
       const profileReadHeaders = await getProfileReadAuthIfLocked(viewer, account)
-      const summary = await fetchUserSummaryApi(viewer, { headers: profileReadHeaders })
+      const summary = await fetchUserSummaryApi(viewer, {
+        forceRefresh,
+        headers: profileReadHeaders,
+      })
       const byLevel = Array.isArray(summary?.earnings?.byLevel)
         ? summary.earnings.byLevel
         : []
@@ -1010,12 +1016,15 @@ const ActivationCenterPage = () => {
   }
 
   const fetchFullOrbitData = useCallback(
-    async (level, sharedProfileReadHeaders = null) => {
+    async (level, sharedProfileReadHeaders = null, forceRefresh = false) => {
       if (!viewer || !isRegistered) return null
 
       try {
         const profileReadHeaders = sharedProfileReadHeaders || await getProfileReadAuthIfLocked(viewer, account)
-        const snapshot = await fetchOrbitLevelSnapshotApi(viewer, level, { headers: profileReadHeaders })
+        const snapshot = await fetchOrbitLevelSnapshotApi(viewer, level, {
+          forceRefresh,
+          headers: profileReadHeaders,
+        })
         if (!snapshot) return null
 
         const positions = snapshot.positions || []
@@ -1078,12 +1087,15 @@ const ActivationCenterPage = () => {
   )
 
 
-  const fetchUserEarnings = useCallback(async () => {
+  const fetchUserEarnings = useCallback(async (forceRefresh = false) => {
     if (!viewer) return
 
     try {
       const profileReadHeaders = await getProfileReadAuthIfLocked(viewer, account)
-      const result = await fetchAddressReceiptsApi(viewer, undefined, { headers: profileReadHeaders })
+      const result = await fetchAddressReceiptsApi(viewer, undefined, {
+        forceRefresh,
+        headers: profileReadHeaders,
+      })
       const receipts = Array.isArray(result?.receipts) ? result.receipts : []
       setReceiptsSupported(true)
 
@@ -1156,6 +1168,24 @@ const ActivationCenterPage = () => {
             levels[i] = false
           }
         }
+
+        try {
+          const profileReadHeaders = await getProfileReadAuthIfLocked(viewer, account)
+          const indexedLevels = await fetchOrbitLevelsApi(viewer, {
+            forceRefresh: true,
+            headers: profileReadHeaders,
+          })
+
+          ;(indexedLevels?.levels || []).forEach((item) => {
+            const level = Number(item?.level || 0)
+            if (level && item?.isActive) {
+              levels[level] = true
+              registered = true
+            }
+          })
+        } catch (error) {
+          console.error('Indexed activation level check failed:', error)
+        }
       }
 
       setIsRegistered(registered)
@@ -1169,7 +1199,7 @@ const ActivationCenterPage = () => {
       setAllowance(formatUsdt(currentAllowance).toString())
 
       if (registered) {
-        await fetchUserEarnings()
+        await fetchUserEarnings(true)
       } else {
         setTotalEarnings('0')
         setLevelEarnings({})
@@ -1180,7 +1210,7 @@ const ActivationCenterPage = () => {
     } finally {
       setRegistrationCheckComplete(true)
     }
-  }, [contracts, viewer, formatUsdt, fetchUserEarnings])
+  }, [contracts, viewer, account, formatUsdt, fetchUserEarnings])
 
   useEffect(() => {
     const checkDeployerStatus = async () => {
@@ -1209,7 +1239,7 @@ const ActivationCenterPage = () => {
     checkDeployerStatus()
   }, [contracts, account, formatUsdt, isOwnSpace])
 
-  const fetchAllOrbitLevelData = useCallback(async () => {
+  const fetchAllOrbitLevelData = useCallback(async (forceRefresh = false) => {
     if (!viewer || !isRegistered) return
 
     setOrbitDataLoading(true)
@@ -1221,7 +1251,7 @@ const ActivationCenterPage = () => {
       const activeLevelResults = await Promise.all(
         activeLevelNumbers.map(async (level) => ({
           level,
-          data: await fetchFullOrbitData(level, profileReadHeaders),
+          data: await fetchFullOrbitData(level, profileReadHeaders, forceRefresh),
         }))
       )
 
@@ -1503,13 +1533,16 @@ const ActivationCenterPage = () => {
   )
 
   const refreshAllAfterWrite = useCallback(async () => {
+    if (viewer) {
+      clearAddressScopedOrbitsApiCache(viewer)
+    }
     await fetchUserData()
-    await fetchAllOrbitLevelData()
+    await fetchAllOrbitLevelData(true)
     await fetchTokenSummary()
     await fetchMyReferralCode()
-    await fetchUserFinancialSummary()
+    await fetchUserFinancialSummary(true)
     setLastUpdated(new Date().toLocaleTimeString())
-  }, [fetchUserData, fetchAllOrbitLevelData, fetchTokenSummary, fetchMyReferralCode, fetchUserFinancialSummary])
+  }, [viewer, fetchUserData, fetchAllOrbitLevelData, fetchTokenSummary, fetchMyReferralCode, fetchUserFinancialSummary])
 
   const handleCombinedRegisterAndActivateLevelOne = useCallback(async (finalRegistrationReferrer = registrationReferrer) => {
     if (!ensureWritableSpace()) return
@@ -2072,13 +2105,6 @@ const ActivationCenterPage = () => {
   )
 
   const maxCumulative = Math.max(...lineChartData.map((d) => d.cumulative), 1)
-  const chartPoints = lineChartData
-    .map((d, i) => {
-      const x = (i / 9) * 100
-      const y = 100 - (d.cumulative / maxCumulative) * 80 - 10
-      return `${x},${y}`
-    })
-    .join(' ')
 
   const getRoleBadge = (role) => {
     switch (role) {
@@ -2274,41 +2300,15 @@ const ActivationCenterPage = () => {
             <span className="activation-hero__visual-status">{activationT('progress.activated', '{{count}}/10 Activated', { count: activatedCount })}</span>
           </div>
 
-          <div className="line-chart-container">
-            <svg className="line-chart" viewBox="0 0 100 100" preserveAspectRatio="none">
-              <polyline
-                className="chart-line"
-                points={chartPoints}
-                fill="none"
-                stroke="var(--glow-teal)"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              {lineChartData.map((d, i) => {
-                const x = (i / 9) * 100
-                const y = 100 - (d.cumulative / maxCumulative) * 80 - 10
-                return (
-                  <circle
-                    key={i}
-                    cx={x}
-                    cy={y}
-                    r="3"
-                    fill={d.activated ? 'var(--glow-teal)' : 'rgba(255,255,255,0.2)'}
-                    stroke={d.activated ? 'white' : 'none'}
-                    strokeWidth="1"
-                  />
-                )
-              })}
-            </svg>
-
-            <div className="chart-labels">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((level) => (
-                <span key={level} className={`chart-label ${activeLevels[level] ? 'active' : ''}`}>
-                  {level}
-                </span>
-              ))}
-            </div>
+          <div className="line-chart-container line-chart-container--institutional">
+            <ProgressionLineChart
+              data={lineChartData}
+              valueKey="cumulative"
+              activeKey="activated"
+              labelKey="level"
+              maxValue={maxCumulative}
+              ariaLabel={activationT('progress.chartAriaLabel', 'Level activation progression chart')}
+            />
           </div>
 
           <p className="activation-hero__visual-note muted-text">
