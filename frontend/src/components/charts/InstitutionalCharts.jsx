@@ -152,6 +152,9 @@ export function ProgressionLineChart({
   emptyLabel = 'Progress syncing',
   ariaLabel = 'Level progression chart',
 }) {
+  const chartId = useId().replace(/:/g, '')
+  const areaId = `ioProgressionAreaGradient-${chartId}`
+  const glowId = `ioProgressionGlow-${chartId}`
   const items = Array.isArray(data) ? data : []
   const resolvedMax = Math.max(toNumber(maxValue), ...items.map((item) => toNumber(item[valueKey])), 1)
   const points = buildLinePoints(items, valueKey, resolvedMax)
