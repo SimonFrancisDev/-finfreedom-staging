@@ -3,7 +3,11 @@ require("@nomicfoundation/hardhat-verify");
 require("@openzeppelin/hardhat-upgrades");
 require("dotenv").config();
 
-const amoyRpcUrl = process.env.AMOY_RPC_URL || process.env.POLYGON_AMOY_RPC_URL || "https://rpc-amoy.polygon.technology";
+const amoyRpcUrl =
+  process.env.AMOY_RPC_URL ||
+  process.env.POLYGON_AMOY_RPC_URL ||
+  process.env.RPC_URL_1 ||
+  "https://rpc-amoy.polygon.technology";
 const polygonRpcUrl = process.env.POLYGON_RPC_URL || process.env.MAINNET_RPC_URL || "";
 function readPrivateKey() {
   const raw = (process.env.PRIVATE_KEY || "").trim();

@@ -946,7 +946,7 @@ describe("Audit readiness contract invariants", function () {
     expect(recycleReceipts.some((event) => event.args.grossAmount === usdtUnits(20))).to.equal(false);
   });
 
-  it("routes P12 recycle release through placement parent, not raw referrer", async function () {
+  it("routes P12 recycle release through eligible registered upline, not matrix parent", async function () {
     const { owner, users, registration, levelManager, router, p12, usdt, register, activateToLevel } = await deployCoreSystem();
     const levelManagerSigner = await impersonateLevelManager(levelManager);
     const founderWallets = users.slice(0, 8);
@@ -1002,11 +1002,11 @@ describe("Audit readiness contract invariants", function () {
 
     expect(releaseEvent.args.reservedAmount).to.equal(usdtUnits(20));
     expect(releaseEvent.args.released).to.equal(true);
-    expect(rawReferrerDelta).to.equal(0n);
-    expect(placementParentDelta).to.equal(usdtUnits(8));
+    expect(rawReferrerDelta).to.equal(usdtUnits(8));
+    expect(placementParentDelta).to.equal(0n);
     expect(founderDelta).to.equal(usdtUnits(10));
-    expect(recycleReceipts.some((event) => event.args.receiver === rawReferrer.address)).to.equal(false);
-    expect(recycleReceipts.some((event) => event.args.receiver === placementParent.address)).to.equal(true);
+    expect(recycleReceipts.some((event) => event.args.receiver === rawReferrer.address)).to.equal(true);
+    expect(recycleReceipts.some((event) => event.args.receiver === placementParent.address)).to.equal(false);
   });
 
   it("reserves mirrored P12 arrivals that land on the recycle window instead of paying them liquid", async function () {
@@ -1213,7 +1213,7 @@ describe("Audit readiness contract invariants", function () {
     expect(recycleReceipts.some((event) => event.args.grossAmount === usdtUnits(40))).to.equal(false);
   });
 
-  it("routes P39 recycle release through placement chain, not raw referrer", async function () {
+  it("routes P39 recycle release through eligible registered upline, not matrix chain", async function () {
     const { owner, users, registration, levelManager, router, p39, usdt, register, activateToLevel } = await deployCoreSystem();
     const levelManagerSigner = await impersonateLevelManager(levelManager);
     const founderWallets = users.slice(0, 8);
@@ -1284,16 +1284,20 @@ describe("Audit readiness contract invariants", function () {
     const placementParentDelta = observed.deltas[1];
     const matrixGrandParentDelta = observed.deltas[2];
     const founderDelta = observed.deltas.slice(3).reduce((total, delta) => total + delta, 0n);
+    const rawReferrerReceipt = recycleReceipts.find(
+      (event) => event.args.receiver === rawReferrer.address
+    );
 
     expect(releaseEvent.args.reservedAmount).to.equal(usdtUnits(40));
     expect(releaseEvent.args.released).to.equal(true);
     expect(rawReferrerDelta).to.equal(0n);
-    expect(placementParentDelta).to.equal(usdtUnits(8));
-    expect(matrixGrandParentDelta).to.equal(usdtUnits(8));
-    expect(founderDelta).to.equal(usdtUnits(20));
-    expect(recycleReceipts.some((event) => event.args.receiver === rawReferrer.address)).to.equal(false);
-    expect(recycleReceipts.some((event) => event.args.receiver === placementParent.address)).to.equal(true);
-    expect(recycleReceipts.some((event) => event.args.receiver === matrixGrandParent.address)).to.equal(true);
+    expect(placementParentDelta).to.equal(0n);
+    expect(matrixGrandParentDelta).to.equal(0n);
+    expect(founderDelta).to.equal(usdtUnits(28));
+    expect(rawReferrerReceipt?.args.grossAmount).to.equal(usdtUnits(8));
+    expect(rawReferrerReceipt?.args.escrowLocked).to.equal(usdtUnits(8));
+    expect(recycleReceipts.some((event) => event.args.receiver === placementParent.address)).to.equal(false);
+    expect(recycleReceipts.some((event) => event.args.receiver === matrixGrandParent.address)).to.equal(false);
   });
 
   it("bounds sponsor resolution before deep inactive referral chains can exhaust gas", async function () {
