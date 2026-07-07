@@ -1009,6 +1009,56 @@ describe("Audit readiness contract invariants", function () {
     expect(recycleReceipts.some((event) => event.args.receiver === placementParent.address)).to.equal(false);
   });
 
+  it("creates a P12 mirror position for structured recycle spillover receivers", async function () {
+    const { owner, users, registration, levelManager, router, p12, usdt, register, activateToLevel } = await deployCoreSystem();
+    const founderWallets = users.slice(0, 8);
+    const grandUpline = users[8];
+    const sponsor = users[9];
+    const orbitOwner = users[10];
+    const fillers = users.slice(11, 21);
+    const recycleTrigger = users[21];
+    const finalRecycleTrigger = users[22];
+
+    await register(grandUpline, owner.address);
+    await activateToLevel(grandUpline, 2);
+    await register(sponsor, grandUpline.address);
+    await activateToLevel(sponsor, 2);
+    await register(orbitOwner, sponsor.address);
+    await activateToLevel(orbitOwner, 2);
+
+    for (const filler of fillers) {
+      await register(filler, orbitOwner.address);
+      await activateToLevel(filler, 2);
+    }
+
+    await register(recycleTrigger, orbitOwner.address);
+    await register(finalRecycleTrigger, orbitOwner.address);
+    await registration.connect(recycleTrigger).activateLevel(2);
+
+    const observed = await balanceDeltas(
+      usdt,
+      [sponsor, grandUpline, ...founderWallets],
+      () => registration.connect(finalRecycleTrigger).activateLevel(2)
+    );
+
+    const sponsorDelta = observed.deltas[0];
+    const grandDelta = observed.deltas[1];
+    const founderDelta = observed.deltas.slice(2).reduce((total, delta) => total + delta, 0n);
+    const grandMirrorFill = parseEvents(observed.receipt, p12, "PositionFilled")
+      .find((event) =>
+        event.args.orbitOwner === grandUpline.address &&
+        event.args.user === orbitOwner.address &&
+        event.args.amount === usdtUnits(10)
+      );
+    const grandMirrorPosition = await findOrbitPosition(p12, grandUpline, 2, orbitOwner, 12);
+
+    expect(sponsorDelta).to.equal(usdtUnits(8));
+    expect(grandDelta).to.equal(usdtUnits(10));
+    expect(founderDelta).to.equal(0n);
+    expect(grandMirrorFill).to.not.equal(undefined);
+    expect(grandMirrorPosition).to.deep.include({ line: 2, isMirror: true });
+  });
+
   it("reserves mirrored P12 arrivals that land on the recycle window instead of paying them liquid", async function () {
     const { users, registration, levelManager, router, p12, usdt, register, activateToLevel } = await deployCoreSystem();
     const sponsor = users[8];
@@ -1298,6 +1348,59 @@ describe("Audit readiness contract invariants", function () {
     expect(rawReferrerReceipt?.args.escrowLocked).to.equal(usdtUnits(8));
     expect(recycleReceipts.some((event) => event.args.receiver === placementParent.address)).to.equal(false);
     expect(recycleReceipts.some((event) => event.args.receiver === matrixGrandParent.address)).to.equal(false);
+  });
+
+  it("creates a P39 mirror position for structured recycle spillover receivers", async function () {
+    const { owner, users, registration, levelManager, router, p39, usdt, register, activateToLevel } = await deployCoreSystem();
+    const founderWallets = users.slice(0, 8);
+    const grandUpline = users[8];
+    const sponsor = users[9];
+    const orbitOwner = users[10];
+    const generated = await createFundedWallets(owner, 39);
+    const fillers = generated.slice(0, 37);
+    const recycleTrigger = generated[37];
+    const finalRecycleTrigger = generated[38];
+
+    await register(grandUpline, owner.address);
+    await activateToLevel(grandUpline, 3);
+    await register(sponsor, grandUpline.address);
+    await activateToLevel(sponsor, 3);
+    await register(orbitOwner, sponsor.address);
+    await activateToLevel(orbitOwner, 3);
+
+    for (const filler of fillers) {
+      await register(filler, orbitOwner.address);
+      await activateToLevel(filler, 3);
+    }
+
+    await register(recycleTrigger, orbitOwner.address);
+    await registration.connect(recycleTrigger).activateLevel(2);
+    await register(finalRecycleTrigger, orbitOwner.address);
+    await registration.connect(finalRecycleTrigger).activateLevel(2);
+    await registration.connect(recycleTrigger).activateLevel(3);
+
+    const observed = await balanceDeltas(
+      usdt,
+      [sponsor, grandUpline, ...founderWallets],
+      () => registration.connect(finalRecycleTrigger).activateLevel(3)
+    );
+
+    const sponsorDelta = observed.deltas[0];
+    const grandDelta = observed.deltas[1];
+    const founderDelta = observed.deltas.slice(2).reduce((total, delta) => total + delta, 0n);
+    const grandMirrorFill = parseEvents(observed.receipt, p39, "PositionFilled")
+      .find((event) =>
+        event.args.orbitOwner === grandUpline.address &&
+        event.args.user === orbitOwner.address &&
+        event.args.amount === usdtUnits(8)
+      );
+    const grandMirrorPosition = await findOrbitPosition(p39, grandUpline, 3, orbitOwner, 39);
+
+    expect(sponsorDelta).to.equal(usdtUnits(8));
+    expect(grandDelta).to.equal(usdtUnits(8));
+    expect(founderDelta).to.equal(usdtUnits(20));
+    expect(grandMirrorFill).to.not.equal(undefined);
+    expect(grandMirrorPosition).to.deep.include({ line: 2, isMirror: true });
   });
 
   it("bounds sponsor resolution before deep inactive referral chains can exhaust gas", async function () {

@@ -619,23 +619,33 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
             recycleEscrowLocked += toEscrow;
         }
 
+        (uint8 spillover1MirrorPosition, uint32 spillover1MirrorCycle) = _mirrorRecyclePayout(
+            input,
+            spillover1Recipient,
+            toSpillover1
+        );
         recycleLiquidPaid += _payStructuredRecycleComponent(
             input,
             spillover1Recipient,
             toSpillover1,
             0,
-            mirrorPosition,
-            mirrorCycle,
+            spillover1MirrorPosition == 0 ? mirrorPosition : spillover1MirrorPosition,
+            spillover1MirrorCycle == 0 ? mirrorCycle : spillover1MirrorCycle,
             2
         );
 
+        (uint8 spillover2MirrorPosition, uint32 spillover2MirrorCycle) = _mirrorRecyclePayout(
+            input,
+            spillover2Recipient,
+            toSpillover2
+        );
         recycleLiquidPaid += _payStructuredRecycleComponent(
             input,
             spillover2Recipient,
             toSpillover2,
             0,
-            mirrorPosition,
-            mirrorCycle,
+            spillover2MirrorPosition == 0 ? mirrorPosition : spillover2MirrorPosition,
+            spillover2MirrorCycle == 0 ? mirrorCycle : spillover2MirrorCycle,
             3
         );
 
@@ -679,6 +689,34 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
             mirrorPosition,
             mirrorCycle,
             false
+        );
+    }
+
+    function _mirrorRecyclePayout(
+        StructuredRecycleInput memory input,
+        address receiver,
+        uint256 amount
+    ) internal returns (uint8 position, uint32 cycleNumber) {
+        if (receiver == address(0) || amount == 0) return (0, 0);
+        if (receiver == input.id1Wallet) return (0, 0);
+
+        address orbitAddress = input.orbitType == 12 ? input.p12Orbit : input.p39Orbit;
+        (
+            position,
+            cycleNumber,
+            ,
+            ,
+            ,
+            ,
+            ,
+            ,
+        ) = ISettlementOrbitDetailed(orbitAddress).recyclePositionDetailed(
+            receiver,
+            input.level,
+            input.orbitOwner,
+            amount,
+            0,
+            input.activationId
         );
     }
 
