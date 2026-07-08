@@ -193,10 +193,12 @@ async function main() {
   const GUARDIAN = readRequiredAddress(ethers, "GUARDIAN_ADDRESS");
   const USDT = readRequiredAddress(ethers, "USDT_ADDRESS");
   const ID1_WALLET = readRequiredAddress(ethers, "ID1_WALLET");
-  const configuredNftPoolAddress = readOptionalAddress(ethers, "NFT_POOL_ADDRESS");
-  const configuredOperationsAddress =
-    readOptionalAddress(ethers, "OPERATIONS_VAULT_ADDRESS") ||
-    readOptionalAddress(ethers, "OPERATIONS_WALLET_ADDRESS");
+  const deployFreshTreasuryVaults = process.env.DEPLOY_FRESH_TREASURY_VAULTS === "true";
+  const configuredNftPoolAddress = deployFreshTreasuryVaults ? "" : readOptionalAddress(ethers, "NFT_POOL_ADDRESS");
+  const configuredOperationsAddress = deployFreshTreasuryVaults
+    ? ""
+    : readOptionalAddress(ethers, "OPERATIONS_VAULT_ADDRESS") ||
+      readOptionalAddress(ethers, "OPERATIONS_WALLET_ADDRESS");
   const founderWallets = readRequiredAddressList(ethers, "FOUNDER_WALLETS", 8);
   const founderRatios = readRequiredRatioList("FOUNDER_RATIOS", 8);
   const founderRepresentatives = readOptionalAddressList(ethers, "FOUNDER_REPRESENTATIVES", 4);
