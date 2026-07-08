@@ -2349,6 +2349,12 @@ const ActivationCenterPage = () => {
             const lockedForUpgrade = parseFloat(userLocks[level] || '0')
             const upgradeRequired = upgradeRequirements[level]
             const upgradeProgress = (lockedForUpgrade / upgradeRequired) * 100
+            const autoUpgradeLockedForThisLevel = level > 1 ? parseFloat(userLocks[level - 1] || '0') : 0
+            const autoUpgradeRequiredForThisLevel = level > 1 ? upgradeRequirements[level - 1] : 0
+            const autoUpgradeProgressForThisLevel = autoUpgradeRequiredForThisLevel
+              ? (autoUpgradeLockedForThisLevel / autoUpgradeRequiredForThisLevel) * 100
+              : 0
+            const hasAutoUpgradeProgress = !isActive && isNext && autoUpgradeLockedForThisLevel > 0
             const fgtEarned = tokenSummary.fgtByLevel[level] || 0
             const fgtrEarned = tokenSummary.fgtrByLevel[level] || 0
             const latestTokenEvent = tokenSummary.lastEventByLevel[level] || null
@@ -2358,6 +2364,8 @@ const ActivationCenterPage = () => {
             const isOpen = !!openLevelDetails[level]
             const levelStatusLabel = isActive
               ? activationT('levels.status.activated', 'Activated')
+              : hasAutoUpgradeProgress
+                ? activationT('levels.status.autoUpgradeProgress', 'Auto-upgrade progress')
               : isNext
                 ? activationT('levels.status.ready', 'Ready to Activate')
                 : activationT('levels.status.locked', 'Locked')
@@ -2370,7 +2378,7 @@ const ActivationCenterPage = () => {
             return (
               <div
                 key={level}
-                className={`activation-levels__card premium-card compact-level-card ${isActive ? 'activated' : ''} ${isNext ? 'next' : ''} ${!isActive && !isNext ? 'is-locked-level' : ''}`}
+                className={`activation-levels__card premium-card compact-level-card ${isActive ? 'activated' : ''} ${isNext ? 'next' : ''} ${hasAutoUpgradeProgress ? 'has-auto-progress' : ''} ${!isActive && !isNext ? 'is-locked-level' : ''}`}
                 style={{ background: getLevelBackground(level) }}
               >
                 {!isActive && !isNext && (
@@ -2397,8 +2405,8 @@ const ActivationCenterPage = () => {
 
                   <div className="activation-level-info-cell activation-level-info-cell--right">
                     <span>{activationT('levels.info.status', 'Status')}</span>
-                    <strong className={`activation-level-status-inline ${isActive ? 'is-active' : isNext ? 'is-ready' : 'is-locked'}`}>
-                      {isActive ? <FaCheckCircle /> : <FaLock />}
+                    <strong className={`activation-level-status-inline ${isActive ? 'is-active' : hasAutoUpgradeProgress ? 'is-progress' : isNext ? 'is-ready' : 'is-locked'}`}>
+                      {isActive ? <FaCheckCircle /> : hasAutoUpgradeProgress || isNext ? <FaInfoCircle /> : <FaLock />}
                       {levelStatusLabel}
                     </strong>
                   </div>
@@ -2581,6 +2589,25 @@ const ActivationCenterPage = () => {
                     ) : (
                       <>
                         <div className="level-details">
+                          {hasAutoUpgradeProgress && (
+                            <div className="auto-upgrade-progress-card">
+                              <div className="escrow-header">
+                                <span><FaSyncAlt /> {activationT('metrics.autoUpgradeProgressForLevel', 'Auto-upgrade toward Level {{level}}', { level })}</span>
+                                <span>{autoUpgradeLockedForThisLevel.toFixed(2)} / {autoUpgradeRequiredForThisLevel} USDT</span>
+                              </div>
+                              <div className="escrow-track">
+                                <div className="escrow-fill escrow-fill--warning" style={{ width: `${Math.min(autoUpgradeProgressForThisLevel, 100)}%` }} />
+                              </div>
+                              <p className="auto-upgrade-progress-card__note">
+                                {activationT(
+                                  'metrics.autoUpgradeNotActiveYet',
+                                  'This level is not activated yet. It will activate automatically after the escrow reaches {{amount}} USDT.',
+                                  { amount: autoUpgradeRequiredForThisLevel }
+                                )}
+                              </p>
+                            </div>
+                          )}
+
                           <div className="detail-row">
                             <span>{activationT('metrics.balance', 'Balance:')}</span>
                             <strong className={hasEnoughBalance ? 'sufficient' : 'insufficient'}>
