@@ -7,8 +7,7 @@ import IndexedEscrowEvent from '../models/IndexedEscrowEvent.js';
 import IndexedActivationSummary from '../models/IndexedActivationSummary.js';
 import IndexedFinancialEvent from '../models/IndexedFinancialEvent.js';
 import IndexerGap from '../models/IndexerGap.js';
-import ReferralCode from '../models/ReferralCode.js';
-import { generateShortCode } from '../utils/shortCodeGenerator.js';
+import { getOrCreateReferralCodeForWallet } from './referralCodeService.js';
 import {
   createAdminIndexerWarning,
   notifyFromIndexedEscrowEvent,
@@ -131,36 +130,7 @@ function rawArgs(args = {}) {
 }
 
 async function ensureReferralCodeForWallet(walletAddress) {
-  const wallet = toLower(walletAddress || '');
-  if (!wallet) return;
-
-  const existing = await ReferralCode.findOne({ walletAddress: wallet }).select('_id').lean();
-  if (existing) return;
-
-  let shortCode;
-  let attempts = 0;
-  const maxAttempts = 20;
-
-  do {
-    shortCode = generateShortCode();
-    attempts += 1;
-  } while (await ReferralCode.exists({ shortCode }) && attempts < maxAttempts);
-
-  if (attempts >= maxAttempts) {
-    throw new Error(`[REFERRAL_CODE_GENERATION_FAILED] ${wallet}`);
-  }
-
-  try {
-    await ReferralCode.create({
-      shortCode,
-      walletAddress: wallet,
-      isActive: true,
-    });
-  } catch (error) {
-    if (Number(error?.code) !== 11000) {
-      throw error;
-    }
-  }
+  await getOrCreateReferralCodeForWallet(walletAddress);
 }
 
 const blockCache = new Map();

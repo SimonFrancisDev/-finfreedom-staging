@@ -1,6 +1,6 @@
 import ReferralCode from '../models/ReferralCode.js'
 import IndexedRegistrationEvent from '../models/IndexedRegistrationEvent.js'
-import { generateShortCode } from '../utils/shortCodeGenerator.js'
+import { getOrCreateReferralCodeForWallet } from '../services/referralCodeService.js'
 import { ethers } from 'ethers'
 import { getContracts } from '../blockchain/contracts.js'
 
@@ -102,43 +102,7 @@ export const getOrCreateReferralCode = async (req, res) => {
       })
     }
 
-    let referral = await ReferralCode.findOne({
-      walletAddress: wallet,
-    })
-
-    if (!referral) {
-      let shortCode
-      let attempts = 0
-      const maxAttempts = 10
-
-      do {
-        shortCode = generateShortCode()
-        attempts += 1
-      } while (await ReferralCode.exists({ shortCode }) && attempts < maxAttempts)
-
-      if (attempts >= maxAttempts) {
-        return res.status(500).json({
-          success: false,
-          message: 'Failed to generate a unique referral ID.',
-        })
-      }
-
-      try {
-        referral = await ReferralCode.create({
-          shortCode,
-          walletAddress: wallet,
-          isActive: true,
-        })
-      } catch (error) {
-        if (error?.code !== 11000) {
-          throw error
-        }
-
-        referral = await ReferralCode.findOne({
-          walletAddress: wallet,
-        })
-      }
-    }
+    const referral = await getOrCreateReferralCodeForWallet(wallet)
 
     const referredByWallet = normalizeWallet(registrationEvent.referrer)
     const referredByCode = await getCodeByWallet(referredByWallet)
