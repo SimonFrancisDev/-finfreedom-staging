@@ -146,8 +146,24 @@ function assertReceiptArithmetic(events, actor, level) {
       ethers.getAddress(event.args.user) === ethers.getAddress(actor) && Number(event.args.level) === level
   );
 
+  const recycleHops = events.filter((event) => event.name === "RecycleCompletedDetailed");
+  const paymentRules = events.filter((event) => event.name === "PaymentRuleApplied");
   for (const event of detailed) {
-    if (event.args.grossAmount !== event.args.escrowLocked + event.args.liquidPaid) {
+    const settled = event.args.escrowLocked + event.args.liquidPaid;
+    if (event.args.grossAmount === settled) continue;
+
+    const forwarded = event.args.grossAmount - settled;
+    const matchingHop = Number(event.args.receiptType) === 4 && recycleHops.some(
+      (hop) => hop.args.activationId === event.args.activationId &&
+        ethers.getAddress(hop.args.orbitOwner) === ethers.getAddress(event.args.receiver) &&
+        hop.args.recycleGross === forwarded
+    );
+    const matchingReserve = paymentRules.some(
+      (rule) => ethers.getAddress(rule.args.orbitOwner) === ethers.getAddress(event.args.receiver) &&
+        Number(rule.args.position) === Number(event.args.mirroredPosition) &&
+        rule.args.toRecycle === forwarded
+    );
+    if (!matchingHop && !matchingReserve) {
       failures.push(`receipt gross mismatch for ${event.args.receiver}`);
     }
   }
@@ -174,6 +190,24 @@ function assertReceiptArithmetic(events, actor, level) {
     }
   }
   if (failures.length) throw new Error(failures.join("; "));
+}
+
+async function recoverRegistrationReceipt(wallet, contracts, ifaces) {
+  const startBlock = Number(process.env.START_BLOCK_REGISTRATION || 0);
+  if (!Number.isSafeInteger(startBlock) || startBlock <= 0) {
+    throw new Error("START_BLOCK_REGISTRATION is required to audit an already-mined registration");
+  }
+  const logs = await contracts.registration.queryFilter(
+    contracts.registration.filters.Registered(wallet.address),
+    startBlock,
+    "latest"
+  );
+  if (logs.length !== 1) {
+    throw new Error(`Expected one registration log for ${wallet.address}, found ${logs.length}`);
+  }
+  const receipt = await ethers.provider.getTransactionReceipt(logs[0].transactionHash);
+  if (!receipt || receipt.status !== 1) throw new Error(`Missing successful receipt for ${wallet.address}`);
+  return { receipt, events: decodeLogs(receipt, ifaces), txHash: logs[0].transactionHash };
 }
 
 function assertMatrixRules(events) {
@@ -234,14 +268,21 @@ async function approveIfNeeded(wallet, amount, contracts, config) {
 
 async function executePaidAction(action, wallet, contracts, config, ifaces) {
   if (action.kind === "register") {
-    if (await contracts.registration.isRegistered(wallet.address)) {
-      throw new Error(`${action.actor} unexpectedly already registered`);
-    }
     const sponsor = action.sponsor === "ID1" ? config.id1 : walletForLabel(action.sponsor);
-    await approveIfNeeded(wallet, LEVEL_PRICE[1], contracts, config);
-    const tx = await contracts.registration.connect(wallet).register(sponsor);
-    const receipt = await tx.wait();
-    const events = decodeLogs(receipt, ifaces);
+    let txHash;
+    let receipt;
+    let events;
+    let outcome = "MINED";
+    if (await contracts.registration.isRegistered(wallet.address)) {
+      ({ txHash, receipt, events } = await recoverRegistrationReceipt(wallet, contracts, ifaces));
+      outcome = "RECOVERED_AND_AUDITED";
+    } else {
+      await approveIfNeeded(wallet, LEVEL_PRICE[1], contracts, config);
+      const tx = await contracts.registration.connect(wallet).register(sponsor);
+      receipt = await tx.wait();
+      txHash = tx.hash;
+      events = decodeLogs(receipt, ifaces);
+    }
     assertReceiptArithmetic(events, wallet.address, 1);
     assertMatrixRules(events);
     assertExpectedRecycleChain(action, events, config);
@@ -250,7 +291,7 @@ async function executePaidAction(action, wallet, contracts, config, ifaces) {
     if (ethers.getAddress(await contracts.registration.getReferrer(wallet.address)) !== ethers.getAddress(sponsor)) {
       throw new Error("stored sponsor mismatch");
     }
-    return { txHash: tx.hash, receipt, events, outcome: "MINED" };
+    return { txHash, receipt, events, outcome };
   }
 
   if (action.kind === "ensureLevel") {
