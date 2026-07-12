@@ -889,6 +889,43 @@ describe("Audit readiness contract invariants", function () {
     expect(recycleEvent).to.not.equal(undefined);
   });
 
+  it("continues chained P4 recycle through every newly completed upline orbit", async function () {
+    const { owner, users, registration, levelManager, register, fundAndApprove, usdt } = await deployCoreSystem();
+    const [root, middle, lower, rootFill1, rootFill2, middleFill1, middleFill2, lowerFill1, lowerFill2, lowerFill3, lowerFill4] =
+      users.slice(8, 19);
+
+    await register(root, owner.address);
+    await register(middle, root.address);
+    await register(lower, middle.address);
+    await register(rootFill1, root.address);
+    await register(rootFill2, root.address);
+    await register(middleFill1, middle.address);
+    await register(middleFill2, middle.address);
+    await register(lowerFill1, lower.address);
+    await register(lowerFill2, lower.address);
+    await register(lowerFill3, lower.address);
+
+    const founderWallets = users.slice(0, 8);
+    const founderBalancesBefore = await Promise.all(founderWallets.map((wallet) => usdt.balanceOf(wallet.address)));
+    await fundAndApprove(lowerFill4);
+    const tx = await registration.connect(lowerFill4).register(lower.address);
+    const receipt = await tx.wait();
+
+    const recycleEvents = parseEvents(receipt, levelManager, "RecycleCompletedDetailed");
+    const ownerSequence = recycleEvents.map((event) => event.args.orbitOwner);
+    const receiverSequence = recycleEvents.map((event) => event.args.recycleReceiver);
+
+    expect(ownerSequence).to.deep.equal([lower.address, middle.address, root.address]);
+    expect(receiverSequence).to.deep.equal([middle.address, root.address, owner.address]);
+    expect(recycleEvents.every((event) => event.args.recycleGross === usdtUnits(9))).to.equal(true);
+    const founderBalancesAfter = await Promise.all(founderWallets.map((wallet) => usdt.balanceOf(wallet.address)));
+    const founderDelta = founderBalancesAfter.reduce(
+      (total, balance, index) => total + balance - founderBalancesBefore[index],
+      0n
+    );
+    expect(founderDelta).to.equal(usdtUnits(9));
+  });
+
   it("reserves the first P12 recycle fill and releases both fills through the normal 40/50 split", async function () {
     const { users, registration, levelManager, router, usdt, register, activateToLevel } = await deployCoreSystem();
     const founderWallets = users.slice(0, 8);
@@ -1206,7 +1243,7 @@ describe("Audit readiness contract invariants", function () {
   });
 
   it("reserves the first P39 recycle fill and releases both fills through the normal 20/20/50 split", async function () {
-    const { owner, users, registration, levelManager, router, usdt, register, activateToLevel } = await deployCoreSystem();
+    const { owner, users, registration, levelManager, router, p39, usdt, register, activateToLevel } = await deployCoreSystem();
     const founderWallets = users.slice(0, 8);
     const sponsor = users[8];
     const orbitOwner = users[9];
@@ -1261,6 +1298,10 @@ describe("Audit readiness contract invariants", function () {
     expect(recycleGrosses).to.deep.equal([usdtUnits(8), usdtUnits(8), usdtUnits(20)]);
     expect(recycleReceipts.reduce((total, event) => total + event.args.grossAmount, 0n)).to.equal(usdtUnits(36));
     expect(recycleReceipts.some((event) => event.args.grossAmount === usdtUnits(40))).to.equal(false);
+    expect(observed.receipt.gasUsed).to.be.lessThan(12_000_000n);
+    expect(await p39.hasHistoricalCycle(orbitOwner.address, 3, 1)).to.equal(true);
+    expect((await p39.getHistoricalPosition(orbitOwner.address, 3, 1, 39)).occupant)
+      .to.equal(finalRecycleTrigger.address);
   });
 
   it("routes P39 recycle release through eligible registered upline, not matrix chain", async function () {
@@ -1993,5 +2034,67 @@ describe("Audit readiness contract invariants", function () {
 
     expect(await usdt.balanceOf(recipient.address)).to.equal(usdtUnits(5));
     expect(await usdt.balanceOf(vault.target)).to.equal(usdtUnits(45));
+  });
+
+  it("anchors mirrored children under the latest repeated matrix-parent occurrence", async function () {
+    const { users, levelManager, p39, register } = await deployCoreSystem();
+    const levelManagerSigner = await impersonateLevelManager(levelManager);
+    const orbitOwner = users[8];
+    const firstLineUser = users[9];
+    const repeatedParent = users[10];
+    const mirroredChild = users[11];
+
+    await register(orbitOwner);
+    await register(firstLineUser, orbitOwner.address);
+    await register(repeatedParent, orbitOwner.address);
+    await register(mirroredChild, repeatedParent.address);
+
+    await p39.connect(levelManagerSigner).fillPositionDetailed(
+      orbitOwner.address,
+      3,
+      firstLineUser.address,
+      orbitOwner.address,
+      usdtUnits(40),
+      99001
+    );
+
+    await p39.connect(levelManagerSigner).mirrorPositionDetailed(
+      orbitOwner.address,
+      3,
+      repeatedParent.address,
+      repeatedParent.address,
+      usdtUnits(40),
+      usdtUnits(40),
+      99002
+    );
+    await p39.connect(levelManagerSigner).mirrorPositionDetailed(
+      orbitOwner.address,
+      3,
+      repeatedParent.address,
+      repeatedParent.address,
+      usdtUnits(40),
+      usdtUnits(40),
+      99003
+    );
+
+    expect((await p39.getPosition(orbitOwner.address, 3, 2)).occupant)
+      .to.equal(repeatedParent.address);
+    expect((await p39.getPosition(orbitOwner.address, 3, 3)).occupant)
+      .to.equal(repeatedParent.address);
+
+    await p39.connect(levelManagerSigner).mirrorPositionDetailed(
+      orbitOwner.address,
+      3,
+      mirroredChild.address,
+      repeatedParent.address,
+      usdtUnits(8),
+      0,
+      99004
+    );
+
+    expect((await p39.getPosition(orbitOwner.address, 3, 6)).occupant)
+      .to.equal(mirroredChild.address);
+    expect((await p39.getPosition(orbitOwner.address, 3, 5)).occupant)
+      .to.equal(ethers.ZeroAddress);
   });
 });

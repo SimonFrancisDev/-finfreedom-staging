@@ -102,6 +102,24 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
         uint256[] founderRatios;
     }
 
+    struct P4RecycleInput {
+        address registration;
+        address p4Orbit;
+        address p12Orbit;
+        address p39Orbit;
+        address id1Wallet;
+        address orbitOwner;
+        uint8 level;
+        uint256 amount;
+        uint256 activationId;
+        address fromUser;
+        uint8 sourcePosition;
+        uint32 sourceCycle;
+        address[] founderWallets;
+        uint256[] founderRatios;
+        uint8 depth;
+    }
+
     struct RecycleReserve {
         uint256 amount;
         uint8 fills;
@@ -301,7 +319,14 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
         uint8 level,
         uint256 amount,
         uint256 activationId
-    ) internal returns (address upline, uint8 mirroredPosition, uint32 mirroredCycle, uint256 recycleEscrowLocked, bool fallbackToId1) {
+    ) internal returns (
+        address upline,
+        uint8 mirroredPosition,
+        uint32 mirroredCycle,
+        uint256 recycleEscrowLocked,
+        uint256 mirrorRecycleAmount,
+        bool fallbackToId1
+    ) {
         upline = IRegistration(registration).getReferrer(orbitOwner);
         uint8 depth = 0;
         while (upline != address(0) && !IRegistration(registration).isLevelActivated(upline, level)) {
@@ -319,7 +344,7 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
 
         if (upline != address(0)) {
             uint256 mirrorOwnerLiquid;
-            (mirroredPosition, mirroredCycle, mirrorOwnerLiquid, recycleEscrowLocked, ) = _mirrorFill(
+            (mirroredPosition, mirroredCycle, mirrorOwnerLiquid, recycleEscrowLocked, mirrorRecycleAmount) = _mirrorFill(
                 orbitType,
                 p4Orbit,
                 p12Orbit,
@@ -416,104 +441,211 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
             }));
         }
 
-        if (orbitOwner == id1Wallet) {
-            _distributeFounders(amount, activationId, fromUser, level, founderWallets, founderRatios, REASON_FOUNDER_ROUTE);
-            _recordExternalEarning(orbitType, p4Orbit, p12Orbit, p39Orbit, id1Wallet, level, amount);
-            _emitRecycleReceipt(id1Wallet, activationId, level, fromUser, orbitOwner, sourcePosition, sourceCycle, 0, 0, amount, 0, amount);
-            emit RecycleCompletedDetailed(activationId, orbitOwner, level, fromUser, sourcePosition, sourceCycle, id1Wallet, amount, amount, 0, 0, 0, false);
-            return (id1Wallet, amount, 0, 0, 0);
+        return _settleP4Recycle(P4RecycleInput({
+            registration: registration,
+            p4Orbit: p4Orbit,
+            p12Orbit: p12Orbit,
+            p39Orbit: p39Orbit,
+            id1Wallet: id1Wallet,
+            orbitOwner: orbitOwner,
+            level: level,
+            amount: amount,
+            activationId: activationId,
+            fromUser: fromUser,
+            sourcePosition: sourcePosition,
+            sourceCycle: sourceCycle,
+            founderWallets: founderWallets,
+            founderRatios: founderRatios,
+            depth: 0
+        }));
+    }
+
+    function _settleP4Recycle(
+        P4RecycleInput memory input
+    ) internal returns (
+        address recycleReceiver,
+        uint256 recycleLiquidPaid,
+        uint256 recycleEscrowLocked,
+        uint8 mirrorPosition,
+        uint32 mirrorCycle
+    ) {
+        if (input.depth >= MAX_UPLINE_SEARCH_DEPTH) {
+            revert UplineSearchTooDeep(input.orbitOwner, input.level);
+        }
+
+        if (input.orbitOwner == input.id1Wallet) {
+            _distributeFounders(
+                input.amount,
+                input.activationId,
+                input.fromUser,
+                input.level,
+                input.founderWallets,
+                input.founderRatios,
+                REASON_FOUNDER_ROUTE
+            );
+            _recordExternalEarning(4, input.p4Orbit, input.p12Orbit, input.p39Orbit, input.id1Wallet, input.level, input.amount);
+            _emitRecycleReceipt(
+                input.id1Wallet,
+                input.activationId,
+                input.level,
+                input.fromUser,
+                input.orbitOwner,
+                input.sourcePosition,
+                input.sourceCycle,
+                0,
+                0,
+                input.amount,
+                0,
+                input.amount
+            );
+            emit RecycleCompletedDetailed(
+                input.activationId,
+                input.orbitOwner,
+                input.level,
+                input.fromUser,
+                input.sourcePosition,
+                input.sourceCycle,
+                input.id1Wallet,
+                input.amount,
+                input.amount,
+                0,
+                0,
+                0,
+                false
+            );
+            return (input.id1Wallet, input.amount, 0, 0, 0);
         }
 
         bool fallbackToId1;
-        (recycleReceiver, mirrorPosition, mirrorCycle, recycleEscrowLocked, fallbackToId1) = _resolveRecycleMirror(
-            orbitType,
-            registration,
-            p4Orbit,
-            p12Orbit,
-            p39Orbit,
-            id1Wallet,
-            orbitOwner,
-            level,
-            amount,
-            activationId
+        uint256 mirrorRecycleAmount;
+        (
+            recycleReceiver,
+            mirrorPosition,
+            mirrorCycle,
+            recycleEscrowLocked,
+            mirrorRecycleAmount,
+            fallbackToId1
+        ) = _resolveRecycleMirror(
+            4,
+            input.registration,
+            input.p4Orbit,
+            input.p12Orbit,
+            input.p39Orbit,
+            input.id1Wallet,
+            input.orbitOwner,
+            input.level,
+            input.amount,
+            input.activationId
         );
 
         if (fallbackToId1) {
             emit PayoutNotDelivered(
-                orbitOwner,
-                fromUser,
-                level,
-                orbitType,
-                sourcePosition,
-                sourceCycle,
-                amount,
-                id1Wallet,
-                amount,
+                input.orbitOwner,
+                input.fromUser,
+                input.level,
+                4,
+                input.sourcePosition,
+                input.sourceCycle,
+                input.amount,
+                input.id1Wallet,
+                input.amount,
                 RECEIPT_RECYCLE,
                 ROLE_RECYCLE_CODE,
                 REASON_RECYCLE_FALLBACK,
                 ACTION_ACTIVATE_LEVEL,
-                activationId
+                input.activationId
             );
         }
 
-        recycleLiquidPaid = amount >= recycleEscrowLocked ? amount - recycleEscrowLocked : 0;
-        if (recycleReceiver == id1Wallet) {
-            _distributeFounders(recycleLiquidPaid, activationId, fromUser, level, founderWallets, founderRatios, REASON_FOUNDER_ROUTE);
+        recycleLiquidPaid = mirrorRecycleAmount > 0
+            ? 0
+            : input.amount >= recycleEscrowLocked ? input.amount - recycleEscrowLocked : 0;
+
+        if (recycleReceiver == input.id1Wallet && recycleLiquidPaid > 0) {
+            _distributeFounders(
+                recycleLiquidPaid,
+                input.activationId,
+                input.fromUser,
+                input.level,
+                input.founderWallets,
+                input.founderRatios,
+                REASON_FOUNDER_ROUTE
+            );
         } else if (recycleReceiver != address(0) && recycleLiquidPaid > 0) {
             usdt.safeTransfer(recycleReceiver, recycleLiquidPaid);
         }
 
-        _recordExternalEarning(orbitType, p4Orbit, p12Orbit, p39Orbit, recycleReceiver, level, amount);
+        _recordExternalEarning(
+            4,
+            input.p4Orbit,
+            input.p12Orbit,
+            input.p39Orbit,
+            recycleReceiver,
+            input.level,
+            recycleLiquidPaid + recycleEscrowLocked
+        );
 
         if (recycleEscrowLocked > 0) {
             emit PayoutNotDelivered(
                 recycleReceiver,
-                fromUser,
-                level,
-                orbitType,
-                sourcePosition,
-                sourceCycle,
-                amount,
+                input.fromUser,
+                input.level,
+                4,
+                input.sourcePosition,
+                input.sourceCycle,
+                input.amount,
                 recycleReceiver,
                 recycleLiquidPaid,
                 RECEIPT_RECYCLE,
                 ROLE_RECYCLE_CODE,
                 REASON_ESCROW_INSTEAD_OF_LIQUID,
                 ACTION_NO_ACTION,
-                activationId
+                input.activationId
             );
         }
 
         _emitRecycleReceipt(
             recycleReceiver,
-            activationId,
-            level,
-            fromUser,
-            orbitOwner,
-            sourcePosition,
-            sourceCycle,
+            input.activationId,
+            input.level,
+            input.fromUser,
+            input.orbitOwner,
+            input.sourcePosition,
+            input.sourceCycle,
             mirrorPosition,
             mirrorCycle,
-            amount,
+            input.amount,
             recycleEscrowLocked,
             recycleLiquidPaid
         );
         emit RecycleCompletedDetailed(
-            activationId,
-            orbitOwner,
-            level,
-            fromUser,
-            sourcePosition,
-            sourceCycle,
+            input.activationId,
+            input.orbitOwner,
+            input.level,
+            input.fromUser,
+            input.sourcePosition,
+            input.sourceCycle,
             recycleReceiver,
-            amount,
+            input.amount,
             recycleLiquidPaid,
             recycleEscrowLocked,
             mirrorPosition,
             mirrorCycle,
             false
         );
+
+        if (mirrorRecycleAmount > 0) {
+            P4RecycleInput memory nested = input;
+            nested.orbitOwner = recycleReceiver;
+            nested.amount = mirrorRecycleAmount;
+            nested.fromUser = input.orbitOwner;
+            nested.sourcePosition = mirrorPosition;
+            nested.sourceCycle = mirrorCycle;
+            nested.depth = input.depth + 1;
+            (, uint256 nestedLiquid, uint256 nestedEscrow, , ) = _settleP4Recycle(nested);
+            recycleLiquidPaid += nestedLiquid;
+            recycleEscrowLocked += nestedEscrow;
+        }
     }
 
     function _recordExternalEarning(

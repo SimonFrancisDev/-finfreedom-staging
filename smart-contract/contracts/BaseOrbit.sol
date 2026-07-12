@@ -139,6 +139,10 @@ abstract contract BaseOrbit is Initializable, OwnableUpgradeable, UUPSUpgradeabl
     // historical snapshots
     mapping(address => mapping(uint8 => mapping(uint256 => mapping(uint8 => StoredRuleSnapshot)))) internal historicalStoredRuleSnapshots;
 
+    // Positions are archived as they are filled so cycle completion remains
+    // affordable for large P39 matrices. One bit represents one position.
+    mapping(address => mapping(uint8 => mapping(uint256 => uint256))) internal historicalCycleArchiveMask;
+
     event LinePaymentTracked(
         address indexed orbitOwner,
         uint8 indexed level,
@@ -392,15 +396,15 @@ abstract contract BaseOrbit is Initializable, OwnableUpgradeable, UUPSUpgradeabl
 
         OrbitData storage orbit = userOrbits[orbitOwner][level];
         OrbitConfig memory config = levelConfig[level];
-        uint8 totalPositions = config.totalPositions;
+        uint8 position = config.totalPositions;
 
-        for (uint8 i = 1; i <= totalPositions; ) {
-            if (orbit.positions[i].user == targetUser) {
-                return i;
+        while (position > 0) {
+            if (orbit.positions[position].user == targetUser) {
+                return position;
             }
 
             unchecked {
-                ++i;
+                --position;
             }
         }
 
@@ -502,6 +506,8 @@ abstract contract BaseOrbit is Initializable, OwnableUpgradeable, UUPSUpgradeabl
         while (current != address(0) && current != orbitOwner) {
             if (depth >= MAX_UPLINE_SEARCH_DEPTH) revert UplineSearchTooDeep(newUser, level);
 
+            // Recycle and mirror paths may place the same wallet more than once.
+            // New descendants belong to the most recent structural occurrence.
             uint8 ancestorPosition = _findUserPosition(orbitOwner, level, current);
 
             if (ancestorPosition != 0) {
@@ -768,6 +774,41 @@ abstract contract BaseOrbit is Initializable, OwnableUpgradeable, UUPSUpgradeabl
             spillover1Recipient: data.spillover1Recipient,
             spillover2Recipient: data.spillover2Recipient
         });
+
+        _archiveCurrentPosition(data.orbitOwner, data.level, data.position);
+    }
+
+    function _archiveCurrentPosition(
+        address orbitOwner,
+        uint8 level,
+        uint8 position
+    ) internal {
+        uint256 cycleNumber = userOrbits[orbitOwner][level].totalCycles + 1;
+        _archivePositionForCycle(orbitOwner, level, cycleNumber, position);
+    }
+
+    function _archivePositionForCycle(
+        address orbitOwner,
+        uint8 level,
+        uint256 cycleNumber,
+        uint8 position
+    ) internal {
+        OrbitData storage orbit = userOrbits[orbitOwner][level];
+        if (orbit.positions[position].user == address(0)) return;
+
+        uint256 positionBit = uint256(1) << (position - 1);
+        if ((historicalCycleArchiveMask[orbitOwner][level][cycleNumber] & positionBit) != 0) return;
+
+        historicalCyclePositions[orbitOwner][level][cycleNumber][position] = orbit.positions[position];
+        historicalPositionLineArrivalNumber[orbitOwner][level][cycleNumber][position] =
+            positionLineArrivalNumber[orbitOwner][level][position];
+        historicalPositionActivationId[orbitOwner][level][cycleNumber][position] =
+            positionActivationId[orbitOwner][level][position];
+        historicalPositionIsMirror[orbitOwner][level][cycleNumber][position] =
+            positionIsMirror[orbitOwner][level][position];
+        historicalStoredRuleSnapshots[orbitOwner][level][cycleNumber][position] =
+            storedRuleSnapshots[orbitOwner][level][position];
+        historicalCycleArchiveMask[orbitOwner][level][cycleNumber] |= positionBit;
     }
 
     function _deleteRuleSnapshot(
@@ -842,27 +883,21 @@ abstract contract BaseOrbit is Initializable, OwnableUpgradeable, UUPSUpgradeabl
         unchecked { orbit.totalCycles++; }
         emit OrbitReset(orbitOwner, level, orbit.totalCycles);
 
-        if (!historicalCycleStored[orbitOwner][level][orbit.totalCycles]) {
+        uint256 completeArchiveMask = (uint256(1) << config.totalPositions) - 1;
+        bool archiveComplete =
+            historicalCycleArchiveMask[orbitOwner][level][orbit.totalCycles] == completeArchiveMask;
+
+        if (!archiveComplete) {
             uint8 historicalTotalPositions = config.totalPositions;
             for (uint8 i = 1; i <= historicalTotalPositions; ) {
-                historicalCyclePositions[orbitOwner][level][orbit.totalCycles][i] = orbit.positions[i];
-                historicalPositionLineArrivalNumber[orbitOwner][level][orbit.totalCycles][i] =
-                    positionLineArrivalNumber[orbitOwner][level][i];
-
-                historicalPositionActivationId[orbitOwner][level][orbit.totalCycles][i] =
-                    positionActivationId[orbitOwner][level][i];
-                historicalPositionIsMirror[orbitOwner][level][orbit.totalCycles][i] =
-                    positionIsMirror[orbitOwner][level][i];
-
-                historicalStoredRuleSnapshots[orbitOwner][level][orbit.totalCycles][i] =
-                    storedRuleSnapshots[orbitOwner][level][i];
+                _archivePositionForCycle(orbitOwner, level, orbit.totalCycles, i);
 
                 unchecked {
                     ++i;
                 }
             }
-            historicalCycleStored[orbitOwner][level][orbit.totalCycles] = true;
         }
+        historicalCycleStored[orbitOwner][level][orbit.totalCycles] = true;
 
         uint8 totalPositions = config.totalPositions;
         for (uint8 i = 1; i <= totalPositions; ) {
@@ -1709,5 +1744,5 @@ returns (FillPositionDetailedResult memory result)
     }
 
 
-    uint256[49] private __gap;
+    uint256[48] private __gap;
 }

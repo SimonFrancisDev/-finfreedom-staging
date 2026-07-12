@@ -52,6 +52,24 @@ const ACTIVATION_GAS_BUFFER_BPS = 12500n
 const GAS_BUFFER_DENOMINATOR = 10000n
 const PENDING_REFERRAL_STORAGE_KEY = 'ffn_pending_registration_referral'
 
+const estimateActivationGas = async (registrationWithSigner, signer, level) => {
+  try {
+    return await registrationWithSigner.activateLevel.estimateGas(level)
+  } catch (walletEstimateError) {
+    const readProvider = web3Service.getReadProvider()
+    if (!readProvider) throw walletEstimateError
+
+    const transaction = await registrationWithSigner.activateLevel.populateTransaction(level)
+    const from = await signer.getAddress()
+
+    try {
+      return await readProvider.estimateGas({ ...transaction, from })
+    } catch {
+      throw walletEstimateError
+    }
+  }
+}
+
 const levelPrices = {
   1: '10',
   2: '20',
@@ -1601,7 +1619,7 @@ const ActivationCenterPage = () => {
         const level1AlreadyActive = await contracts.registration.isLevelActivated(account, 1)
 
         if (!level1AlreadyActive) {
-          const activationGas = await registrationWithSigner.activateLevel.estimateGas(1)
+          const activationGas = await estimateActivationGas(registrationWithSigner, signer, 1)
           const activateTx = await registrationWithSigner.activateLevel(
             1,
             await buildTxOptions({
@@ -1872,7 +1890,7 @@ const ActivationCenterPage = () => {
 
       const signer = await getSigner()
       const registrationWithSigner = contracts.registration.connect(signer)
-      const gasEstimate = await registrationWithSigner.activateLevel.estimateGas(level)
+      const gasEstimate = await estimateActivationGas(registrationWithSigner, signer, level)
       const tx = await registrationWithSigner.activateLevel(
         level,
         await buildTxOptions({

@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "preserveMockUsdt": "0x7b7E39f3D177B3356368431C5C285bca58b43A60",
+  "walletRange": "Account 8 through Account 81",
+  "roles": {
+    "primaryOwner": "Account 8",
+    "p39Line1": {
+      "1": "Account 9",
+      "2": "Account 10",
+      "3": "Account 11"
+    },
+    "p39Line2": {
+      "4": { "wallet": "Account 12", "parentPosition": 1 },
+      "5": { "wallet": "Account 13", "parentPosition": 2 },
+      "6": { "wallet": "Account 14", "parentPosition": 3 },
+      "7": { "wallet": "Account 15", "parentPosition": 1 },
+      "8": { "wallet": "Account 16", "parentPosition": 2 },
+      "9": { "wallet": "Account 17", "parentPosition": 3 },
+      "10": { "wallet": "Account 18", "parentPosition": 1 },
+      "11": { "wallet": "Account 19", "parentPosition": 2 },
+      "12": { "wallet": "Account 20", "parentPosition": 3 }
+    },
+    "p39Line3": {
+      "13": { "wallet": "Account 21", "parentPosition": 4 },
+      "14": { "wallet": "Account 22", "parentPosition": 5 },
+      "15": { "wallet": "Account 23", "parentPosition": 6 },
+      "16": { "wallet": "Account 24", "parentPosition": 7 },
+      "17": { "wallet": "Account 25", "parentPosition": 8 },
+      "18": { "wallet": "Account 26", "parentPosition": 9 },
+      "19": { "wallet": "Account 27", "parentPosition": 10 },
+      "20": { "wallet": "Account 28", "parentPosition": 11 },
+      "21": { "wallet": "Account 29", "parentPosition": 12 },
+      "22": { "wallet": "Account 30", "parentPosition": 4 },
+      "23": { "wallet": "Account 31", "parentPosition": 5 },
+      "24": { "wallet": "Account 32", "parentPosition": 6 },
+      "25": { "wallet": "Account 33", "parentPosition": 7 },
+      "26": { "wallet": "Account 34", "parentPosition": 8 },
+      "27": { "wallet": "Account 35", "parentPosition": 9 },
+      "28": { "wallet": "Account 36", "parentPosition": 10 },
+      "29": { "wallet": "Account 37", "parentPosition": 11 },
+      "30": { "wallet": "Account 38", "parentPosition": 12 },
+      "31": { "wallet": "Account 39", "parentPosition": 4 },
+      "32": { "wallet": "Account 40", "parentPosition": 5 },
+      "33": { "wallet": "Account 41", "parentPosition": 6 },
+      "34": { "wallet": "Account 42", "parentPosition": 7 },
+      "35": { "wallet": "Account 43", "parentPosition": 8 },
+      "36": { "wallet": "Account 44", "parentPosition": 9 },
+      "37": { "wallet": "Account 45", "parentPosition": 10 },
+      "38": { "wallet": "Account 46", "parentPosition": 11 },
+      "39": { "wallet": "Account 47", "parentPosition": 12 }
+    },
+    "p4ChainedRecycle": {
+      "root": "Account 48",
+      "middle": "Account 49",
+      "lower": "Account 50",
+      "rootPrefill": ["Account 51", "Account 52"],
+      "middlePrefill": ["Account 53", "Account 54"],
+      "lowerFill": ["Account 55", "Account 56", "Account 57", "Account 58"]
+    },
+    "inactiveUplineChain": {
+      "eligibleRoot": "Account 59",
+      "inactiveMiddle": "Account 60",
+      "actorBeforeEligibility": "Account 61",
+      "actorAfterEligibility": "Account 62"
+    },
+    "repeatedParentScenario": [
+      "Account 63", "Account 64", "Account 65"
+    ],
+    "id1FounderFallback": ["Account 67", "Account 68", "Account 69"],
+    "failureCases": {
+      "insufficientUsdt": "Account 70",
+      "missingAllowance": "Account 71",
+      "duplicateRegistration": "Account 72",
+      "previousLevelMissing": "Account 73",
+      "walletRpcFallback": "Account 74"
+    },
+    "higherLevelAndReserve": [
+      "Account 66", "Account 75", "Account 76", "Account 77", "Account 78",
+      "Account 79", "Account 80", "Account 81"
+    ]
+  }
+}
