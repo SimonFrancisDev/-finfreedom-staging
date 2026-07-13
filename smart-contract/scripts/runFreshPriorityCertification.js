@@ -185,8 +185,32 @@ function assertReceiptArithmetic(events, actor, level) {
       summary.args.totalLiquidPaid +
       summary.args.totalEscrowLocked +
       summary.args.totalRecycleAllocated;
-    if (accounted !== summary.args.activationAmount) {
-      failures.push(`activation summary accounting ${accounted} != ${summary.args.activationAmount}`);
+    // Recycle allocation is a throughput metric. If it settles in the same
+    // transaction, the same amount also appears in terminal liquid/escrow.
+    const settledRecycleAccounting = summary.args.activationAmount + summary.args.totalRecycleAllocated;
+    const mirroredReserve = detailed
+      .filter((event) => event.args.activationId === summary.args.activationId)
+      .reduce((sum, event) => {
+        const settled = event.args.escrowLocked + event.args.liquidPaid;
+        if (event.args.grossAmount <= settled) return sum;
+        const reserved = event.args.grossAmount - settled;
+        const hasReserveRule = paymentRules.some(
+          (rule) => ethers.getAddress(rule.args.orbitOwner) === ethers.getAddress(event.args.receiver) &&
+            Number(rule.args.position) === Number(event.args.mirroredPosition) &&
+            rule.args.toRecycle === reserved
+        );
+        return hasReserveRule ? sum + reserved : sum;
+      }, 0n);
+    const reconciledWithMirroredReserve =
+      accounted + mirroredReserve === summary.args.activationAmount;
+    if (
+      accounted !== summary.args.activationAmount &&
+      accounted !== settledRecycleAccounting &&
+      !reconciledWithMirroredReserve
+    ) {
+      failures.push(
+        `activation summary accounting ${accounted} does not reconcile activation, recycle throughput, or mirrored reserve`
+      );
     }
   }
   if (failures.length) throw new Error(failures.join("; "));
@@ -207,6 +231,24 @@ async function recoverRegistrationReceipt(wallet, contracts, ifaces) {
   }
   const receipt = await ethers.provider.getTransactionReceipt(logs[0].transactionHash);
   if (!receipt || receipt.status !== 1) throw new Error(`Missing successful receipt for ${wallet.address}`);
+  return { receipt, events: decodeLogs(receipt, ifaces), txHash: logs[0].transactionHash };
+}
+
+async function recoverLevelReceipt(wallet, level, contracts, ifaces) {
+  const startBlock = Number(process.env.START_BLOCK_REGISTRATION || 0);
+  if (!Number.isSafeInteger(startBlock) || startBlock <= 0) {
+    throw new Error("START_BLOCK_REGISTRATION is required to audit an already-mined level activation");
+  }
+  const logs = (await contracts.registration.queryFilter(
+    contracts.registration.filters.LevelActivated(wallet.address),
+    startBlock,
+    "latest"
+  )).filter((log) => Number(log.args.level) === level);
+  if (logs.length !== 1) {
+    throw new Error(`Expected one level ${level} activation log for ${wallet.address}, found ${logs.length}`);
+  }
+  const receipt = await ethers.provider.getTransactionReceipt(logs[0].transactionHash);
+  if (!receipt || receipt.status !== 1) throw new Error(`Missing successful level ${level} receipt for ${wallet.address}`);
   return { receipt, events: decodeLogs(receipt, ifaces), txHash: logs[0].transactionHash };
 }
 
@@ -297,7 +339,10 @@ async function executePaidAction(action, wallet, contracts, config, ifaces) {
   if (action.kind === "ensureLevel") {
     const level = Number(action.level);
     if (await contracts.levelManager.userLevelActivated(wallet.address, level)) {
-      return { txHash: null, receipt: null, events: [], outcome: "ALREADY_ACTIVE_AUTO_OR_PRIOR" };
+      const recovered = await recoverLevelReceipt(wallet, level, contracts, ifaces);
+      assertReceiptArithmetic(recovered.events, wallet.address, level);
+      assertMatrixRules(recovered.events);
+      return { ...recovered, outcome: "RECOVERED_AND_AUDITED" };
     }
     if (!(await contracts.levelManager.userLevelActivated(wallet.address, level - 1))) {
       throw new Error(`${action.actor} previous level ${level - 1} is not active`);

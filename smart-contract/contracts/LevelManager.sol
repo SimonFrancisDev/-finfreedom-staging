@@ -175,6 +175,7 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
         address spillover2Recipient;
         uint256 toEscrow;
         uint256 toRecycle;
+        address recycleRecipient;
         bool isTrueNoReferrer;
     }
 
@@ -769,7 +770,6 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
                     a.activationId
                 );
                 _handleLock(a.sponsor, level, a.toEscrow);
-                _maybeTriggerAutoUpgrade(a.sponsor, level);
             }
 
             SpilloverSettlementResult memory spilloverResult = _settleRoutedSpillovers(
@@ -798,6 +798,7 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
                     a.sourcePosition,
                     a.sourceCycle
                 );
+                a.recycleRecipient = recycleResult.actualRecycleReceiver;
             }
 
             summaryLiquidPaid = a.toOwner + spilloverResult.liquidPaid + recycleResult.recycleLiquidPaid;
@@ -842,6 +843,11 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
 
         emit LevelActivated(user, level, amount);
         emit LevelActivatedInOrbit(user, level, a.orbitAddress, amount);
+
+        _maybeTriggerAutoUpgrade(a.sponsor, level);
+        _maybeTriggerAutoUpgrade(a.spillover1Recipient, level);
+        _maybeTriggerAutoUpgrade(a.spillover2Recipient, level);
+        _maybeTriggerAutoUpgrade(a.recycleRecipient, level);
     }
 
     function _settleRoutedSpillovers(
@@ -1108,7 +1114,6 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
 
         if (result.escrowLocked > 0) {
             _handleLock(recipient, level, result.escrowLocked);
-            _maybeTriggerAutoUpgrade(recipient, level);
         }
     }
 
@@ -1361,7 +1366,6 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
         result.recycleGross = amount;
         if (result.recycleEscrowLocked > 0 && result.actualRecycleReceiver != id1Wallet) {
             _handleLock(result.actualRecycleReceiver, level, result.recycleEscrowLocked);
-            _maybeTriggerAutoUpgrade(result.actualRecycleReceiver, level);
         }
     }
     function _handleLock(address beneficiary, uint8 fromLevel, uint256 lockAmount) internal {
@@ -1382,6 +1386,7 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
     }
 
     function _maybeTriggerAutoUpgrade(address user, uint8 currentLevel) internal {
+        if (user == address(0)) return;
         if (currentLevel == MAX_LEVEL) return;
         if (userLevelActivated[user][currentLevel + 1]) return;
         if (autoUpgradeExecutionDepth != 0) return;

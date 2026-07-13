@@ -2097,4 +2097,49 @@ describe("Audit readiness contract invariants", function () {
     expect((await p39.getPosition(orbitOwner.address, 3, 5)).occupant)
       .to.equal(ethers.ZeroAddress);
   });
+
+  it("preserves parent P39 mirror accounting when routed escrow triggers a nested auto-upgrade", async function () {
+    this.timeout(600000);
+    const { owner, registration, levelManager, register, activateToLevel } = await deployCoreSystem();
+    const accounts = await createFundedWallets(owner, 40);
+    const account = (label) => accounts[label - 8];
+
+    await register(account(8), owner.address);
+    for (let position = 1; position <= 39; position += 1) {
+      const childLabel = position + 8;
+      let sponsorLabel = 8;
+      if (position >= 4 && position <= 12) {
+        sponsorLabel = 9 + ((position - 4) % 3);
+      } else if (position >= 13) {
+        const parentPosition = 4 + ((position - 13) % 9);
+        sponsorLabel = parentPosition + 8;
+      }
+      await register(account(childLabel), account(sponsorLabel).address);
+    }
+
+    for (let label = 9; label <= 47; label += 1) {
+      await activateToLevel(account(label), 2);
+    }
+    await activateToLevel(account(8), 3);
+    for (let label = 9; label < 36; label += 1) {
+      await activateToLevel(account(label), 3);
+    }
+
+    const tx = await registration.connect(account(36)).activateLevel(3);
+    const receipt = await tx.wait();
+    const summaries = parseEvents(receipt, levelManager, "ActivationFinancialSummaryRecorded");
+    const targetSummary = summaries.find(
+      (event) => event.args.user === account(36).address && event.args.level === 3n
+    );
+    const targetReceipts = parseEvents(receipt, levelManager, "DetailedPayoutReceiptRecorded")
+      .filter((event) => event.args.activationId === targetSummary.args.activationId);
+
+    expect(targetSummary).to.not.equal(undefined);
+    expect(targetSummary.args.systemCharge).to.equal(usdtUnits(4));
+    expect(targetSummary.args.totalLiquidPaid).to.equal(usdtUnits(8));
+    expect(targetSummary.args.totalEscrowLocked).to.equal(usdtUnits(28));
+    expect(targetReceipts.reduce((sum, event) => sum + event.args.liquidPaid, 0n)).to.equal(usdtUnits(8));
+    expect(targetReceipts.reduce((sum, event) => sum + event.args.escrowLocked, 0n)).to.equal(usdtUnits(28));
+    expect(summaries.some((event) => event.args.isAutoUpgrade && event.args.level === 4n)).to.equal(true);
+  });
 });
