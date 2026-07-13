@@ -47,8 +47,15 @@ async function main() {
   console.log("");
 
   const prepared = {};
+  const selectedTargets = String(process.env.ORBIT_UPGRADE_TARGETS || Object.keys(ORBIT_PROXIES).join(","))
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean);
+  const unknownTargets = selectedTargets.filter((name) => !ORBIT_PROXIES[name]);
+  if (unknownTargets.length) throw new Error(`Unknown orbit targets: ${unknownTargets.join(", ")}`);
 
-  for (const [contractName, proxyAddress] of Object.entries(ORBIT_PROXIES)) {
+  for (const contractName of selectedTargets) {
+    const proxyAddress = ORBIT_PROXIES[contractName];
     console.log(`${contractName}`);
     console.log("  proxy:", proxyAddress);
 

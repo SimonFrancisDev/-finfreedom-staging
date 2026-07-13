@@ -193,6 +193,11 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
         uint256 escrowLocked;
     }
 
+    struct PendingAutoUpgradeCheck {
+        address user;
+        uint8 level;
+    }
+
     struct RecycleResult {
         uint256 recycleGross;
         uint256 recycleLiquidPaid;
@@ -536,29 +541,10 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
     function resolveSponsor(address user, uint8 level) public view returns (address) {
         if (user == address(0)) return id1Wallet;
 
-        uint8 orbitType = _orbitCodeForLevel(level);
+        _orbitCodeForLevel(level);
         address current = registration.getReferrer(user);
         uint8 depth = 0;
 
-        // P39 uses the closest active qualified upline; ID1 remains fallback.
-        if (orbitType == 39) {
-            while (current != address(0)) {
-                if (depth >= MAX_UPLINE_SEARCH_DEPTH) revert UplineSearchTooDeep(user, level);
-
-                if (registration.isLevelActivated(current, level)) {
-                    return current;
-                }
-                current = registration.getReferrer(current);
-
-                unchecked {
-                    ++depth;
-                }
-            }
-
-            return id1Wallet;
-        }
-
-        // P4 and P12 use closest active sponsor
         while (current != address(0)) {
             if (depth >= MAX_UPLINE_SEARCH_DEPTH) revert UplineSearchTooDeep(user, level);
 
@@ -1394,9 +1380,13 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
 
     function _maybeTriggerAutoUpgrade(address user, uint8 currentLevel) internal {
         if (user == address(0)) return;
+        if (user == id1Wallet) return;
         if (currentLevel == MAX_LEVEL) return;
         if (userLevelActivated[user][currentLevel + 1]) return;
-        if (autoUpgradeExecutionDepth != 0) return;
+        if (autoUpgradeExecutionDepth != 0) {
+            pendingAutoUpgradeChecks.push(PendingAutoUpgradeCheck(user, currentLevel));
+            return;
+        }
 
         uint256 requiredAmount = _getUpgradeRequirement(currentLevel);
         uint256 lockedAmount = IAutoUpgradeEscrow(escrow).getLockedAmount(user, currentLevel, currentLevel + 1);
@@ -1438,7 +1428,23 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
                 escrowAfter
             );
             autoUpgradeExecutionDepth = 0;
+            _drainPendingAutoUpgradeChecks();
         }
+    }
+
+    function _drainPendingAutoUpgradeChecks() internal {
+        if (drainingAutoUpgradeChecks) return;
+        drainingAutoUpgradeChecks = true;
+
+        while (pendingAutoUpgradeChecks.length > 0) {
+            PendingAutoUpgradeCheck memory pending = pendingAutoUpgradeChecks[
+                pendingAutoUpgradeChecks.length - 1
+            ];
+            pendingAutoUpgradeChecks.pop();
+            _maybeTriggerAutoUpgrade(pending.user, pending.level);
+        }
+
+        drainingAutoUpgradeChecks = false;
     }
 
     function _settleOrbitEscrow(address user, uint8 level) internal {
@@ -1473,17 +1479,7 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
     }
 
     function _getUpgradeRequirement(uint8 level) internal pure returns (uint256) {
-        if (level == 1) return 20 * 10**6;
-        if (level == 2) return 40 * 10**6;
-        if (level == 3) return 80 * 10**6;
-        if (level == 4) return 160 * 10**6;
-        if (level == 5) return 320 * 10**6;
-        if (level == 6) return 640 * 10**6;
-        if (level == 7) return 1280 * 10**6;
-        if (level == 8) return 2560 * 10**6;
-        if (level == 9) return 5120 * 10**6;
-        if (level == 10) return 10240 * 10**6;
-        return 0;
+        return uint256(20 * 10**6) << (level - 1);
     }
 
     function onOrbitRecycleCompleted(
@@ -1640,6 +1636,8 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
 
     address[] public founderRepWallets;
     uint256 private autoUpgradeExecutionDepth;
+    PendingAutoUpgradeCheck[] private pendingAutoUpgradeChecks;
+    bool private drainingAutoUpgradeChecks;
 
-    uint256[47] private __gap;
+    uint256[45] private __gap;
 }

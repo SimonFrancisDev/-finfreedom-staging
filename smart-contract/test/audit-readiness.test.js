@@ -740,6 +740,37 @@ describe("Audit readiness contract invariants", function () {
     expect(secondMirror.mirrorEscrowLockAmount).to.equal(mirrorAmount);
   });
 
+  it("accumulates the complete P4 routed escrow window through its 20 USDT threshold", async function () {
+    const { owner, users, levelManager, p4, register } = await deployCoreSystem();
+    const levelManagerSigner = await impersonateLevelManager(levelManager);
+    const orbitOwner = users[8];
+
+    await register(orbitOwner, owner.address);
+
+    await p4.connect(levelManagerSigner).mirrorPositionDetailed(
+      orbitOwner.address, 1, users[9].address, orbitOwner.address,
+      usdtUnits(2), usdtUnits(10), 9050
+    );
+    await p4.connect(levelManagerSigner).mirrorPositionDetailed(
+      orbitOwner.address, 1, users[10].address, orbitOwner.address,
+      usdtUnits(9), usdtUnits(10), 9051
+    );
+
+    let orbit = await p4.getUserOrbit(orbitOwner.address, 1);
+    expect(orbit.escrowBalance).to.equal(usdtUnits(11));
+    expect(orbit.autoUpgradeCompleted).to.equal(false);
+
+    await expect(p4.connect(levelManagerSigner).mirrorPositionDetailed(
+      orbitOwner.address, 1, users[11].address, orbitOwner.address,
+      usdtUnits(9), usdtUnits(10), 9052
+    )).to.emit(p4, "AutoUpgradeTriggered")
+      .withArgs(orbitOwner.address, 1, 2, usdtUnits(20));
+
+    orbit = await p4.getUserOrbit(orbitOwner.address, 1);
+    expect(orbit.escrowBalance).to.equal(usdtUnits(20));
+    expect(orbit.autoUpgradeCompleted).to.equal(true);
+  });
+
   it("locks the full routed mirror amount for P12 line-2 escrow-window mirror arrivals", async function () {
     const { owner, users, levelManager, p12, register, activateToLevel } = await deployCoreSystem();
     const levelManagerSigner = await impersonateLevelManager(levelManager);
@@ -779,6 +810,77 @@ describe("Audit readiness contract invariants", function () {
     expect(lineTwoMirror.mirrorEscrowLockAmount).to.equal(mirrorAmount);
   });
 
+  it("accumulates P12 routed escrow and marks the fourth line-2 arrival ready for auto-upgrade", async function () {
+    const { owner, users, levelManager, p12, register, activateToLevel } = await deployCoreSystem();
+    const levelManagerSigner = await impersonateLevelManager(levelManager);
+    const orbitOwner = users[8];
+
+    await register(orbitOwner, owner.address);
+    await activateToLevel(orbitOwner, 2);
+
+    for (let index = 0; index < 6; index += 1) {
+      await p12.connect(levelManagerSigner).mirrorPositionDetailed(
+        orbitOwner.address, 2, users[9 + index].address, orbitOwner.address,
+        mirrorAmount, mirrorAmount, 9120 + index
+      );
+    }
+
+    let orbit = await p12.getUserOrbit(orbitOwner.address, 2);
+    expect(orbit.escrowBalance).to.equal(usdtUnits(30));
+    expect(orbit.autoUpgradeCompleted).to.equal(false);
+
+    await expect(p12.connect(levelManagerSigner).mirrorPositionDetailed(
+      orbitOwner.address, 2, users[15].address, orbitOwner.address,
+      mirrorAmount, mirrorAmount, 9126
+    )).to.emit(p12, "AutoUpgradeTriggered")
+      .withArgs(orbitOwner.address, 2, 3, usdtUnits(40));
+
+    orbit = await p12.getUserOrbit(orbitOwner.address, 2);
+    expect(orbit.escrowBalance).to.equal(usdtUnits(40));
+    expect(orbit.autoUpgradeCompleted).to.equal(true);
+  });
+
+  it("does not inflate a smaller P12 routed fragment from the full activation rule base", async function () {
+    const { owner, users, levelManager, p12, register, activateToLevel } = await deployCoreSystem();
+    const levelManagerSigner = await impersonateLevelManager(levelManager);
+    const orbitOwner = users[8];
+
+    await register(orbitOwner, owner.address);
+    await activateToLevel(orbitOwner, 2);
+
+    for (let index = 0; index < 7; index += 1) {
+      await p12
+        .connect(levelManagerSigner)
+        .mirrorPositionDetailed(
+          orbitOwner.address,
+          2,
+          users[9 + index].address,
+          orbitOwner.address,
+          mirrorAmount,
+          usdtUnits(20),
+          9150 + index
+        );
+    }
+
+    const routedFragment = usdtUnits(8);
+    const result = await p12
+      .connect(levelManagerSigner)
+      .mirrorPositionDetailed.staticCall(
+        orbitOwner.address,
+        2,
+        users[16].address,
+        orbitOwner.address,
+        routedFragment,
+        usdtUnits(20),
+        9158
+      );
+
+    expect(result.position).to.equal(8);
+    expect(result.mirrorOwnerLiquidAmount).to.equal(routedFragment);
+    expect(result.mirrorEscrowLockAmount).to.equal(0);
+    expect(result.mirrorRecycleAmount).to.equal(0);
+  });
+
   it("locks the full routed mirror amount for P39 line-2 escrow-window mirror arrivals", async function () {
     const { owner, users, levelManager, p39, register, activateToLevel } = await deployCoreSystem();
     const levelManagerSigner = await impersonateLevelManager(levelManager);
@@ -816,6 +918,37 @@ describe("Audit readiness contract invariants", function () {
     expect(lineTwoMirror.position).to.equal(4);
     expect(lineTwoMirror.mirrorOwnerLiquidAmount).to.equal(0);
     expect(lineTwoMirror.mirrorEscrowLockAmount).to.equal(mirrorAmount);
+  });
+
+  it("accumulates the complete P39 routed escrow window through its 80 USDT threshold", async function () {
+    const { owner, users, levelManager, p39, register, activateToLevel } = await deployCoreSystem();
+    const levelManagerSigner = await impersonateLevelManager(levelManager);
+    const orbitOwner = users[8];
+
+    await register(orbitOwner, owner.address);
+    await activateToLevel(orbitOwner, 3);
+
+    for (let index = 0; index < 13; index += 1) {
+      const amount = index < 12 ? usdtUnits(8) : usdtUnits(20);
+      await p39.connect(levelManagerSigner).mirrorPositionDetailed(
+        orbitOwner.address, 3, users[9 + index].address, orbitOwner.address,
+        amount, usdtUnits(40), 9220 + index
+      );
+    }
+
+    let orbit = await p39.getUserOrbit(orbitOwner.address, 3);
+    expect(orbit.escrowBalance).to.equal(usdtUnits(60));
+    expect(orbit.autoUpgradeCompleted).to.equal(false);
+
+    await expect(p39.connect(levelManagerSigner).mirrorPositionDetailed(
+      orbitOwner.address, 3, users[22].address, orbitOwner.address,
+      usdtUnits(20), usdtUnits(40), 9233
+    )).to.emit(p39, "AutoUpgradeTriggered")
+      .withArgs(orbitOwner.address, 3, 4, usdtUnits(80));
+
+    orbit = await p39.getUserOrbit(orbitOwner.address, 3);
+    expect(orbit.escrowBalance).to.equal(usdtUnits(80));
+    expect(orbit.autoUpgradeCompleted).to.equal(true);
   });
 
   it("does not leak liquid on P4 recycle mirror escrow windows", async function () {
@@ -2184,13 +2317,82 @@ describe("Audit readiness contract invariants", function () {
       .filter((event) => event.args.activationId === targetSummary.args.activationId);
 
     expect(targetSummary.args.systemCharge).to.equal(usdtUnits(4));
-    expect(targetSummary.args.totalLiquidPaid).to.equal(usdtUnits(28));
-    expect(targetSummary.args.totalEscrowLocked).to.equal(usdtUnits(8));
+    expect(targetSummary.args.totalLiquidPaid).to.equal(usdtUnits(36));
+    expect(targetSummary.args.totalEscrowLocked).to.equal(0);
     expect(targetReceipts.reduce((sum, event) => sum + event.args.liquidPaid, 0n))
-      .to.equal(usdtUnits(28));
+      .to.equal(usdtUnits(36));
     expect(targetReceipts.reduce((sum, event) => sum + event.args.escrowLocked, 0n))
-      .to.equal(usdtUnits(8));
+      .to.equal(0);
+    expect(
+      targetSummary.args.systemCharge +
+      targetSummary.args.totalLiquidPaid +
+      targetSummary.args.totalEscrowLocked
+    ).to.equal(usdtUnits(40));
     expect(summaries.some((event) => event.args.isAutoUpgrade && event.args.level === 4n))
       .to.equal(true);
+  });
+
+  it("defers and completes a P12 beneficiary upgrade reached inside another auto-upgrade", async function () {
+    const { owner, users, usdt, escrow, registration, levelManager, p12, fundAndApprove, register, activateToLevel } =
+      await deployCoreSystem();
+    const levelManagerSigner = await impersonateLevelManager(levelManager);
+    const beneficiary = users[8];
+    const sponsor = users[9];
+    const firstLevelTwoChild = users[10];
+    const nestedCandidate = users[11];
+    const nestedChildren = users.slice(12, 15);
+    const mirrorFillers = users.slice(15, 19);
+
+    await register(beneficiary, owner.address);
+    await activateToLevel(beneficiary, 2);
+    await register(sponsor, beneficiary.address);
+    await activateToLevel(sponsor, 2);
+    await register(firstLevelTwoChild, sponsor.address);
+    await activateToLevel(firstLevelTwoChild, 2);
+
+    for (let index = 0; index < mirrorFillers.length; index += 1) {
+      await p12.connect(levelManagerSigner).mirrorPositionDetailed(
+        beneficiary.address,
+        2,
+        mirrorFillers[index].address,
+        beneficiary.address,
+        mirrorAmount,
+        usdtUnits(20),
+        99500 + index
+      );
+    }
+
+    const lockedBeforeTopUp = await escrow.getLockedAmount(beneficiary.address, 2, 3);
+    const topUpAmount = usdtUnits(30) - lockedBeforeTopUp;
+    await usdt.mint(levelManager.target, topUpAmount);
+    await escrow.connect(levelManagerSigner).lockFunds(
+      beneficiary.address,
+      2,
+      3,
+      topUpAmount
+    );
+
+    await register(nestedCandidate, sponsor.address);
+    await register(nestedChildren[0], nestedCandidate.address);
+    await register(nestedChildren[1], nestedCandidate.address);
+
+    expect(await levelManager.userLevelActivated(beneficiary.address, 3)).to.equal(false);
+    expect(await escrow.getLockedAmount(beneficiary.address, 2, 3)).to.equal(usdtUnits(30));
+    expect((await p12.getUserOrbit(beneficiary.address, 2)).escrowBalance).to.equal(usdtUnits(30));
+
+    await fundAndApprove(nestedChildren[2]);
+    await expect(registration.connect(nestedChildren[2]).register(nestedCandidate.address))
+      .to.emit(levelManager, "AutoUpgradeTriggered")
+      .withArgs(beneficiary.address, 2, 3);
+
+    expect(await levelManager.userLevelActivated(nestedCandidate.address, 2)).to.equal(true);
+    expect(await levelManager.userLevelActivated(beneficiary.address, 3)).to.equal(true);
+    expect(await escrow.getLockedAmount(beneficiary.address, 2, 3)).to.equal(0);
+
+    const beneficiaryOrbit = await p12.getUserOrbit(beneficiary.address, 2);
+    expect(beneficiaryOrbit.escrowBalance).to.equal(0);
+    expect(beneficiaryOrbit.autoUpgradeCompleted).to.equal(true);
+    expect((await p12.getPosition(beneficiary.address, 2, 7)).occupant)
+      .to.equal(nestedCandidate.address);
   });
 });

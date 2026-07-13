@@ -942,6 +942,25 @@ abstract contract BaseOrbit is Initializable, OwnableUpgradeable, UUPSUpgradeabl
         emit EscrowUpdated(orbitOwner, level, 0);
     }
 
+    function _recordEscrowProgress(
+        address orbitOwner,
+        uint8 level,
+        uint256 amount,
+        uint256 upgradeRequirement
+    ) internal {
+        if (amount == 0) return;
+
+        OrbitData storage orbit = userOrbits[orbitOwner][level];
+        uint256 newEscrowBalance = orbit.escrowBalance + amount;
+        orbit.escrowBalance = newEscrowBalance;
+        emit EscrowUpdated(orbitOwner, level, newEscrowBalance);
+
+        if (newEscrowBalance >= upgradeRequirement && !orbit.autoUpgradeCompleted) {
+            orbit.autoUpgradeCompleted = true;
+            emit AutoUpgradeTriggered(orbitOwner, level, level + 1, newEscrowBalance);
+        }
+    }
+
     function getUserOrbit(address user, uint8 level)
         external
         view
@@ -1338,16 +1357,7 @@ abstract contract BaseOrbit is Initializable, OwnableUpgradeable, UUPSUpgradeabl
 
             orbit.totalEarned += (result.toOwner + result.toEscrow);
 
-            if (result.toEscrow > 0) {
-                uint256 newEscrowBalance = orbit.escrowBalance + result.toEscrow;
-                orbit.escrowBalance = newEscrowBalance;
-                emit EscrowUpdated(orbitOwner, level, newEscrowBalance);
-
-                if (newEscrowBalance >= config.upgradeRequirement && !orbit.autoUpgradeCompleted) {
-                    orbit.autoUpgradeCompleted = true;
-                    emit AutoUpgradeTriggered(orbitOwner, level, level + 1, newEscrowBalance);
-                }
-            }
+            _recordEscrowProgress(orbitOwner, level, result.toEscrow, config.upgradeRequirement);
 
             emit PaymentRuleApplied(
                 orbitOwner,
@@ -1474,7 +1484,11 @@ returns (MirrorPositionDetailedResult memory result)
     mirrorRecycleAmount = (ruleBaseAmount * pct.toRecycle) / 100;
 
     uint256 mirrorGrossAmount = mirrorOwnerLiquidAmount + mirrorEscrowAmount + mirrorRecycleAmount;
-    if (amount > mirrorGrossAmount) {
+    // A normal mirror receives an already-split routed fragment. Its matrix
+    // position decides whether that exact fragment is liquid, escrowed, or
+    // reserved for recycle; it must never increase the fragment by applying
+    // percentages to the original activation amount again.
+    if (amount != mirrorGrossAmount) {
         if (pct.toEscrow > 0) {
             mirrorOwnerLiquidAmount = 0;
             mirrorEscrowAmount = amount;
@@ -1513,6 +1527,8 @@ returns (MirrorPositionDetailedResult memory result)
     result.mirrorOwnerLiquidAmount = mirrorOwnerLiquidAmount;
     result.mirrorEscrowLockAmount = mirrorEscrowAmount;
     result.mirrorRecycleAmount = mirrorRecycleAmount;
+
+    _recordEscrowProgress(orbitOwner, level, mirrorEscrowAmount, config.upgradeRequirement);
 
     emit PositionFilled(
         orbitOwner,
@@ -1623,16 +1639,7 @@ returns (FillPositionDetailedResult memory result)
 
     orbit.totalEarned += (result.toOwner + result.toEscrow);
 
-    if (result.toEscrow > 0) {
-        uint256 newEscrowBalance = orbit.escrowBalance + result.toEscrow;
-        orbit.escrowBalance = newEscrowBalance;
-        emit EscrowUpdated(orbitOwner, level, newEscrowBalance);
-
-        if (newEscrowBalance >= config.upgradeRequirement && !orbit.autoUpgradeCompleted) {
-            orbit.autoUpgradeCompleted = true;
-            emit AutoUpgradeTriggered(orbitOwner, level, level + 1, newEscrowBalance);
-        }
-    }
+    _recordEscrowProgress(orbitOwner, level, result.toEscrow, config.upgradeRequirement);
 
     emit PaymentRuleApplied(
         orbitOwner,

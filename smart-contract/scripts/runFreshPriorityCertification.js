@@ -10,7 +10,7 @@ const LEVEL_PRICE = {
   2: ethers.parseUnits("20", 6),
   3: ethers.parseUnits("40", 6),
 };
-const MIN_POL = ethers.parseEther("0.05");
+const MIN_POL = ethers.parseEther("0.30");
 const MAX_P39_COMPLETION_GAS = 15_000_000n;
 
 function boolEnv(name, fallback = false) {
@@ -221,10 +221,10 @@ async function recoverRegistrationReceipt(wallet, contracts, ifaces) {
   if (!Number.isSafeInteger(startBlock) || startBlock <= 0) {
     throw new Error("START_BLOCK_REGISTRATION is required to audit an already-mined registration");
   }
-  const logs = await contracts.registration.queryFilter(
+  const logs = await queryFilterChunked(
+    contracts.registration,
     contracts.registration.filters.Registered(wallet.address),
-    startBlock,
-    "latest"
+    startBlock
   );
   if (logs.length !== 1) {
     throw new Error(`Expected one registration log for ${wallet.address}, found ${logs.length}`);
@@ -239,10 +239,10 @@ async function recoverLevelReceipt(wallet, level, contracts, ifaces) {
   if (!Number.isSafeInteger(startBlock) || startBlock <= 0) {
     throw new Error("START_BLOCK_REGISTRATION is required to audit an already-mined level activation");
   }
-  const logs = (await contracts.registration.queryFilter(
+  const logs = (await queryFilterChunked(
+    contracts.registration,
     contracts.registration.filters.LevelActivated(wallet.address),
-    startBlock,
-    "latest"
+    startBlock
   )).filter((log) => Number(log.args.level) === level);
   if (logs.length !== 1) {
     throw new Error(`Expected one level ${level} activation log for ${wallet.address}, found ${logs.length}`);
@@ -252,12 +252,128 @@ async function recoverLevelReceipt(wallet, level, contracts, ifaces) {
   return { receipt, events: decodeLogs(receipt, ifaces), txHash: logs[0].transactionHash };
 }
 
+async function queryFilterChunked(contract, filter, startBlock, endBlock = null) {
+  const latest = endBlock == null ? await ethers.provider.getBlockNumber() : Number(endBlock);
+  const logs = [];
+  for (let from = Number(startBlock); from <= latest; from += 9_999) {
+    const to = Math.min(from + 9_998, latest);
+    logs.push(...await contract.queryFilter(filter, from, to));
+  }
+  return logs;
+}
+
 function assertMatrixRules(events) {
-  for (const event of events.filter((item) => item.name === "PaymentRuleApplied")) {
+  const pendingLinks = new Map();
+  const keyFor = (owner, level, position) =>
+    `${ethers.getAddress(owner)}:${Number(level)}:${Number(position)}`;
+
+  for (const event of events) {
+    if (event.name === "PositionActivationLinked") {
+      const key = keyFor(event.args.orbitOwner, event.args.level, event.args.position);
+      const queue = pendingLinks.get(key) || [];
+      queue.push(event);
+      pendingLinks.set(key, queue);
+      continue;
+    }
+    if (event.name !== "PaymentRuleApplied") continue;
+
+    const key = keyFor(event.args.orbitOwner, event.args.level, event.args.position);
+    const queue = pendingLinks.get(key) || [];
+    const link = queue.shift();
+    pendingLinks.set(key, queue);
+
     const line = Number(event.args.line);
+    const level = Number(event.args.level);
+    const arrival = Number(event.args.linePaymentNumber);
     const amounts = [event.args.toOwner, event.args.toSpillover1, event.args.toSpillover2, event.args.toEscrow, event.args.toRecycle];
     if (amounts.some((amount) => amount < 0n)) throw new Error("negative payout amount");
     if (line < 1 || line > 3) throw new Error(`invalid payment line ${line}`);
+
+    // Routed mirrors carry already-split fragments and must never split again.
+    // If both normal P39 routed roles resolve to the same receiver, the
+    // approved behavior is one 28 USDT mirror (8 + 20).
+    if (link?.args.isMirror) {
+      const routed = event.args.toOwner + event.args.toEscrow + event.args.toRecycle;
+      const fullDistributable = LEVEL_PRICE[level] - (LEVEL_PRICE[level] / 10n);
+      const appliesFreshRecycleSplit =
+        (event.args.toSpillover1 !== 0n || event.args.toSpillover2 !== 0n) &&
+        routed + event.args.toSpillover1 + event.args.toSpillover2 === fullDistributable;
+      if (event.args.toSpillover1 !== 0n || event.args.toSpillover2 !== 0n) {
+        if (!appliesFreshRecycleSplit) {
+          throw new Error(`fragment mirror attempted duplicate spillover at level ${level} position ${event.args.position}`);
+        }
+      } else {
+        const allowedMirrorAmounts = level === 2
+          ? [ethers.parseUnits("8", 6), ethers.parseUnits("10", 6), ethers.parseUnits("18", 6)]
+          : level === 3
+            ? [ethers.parseUnits("8", 6), ethers.parseUnits("20", 6), ethers.parseUnits("28", 6)]
+            : [];
+        if (allowedMirrorAmounts.length && !allowedMirrorAmounts.includes(routed)) {
+          throw new Error(`invalid level ${level} mirror amount ${ethers.formatUnits(routed, 6)}`);
+        }
+        continue;
+      }
+    }
+    // The original non-mirror fill must always execute the exact full
+    // activation percentages.
+    if (!link) continue;
+    const gross = LEVEL_PRICE[level];
+    if (!gross) throw new Error(`unsupported certification level ${level}`);
+    const unit = gross / 100n;
+    const actual = amounts.map((amount) => amount / unit);
+    if (amounts.some((amount) => amount % unit !== 0n)) {
+      throw new Error(`non-integral payout percentage at level ${level} line ${line} arrival ${arrival}`);
+    }
+
+    let allowed;
+    if (level === 1) {
+      const position = Number(event.args.position);
+      if (position === 4) allowed = [[0, 0, 0, 0, 90]];
+      else if (position === 1) allowed = [[90, 0, 0, 0, 0], [70, 0, 0, 20, 0]];
+      else allowed = [[90, 0, 0, 0, 0], [0, 0, 0, 90, 0]];
+    } else if (level === 2) {
+      if (line === 1) allowed = [[40, 50, 0, 0, 0]];
+      else if (arrival === 8 || arrival === 9) allowed = [[0, 40, 0, 0, 50]];
+      else if (arrival <= 4) allowed = [[50, 40, 0, 0, 0], [0, 40, 0, 50, 0]];
+      else allowed = [[50, 40, 0, 0, 0]];
+    } else if (level === 3) {
+      if (line === 1) {
+        allowed = arrival === 3
+          ? [[20, 20, 50, 0, 0], [0, 20, 50, 20, 0]]
+          : [[20, 20, 50, 0, 0]];
+      } else if (line === 2) {
+        allowed = arrival <= 4
+          ? [[20, 20, 50, 0, 0], [0, 20, 50, 20, 0]]
+          : [[20, 20, 50, 0, 0]];
+      } else if (arrival === 26 || arrival === 27) {
+        allowed = [[0, 20, 20, 0, 50]];
+      } else if (arrival <= 2) {
+        allowed = [[50, 20, 20, 0, 0], [0, 20, 20, 50, 0]];
+      } else {
+        allowed = [[50, 20, 20, 0, 0]];
+      }
+    }
+
+    if (!allowed || !allowed.some((candidate) => candidate.every((value, index) => BigInt(value) === actual[index]))) {
+      throw new Error(
+        `wrong payout percentages level=${level} line=${line} arrival=${arrival} actual=${actual.join("/")}`
+      );
+    }
+  }
+}
+
+function assertExpectedRouting(action, events) {
+  if (!action.expectedEligibleUpline) return;
+  const expected = ethers.getAddress(walletForLabel(action.expectedEligibleUpline));
+  const skipped = action.expectedSkippedUpline
+    ? ethers.getAddress(walletForLabel(action.expectedSkippedUpline))
+    : null;
+  const receipts = events.filter((event) => event.name === "DetailedPayoutReceiptRecorded");
+  if (!receipts.some((event) => ethers.getAddress(event.args.receiver) === expected && event.args.grossAmount > 0n)) {
+    throw new Error(`eligible upline ${action.expectedEligibleUpline} received no routed payment`);
+  }
+  if (skipped && receipts.some((event) => ethers.getAddress(event.args.receiver) === skipped && event.args.grossAmount > 0n)) {
+    throw new Error(`ineligible upline ${action.expectedSkippedUpline} incorrectly received payment`);
   }
 }
 
@@ -299,6 +415,18 @@ function assertFounderTerminal(action, events, config) {
   if (founderTotal !== routedToId1) {
     throw new Error(`founder total ${founderTotal} != ID1 routed liquid ${routedToId1}`);
   }
+  const fallbacks = events.filter(
+    (event) => event.name === "PayoutNotDelivered" &&
+      event.args.reasonCode === ethers.encodeBytes32String("ID1_FALLBACK")
+  );
+  if (!fallbacks.length) throw new Error("missing explicit ID1 terminal fallback event");
+  const fallbackReceipts = events.filter(
+    (event) => event.name === "DetailedPayoutReceiptRecorded" &&
+      ethers.getAddress(event.args.receiver) === config.id1 &&
+      Number(event.args.sourcePosition) === 0 &&
+      Number(event.args.mirroredPosition) === 0
+  );
+  if (!fallbackReceipts.length) throw new Error("ID1 fallback receipt incorrectly created a matrix position");
 }
 
 async function approveIfNeeded(wallet, amount, contracts, config) {
@@ -329,6 +457,7 @@ async function executePaidAction(action, wallet, contracts, config, ifaces) {
     assertMatrixRules(events);
     assertExpectedRecycleChain(action, events, config);
     assertFounderTerminal(action, events, config);
+    assertExpectedRouting(action, events);
     if (!(await contracts.registration.isRegistered(wallet.address))) throw new Error("registration state missing");
     if (ethers.getAddress(await contracts.registration.getReferrer(wallet.address)) !== ethers.getAddress(sponsor)) {
       throw new Error("stored sponsor mismatch");
@@ -354,6 +483,7 @@ async function executePaidAction(action, wallet, contracts, config, ifaces) {
     const events = decodeLogs(receipt, ifaces);
     assertReceiptArithmetic(events, wallet.address, level);
     assertMatrixRules(events);
+    assertExpectedRouting(action, events);
     if (!(await contracts.levelManager.userLevelActivated(wallet.address, level))) throw new Error("level activation state missing");
     return { txHash: tx.hash, receipt, events, gasEstimate, outcome: "MINED" };
   }
@@ -404,7 +534,26 @@ async function validateCleanState(contracts, manifest) {
 }
 
 async function validateFunding(actions, signers, contracts, negativePhase) {
-  const labels = [...new Set(actions.map((action) => action.actor).filter((actor) => signers.has(actor)))];
+  const labels = [];
+  const requiredUsdt = new Map();
+  for (const action of actions) {
+    if (!signers.has(action.actor)) continue;
+    let pending = true;
+    const address = signers.get(action.actor).address;
+    if (action.kind === "register") pending = !(await contracts.registration.isRegistered(address));
+    if (action.kind === "ensureLevel") {
+      pending = !(await contracts.levelManager.userLevelActivated(address, Number(action.level)));
+    }
+    if (pending || negativePhase) {
+      if (!labels.includes(action.actor)) labels.push(action.actor);
+      const needed = action.kind === "register"
+        ? LEVEL_PRICE[1]
+        : action.kind === "ensureLevel"
+          ? LEVEL_PRICE[Number(action.level)]
+          : 0n;
+      requiredUsdt.set(action.actor, (requiredUsdt.get(action.actor) || 0n) + needed);
+    }
+  }
   for (const label of labels) {
     const wallet = signers.get(label);
     const [pol, usdt] = await Promise.all([
@@ -412,21 +561,135 @@ async function validateFunding(actions, signers, contracts, negativePhase) {
       contracts.usdt.balanceOf(wallet.address),
     ]);
     if (pol < MIN_POL) throw new Error(`${label} has insufficient POL ${ethers.formatEther(pol)}`);
-    if (!negativePhase && usdt < ethers.parseUnits("70", 6)) {
-      throw new Error(`${label} has insufficient MockUSDT ${ethers.formatUnits(usdt, 6)}`);
+    const needed = requiredUsdt.get(label) || 0n;
+    if (!negativePhase && usdt < needed) {
+      throw new Error(
+        `${label} has insufficient MockUSDT ${ethers.formatUnits(usdt, 6)}; requires ${ethers.formatUnits(needed, 6)}`
+      );
     }
   }
 }
 
-async function validatePrimaryP39Topology(manifest, contracts) {
-  const owner = walletForLabel(manifest.primaryP39Topology[0].sponsor);
-  for (const expected of manifest.primaryP39Topology) {
-    const position = await contracts.p39.getPosition(owner, 3, expected.position);
-    if (ethers.getAddress(position.occupant) !== ethers.getAddress(walletForLabel(expected.wallet))) {
-      throw new Error(`P39 position ${expected.position}: ${position.occupant} != ${walletForLabel(expected.wallet)}`);
+async function validatePrimaryP39Topology(manifest, contracts, report, config) {
+  const actions = manifest.actions.filter((action) => action.phase === "P5");
+  if (report.results.length !== actions.length) throw new Error("P5 result count mismatch");
+
+  for (let index = 0; index < actions.length; index += 1) {
+    const action = actions[index];
+    const actor = ethers.getAddress(walletForLabel(action.actor));
+    if (!(await contracts.levelManager.userLevelActivated(actor, 3))) {
+      throw new Error(`${action.actor} level 3 is not active`);
     }
-    const rule = await contracts.p39.getPositionRuleView(owner, 3, expected.position);
-    if (Number(rule.line) !== expected.line) throw new Error(`P39 position ${expected.position} line mismatch`);
+  }
+
+  const id1Orbit = await contracts.p39.getUserOrbit(config.id1, 3);
+  if (Number(id1Orbit.currentPosition) !== 38 || id1Orbit.totalCycles !== 0n) {
+    throw new Error(`P5 ID1 checkpoint mismatch position=${id1Orbit.currentPosition} cycles=${id1Orbit.totalCycles}`);
+  }
+  let mergedNormalPaymentProofs = 0;
+  for (let position = 1; position <= 37; position += 1) {
+    const [row, activation, rule] = await Promise.all([
+      contracts.p39.getPosition(config.id1, 3, position),
+      contracts.p39.getPositionActivationData(config.id1, 3, position),
+      contracts.p39.getPositionRuleView(config.id1, 3, position),
+    ]);
+    if (ethers.getAddress(row.occupant) === ethers.ZeroAddress) {
+      throw new Error(`ID1 P39 position ${position} is unexpectedly empty`);
+    }
+    if (position === 1) continue;
+    if (!activation.isMirror) throw new Error(`ID1 P39 position ${position} is not a normal payment mirror`);
+    if (rule.toSpillover1 !== 0n || rule.toSpillover2 !== 0n) {
+      throw new Error(`ID1 P39 mirror ${position} attempted duplicate routing`);
+    }
+    const routed = rule.toOwner + rule.toEscrow + rule.toRecycle;
+    if (routed === ethers.parseUnits("28", 6)) mergedNormalPaymentProofs += 1;
+    else if (routed !== ethers.parseUnits("20", 6)) {
+      throw new Error(`ID1 P39 mirror ${position} has unexpected routed amount ${ethers.formatUnits(routed, 6)}`);
+    }
+  }
+  if (!mergedNormalPaymentProofs) throw new Error("missing approved 8 + 20 ID1 mirror aggregation proof");
+
+  const primary = walletForLabel(manifest.roles.primaryOwner);
+  const primaryOrbit = await contracts.p39.getUserOrbit(primary, 3);
+  if (Number(primaryOrbit.currentPosition) !== 10 || primaryOrbit.totalCycles !== 0n) {
+    throw new Error(`P5 primary checkpoint mismatch position=${primaryOrbit.currentPosition} cycles=${primaryOrbit.totalCycles}`);
+  }
+}
+
+async function validatePrimaryP12Topology(manifest, contracts, config) {
+  const owner = walletForLabel(manifest.roles.primaryOwner);
+  const orbit = await contracts.p12.getUserOrbit(owner, 2);
+  if (orbit.totalCycles < 1n) throw new Error("primary P12 orbit did not complete a cycle");
+  for (const expected of manifest.primaryP39Topology.filter((row) => row.position <= 12)) {
+    const position = await contracts.p12.getHistoricalPosition(owner, 2, 1, expected.position);
+    const activation = await contracts.p12.getHistoricalPositionActivationData(owner, 2, 1, expected.position);
+    if (ethers.getAddress(position.occupant) !== ethers.getAddress(walletForLabel(expected.wallet))) {
+      throw new Error(`P12 position ${expected.position}: ${position.occupant} != ${walletForLabel(expected.wallet)}`);
+    }
+    const rule = await contracts.p12.getHistoricalPositionRuleView(owner, 2, 1, expected.position);
+    const expectedLine = expected.position <= 3 ? 1 : 2;
+    if (Number(rule.line) !== expectedLine) throw new Error(`P12 position ${expected.position} line mismatch`);
+    const expectedParent = expectedLine === 1
+      ? owner
+      : walletForLabel(manifest.primaryP39Topology[expected.parentPosition - 1].wallet);
+    if (ethers.getAddress(position.referrer) !== ethers.getAddress(expectedParent)) {
+      throw new Error(`P12 position ${expected.position} structural parent mismatch`);
+    }
+    if (expectedLine === 1) {
+      if (activation.isMirror) throw new Error(`P12 line-1 position ${expected.position} unexpectedly mirrored`);
+      if (
+        rule.toOwner !== ethers.parseUnits("8", 6) ||
+        rule.toSpillover1 !== ethers.parseUnits("10", 6) ||
+        ethers.getAddress(rule.spillover1Recipient) !== config.id1
+      ) {
+        throw new Error(`P12 line-1 position ${expected.position} 40/50 route mismatch`);
+      }
+    } else {
+      if (!activation.isMirror) throw new Error(`P12 line-2 position ${expected.position} is not a payment mirror`);
+      if (ethers.getAddress(rule.spillover1Recipient) !== ethers.ZeroAddress || rule.toSpillover1 !== 0n) {
+        throw new Error(`P12 mirror position ${expected.position} attempted a duplicate spillover`);
+      }
+      const routed = rule.toOwner + rule.toEscrow + rule.toRecycle;
+      if (routed !== ethers.parseUnits("10", 6)) {
+        throw new Error(`P12 mirror position ${expected.position} routed ${routed}, expected 10 USDT`);
+      }
+    }
+  }
+}
+
+async function validateP2RegistrationStructure(manifest, contracts, report, config) {
+  const p2Actions = manifest.actions.filter((action) => action.phase === "P2");
+  if (report.results.length !== p2Actions.length) throw new Error("P2 result count mismatch");
+
+  for (let index = 0; index < p2Actions.length; index += 1) {
+    const action = p2Actions[index];
+    const result = report.results[index];
+    const actor = ethers.getAddress(walletForLabel(action.actor));
+    const sponsor = action.sponsor === "ID1"
+      ? config.id1
+      : ethers.getAddress(walletForLabel(action.sponsor));
+    const registration = result.events.find(
+      (event) => event.name === "Registered" && ethers.getAddress(event.args[0]) === actor
+    );
+    if (!registration || ethers.getAddress(registration.args[1]) !== sponsor) {
+      throw new Error(`${action.actor} registration event sponsor mismatch`);
+    }
+    const sourceFill = result.events.find(
+      (event) => event.name === "PositionFilled" &&
+        ethers.getAddress(event.address) === ethers.getAddress(contracts.p4.target) &&
+        ethers.getAddress(event.args[0]) === sponsor &&
+        ethers.getAddress(event.args[1]) === actor &&
+        Number(event.args[2]) === 1
+    );
+    if (!sourceFill) throw new Error(`${action.actor} missing source placement in sponsor P4 orbit`);
+  }
+
+  const [registered, participants] = await Promise.all([
+    contracts.registration.registeredCount(),
+    contracts.registration.totalParticipants(),
+  ]);
+  if (registered !== 40n || participants !== 41n) {
+    throw new Error(`P2 participant totals mismatch registered=${registered} participants=${participants}`);
   }
 }
 
@@ -439,18 +702,18 @@ async function validateAutoUpgrade(action, contracts) {
   if (!(await contracts.levelManager.userLevelActivated(user, toLevel))) {
     throw new Error(`${action.actor} level ${toLevel} is not active`);
   }
-  const triggerEvents = await contracts.levelManager.queryFilter(
-    contracts.levelManager.filters.AutoUpgradeTriggered(user, fromLevel, toLevel),
-    startBlock,
-    "latest"
-  );
+  const triggerEvents = (await queryFilterChunked(
+    contracts.levelManager,
+    contracts.levelManager.filters.AutoUpgradeTriggered(user),
+    startBlock
+  )).filter((event) => Number(event.args.fromLevel) === fromLevel && Number(event.args.toLevel) === toLevel);
   if (triggerEvents.length !== Number(action.expectedActivations)) {
     throw new Error(`expected ${action.expectedActivations} auto-upgrade event, found ${triggerEvents.length}`);
   }
-  const usedEvents = await contracts.escrow.queryFilter(
+  const usedEvents = await queryFilterChunked(
+    contracts.escrow,
     contracts.escrow.filters.EscrowUsedForUpgrade(user, fromLevel, toLevel),
-    startBlock,
-    "latest"
+    startBlock
   );
   if (usedEvents.length !== 1) throw new Error(`expected one escrow-use event, found ${usedEvents.length}`);
   const expected = ethers.parseUnits(action.requiredEscrow, 6);
@@ -460,23 +723,81 @@ async function validateAutoUpgrade(action, contracts) {
 }
 
 async function validateLatestOccurrence(manifest, contracts, config) {
-  const repeatedParent = walletForLabel(manifest.roles?.primaryOwner || "Account 8");
-  const children = ["Account 63", "Account 64", "Account 65"].map(walletForLabel);
-  const occurrences = [];
-  for (let position = 1; position <= 39; position += 1) {
-    const row = await contracts.p39.getPosition(config.id1, 3, position);
-    if (ethers.getAddress(row.occupant) === ethers.getAddress(repeatedParent)) occurrences.push(position);
+  const actors = ["Account 63", "Account 64", "Account 65"].map(walletForLabel);
+  const id1State = await contracts.p39.getUserOrbit(config.id1, 3);
+  if (id1State.totalCycles !== 1n || Number(id1State.currentPosition) !== 3) {
+    throw new Error(`ID1 P39 recycle checkpoint mismatch cycles=${id1State.totalCycles} position=${id1State.currentPosition}`);
   }
-  if (occurrences.length < 2) throw new Error(`expected repeated Account 8 occurrence in ID1 P39, found ${occurrences.length}`);
-  const latest = occurrences.at(-1);
-  let expectedChildren;
-  if (latest <= 3) expectedChildren = [3 + latest, 6 + latest, 9 + latest];
-  else if (latest <= 12) expectedChildren = [9 + latest, 18 + latest, 27 + latest];
-  else throw new Error(`latest repeated parent at terminal line-3 position ${latest}`);
-  for (let index = 0; index < children.length; index += 1) {
-    const row = await contracts.p39.getPosition(config.id1, 3, expectedChildren[index]);
-    if (ethers.getAddress(row.occupant) !== ethers.getAddress(children[index])) {
-      throw new Error(`latest-parent child position ${expectedChildren[index]} mismatch`);
+
+  for (let index = 0; index < 2; index += 1) {
+    const position = 38 + index;
+    const [row, activation, rule] = await Promise.all([
+      contracts.p39.getHistoricalPosition(config.id1, 3, 1, position),
+      contracts.p39.getHistoricalPositionActivationData(config.id1, 3, 1, position),
+      contracts.p39.getHistoricalPositionRuleView(config.id1, 3, 1, position),
+    ]);
+    if (ethers.getAddress(row.occupant) !== ethers.getAddress(actors[index])) {
+      throw new Error(`ID1 historical P39 position ${position} occupant mismatch`);
+    }
+    if (!activation.isMirror || Number(rule.line) !== 3 || Number(rule.linePaymentNumber) !== 26 + index) {
+      throw new Error(`ID1 historical P39 position ${position} line/arrival mismatch`);
+    }
+    if (rule.toRecycle !== ethers.parseUnits("20", 6)) {
+      throw new Error(`ID1 historical P39 position ${position} did not reserve 20 USDT`);
+    }
+  }
+
+  const [recycleRow, recycleActivation, recycleRule] = await Promise.all([
+    contracts.p39.getPosition(config.id1, 3, 1),
+    contracts.p39.getPositionActivationData(config.id1, 3, 1),
+    contracts.p39.getPositionRuleView(config.id1, 3, 1),
+  ]);
+  if (ethers.getAddress(recycleRow.occupant) !== config.id1 || !recycleActivation.isMirror) {
+    throw new Error("ID1 recycle did not re-enter at new-cycle position 1");
+  }
+  if (
+    recycleRule.toOwner !== ethers.parseUnits("8", 6) ||
+    recycleRule.toSpillover1 !== ethers.parseUnits("8", 6) ||
+    recycleRule.toSpillover2 !== ethers.parseUnits("20", 6)
+  ) {
+    throw new Error("ID1 recycle re-entry did not apply fresh 20/20/50 routing");
+  }
+
+  const [postRecycleRow, postRecycleActivation, postRecycleRule] = await Promise.all([
+    contracts.p39.getPosition(config.id1, 3, 2),
+    contracts.p39.getPositionActivationData(config.id1, 3, 2),
+    contracts.p39.getPositionRuleView(config.id1, 3, 2),
+  ]);
+  if (ethers.getAddress(postRecycleRow.occupant) !== ethers.getAddress(actors[2]) || !postRecycleActivation.isMirror) {
+    throw new Error("Account 65 post-recycle mirror mismatch");
+  }
+  if (
+    postRecycleRule.toOwner + postRecycleRule.toEscrow + postRecycleRule.toRecycle !== ethers.parseUnits("20", 6) ||
+    postRecycleRule.toSpillover1 !== 0n ||
+    postRecycleRule.toSpillover2 !== 0n
+  ) {
+    throw new Error("Account 65 post-recycle mirror was not a terminal 20 USDT fragment");
+  }
+
+  const primary = walletForLabel(manifest.roles.primaryOwner);
+  for (let index = 0; index < actors.length; index += 1) {
+    const position = 10 + index;
+    const [row, activation, rule] = await Promise.all([
+      contracts.p39.getPosition(primary, 3, position),
+      contracts.p39.getPositionActivationData(primary, 3, position),
+      contracts.p39.getPositionRuleView(primary, 3, position),
+    ]);
+    if (ethers.getAddress(row.occupant) !== ethers.getAddress(actors[index]) || activation.isMirror) {
+      throw new Error(`Account 8 P39 source position ${position} mismatch`);
+    }
+    if (
+      Number(rule.line) !== 2 ||
+      Number(rule.linePaymentNumber) !== 7 + index ||
+      rule.toOwner !== ethers.parseUnits("8", 6) ||
+      rule.toSpillover1 !== ethers.parseUnits("8", 6) ||
+      rule.toSpillover2 !== ethers.parseUnits("20", 6)
+    ) {
+      throw new Error(`Account 8 P39 source position ${position} routing mismatch`);
     }
   }
 }
@@ -658,7 +979,9 @@ async function main() {
     });
   }
 
-  if (phase === "P5") await validatePrimaryP39Topology(manifest, contracts);
+  if (phase === "P2") await validateP2RegistrationStructure(manifest, contracts, report, config);
+  if (phase === "P4") await validatePrimaryP12Topology(manifest, contracts, config);
+  if (phase === "P5") await validatePrimaryP39Topology(manifest, contracts, report, config);
   if (phase === "P6") await validateLatestOccurrence(manifest, contracts, config);
   report.endBlock = await ethers.provider.getBlockNumber();
   report.completedAt = new Date().toISOString();

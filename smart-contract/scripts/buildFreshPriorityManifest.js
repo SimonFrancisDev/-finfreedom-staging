@@ -186,16 +186,20 @@ function buildManifest() {
 
   const skip = roles.inactiveUplineChain;
   addAction(actions, "P7", "register", skip.eligibleRoot, { sponsor: "ID1" });
+  addAction(actions, "P7", "ensureLevel", skip.eligibleRoot, { level: 2 });
   addAction(actions, "P7", "ensureLevel", skip.eligibleRoot, { level: 3 });
   addAction(actions, "P7", "register", skip.inactiveMiddle, { sponsor: skip.eligibleRoot });
   addAction(actions, "P7", "register", skip.actorBeforeEligibility, { sponsor: skip.inactiveMiddle });
+  addAction(actions, "P7", "ensureLevel", skip.actorBeforeEligibility, { level: 2 });
   addAction(actions, "P7", "ensureLevel", skip.actorBeforeEligibility, {
     level: 3,
     expectedEligibleUpline: skip.eligibleRoot,
     expectedSkippedUpline: skip.inactiveMiddle,
   });
+  addAction(actions, "P7", "ensureLevel", skip.inactiveMiddle, { level: 2 });
   addAction(actions, "P7", "ensureLevel", skip.inactiveMiddle, { level: 3 });
   addAction(actions, "P7", "register", skip.actorAfterEligibility, { sponsor: skip.inactiveMiddle });
+  addAction(actions, "P7", "ensureLevel", skip.actorAfterEligibility, { level: 2 });
   addAction(actions, "P7", "ensureLevel", skip.actorAfterEligibility, {
     level: 3,
     expectedEligibleUpline: skip.inactiveMiddle,
@@ -228,6 +232,7 @@ function buildManifest() {
     preserveMockUsdt: roleFile.preserveMockUsdt,
     walletCount: wallets.size,
     wallets: publicWallets,
+    roles,
     primaryP39Topology: primaryTree,
     actions,
     requiredPhases: ["P0", "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "P10", "P11"],
