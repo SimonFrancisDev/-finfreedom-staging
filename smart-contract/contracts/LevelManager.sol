@@ -177,6 +177,7 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
         uint256 toRecycle;
         address recycleRecipient;
         bool isTrueNoReferrer;
+        bool isId1Fallback;
     }
 
     struct MirrorSplitResult {
@@ -631,7 +632,13 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
         a.sponsor = resolveSponsor(user, level);
         a.orbitType = _orbitCodeForLevel(level);
         a.orbitAddress = _getOrbitAddress(a.orbitType);
-        if (a.sponsor == id1Wallet && registration.getReferrer(user) != id1Wallet) {
+        a.isTrueNoReferrer = registration.hadNoReferrer(user);
+        a.isId1Fallback = (
+            a.sponsor == id1Wallet &&
+            !a.isTrueNoReferrer &&
+            registration.getReferrer(user) != id1Wallet
+        );
+        if (a.isId1Fallback) {
             _emitPayoutNotDelivered(
                 user,
                 user,
@@ -650,33 +657,33 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
             );
         }
 
-        (
-            a.sourcePosition,
-            a.sourceCycle,
-            a.toOwner,
-            a.toSpillover1,
-            a.spillover1Recipient,
-            a.toSpillover2,
-            a.spillover2Recipient,
-            a.toEscrow,
-            a.toRecycle
-        ) = _fillOrbitPosition(
-            a.orbitType,
-            a.sponsor,
-            level,
-            user,
-            a.sponsor,
-            amount,
-            a.activationId
-        );
-
-        a.isTrueNoReferrer = (a.sponsor == id1Wallet && registration.hadNoReferrer(user));
+        if (!a.isId1Fallback) {
+            (
+                a.sourcePosition,
+                a.sourceCycle,
+                a.toOwner,
+                a.toSpillover1,
+                a.spillover1Recipient,
+                a.toSpillover2,
+                a.spillover2Recipient,
+                a.toEscrow,
+                a.toRecycle
+            ) = _fillOrbitPosition(
+                a.orbitType,
+                a.sponsor,
+                level,
+                user,
+                a.sponsor,
+                amount,
+                a.activationId
+            );
+        }
 
         uint256 summaryLiquidPaid;
         uint256 summaryEscrowLocked;
         uint256 summaryRecycleAllocated;
 
-        if (a.isTrueNoReferrer) {
+        if (a.isTrueNoReferrer || a.isId1Fallback) {
             uint256 founderPathNetAmount = amount - a.systemCharge;
 
             _sendPayoutWithContext(

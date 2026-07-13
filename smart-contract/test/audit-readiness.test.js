@@ -552,6 +552,46 @@ describe("Audit readiness contract invariants", function () {
     expect(rule.toRecycle).to.equal(0);
   });
 
+  it("pays exhausted-upline ID1 fallbacks to founders without creating P12, P39, or P4 positions", async function () {
+    const { owner, users, usdt, registration, levelManager, p4, p12, p39, register } =
+      await deployCoreSystem();
+    const founderWallets = users.slice(0, 8);
+    const inactiveSponsor = users[8];
+    const fallbackUser = users[9];
+
+    await register(inactiveSponsor, owner.address);
+    await register(fallbackUser, inactiveSponsor.address);
+
+    const cases = [
+      { level: 2, amount: 20, orbit: p12 },
+      { level: 3, amount: 40, orbit: p39 },
+      { level: 4, amount: 80, orbit: p4 },
+    ];
+
+    for (const testCase of cases) {
+      const { receipt, deltas } = await balanceDeltas(usdt, founderWallets, () =>
+        registration.connect(fallbackUser).activateLevel(testCase.level)
+      );
+      const summary = findEvent(receipt, levelManager, "ActivationFinancialSummaryRecorded");
+      const fallback = findEvent(receipt, levelManager, "PayoutNotDelivered");
+      const founderReceipt = findEvent(receipt, levelManager, "DetailedPayoutReceiptRecorded");
+      const position = await testCase.orbit.getPosition(owner.address, testCase.level, 1);
+      const netAmount = usdtUnits(testCase.amount * 0.9);
+
+      expect(await registration.isLevelActivated(fallbackUser.address, testCase.level)).to.equal(true);
+      expect(position.occupant).to.equal(ethers.ZeroAddress);
+      expect(deltas.reduce((sum, delta) => sum + delta, 0n)).to.equal(netAmount);
+      expect(summary.args.systemCharge).to.equal(usdtUnits(testCase.amount * 0.1));
+      expect(summary.args.totalLiquidPaid).to.equal(netAmount);
+      expect(summary.args.totalEscrowLocked).to.equal(0);
+      expect(summary.args.totalRecycleAllocated).to.equal(0);
+      expect(fallback.args.reasonCode).to.equal(ethers.encodeBytes32String("ID1_FALLBACK"));
+      expect(founderReceipt.args.sourcePosition).to.equal(0);
+      expect(founderReceipt.args.mirroredPosition).to.equal(0);
+      expect(parseEvents(receipt, testCase.orbit, "PositionFilled")).to.have.length(0);
+    }
+  });
+
   it("applies the P39 line-3 escrow rule from stored on-chain rule snapshots", async function () {
     const { owner, users, registration, p39, register, activateToLevel } = await deployCoreSystem();
 
@@ -2100,7 +2140,8 @@ describe("Audit readiness contract invariants", function () {
 
   it("preserves parent P39 mirror accounting when routed escrow triggers a nested auto-upgrade", async function () {
     this.timeout(600000);
-    const { owner, registration, levelManager, register, activateToLevel } = await deployCoreSystem();
+    const { owner, usdt, escrow, registration, levelManager, register, activateToLevel } =
+      await deployCoreSystem();
     const accounts = await createFundedWallets(owner, 40);
     const account = (label) => accounts[label - 8];
 
@@ -2125,6 +2166,14 @@ describe("Audit readiness contract invariants", function () {
       await activateToLevel(account(label), 3);
     }
 
+    const levelManagerSigner = await impersonateLevelManager(levelManager);
+    await usdt.mint(levelManager.target, usdtUnits(13 * 79));
+    for (let label = 8; label <= 20; label += 1) {
+      await escrow
+        .connect(levelManagerSigner)
+        .lockFunds(account(label).address, 3, 4, usdtUnits(79));
+    }
+
     const tx = await registration.connect(account(36)).activateLevel(3);
     const receipt = await tx.wait();
     const summaries = parseEvents(receipt, levelManager, "ActivationFinancialSummaryRecorded");
@@ -2134,12 +2183,14 @@ describe("Audit readiness contract invariants", function () {
     const targetReceipts = parseEvents(receipt, levelManager, "DetailedPayoutReceiptRecorded")
       .filter((event) => event.args.activationId === targetSummary.args.activationId);
 
-    expect(targetSummary).to.not.equal(undefined);
     expect(targetSummary.args.systemCharge).to.equal(usdtUnits(4));
-    expect(targetSummary.args.totalLiquidPaid).to.equal(usdtUnits(8));
-    expect(targetSummary.args.totalEscrowLocked).to.equal(usdtUnits(28));
-    expect(targetReceipts.reduce((sum, event) => sum + event.args.liquidPaid, 0n)).to.equal(usdtUnits(8));
-    expect(targetReceipts.reduce((sum, event) => sum + event.args.escrowLocked, 0n)).to.equal(usdtUnits(28));
-    expect(summaries.some((event) => event.args.isAutoUpgrade && event.args.level === 4n)).to.equal(true);
+    expect(targetSummary.args.totalLiquidPaid).to.equal(usdtUnits(28));
+    expect(targetSummary.args.totalEscrowLocked).to.equal(usdtUnits(8));
+    expect(targetReceipts.reduce((sum, event) => sum + event.args.liquidPaid, 0n))
+      .to.equal(usdtUnits(28));
+    expect(targetReceipts.reduce((sum, event) => sum + event.args.escrowLocked, 0n))
+      .to.equal(usdtUnits(8));
+    expect(summaries.some((event) => event.args.isAutoUpgrade && event.args.level === 4n))
+      .to.equal(true);
   });
 });
