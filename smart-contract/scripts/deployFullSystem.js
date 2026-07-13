@@ -498,7 +498,17 @@ async function main() {
   // =========================
   console.log("20. Transferring Guardian ownership to multisig...");
   const guardian = await ethers.getContractAt("Guardian", GUARDIAN);
-  await (await guardian.transferOwnership(MULTISIG)).wait();
+  const guardianOwner = await guardian.owner();
+  if (guardianOwner === MULTISIG) {
+    console.log("Guardian already owned by multisig");
+  } else {
+    if (guardianOwner !== deployer.address) {
+      throw new Error(
+        `Guardian owner ${guardianOwner} is neither deployer nor multisig`
+      );
+    }
+    await (await guardian.transferOwnership(MULTISIG)).wait();
+  }
   console.log("✅ Guardian ownership transferred");
   console.log("");
 
