@@ -327,6 +327,14 @@ abstract contract BaseOrbit is Initializable, OwnableUpgradeable, UUPSUpgradeabl
         return ILevelManagerReader(levelManager).id1Wallet();
     }
 
+    function _resolveEligibleRecipient(address candidate, uint8 level) internal view returns (address) {
+        return IRegistration(registration).resolveEligibleRecipient(
+            candidate,
+            level,
+            ILevelManagerReader(levelManager).id1Wallet()
+        );
+    }
+
 
 
         /**
@@ -1330,6 +1338,8 @@ abstract contract BaseOrbit is Initializable, OwnableUpgradeable, UUPSUpgradeabl
             );
 
             (result.spillover1Recipient, result.spillover2Recipient) = _resolveRecipients(orbitOwner, level, result.sourcePosition);
+            result.spillover1Recipient = _resolveEligibleRecipient(result.spillover1Recipient, level);
+            result.spillover2Recipient = _resolveEligibleRecipient(result.spillover2Recipient, level);
 
             (result.toOwner, result.toSpillover1, result.toSpillover2, result.toEscrow, result.toRecycle) = _calculateActualAmounts(
                 amount,
@@ -1606,6 +1616,8 @@ returns (FillPositionDetailedResult memory result)
         level,
         result.sourcePosition
     );
+    result.spillover1Recipient = _resolveEligibleRecipient(result.spillover1Recipient, level);
+    result.spillover2Recipient = _resolveEligibleRecipient(result.spillover2Recipient, level);
 
     (
         result.toOwner,

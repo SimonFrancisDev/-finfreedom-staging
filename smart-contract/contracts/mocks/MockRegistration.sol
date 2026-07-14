@@ -33,12 +33,29 @@ contract MockRegistration {
         active[user][level] = true;
     }
 
+    function setActiveStatus(address user, uint8 level, bool status) external {
+        active[user][level] = status;
+    }
+
     function getReferrer(address user) external view returns(address) {
         return ref[user];
     }
 
     function isLevelActivated(address user, uint8 level) external view returns(bool) {
         return active[user][level];
+    }
+
+    function resolveEligibleRecipient(address candidate, uint8 level, address fallbackRecipient) external view returns(address) {
+        if (candidate == address(0)) return address(0);
+
+        address current = candidate;
+        for (uint8 depth = 0; depth < 64; ++depth) {
+            if (current == fallbackRecipient || active[current][level]) return current;
+            current = ref[current];
+            if (current == address(0)) return fallbackRecipient;
+        }
+
+        return fallbackRecipient;
     }
 
     function hadNoReferrer(address user) external view returns(bool) {

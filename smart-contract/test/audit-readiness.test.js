@@ -1819,32 +1819,147 @@ describe("Audit readiness contract invariants", function () {
     expect(spill2Receipt.args.grossAmount).to.equal(usdtUnits(20));
   });
 
-  it("walks the connected P12 matrix chain before falling back to ID1", async function () {
-    const { owner, users, levelManager, p12, register } = await deployCoreSystem();
+  it("skips inactive sponsor candidates at every configured level", async function () {
+    const { owner, registration, levelManager } = await deployLevelManagerWithMockRegistration();
+    const [, , , eligible, inactiveA, inactiveB, actor] = await ethers.getSigners();
+
+    await registration.setRef(actor.address, inactiveA.address);
+    await registration.setRef(inactiveA.address, inactiveB.address);
+    await registration.setRef(inactiveB.address, eligible.address);
+
+    for (let level = 1; level <= 10; level += 1) {
+      await registration.setActive(eligible.address, level);
+      expect(await levelManager.resolveSponsor(actor.address, level)).to.equal(eligible.address);
+      expect(
+        await registration.resolveEligibleRecipient(inactiveA.address, level, owner.address)
+      ).to.equal(eligible.address);
+      expect(
+        await registration.resolveEligibleRecipient(inactiveB.address, level, owner.address)
+      ).to.equal(eligible.address);
+    }
+
+    for (let level = 1; level <= 10; level += 1) {
+      await registration.setActiveStatus(eligible.address, level, false);
+      expect(await levelManager.resolveSponsor(actor.address, level)).to.equal(owner.address);
+      expect(
+        await registration.resolveEligibleRecipient(inactiveA.address, level, owner.address)
+      ).to.equal(owner.address);
+      expect(
+        await registration.resolveEligibleRecipient(inactiveB.address, level, owner.address)
+      ).to.equal(owner.address);
+    }
+  });
+
+  it("normalizes inactive P12 and P39 matrix recipients at every supported level", async function () {
+    const { owner, users, levelManager, p12, p39, register, activateToLevel } = await deployCoreSystem();
+    const levelManagerSigner = await impersonateLevelManager(levelManager);
+    const eligibleRoot = users[8];
+    const inactiveMiddle = users[9];
+    const inactiveMatrixParent = users[10];
+    const orbitOwner = users[11];
+    const activatingUser = users[12];
+    const inactiveFallbackRoot = users[13];
+    const inactiveFallbackParent = users[14];
+    const fallbackOrbitOwner = users[15];
+    const fallbackActivatingUser = users[16];
+
+    await register(eligibleRoot, owner.address);
+    await activateToLevel(eligibleRoot, 9);
+    await register(inactiveMiddle, eligibleRoot.address);
+    await register(inactiveMatrixParent, inactiveMiddle.address);
+    await register(orbitOwner, inactiveMatrixParent.address);
+    await register(activatingUser, orbitOwner.address);
+    await register(inactiveFallbackRoot, owner.address);
+    await register(inactiveFallbackParent, inactiveFallbackRoot.address);
+    await register(fallbackOrbitOwner, inactiveFallbackParent.address);
+    await register(fallbackActivatingUser, fallbackOrbitOwner.address);
+
+    for (const [orbit, level, amount] of [
+      [p12, 2, 20],
+      [p12, 5, 160],
+      [p12, 8, 1280],
+      [p39, 3, 40],
+      [p39, 6, 320],
+      [p39, 9, 2560],
+    ]) {
+      const activationBase = 9900 + level * 10;
+      await orbit.connect(levelManagerSigner).fillPositionDetailed(
+        inactiveMatrixParent.address,
+        level,
+        orbitOwner.address,
+        inactiveMatrixParent.address,
+        usdtUnits(amount),
+        activationBase
+      );
+      await orbit.connect(levelManagerSigner).fillPositionDetailed(
+        orbitOwner.address,
+        level,
+        activatingUser.address,
+        orbitOwner.address,
+        usdtUnits(amount),
+        activationBase + 1
+      );
+
+      const rule = await orbit.getPositionRuleView(orbitOwner.address, level, 1);
+      expect(rule.spillover1Recipient).to.equal(eligibleRoot.address);
+      expect(rule.spillover1Recipient).to.not.equal(inactiveMatrixParent.address);
+      expect(rule.spillover1Recipient).to.not.equal(inactiveMiddle.address);
+      if (orbit === p39) {
+        expect(rule.spillover2Recipient).to.equal(owner.address);
+      }
+
+      await orbit.connect(levelManagerSigner).fillPositionDetailed(
+        inactiveFallbackParent.address,
+        level,
+        fallbackOrbitOwner.address,
+        inactiveFallbackParent.address,
+        usdtUnits(amount),
+        activationBase + 2
+      );
+      await orbit.connect(levelManagerSigner).fillPositionDetailed(
+        fallbackOrbitOwner.address,
+        level,
+        fallbackActivatingUser.address,
+        fallbackOrbitOwner.address,
+        usdtUnits(amount),
+        activationBase + 3
+      );
+
+      const fallbackRule = await orbit.getPositionRuleView(fallbackOrbitOwner.address, level, 1);
+      expect(fallbackRule.spillover1Recipient).to.equal(owner.address);
+      if (orbit === p39) {
+        expect(fallbackRule.spillover2Recipient).to.equal(owner.address);
+      }
+    }
+  });
+
+  it("skips an inactive connected P12 matrix parent and pays its first eligible upline", async function () {
+    const { owner, users, levelManager, p12, register, activateToLevel } = await deployCoreSystem();
     const levelManagerSigner = await impersonateLevelManager(levelManager);
 
-    const inactiveRoot = users[8];
-    const visibleMatrixParent = users[9];
+    const eligibleRoot = users[8];
+    const inactiveMatrixParent = users[9];
     const orbitOwner = users[10];
     const activatingUser = users[11];
 
-    await register(inactiveRoot, owner.address);
-    await register(visibleMatrixParent, inactiveRoot.address);
-    await register(orbitOwner, inactiveRoot.address);
+    await register(eligibleRoot, owner.address);
+    await activateToLevel(eligibleRoot, 2);
+    await register(inactiveMatrixParent, eligibleRoot.address);
+    await register(orbitOwner, inactiveMatrixParent.address);
     await register(activatingUser, orbitOwner.address);
 
     await p12
       .connect(levelManagerSigner)
       .fillPositionDetailed(
-        visibleMatrixParent.address,
+        inactiveMatrixParent.address,
         2,
         orbitOwner.address,
-        visibleMatrixParent.address,
+        inactiveMatrixParent.address,
         usdtUnits(20),
         9701
       );
 
-    const orbitOwnerPosition = await p12.getPosition(visibleMatrixParent.address, 2, 1);
+    const orbitOwnerPosition = await p12.getPosition(inactiveMatrixParent.address, 2, 1);
     expect(orbitOwnerPosition.occupant).to.equal(orbitOwner.address);
 
     await p12
@@ -1862,12 +1977,12 @@ describe("Audit readiness contract invariants", function () {
     expect(rule.line).to.equal(1);
     expect(rule.toOwner).to.equal(usdtUnits(8));
     expect(rule.toSpillover1).to.equal(usdtUnits(10));
-    expect(rule.spillover1Recipient).to.equal(visibleMatrixParent.address);
-    expect(rule.spillover1Recipient).to.not.equal(owner.address);
+    expect(rule.spillover1Recipient).to.equal(eligibleRoot.address);
+    expect(rule.spillover1Recipient).to.not.equal(inactiveMatrixParent.address);
   });
 
   it("uses stored P12 placement parent when referrer chain and placement chain differ", async function () {
-    const { owner, users, levelManager, p12, register } = await deployCoreSystem();
+    const { owner, users, levelManager, p12, register, activateToLevel } = await deployCoreSystem();
     const levelManagerSigner = await impersonateLevelManager(levelManager);
 
     const rawReferrer = users[8];
@@ -1877,6 +1992,7 @@ describe("Audit readiness contract invariants", function () {
 
     await register(rawReferrer, owner.address);
     await register(placementParent, owner.address);
+    await activateToLevel(placementParent, 2);
     await register(orbitOwner, rawReferrer.address);
     await register(activatingUser, orbitOwner.address);
 
@@ -1914,32 +2030,33 @@ describe("Audit readiness contract invariants", function () {
     expect(rule.spillover1Recipient).to.not.equal(owner.address);
   });
 
-  it("walks the connected P39 matrix chain before falling back to ID1", async function () {
-    const { owner, users, levelManager, p39, register } = await deployCoreSystem();
+  it("skips an inactive connected P39 matrix parent and pays its first eligible upline", async function () {
+    const { owner, users, levelManager, p39, register, activateToLevel } = await deployCoreSystem();
     const levelManagerSigner = await impersonateLevelManager(levelManager);
 
-    const inactiveRoot = users[8];
-    const visibleMatrixParent = users[9];
+    const eligibleRoot = users[8];
+    const inactiveMatrixParent = users[9];
     const orbitOwner = users[10];
     const activatingUser = users[11];
 
-    await register(inactiveRoot, owner.address);
-    await register(visibleMatrixParent, inactiveRoot.address);
-    await register(orbitOwner, inactiveRoot.address);
+    await register(eligibleRoot, owner.address);
+    await activateToLevel(eligibleRoot, 3);
+    await register(inactiveMatrixParent, eligibleRoot.address);
+    await register(orbitOwner, inactiveMatrixParent.address);
     await register(activatingUser, orbitOwner.address);
 
     await p39
       .connect(levelManagerSigner)
       .fillPositionDetailed(
-        visibleMatrixParent.address,
+        inactiveMatrixParent.address,
         3,
         orbitOwner.address,
-        visibleMatrixParent.address,
+        inactiveMatrixParent.address,
         usdtUnits(40),
         9801
       );
 
-    const orbitOwnerPosition = await p39.getPosition(visibleMatrixParent.address, 3, 1);
+    const orbitOwnerPosition = await p39.getPosition(inactiveMatrixParent.address, 3, 1);
     expect(orbitOwnerPosition.occupant).to.equal(orbitOwner.address);
 
     await p39
@@ -1958,12 +2075,12 @@ describe("Audit readiness contract invariants", function () {
     expect(rule.toOwner).to.equal(usdtUnits(8));
     expect(rule.toSpillover1).to.equal(usdtUnits(8));
     expect(rule.toSpillover2).to.equal(usdtUnits(20));
-    expect(rule.spillover1Recipient).to.equal(visibleMatrixParent.address);
-    expect(rule.spillover1Recipient).to.not.equal(owner.address);
+    expect(rule.spillover1Recipient).to.equal(eligibleRoot.address);
+    expect(rule.spillover1Recipient).to.not.equal(inactiveMatrixParent.address);
   });
 
   it("uses stored P39 placement parents for line-1 spillovers when referrer chain differs", async function () {
-    const { owner, users, levelManager, p39, register } = await deployCoreSystem();
+    const { owner, users, levelManager, p39, register, activateToLevel } = await deployCoreSystem();
     const levelManagerSigner = await impersonateLevelManager(levelManager);
 
     const rawReferrer = users[8];
@@ -1974,7 +2091,9 @@ describe("Audit readiness contract invariants", function () {
 
     await register(rawReferrer, owner.address);
     await register(matrixGrandParent, owner.address);
+    await activateToLevel(matrixGrandParent, 3);
     await register(placementParent, rawReferrer.address);
+    await activateToLevel(placementParent, 3);
     await register(orbitOwner, rawReferrer.address);
     await register(activatingUser, orbitOwner.address);
 

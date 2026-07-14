@@ -57,6 +57,7 @@ contract RegistrationFixed is
     uint8 private constant MIN_LEVEL = 1;
     uint8 private constant MAX_LEVEL = 10;
     uint8 private constant LEVEL_ONE = 1;
+    uint8 private constant MAX_UPLINE_SEARCH_DEPTH = 64;
 
     IERC20 public usdt;
     ILevelManager public levelManager;
@@ -310,6 +311,23 @@ contract RegistrationFixed is
         }
 
         return levelActivated[user][level];
+    }
+
+    function resolveEligibleRecipient(
+        address candidate,
+        uint8 level,
+        address fallbackRecipient
+    ) external view returns (address) {
+        if (candidate == address(0)) return address(0);
+
+        address current = candidate;
+        for (uint8 depth = 0; depth < MAX_UPLINE_SEARCH_DEPTH; ++depth) {
+            if (current == fallbackRecipient || levelActivated[current][level]) return current;
+            current = referrerOf[current];
+            if (current == address(0)) return fallbackRecipient;
+        }
+
+        return fallbackRecipient;
     }
 
     function getReferrer(address user) external view returns (address) {
