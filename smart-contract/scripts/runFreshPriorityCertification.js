@@ -318,7 +318,10 @@ function assertMatrixRules(events) {
     // activation percentages.
     if (!link) continue;
     const gross = LEVEL_PRICE[level];
-    if (!gross) throw new Error(`unsupported certification level ${level}`);
+    // P5 can trigger a nested higher-level auto-upgrade in the same receipt.
+    // Higher levels are certified by their dedicated phase, not by the
+    // Level 1-3 percentage table below.
+    if (!gross) continue;
     const unit = gross / 100n;
     const actual = amounts.map((amount) => amount / unit);
     if (amounts.some((amount) => amount % unit !== 0n)) {
@@ -583,36 +586,52 @@ async function validatePrimaryP39Topology(manifest, contracts, report, config) {
   }
 
   const id1Orbit = await contracts.p39.getUserOrbit(config.id1, 3);
-  if (Number(id1Orbit.currentPosition) !== 38 || id1Orbit.totalCycles !== 0n) {
+  if (Number(id1Orbit.currentPosition) !== 3 || id1Orbit.totalCycles !== 0n) {
     throw new Error(`P5 ID1 checkpoint mismatch position=${id1Orbit.currentPosition} cycles=${id1Orbit.totalCycles}`);
   }
-  let mergedNormalPaymentProofs = 0;
-  for (let position = 1; position <= 37; position += 1) {
+  const primary = walletForLabel(manifest.roles.primaryOwner);
+  for (let position = 1; position <= 2; position += 1) {
     const [row, activation, rule] = await Promise.all([
       contracts.p39.getPosition(config.id1, 3, position),
       contracts.p39.getPositionActivationData(config.id1, 3, position),
       contracts.p39.getPositionRuleView(config.id1, 3, position),
     ]);
-    if (ethers.getAddress(row.occupant) === ethers.ZeroAddress) {
-      throw new Error(`ID1 P39 position ${position} is unexpectedly empty`);
+    if (ethers.getAddress(row.occupant) !== ethers.getAddress(primary)) {
+      throw new Error(`ID1 P39 position ${position} occupant mismatch`);
     }
-    if (position === 1) continue;
-    if (!activation.isMirror) throw new Error(`ID1 P39 position ${position} is not a normal payment mirror`);
-    if (rule.toSpillover1 !== 0n || rule.toSpillover2 !== 0n) {
-      throw new Error(`ID1 P39 mirror ${position} attempted duplicate routing`);
+    if (activation.isMirror !== (position === 2)) {
+      throw new Error(`ID1 P39 position ${position} mirror status mismatch`);
     }
-    const routed = rule.toOwner + rule.toEscrow + rule.toRecycle;
-    if (routed === ethers.parseUnits("28", 6)) mergedNormalPaymentProofs += 1;
-    else if (routed !== ethers.parseUnits("20", 6)) {
-      throw new Error(`ID1 P39 mirror ${position} has unexpected routed amount ${ethers.formatUnits(routed, 6)}`);
+    if (
+      rule.toOwner !== ethers.parseUnits("8", 6) ||
+      rule.toSpillover1 !== ethers.parseUnits("8", 6) ||
+      rule.toSpillover2 !== ethers.parseUnits("20", 6)
+    ) {
+      throw new Error(`ID1 P39 position ${position} normal 20/20/50 route mismatch`);
     }
   }
-  if (!mergedNormalPaymentProofs) throw new Error("missing approved 8 + 20 ID1 mirror aggregation proof");
 
-  const primary = walletForLabel(manifest.roles.primaryOwner);
   const primaryOrbit = await contracts.p39.getUserOrbit(primary, 3);
-  if (Number(primaryOrbit.currentPosition) !== 10 || primaryOrbit.totalCycles !== 0n) {
+  if (Number(primaryOrbit.currentPosition) !== 1 || primaryOrbit.totalCycles !== 1n) {
     throw new Error(`P5 primary checkpoint mismatch position=${primaryOrbit.currentPosition} cycles=${primaryOrbit.totalCycles}`);
+  }
+  for (const expected of manifest.primaryP39Topology) {
+    const [row, rule] = await Promise.all([
+      contracts.p39.getHistoricalPosition(primary, 3, 1, expected.position),
+      contracts.p39.getHistoricalPositionRuleView(primary, 3, 1, expected.position),
+    ]);
+    if (ethers.getAddress(row.occupant) !== ethers.getAddress(walletForLabel(expected.wallet))) {
+      throw new Error(`P39 position ${expected.position} occupant mismatch`);
+    }
+    if (Number(rule.line) !== expected.line) {
+      throw new Error(`P39 position ${expected.position} line mismatch`);
+    }
+    const expectedParent = expected.line === 1
+      ? primary
+      : walletForLabel(manifest.primaryP39Topology[expected.parentPosition - 1].wallet);
+    if (ethers.getAddress(row.referrer) !== ethers.getAddress(expectedParent)) {
+      throw new Error(`P39 position ${expected.position} structural parent mismatch`);
+    }
   }
 }
 
@@ -725,63 +744,17 @@ async function validateAutoUpgrade(action, contracts) {
 async function validateLatestOccurrence(manifest, contracts, config) {
   const actors = ["Account 63", "Account 64", "Account 65"].map(walletForLabel);
   const id1State = await contracts.p39.getUserOrbit(config.id1, 3);
-  if (id1State.totalCycles !== 1n || Number(id1State.currentPosition) !== 3) {
-    throw new Error(`ID1 P39 recycle checkpoint mismatch cycles=${id1State.totalCycles} position=${id1State.currentPosition}`);
-  }
-
-  for (let index = 0; index < 2; index += 1) {
-    const position = 38 + index;
-    const [row, activation, rule] = await Promise.all([
-      contracts.p39.getHistoricalPosition(config.id1, 3, 1, position),
-      contracts.p39.getHistoricalPositionActivationData(config.id1, 3, 1, position),
-      contracts.p39.getHistoricalPositionRuleView(config.id1, 3, 1, position),
-    ]);
-    if (ethers.getAddress(row.occupant) !== ethers.getAddress(actors[index])) {
-      throw new Error(`ID1 historical P39 position ${position} occupant mismatch`);
-    }
-    if (!activation.isMirror || Number(rule.line) !== 3 || Number(rule.linePaymentNumber) !== 26 + index) {
-      throw new Error(`ID1 historical P39 position ${position} line/arrival mismatch`);
-    }
-    if (rule.toRecycle !== ethers.parseUnits("20", 6)) {
-      throw new Error(`ID1 historical P39 position ${position} did not reserve 20 USDT`);
-    }
-  }
-
-  const [recycleRow, recycleActivation, recycleRule] = await Promise.all([
-    contracts.p39.getPosition(config.id1, 3, 1),
-    contracts.p39.getPositionActivationData(config.id1, 3, 1),
-    contracts.p39.getPositionRuleView(config.id1, 3, 1),
-  ]);
-  if (ethers.getAddress(recycleRow.occupant) !== config.id1 || !recycleActivation.isMirror) {
-    throw new Error("ID1 recycle did not re-enter at new-cycle position 1");
-  }
-  if (
-    recycleRule.toOwner !== ethers.parseUnits("8", 6) ||
-    recycleRule.toSpillover1 !== ethers.parseUnits("8", 6) ||
-    recycleRule.toSpillover2 !== ethers.parseUnits("20", 6)
-  ) {
-    throw new Error("ID1 recycle re-entry did not apply fresh 20/20/50 routing");
-  }
-
-  const [postRecycleRow, postRecycleActivation, postRecycleRule] = await Promise.all([
-    contracts.p39.getPosition(config.id1, 3, 2),
-    contracts.p39.getPositionActivationData(config.id1, 3, 2),
-    contracts.p39.getPositionRuleView(config.id1, 3, 2),
-  ]);
-  if (ethers.getAddress(postRecycleRow.occupant) !== ethers.getAddress(actors[2]) || !postRecycleActivation.isMirror) {
-    throw new Error("Account 65 post-recycle mirror mismatch");
-  }
-  if (
-    postRecycleRule.toOwner + postRecycleRule.toEscrow + postRecycleRule.toRecycle !== ethers.parseUnits("20", 6) ||
-    postRecycleRule.toSpillover1 !== 0n ||
-    postRecycleRule.toSpillover2 !== 0n
-  ) {
-    throw new Error("Account 65 post-recycle mirror was not a terminal 20 USDT fragment");
+  if (id1State.totalCycles !== 0n || Number(id1State.currentPosition) !== 3) {
+    throw new Error(`ID1 fallback incorrectly changed P39 cycles=${id1State.totalCycles} position=${id1State.currentPosition}`);
   }
 
   const primary = walletForLabel(manifest.roles.primaryOwner);
+  const primaryState = await contracts.p39.getUserOrbit(primary, 3);
+  if (primaryState.totalCycles !== 1n || Number(primaryState.currentPosition) !== 4) {
+    throw new Error(`Account 8 P39 second-cycle checkpoint mismatch cycles=${primaryState.totalCycles} position=${primaryState.currentPosition}`);
+  }
   for (let index = 0; index < actors.length; index += 1) {
-    const position = 10 + index;
+    const position = 1 + index;
     const [row, activation, rule] = await Promise.all([
       contracts.p39.getPosition(primary, 3, position),
       contracts.p39.getPositionActivationData(primary, 3, position),
@@ -791,8 +764,8 @@ async function validateLatestOccurrence(manifest, contracts, config) {
       throw new Error(`Account 8 P39 source position ${position} mismatch`);
     }
     if (
-      Number(rule.line) !== 2 ||
-      Number(rule.linePaymentNumber) !== 7 + index ||
+      Number(rule.line) !== 1 ||
+      Number(rule.linePaymentNumber) !== 1 + index ||
       rule.toOwner !== ethers.parseUnits("8", 6) ||
       rule.toSpillover1 !== ethers.parseUnits("8", 6) ||
       rule.toSpillover2 !== ethers.parseUnits("20", 6)
