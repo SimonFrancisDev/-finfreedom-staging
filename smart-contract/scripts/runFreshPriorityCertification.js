@@ -403,7 +403,7 @@ function assertExpectedRecycleChain(action, events, config) {
 }
 
 function assertFounderTerminal(action, events, config) {
-  if (action.expectedTerminalRoute !== "ID1_FOUNDERS") return;
+  if (!["ID1_FOUNDERS", "ID1_FOUNDERS_NORMAL"].includes(action.expectedTerminalRoute)) return;
   const founderEvents = events.filter((event) => event.name === "FounderDistributionDetailed");
   if (!founderEvents.length || founderEvents.length % 8 !== 0) {
     throw new Error(`founder distribution count ${founderEvents.length} is not a non-zero multiple of 8`);
@@ -422,6 +422,16 @@ function assertFounderTerminal(action, events, config) {
     (event) => event.name === "PayoutNotDelivered" &&
       event.args.reasonCode === ethers.encodeBytes32String("ID1_FALLBACK")
   );
+  if (action.expectedTerminalRoute === "ID1_FOUNDERS_NORMAL") {
+    if (fallbacks.length) throw new Error("normal ID1 payment was incorrectly marked as fallback");
+    const positionedReceipts = events.filter(
+      (event) => event.name === "DetailedPayoutReceiptRecorded" &&
+        ethers.getAddress(event.args.receiver) === config.id1 &&
+        Number(event.args.sourcePosition) > 0
+    );
+    if (!positionedReceipts.length) throw new Error("normal ID1 payment did not create a matrix position");
+    return;
+  }
   if (!fallbacks.length) throw new Error("missing explicit ID1 terminal fallback event");
   const fallbackReceipts = events.filter(
     (event) => event.name === "DetailedPayoutReceiptRecorded" &&

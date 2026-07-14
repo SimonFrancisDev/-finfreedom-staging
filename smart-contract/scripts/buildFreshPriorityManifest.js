@@ -206,7 +206,7 @@ function buildManifest() {
   });
 
   for (const actor of roles.id1FounderFallback) {
-    addAction(actions, "P9", "register", actor, { sponsor: "ID1", expectedTerminalRoute: "ID1_FOUNDERS" });
+    addAction(actions, "P9", "register", actor, { sponsor: "ID1", expectedTerminalRoute: "ID1_FOUNDERS_NORMAL" });
   }
 
   for (const [caseName, actor] of Object.entries(roles.failureCases)) {
