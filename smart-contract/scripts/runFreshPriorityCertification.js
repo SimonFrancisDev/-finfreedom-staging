@@ -4,7 +4,7 @@ const hre = require("hardhat");
 const { ethers } = hre;
 const { buildManifest, validateManifest } = require("./buildFreshPriorityManifest");
 
-const PHASE_ORDER = ["P0", "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "P10", "P11"];
+const PHASE_ORDER = ["P0", "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "P10", "P11", "P12", "P13", "P14", "P15", "P16"];
 const LEVEL_PRICE = {
   1: ethers.parseUnits("10", 6),
   2: ethers.parseUnits("20", 6),
@@ -111,7 +111,13 @@ function decodeLogs(receipt, ifaces) {
       try {
         const parsed = iface.parseLog(log);
         if (parsed) {
-          events.push({ address: ethers.getAddress(log.address), name: parsed.name, args: parsed.args, index: log.index });
+          events.push({
+            address: ethers.getAddress(log.address),
+            name: parsed.name,
+            args: parsed.args,
+            argNames: parsed.fragment.inputs.map((input) => input.name),
+            index: log.index,
+          });
           break;
         }
       } catch (_) {}
@@ -134,7 +140,11 @@ function jsonValue(value) {
 }
 
 function eventRecord(event) {
-  return { address: event.address, name: event.name, args: jsonValue(event.args) };
+  const args = {};
+  event.argNames.forEach((name, index) => {
+    args[name || String(index)] = jsonValue(event.args[index]);
+  });
+  return { address: event.address, name: event.name, args };
 }
 
 function assertReceiptArithmetic(events, actor, level) {
@@ -188,6 +198,14 @@ function assertReceiptArithmetic(events, actor, level) {
     // Recycle allocation is a throughput metric. If it settles in the same
     // transaction, the same amount also appears in terminal liquid/escrow.
     const settledRecycleAccounting = summary.args.activationAmount + summary.args.totalRecycleAllocated;
+    const recycleSettlementThroughput = recycleHops
+      .filter((event) => event.args.activationId === summary.args.activationId)
+      .reduce(
+        (sum, event) => sum + event.args.recycleLiquidPaid + event.args.recycleEscrowLocked,
+        0n
+      );
+    const settledRecycleReceiptsAccounting =
+      summary.args.activationAmount + recycleSettlementThroughput;
     const mirroredReserve = detailed
       .filter((event) => event.args.activationId === summary.args.activationId)
       .reduce((sum, event) => {
@@ -206,10 +224,11 @@ function assertReceiptArithmetic(events, actor, level) {
     if (
       accounted !== summary.args.activationAmount &&
       accounted !== settledRecycleAccounting &&
+      accounted !== settledRecycleReceiptsAccounting &&
       !reconciledWithMirroredReserve
     ) {
       failures.push(
-        `activation summary accounting ${accounted} does not reconcile activation, recycle throughput, or mirrored reserve`
+        `activation summary accounting ${accounted} does not reconcile activation, recycle allocation, recycle settlement, or mirrored reserve`
       );
     }
   }
@@ -254,9 +273,10 @@ async function recoverLevelReceipt(wallet, level, contracts, ifaces) {
 
 async function queryFilterChunked(contract, filter, startBlock, endBlock = null) {
   const latest = endBlock == null ? await ethers.provider.getBlockNumber() : Number(endBlock);
+  const chunkSize = Math.max(1, Number(process.env.TEST_LOG_QUERY_CHUNK_SIZE || 500));
   const logs = [];
-  for (let from = Number(startBlock); from <= latest; from += 9_999) {
-    const to = Math.min(from + 9_998, latest);
+  for (let from = Number(startBlock); from <= latest; from += chunkSize) {
+    const to = Math.min(from + chunkSize - 1, latest);
     logs.push(...await contract.queryFilter(filter, from, to));
   }
   return logs;
@@ -308,6 +328,15 @@ function assertMatrixRules(events) {
           : level === 3
             ? [ethers.parseUnits("8", 6), ethers.parseUnits("20", 6), ethers.parseUnits("28", 6)]
             : [];
+        const matchingPreSplitRecycleReceipt = routed === 0n && events.some(
+          (receipt) => receipt.name === "DetailedPayoutReceiptRecorded" &&
+            ethers.getAddress(receipt.args.receiver) === ethers.getAddress(event.args.orbitOwner) &&
+            Number(receipt.args.level) === level &&
+            Number(receipt.args.mirroredPosition) === Number(event.args.position) &&
+            Number(receipt.args.receiptType) === 4 &&
+            receipt.args.grossAmount > 0n
+        );
+        if (matchingPreSplitRecycleReceipt) continue;
         if (allowedMirrorAmounts.length && !allowedMirrorAmounts.includes(routed)) {
           throw new Error(`invalid level ${level} mirror amount ${ethers.formatUnits(routed, 6)}`);
         }
@@ -457,7 +486,15 @@ async function executePaidAction(action, wallet, contracts, config, ifaces) {
     let events;
     let outcome = "MINED";
     if (await contracts.registration.isRegistered(wallet.address)) {
-      ({ txHash, receipt, events } = await recoverRegistrationReceipt(wallet, contracts, ifaces));
+      const recoveryTx = recoveryTransactions.get(action.id);
+      if (recoveryTx) {
+        receipt = await ethers.provider.getTransactionReceipt(recoveryTx);
+        if (!receipt || receipt.status !== 1) throw new Error(`Missing successful recovery receipt ${recoveryTx}`);
+        txHash = recoveryTx;
+        events = decodeLogs(receipt, ifaces);
+      } else {
+        ({ txHash, receipt, events } = await recoverRegistrationReceipt(wallet, contracts, ifaces));
+      }
       outcome = "RECOVERED_AND_AUDITED";
     } else {
       await approveIfNeeded(wallet, LEVEL_PRICE[1], contracts, config);
@@ -481,7 +518,14 @@ async function executePaidAction(action, wallet, contracts, config, ifaces) {
   if (action.kind === "ensureLevel") {
     const level = Number(action.level);
     if (await contracts.levelManager.userLevelActivated(wallet.address, level)) {
-      const recovered = await recoverLevelReceipt(wallet, level, contracts, ifaces);
+      const recoveryTx = recoveryTransactions.get(action.id);
+      const recovered = recoveryTx
+        ? await (async () => {
+            const receipt = await ethers.provider.getTransactionReceipt(recoveryTx);
+            if (!receipt || receipt.status !== 1) throw new Error(`Missing successful recovery receipt ${recoveryTx}`);
+            return { receipt, events: decodeLogs(receipt, ifaces), txHash: recoveryTx };
+          })()
+        : await recoverLevelReceipt(wallet, level, contracts, ifaces);
       assertReceiptArithmetic(recovered.events, wallet.address, level);
       assertMatrixRules(recovered.events);
       return { ...recovered, outcome: "RECOVERED_AND_AUDITED" };
@@ -497,6 +541,8 @@ async function executePaidAction(action, wallet, contracts, config, ifaces) {
     assertReceiptArithmetic(events, wallet.address, level);
     assertMatrixRules(events);
     assertExpectedRouting(action, events);
+    assertExpectedRecycleChain(action, events, config);
+    assertFounderTerminal(action, events, config);
     if (!(await contracts.levelManager.userLevelActivated(wallet.address, level))) throw new Error("level activation state missing");
     return { txHash: tx.hash, receipt, events, gasEstimate, outcome: "MINED" };
   }
@@ -505,6 +551,7 @@ async function executePaidAction(action, wallet, contracts, config, ifaces) {
 }
 
 let activeManifest;
+let recoveryTransactions = new Map();
 function walletForLabel(label) {
   const address = activeManifest.wallets[label];
   if (!address) throw new Error(`Unknown wallet label ${label}`);
@@ -643,6 +690,43 @@ async function validatePrimaryP39Topology(manifest, contracts, report, config) {
       throw new Error(`P39 position ${expected.position} structural parent mismatch`);
     }
   }
+}
+
+async function validateFinalP39Recycle(manifest, contracts, report, config) {
+  const target = ethers.getAddress(manifest.wallets["Account 9"]);
+  const p39 = config.p39.toLowerCase();
+  const events = report.results.flatMap((row) => row.events || []);
+  const targetEvents = events.filter((event) => event.address.toLowerCase() === p39);
+  const positions = targetEvents.filter(
+    (event) => event.name === "PositionFilled" &&
+      ethers.getAddress(event.args.orbitOwner) === target
+  );
+  for (const boundary of [38, 39]) {
+    if (!positions.some((event) => Number(event.args.position) === boundary)) {
+      throw new Error(`P16 missing Account 9 P39 position ${boundary}`);
+    }
+    const rule = targetEvents.find(
+      (event) => event.name === "PaymentRuleApplied" &&
+        ethers.getAddress(event.args.orbitOwner) === target &&
+        Number(event.args.position) === boundary
+    );
+    if (!rule || BigInt(rule.args.toRecycle || 0) <= 0n) {
+      throw new Error(`P16 position ${boundary} did not allocate recycle reserve`);
+    }
+  }
+  const recycle = events.find(
+    (event) => event.name === "RecycleCompletedDetailed" &&
+      ethers.getAddress(event.args.orbitOwner) === target &&
+      Number(event.args.level) === 3 &&
+      BigInt(event.args.recycleGross) === LEVEL_PRICE[3]
+  );
+  if (!recycle) throw new Error("P16 missing Account 9 P39 recycle completion");
+  if (BigInt(recycle.args.recycleGross) !== LEVEL_PRICE[3]) {
+    throw new Error(`P16 recycle gross ${recycle.args.recycleGross} != ${LEVEL_PRICE[3]}`);
+  }
+  const state = await contracts.p39.getUserOrbit(target, 3);
+  if (BigInt(state.totalCycles) < 1n) throw new Error("P16 Account 9 P39 cycle did not increment");
+  if (Number(state.currentPosition) <= 1) throw new Error("P16 new P39 cycle has no post-recycle placement");
 }
 
 async function validatePrimaryP12Topology(manifest, contracts, config) {
@@ -887,6 +971,16 @@ async function main() {
   validateManifest(manifest);
   activeManifest = manifest;
 
+  const recoveryReportPath = String(process.env.TEST_RECOVERY_REPORT || "").trim();
+  if (recoveryReportPath) {
+    const recoveryReport = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), recoveryReportPath), "utf8"));
+    recoveryTransactions = new Map(
+      recoveryReport.results
+        .filter((row) => row.id && row.txHash)
+        .map((row) => [row.id, row.txHash])
+    );
+  }
+
   const phase = String(process.env.TEST_PHASE || "PLAN").toUpperCase();
   const dryRun = boolEnv("TEST_DRY_RUN", true);
   const actions = phase === "PLAN" ? manifest.actions : manifest.actions.filter((action) => action.phase === phase);
@@ -965,6 +1059,7 @@ async function main() {
   if (phase === "P2") await validateP2RegistrationStructure(manifest, contracts, report, config);
   if (phase === "P4") await validatePrimaryP12Topology(manifest, contracts, config);
   if (phase === "P5") await validatePrimaryP39Topology(manifest, contracts, report, config);
+  if (phase === "P16") await validateFinalP39Recycle(manifest, contracts, report, config);
   if (phase === "P6") await validateLatestOccurrence(manifest, contracts, config);
   report.endBlock = await ethers.provider.getBlockNumber();
   report.completedAt = new Date().toISOString();

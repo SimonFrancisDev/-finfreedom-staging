@@ -16,6 +16,23 @@ escrow release, and recycle. A mined transaction is not proof of correctness.
 - The same rules apply to manual activation, auto-upgrade, recycle, and nested
   recycle.
 
+## Approved Relationship Decision Table
+
+| Situation | Structural placement starts from | Eligibility search follows | Required result |
+|---|---|---|---|
+| Registration / Level 1 | Permanent sponsor | Sponsor/upline chain | Sponsor remains permanently recorded; P4 placement follows the configured matrix rules. |
+| Normal P12/P39 activation | The selected matrix parent for that orbit and cycle | The selected recipient's permanent sponsor/upline chain | First wallet active at the exact level receives; inactive wallets receive nothing. |
+| Matrix parent and sponsor differ | Matrix parent still determines the structural role | Inactive matrix parent's permanent sponsor/upline chain | Do not switch to the activating user's sponsor chain or continue through matrix parents. |
+| Several consecutive inactive uplines | Existing structural role | Permanent sponsor/upline chain | Skip every inactive wallet and select the first exact-level eligible wallet. |
+| No eligible upline | Existing structural role | Permanent sponsor/upline chain exhausted | Route to ID1; no participant mirror is manufactured solely for terminal fallback. |
+| P12/P39 recycle | Recycle owner's permanent sponsor route; a new cycle begins | Permanent sponsor/upline chain, then normal orbit percentages | Previous cycle remains immutable; fresh re-entry gets its own placement and receipts. |
+| Nested recycle | Each recycle is a separate new-cycle re-entry | Permanent sponsor/upline chain independently for each recycle | No duplicate settlement, partial mutation, or reuse of the closed cycle. |
+
+The approved normal-payment rule is therefore: matrix structure identifies the
+candidate role; exact-level eligibility is resolved through that candidate's
+permanent sponsor chain. Recycle is sponsor-based re-entry and does not continue
+the closed cycle's matrix-parent chain.
+
 ## Configured Levels
 
 | Level | Price (USDT) | Engine | Next-level escrow requirement |

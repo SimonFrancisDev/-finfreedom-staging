@@ -95,6 +95,53 @@ function buildManifest() {
     expectedActivations: 1,
   });
 
+  const p39CompletionCandidates = [
+    ...Array.from({ length: 11 }, (_, index) => `Account ${48 + index}`),
+    ...Array.from({ length: 15 }, (_, index) => `Account ${67 + index}`),
+  ];
+  const p39MissingLevel2 = new Set([
+    ...Array.from({ length: 8 }, (_, index) => `Account ${51 + index}`),
+    "Account 67", "Account 68", "Account 69", "Account 72", "Account 73", "Account 78", "Account 81",
+  ]);
+  const p39MissingLevel3 = new Set([
+    ...Array.from({ length: 11 }, (_, index) => `Account ${48 + index}`),
+    "Account 67", "Account 68", "Account 69", "Account 70", "Account 71", "Account 72", "Account 73", "Account 74",
+    "Account 78", "Account 80", "Account 81",
+  ]);
+  addAction(actions, "P15", "register", "Account 81", {
+    sponsor: "Account 9",
+    purpose: "final controlled P39 arrival",
+  });
+  for (const actor of p39CompletionCandidates) {
+    if (p39MissingLevel2.has(actor)) {
+      addAction(actions, "P15", "ensureLevel", actor, {
+        level: 2,
+        payoutRule: "P12_40_50_10",
+      });
+    }
+    if (p39MissingLevel3.has(actor)) {
+      addAction(actions, "P15", "ensureLevel", actor, {
+        level: 3,
+        payoutRule: "P39_20_20_50_10",
+      });
+    }
+  }
+  for (let account = 82; account <= 111; account += 1) {
+    const actor = `Account ${account}`;
+    addAction(actions, "P16", "register", actor, {
+      sponsor: "Account 9",
+      purpose: "Account 9 P39 completion and post-recycle proof",
+    });
+    addAction(actions, "P16", "ensureLevel", actor, {
+      level: 2,
+      payoutRule: "P12_40_50_10",
+    });
+    addAction(actions, "P16", "ensureLevel", actor, {
+      level: 3,
+      payoutRule: "P39_20_20_50_10",
+    });
+  }
+
   for (const row of primaryTree) {
     addAction(actions, "P4", "ensureLevel", row.wallet, {
       level: 2,
@@ -217,8 +264,64 @@ function buildManifest() {
     layers: ["CHAIN", "WORKER", "DATABASE", "API", "UI"],
   });
 
+  // Post-upgrade live regression for the founder-approved Rule A. These
+  // reserved wallets are intentionally outside the original fresh-state run.
+  addAction(actions, "P12", "register", "Account 66", { sponsor: "ID1" });
+  addAction(actions, "P12", "ensureLevel", "Account 66", { level: 2 });
+  addAction(actions, "P12", "ensureLevel", "Account 66", { level: 3 });
+  addAction(actions, "P12", "register", "Account 75", { sponsor: "Account 66" });
+  addAction(actions, "P12", "register", "Account 76", { sponsor: "Account 75" });
+  addAction(actions, "P12", "ensureLevel", "Account 76", {
+    level: 2,
+    expectedEligibleUpline: "Account 66",
+    expectedSkippedUpline: "Account 75",
+  });
+  addAction(actions, "P12", "ensureLevel", "Account 76", {
+    level: 3,
+    expectedEligibleUpline: "Account 66",
+    expectedSkippedUpline: "Account 75",
+  });
+  addAction(actions, "P12", "ensureLevel", "Account 75", { level: 2 });
+  addAction(actions, "P12", "ensureLevel", "Account 75", { level: 3 });
+  addAction(actions, "P12", "register", "Account 77", { sponsor: "Account 75" });
+  addAction(actions, "P12", "ensureLevel", "Account 77", {
+    level: 2,
+    expectedEligibleUpline: "Account 75",
+  });
+  addAction(actions, "P12", "ensureLevel", "Account 77", {
+    level: 3,
+    expectedEligibleUpline: "Account 75",
+  });
+  addAction(actions, "P12", "register", "Account 78", { sponsor: "ID1" });
+  addAction(actions, "P12", "register", "Account 79", { sponsor: "Account 78" });
+  addAction(actions, "P12", "ensureLevel", "Account 79", {
+    level: 2,
+    expectedTerminalRoute: "ID1_FOUNDERS",
+  });
+  addAction(actions, "P12", "ensureLevel", "Account 79", {
+    level: 3,
+    expectedTerminalRoute: "ID1_FOUNDERS",
+  });
+
+  addAction(actions, "P13", "register", "Account 70", { sponsor: roles.primaryOwner });
+  addAction(actions, "P13", "ensureLevel", "Account 70", { level: 2 });
+  addAction(actions, "P13", "register", "Account 71", { sponsor: roles.primaryOwner });
+  addAction(actions, "P13", "ensureLevel", "Account 71", { level: 2 });
+  addAction(actions, "P13", "register", "Account 74", { sponsor: roles.primaryOwner });
+  addAction(actions, "P13", "ensureLevel", "Account 74", {
+    level: 2,
+  });
+
+  addAction(actions, "P14", "register", "Account 80", { sponsor: roles.primaryOwner });
+  addAction(actions, "P14", "ensureLevel", "Account 80", {
+    level: 2,
+    expectedRecycleChain: [
+      { orbitOwner: roles.primaryOwner, receiver: "ID1", amount: "20" },
+    ],
+  });
+
   const publicWallets = Object.fromEntries([...wallets.entries()]);
-  const phaseOrder = ["P0", "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "P10", "P11"];
+  const phaseOrder = ["P0", "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "P10", "P11", "P12", "P13", "P14", "P15", "P16"];
   actions.sort((a, b) => {
     const phaseDifference = phaseOrder.indexOf(a.phase) - phaseOrder.indexOf(b.phase);
     return phaseDifference || a.id.localeCompare(b.id);
@@ -235,7 +338,7 @@ function buildManifest() {
     roles,
     primaryP39Topology: primaryTree,
     actions,
-    requiredPhases: ["P0", "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "P10", "P11"],
+    requiredPhases: ["P0", "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "P10", "P11", "P12", "P13", "P14", "P15", "P16"],
   };
 }
 
@@ -254,7 +357,7 @@ function validateManifest(manifest) {
   for (const phase of manifest.requiredPhases) {
     if (!covered.has(phase)) errors.push(`phase ${phase} has no action`);
   }
-  if (manifest.walletCount !== 74) errors.push(`expected 74 wallets, found ${manifest.walletCount}`);
+  if (manifest.walletCount !== 104) errors.push(`expected 104 wallets, found ${manifest.walletCount}`);
   if (errors.length) throw new Error(errors.join("\n"));
 }
 

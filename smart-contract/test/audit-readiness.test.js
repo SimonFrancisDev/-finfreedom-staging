@@ -2030,6 +2030,47 @@ describe("Audit readiness contract invariants", function () {
     expect(rule.spillover1Recipient).to.not.equal(owner.address);
   });
 
+  it("follows an inactive P12 matrix parent's sponsor chain when placement and sponsor chains diverge", async function () {
+    const { owner, users, levelManager, p12, register, activateToLevel } = await deployCoreSystem();
+    const levelManagerSigner = await impersonateLevelManager(levelManager);
+
+    const activatingChainRoot = users[8];
+    const eligibleMatrixParentSponsor = users[9];
+    const inactiveMatrixParent = users[10];
+    const orbitOwner = users[11];
+    const activatingUser = users[12];
+
+    await register(activatingChainRoot, owner.address);
+    await activateToLevel(activatingChainRoot, 2);
+    await register(eligibleMatrixParentSponsor, owner.address);
+    await activateToLevel(eligibleMatrixParentSponsor, 2);
+    await register(inactiveMatrixParent, eligibleMatrixParentSponsor.address);
+    await register(orbitOwner, activatingChainRoot.address);
+    await register(activatingUser, orbitOwner.address);
+
+    await p12.connect(levelManagerSigner).fillPositionDetailed(
+      inactiveMatrixParent.address,
+      2,
+      orbitOwner.address,
+      activatingChainRoot.address,
+      usdtUnits(20),
+      9721
+    );
+    await p12.connect(levelManagerSigner).fillPositionDetailed(
+      orbitOwner.address,
+      2,
+      activatingUser.address,
+      orbitOwner.address,
+      usdtUnits(20),
+      9722
+    );
+
+    const rule = await p12.getPositionRuleView(orbitOwner.address, 2, 1);
+    expect(rule.spillover1Recipient).to.equal(eligibleMatrixParentSponsor.address);
+    expect(rule.spillover1Recipient).to.not.equal(inactiveMatrixParent.address);
+    expect(rule.spillover1Recipient).to.not.equal(activatingChainRoot.address);
+  });
+
   it("skips an inactive connected P39 matrix parent and pays its first eligible upline", async function () {
     const { owner, users, levelManager, p39, register, activateToLevel } = await deployCoreSystem();
     const levelManagerSigner = await impersonateLevelManager(levelManager);
@@ -2139,6 +2180,63 @@ describe("Audit readiness contract invariants", function () {
     expect(rule.spillover2Recipient).to.equal(matrixGrandParent.address);
     expect(rule.spillover1Recipient).to.not.equal(rawReferrer.address);
     expect(rule.spillover2Recipient).to.not.equal(owner.address);
+  });
+
+  it("follows each inactive P39 matrix recipient's sponsor chain when placement chains diverge", async function () {
+    const { owner, users, levelManager, p39, register, activateToLevel } = await deployCoreSystem();
+    const levelManagerSigner = await impersonateLevelManager(levelManager);
+
+    const activatingChainRoot = users[8];
+    const eligibleGrandParentSponsor = users[9];
+    const inactiveMatrixGrandParent = users[10];
+    const eligibleParentSponsor = users[11];
+    const inactiveMatrixParent = users[12];
+    const orbitOwner = users[13];
+    const activatingUser = users[14];
+
+    await register(activatingChainRoot, owner.address);
+    await activateToLevel(activatingChainRoot, 3);
+    await register(eligibleGrandParentSponsor, owner.address);
+    await activateToLevel(eligibleGrandParentSponsor, 3);
+    await register(inactiveMatrixGrandParent, eligibleGrandParentSponsor.address);
+    await register(eligibleParentSponsor, owner.address);
+    await activateToLevel(eligibleParentSponsor, 3);
+    await register(inactiveMatrixParent, eligibleParentSponsor.address);
+    await register(orbitOwner, activatingChainRoot.address);
+    await register(activatingUser, orbitOwner.address);
+
+    await p39.connect(levelManagerSigner).fillPositionDetailed(
+      inactiveMatrixGrandParent.address,
+      3,
+      inactiveMatrixParent.address,
+      activatingChainRoot.address,
+      usdtUnits(40),
+      9821
+    );
+    await p39.connect(levelManagerSigner).fillPositionDetailed(
+      inactiveMatrixParent.address,
+      3,
+      orbitOwner.address,
+      activatingChainRoot.address,
+      usdtUnits(40),
+      9822
+    );
+    await p39.connect(levelManagerSigner).fillPositionDetailed(
+      orbitOwner.address,
+      3,
+      activatingUser.address,
+      orbitOwner.address,
+      usdtUnits(40),
+      9823
+    );
+
+    const rule = await p39.getPositionRuleView(orbitOwner.address, 3, 1);
+    expect(rule.spillover1Recipient).to.equal(eligibleParentSponsor.address);
+    expect(rule.spillover2Recipient).to.equal(eligibleGrandParentSponsor.address);
+    expect(rule.spillover1Recipient).to.not.equal(inactiveMatrixParent.address);
+    expect(rule.spillover2Recipient).to.not.equal(inactiveMatrixGrandParent.address);
+    expect(rule.spillover1Recipient).to.not.equal(activatingChainRoot.address);
+    expect(rule.spillover2Recipient).to.not.equal(activatingChainRoot.address);
   });
 
   it("validates the described P39 chain where H is referred by C and appears under C in A's line 2", async function () {
