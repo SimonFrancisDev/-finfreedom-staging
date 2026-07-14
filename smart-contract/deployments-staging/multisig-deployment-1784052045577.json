@@ -1,0 +1,16 @@
+{
+  "contract": "SimpleMultiSig",
+  "network": "amoy",
+  "deployedAt": "2026-07-14T18:00:45.576Z",
+  "blockNumber": 42233648,
+  "address": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+  "deployer": "0x21f9eDB0CE6b79afA98dE14b03678CB29bc4859C",
+  "transactionHash": "0x4f45693d7a1adf95a06a20be9b8d255cd58e2f0fb961a1aac20d3baba01e809d",
+  "owners": [
+    "0x296238e950ef0066D2119230Bf0eb3aDEBc94882",
+    "0x21f9eDB0CE6b79afA98dE14b03678CB29bc4859C",
+    "0xA32332B104aa9Fc5E5415a227D58d6914f3D7478"
+  ],
+  "confirmations": 2,
+  "timelock": 120
+}
