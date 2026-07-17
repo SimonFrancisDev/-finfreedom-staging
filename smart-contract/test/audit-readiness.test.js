@@ -1156,6 +1156,192 @@ describe("Audit readiness contract invariants", function () {
     expect(recycleReceipts.some((event) => event.args.grossAmount === usdtUnits(20))).to.equal(false);
   });
 
+  it("grandfathers only the exact legacy P12 final arrival without creating a reserve", async function () {
+    const { users, registration, levelManager, router, guardian, register, activateToLevel } = await deployCoreSystem();
+    const sponsor = users[8];
+    const orbitOwner = users[9];
+    const fillers = users.slice(10, 20);
+    const firstBoundaryTrigger = users[20];
+    const finalBoundaryTrigger = users[21];
+
+    await register(sponsor);
+    await activateToLevel(sponsor, 2);
+    await register(orbitOwner, sponsor.address);
+    await activateToLevel(orbitOwner, 2);
+
+    for (const filler of fillers) {
+      await register(filler, orbitOwner.address);
+      await activateToLevel(filler, 2);
+    }
+
+    await register(firstBoundaryTrigger, orbitOwner.address);
+    await register(finalBoundaryTrigger, orbitOwner.address);
+    const firstTx = await registration.connect(firstBoundaryTrigger).activateLevel(2);
+    const firstReceipt = await firstTx.wait();
+    const firstReserve = findEvent(firstReceipt, router, "RecycleReserveUpdated");
+    const sourceCycle = Number(firstReserve.args.sourceCycle);
+
+    // Reproduce production: the old first boundary payment was already paid,
+    // so no corrected reserve exists for this owner/level.
+    const reserveNamespace = ethers.keccak256(
+      ethers.toUtf8Bytes("ffreedom.levelSettlementRouter.recycleReserve.v1")
+    );
+    const reserveKey = ethers.solidityPackedKeccak256(
+      ["address", "uint8"],
+      [orbitOwner.address, 2]
+    );
+    const reserveSlot = ethers.keccak256(
+      ethers.AbiCoder.defaultAbiCoder().encode(
+        ["bytes32", "bytes32"],
+        [reserveKey, reserveNamespace]
+      )
+    );
+    await ethers.provider.send("hardhat_setStorageAt", [
+      levelManager.target,
+      reserveSlot,
+      ethers.ZeroHash,
+    ]);
+    await ethers.provider.send("hardhat_setStorageAt", [
+      levelManager.target,
+      ethers.toBeHex(BigInt(reserveSlot) + 1n, 32),
+      ethers.ZeroHash,
+    ]);
+
+    await guardian.setApprovedProxy(levelManager.target, true);
+    const Configurator = await ethers.getContractFactory("LevelManagerMigrationConfigurator");
+    const configuratorImpl = await upgrades.prepareUpgrade(levelManager, Configurator, {
+      kind: "uups",
+      unsafeAllow: ["delegatecall"],
+    });
+    await guardian.setApprovedImplementation(levelManager.target, configuratorImpl, true);
+    const configurator = await upgrades.upgradeProxy(levelManager, Configurator, {
+      kind: "uups",
+      unsafeAllow: ["delegatecall"],
+    });
+    await configurator.configureLegacyRecycleMigration([12], [orbitOwner.address], [2], [sourceCycle]);
+
+    const LevelManager = await ethers.getContractFactory("LevelManager");
+    const restoredImpl = await upgrades.prepareUpgrade(configurator, LevelManager, {
+      kind: "uups",
+      unsafeAllow: ["delegatecall"],
+    });
+    await guardian.setApprovedImplementation(levelManager.target, restoredImpl, true);
+    const restored = await upgrades.upgradeProxy(configurator, LevelManager, {
+      kind: "uups",
+      unsafeAllow: ["delegatecall"],
+    });
+
+    const finalTx = await registration.connect(finalBoundaryTrigger).activateLevel(2);
+    const finalReceipt = await finalTx.wait();
+    const transition = findEvent(finalReceipt, router, "LegacyRecycleTransitionConsumed");
+    const reserveEvents = parseEvents(finalReceipt, router, "RecycleReserveUpdated");
+    const recycle = findEvent(finalReceipt, router, "RecycleCompletedDetailed");
+    const recycleReceipts = parseEvents(finalReceipt, restored, "DetailedPayoutReceiptRecorded")
+      .filter((event) => event.args.receiptType === 4n);
+    const chargeEvents = parseEvents(finalReceipt, router, "SystemChargeDistributedDetailed");
+
+    expect(transition.args.orbitType).to.equal(12);
+    expect(transition.args.orbitOwner).to.equal(orbitOwner.address);
+    expect(transition.args.level).to.equal(2);
+    expect(transition.args.sourceCycle).to.equal(sourceCycle);
+    expect(reserveEvents).to.have.length(0);
+    expect(recycle.args.recycleGross).to.equal(usdtUnits(18));
+    expect(recycleReceipts.map((event) => event.args.grossAmount).sort((a, b) => Number(a - b)))
+      .to.deep.equal([usdtUnits(8), usdtUnits(10)]);
+    expect(chargeEvents).to.have.length(1);
+    expect(chargeEvents[0].args.systemChargeTotal).to.equal(usdtUnits(2));
+
+    const configuratorImplAgain = await upgrades.prepareUpgrade(restored, Configurator, {
+      kind: "uups",
+      unsafeAllow: ["delegatecall"],
+    });
+    await guardian.setApprovedImplementation(levelManager.target, configuratorImplAgain, true);
+    const inspectConfigurator = await upgrades.upgradeProxy(restored, Configurator, {
+      kind: "uups",
+      unsafeAllow: ["delegatecall"],
+    });
+    expect(await inspectConfigurator.legacyRecycleMigrationState(12, orbitOwner.address, 2, sourceCycle))
+      .to.deep.equal([true, false]);
+  });
+
+  it("preserves an in-progress P4 cycle across the LevelManager migration round trip", async function () {
+    const { owner, users, registration, levelManager, guardian, p4, register } = await deployCoreSystem();
+    const orbitOwner = users[8];
+    const first = users[9];
+    const second = users[10];
+
+    await register(orbitOwner, owner.address);
+    await register(first, orbitOwner.address);
+    await register(second, orbitOwner.address);
+
+    const before = await p4.getUserOrbit(orbitOwner.address, 1);
+    const beforePositions = await Promise.all(
+      [1, 2, 3].map((position) => p4.getPosition(orbitOwner.address, 1, position))
+    );
+    expect(before.currentPosition).to.equal(3);
+    expect(before.totalCycles).to.equal(0);
+
+    await guardian.setApprovedProxy(levelManager.target, true);
+    const Configurator = await ethers.getContractFactory("LevelManagerMigrationConfigurator");
+    const configuratorImpl = await upgrades.prepareUpgrade(levelManager, Configurator, {
+      kind: "uups",
+      unsafeAllow: ["delegatecall"],
+    });
+    await guardian.setApprovedImplementation(levelManager.target, configuratorImpl, true);
+    const configurator = await upgrades.upgradeProxy(levelManager, Configurator, {
+      kind: "uups",
+      unsafeAllow: ["delegatecall"],
+    });
+    await configurator.configureLegacyRecycleMigration([], [], [], []);
+
+    const LevelManager = await ethers.getContractFactory("LevelManager");
+    const restoredImpl = await upgrades.prepareUpgrade(configurator, LevelManager, {
+      kind: "uups",
+      unsafeAllow: ["delegatecall"],
+    });
+    await guardian.setApprovedImplementation(levelManager.target, restoredImpl, true);
+    await upgrades.upgradeProxy(configurator, LevelManager, {
+      kind: "uups",
+      unsafeAllow: ["delegatecall"],
+    });
+
+    const preserved = await p4.getUserOrbit(orbitOwner.address, 1);
+    expect(preserved.currentPosition).to.equal(before.currentPosition);
+    expect(preserved.totalCycles).to.equal(before.totalCycles);
+    const preservedPositions = await Promise.all(
+      [1, 2, 3].map((position) => p4.getPosition(orbitOwner.address, 1, position))
+    );
+    expect(preservedPositions.map((position) => position.occupant))
+      .to.deep.equal(beforePositions.map((position) => position.occupant));
+
+    const levelManagerSigner = await impersonateLevelManager(levelManager);
+    for (let index = 0; index < 3; index += 1) {
+      if ((await p4.getUserOrbit(orbitOwner.address, 1)).totalCycles > 0) break;
+      await p4.connect(levelManagerSigner).mirrorPositionDetailed(
+        orbitOwner.address,
+        1,
+        users[11 + index].address,
+        orbitOwner.address,
+        mirrorAmount,
+        mirrorAmount,
+        99001 + index
+      );
+    }
+    const after = await p4.getUserOrbit(orbitOwner.address, 1);
+    expect(after.totalCycles).to.equal(1);
+    expect(await p4.hasHistoricalCycle(orbitOwner.address, 1, 1)).to.equal(true);
+    const historicalPositions = await Promise.all(
+      [1, 2, 3].map((position) => p4.getHistoricalPosition(orbitOwner.address, 1, 1, position))
+    );
+    for (let index = 0; index < beforePositions.length; index += 1) {
+      if (beforePositions[index].occupant !== ethers.ZeroAddress) {
+        expect(historicalPositions[index].occupant).to.equal(beforePositions[index].occupant);
+      }
+    }
+    expect((await p4.getHistoricalPosition(orbitOwner.address, 1, 1, 4)).occupant)
+      .to.not.equal(ethers.ZeroAddress);
+  });
+
   it("routes P12 recycle release through eligible registered upline, not matrix parent", async function () {
     const { owner, users, registration, levelManager, router, p12, usdt, register, activateToLevel } = await deployCoreSystem();
     const levelManagerSigner = await impersonateLevelManager(levelManager);
@@ -1475,6 +1661,101 @@ describe("Audit readiness contract invariants", function () {
     expect(await p39.hasHistoricalCycle(orbitOwner.address, 3, 1)).to.equal(true);
     expect((await p39.getHistoricalPosition(orbitOwner.address, 3, 1, 39)).occupant)
       .to.equal(finalRecycleTrigger.address);
+  });
+
+  it("grandfathers only the exact legacy P39 final arrival without creating a reserve", async function () {
+    const { owner, users, registration, levelManager, router, guardian, register, activateToLevel } = await deployCoreSystem();
+    const sponsor = users[8];
+    const orbitOwner = users[9];
+    const generated = await createFundedWallets(owner, 39);
+    const fillers = generated.slice(0, 37);
+    const firstBoundaryTrigger = generated[37];
+    const finalBoundaryTrigger = generated[38];
+
+    await register(sponsor);
+    await activateToLevel(sponsor, 3);
+    await register(orbitOwner, sponsor.address);
+    await activateToLevel(orbitOwner, 3);
+
+    for (const filler of fillers) {
+      await register(filler, orbitOwner.address);
+      await activateToLevel(filler, 3);
+    }
+
+    await register(firstBoundaryTrigger, orbitOwner.address);
+    await registration.connect(firstBoundaryTrigger).activateLevel(2);
+    await register(finalBoundaryTrigger, orbitOwner.address);
+    await registration.connect(finalBoundaryTrigger).activateLevel(2);
+
+    const firstTx = await registration.connect(firstBoundaryTrigger).activateLevel(3);
+    const firstReceipt = await firstTx.wait();
+    const firstReserve = findEvent(firstReceipt, router, "RecycleReserveUpdated");
+    const sourceCycle = Number(firstReserve.args.sourceCycle);
+
+    const reserveNamespace = ethers.keccak256(
+      ethers.toUtf8Bytes("ffreedom.levelSettlementRouter.recycleReserve.v1")
+    );
+    const reserveKey = ethers.solidityPackedKeccak256(
+      ["address", "uint8"],
+      [orbitOwner.address, 3]
+    );
+    const reserveSlot = ethers.keccak256(
+      ethers.AbiCoder.defaultAbiCoder().encode(
+        ["bytes32", "bytes32"],
+        [reserveKey, reserveNamespace]
+      )
+    );
+    await ethers.provider.send("hardhat_setStorageAt", [levelManager.target, reserveSlot, ethers.ZeroHash]);
+    await ethers.provider.send("hardhat_setStorageAt", [
+      levelManager.target,
+      ethers.toBeHex(BigInt(reserveSlot) + 1n, 32),
+      ethers.ZeroHash,
+    ]);
+
+    await guardian.setApprovedProxy(levelManager.target, true);
+    const Configurator = await ethers.getContractFactory("LevelManagerMigrationConfigurator");
+    const configuratorImpl = await upgrades.prepareUpgrade(levelManager, Configurator, {
+      kind: "uups",
+      unsafeAllow: ["delegatecall"],
+    });
+    await guardian.setApprovedImplementation(levelManager.target, configuratorImpl, true);
+    const configurator = await upgrades.upgradeProxy(levelManager, Configurator, {
+      kind: "uups",
+      unsafeAllow: ["delegatecall"],
+    });
+    await configurator.configureLegacyRecycleMigration([39], [orbitOwner.address], [3], [sourceCycle]);
+
+    const LevelManager = await ethers.getContractFactory("LevelManager");
+    const restoredImpl = await upgrades.prepareUpgrade(configurator, LevelManager, {
+      kind: "uups",
+      unsafeAllow: ["delegatecall"],
+    });
+    await guardian.setApprovedImplementation(levelManager.target, restoredImpl, true);
+    const restored = await upgrades.upgradeProxy(configurator, LevelManager, {
+      kind: "uups",
+      unsafeAllow: ["delegatecall"],
+    });
+    restored;
+
+    const finalTx = await registration.connect(finalBoundaryTrigger).activateLevel(3);
+    const finalReceipt = await finalTx.wait();
+    const transition = findEvent(finalReceipt, router, "LegacyRecycleTransitionConsumed");
+    const reserveEvents = parseEvents(finalReceipt, router, "RecycleReserveUpdated");
+    const recycle = findEvent(finalReceipt, router, "RecycleCompletedDetailed");
+
+    expect(transition.args.orbitType).to.equal(39);
+    expect(transition.args.orbitOwner).to.equal(orbitOwner.address);
+    expect(transition.args.level).to.equal(3);
+    expect(transition.args.sourceCycle).to.equal(sourceCycle);
+    expect(reserveEvents).to.have.length(0);
+    expect(recycle.args.recycleGross).to.equal(usdtUnits(36));
+    const recycleReceipts = parseEvents(finalReceipt, restored, "DetailedPayoutReceiptRecorded")
+      .filter((event) => event.args.receiptType === 4n);
+    const chargeEvents = parseEvents(finalReceipt, router, "SystemChargeDistributedDetailed");
+    expect(recycleReceipts.map((event) => event.args.grossAmount).sort((a, b) => Number(a - b)))
+      .to.deep.equal([usdtUnits(8), usdtUnits(8), usdtUnits(20)]);
+    expect(chargeEvents).to.have.length(1);
+    expect(chargeEvents[0].args.systemChargeTotal).to.equal(usdtUnits(4));
   });
 
   it("routes P39 recycle release through eligible registered upline, not matrix chain", async function () {

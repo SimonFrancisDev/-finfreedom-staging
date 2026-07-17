@@ -235,6 +235,7 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
         uint256 liquidPaid
     );
 
+
     event LevelActivated(address indexed user, uint8 level, uint256 amount);
     event LevelActivatedInOrbit(address indexed user, uint8 level, address orbit, uint256 netAmount);
     event SystemChargeDistributed(uint256 nftPoolAmount, uint256 operationsAmount);
@@ -663,6 +664,8 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
                 amount,
                 a.activationId
             );
+
+            _consumeLegacyRecycleTransition(a, level, amount);
         }
 
         uint256 summaryLiquidPaid;
@@ -1132,35 +1135,33 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
             uint256 toRecycle
         )
     {
-        if (orbitType == 4) {
-            return IOrbitDetailed(address(p4Orbit)).fillPositionDetailed(
-                orbitOwner,
-                level,
-                user,
-                referrer,
-                amount,
-                activationId
-            );
-        } else if (orbitType == 12) {
-            return IOrbitDetailed(address(p12Orbit)).fillPositionDetailed(
-                orbitOwner,
-                level,
-                user,
-                referrer,
-                amount,
-                activationId
-            );
-        } else if (orbitType == 39) {
-            return IOrbitDetailed(address(p39Orbit)).fillPositionDetailed(
-                orbitOwner,
-                level,
-                user,
-                referrer,
-                amount,
-                activationId
-            );
-        }
-        revert InvalidOrbitType();
+        return IOrbitDetailed(_getOrbitAddress(orbitType)).fillPositionDetailed(
+            orbitOwner,
+            level,
+            user,
+            referrer,
+            amount,
+            activationId
+        );
+    }
+
+    function _consumeLegacyRecycleTransition(
+        ActivationFlowData memory a,
+        uint8 level,
+        uint256 activationAmount
+    ) internal {
+        if (a.toRecycle == 0 || (a.orbitType != 12 && a.orbitType != 39)) return;
+
+        uint256 legacyRecycleAmount = activationAmount - a.systemCharge;
+        bool consumed = abi.decode(_delegateToSettlementRouterWithResult(abi.encodeCall(
+            ILevelSettlementRouter.consumeLegacyRecycleTransition,
+            (a.orbitType, a.sponsor, level, a.sourceCycle)
+        )), (bool));
+        if (!consumed) return;
+
+        a.toSpillover1 = 0;
+        a.toSpillover2 = 0;
+        a.toRecycle = legacyRecycleAmount;
     }
 
     function _recordRoutedEarning(
@@ -1171,15 +1172,7 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
     ) internal {
         if (recipient == address(0) || amount == 0) return;
 
-        if (orbitType == 4) {
-            p4Orbit.recordExternalEarning(recipient, level, amount);
-        } else if (orbitType == 12) {
-            p12Orbit.recordExternalEarning(recipient, level, amount);
-        } else if (orbitType == 39) {
-            p39Orbit.recordExternalEarning(recipient, level, amount);
-        } else {
-            revert InvalidOrbitType();
-        }
+        IManagedOrbit(_getOrbitAddress(orbitType)).recordExternalEarning(recipient, level, amount);
     }
 
     function _recordPayoutReceipt(
@@ -1449,14 +1442,7 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
 
     function _settleOrbitEscrow(address user, uint8 level) internal {
         uint8 orbitType = _orbitCodeForLevel(level);
-
-        if (orbitType == 4) {
-            p4Orbit.settleEscrowState(user, level);
-        } else if (orbitType == 12) {
-            p12Orbit.settleEscrowState(user, level);
-        } else if (orbitType == 39) {
-            p39Orbit.settleEscrowState(user, level);
-        }
+        IManagedOrbit(_getOrbitAddress(orbitType)).settleEscrowState(user, level);
     }
 
     function _getOrbitAddress(uint8 orbitType) internal view returns (address) {

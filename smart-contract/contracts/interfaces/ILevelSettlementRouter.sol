@@ -4,6 +4,13 @@ pragma solidity ^0.8.24;
 interface ILevelSettlementRouter {
     function validatesConfig(address expectedLevelManager, address expectedUsdt) external view returns (bool);
 
+    function consumeLegacyRecycleTransition(
+        uint8 orbitType,
+        address orbitOwner,
+        uint8 level,
+        uint32 sourceCycle
+    ) external returns (bool);
+
     function applyMirrorEscrowSplit(
         uint8 orbitType,
         address p4Orbit,

@@ -84,6 +84,13 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
     uint8 internal constant ROUTED_ROLE_RECYCLE = 4;
     uint8 internal constant MAX_UPLINE_SEARCH_DEPTH = 64;
     bytes32 internal constant RECYCLE_RESERVE_STORAGE_SLOT = keccak256("ffreedom.levelSettlementRouter.recycleReserve.v1");
+    bytes32 internal constant LEGACY_RECYCLE_BYPASS_STORAGE_SLOT = keccak256("ffreedom.levelSettlementRouter.legacyRecycleBypass.v1");
+    bytes32 internal constant LEGACY_RECYCLE_MIGRATION_STORAGE_SLOT = keccak256("ffreedom.levelManager.legacyRecycleMigration.v1");
+
+    struct LegacyRecycleMigrationLayout {
+        mapping(bytes32 => bool) transitions;
+        bool configured;
+    }
 
     struct StructuredRecycleInput {
         uint8 orbitType;
@@ -98,6 +105,7 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
         address fromUser;
         uint8 sourcePosition;
         uint32 sourceCycle;
+        bool systemChargeAlreadyPaid;
         address[] founderWallets;
         uint256[] founderRatios;
     }
@@ -225,6 +233,32 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
         uint8 requiredFills,
         bool released
     );
+
+    event LegacyRecycleTransitionConsumed(
+        uint8 indexed orbitType,
+        address indexed orbitOwner,
+        uint8 indexed level,
+        uint32 sourceCycle
+    );
+
+    function consumeLegacyRecycleTransition(
+        uint8 orbitType,
+        address orbitOwner,
+        uint8 level,
+        uint32 sourceCycle
+    ) external onlyDelegateCall returns (bool) {
+        bytes32 key = keccak256(abi.encode(orbitType, orbitOwner, level, sourceCycle));
+        LegacyRecycleMigrationLayout storage migration = _legacyRecycleMigrationLayout();
+        if (!migration.transitions[key]) return false;
+
+        delete migration.transitions[key];
+        bytes32 bypassSlot = LEGACY_RECYCLE_BYPASS_STORAGE_SLOT;
+        assembly {
+            sstore(bypassSlot, 1)
+        }
+        emit LegacyRecycleTransitionConsumed(orbitType, orbitOwner, level, sourceCycle);
+        return true;
+    }
 
     event AutoUpgradeCompleted(
         uint256 indexed activationId,
@@ -409,6 +443,26 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
         }
 
         if (orbitType == 12 || orbitType == 39) {
+            if (_consumeLegacyRecycleBypass()) {
+                return _settleStructuredRecycle(StructuredRecycleInput({
+                    orbitType: orbitType,
+                    registration: registration,
+                    p12Orbit: p12Orbit,
+                    p39Orbit: p39Orbit,
+                    id1Wallet: id1Wallet,
+                    orbitOwner: orbitOwner,
+                    level: level,
+                    amount: amount,
+                    activationId: activationId,
+                    fromUser: fromUser,
+                    sourcePosition: sourcePosition,
+                    sourceCycle: sourceCycle,
+                    systemChargeAlreadyPaid: true,
+                    founderWallets: founderWallets,
+                    founderRatios: founderRatios
+                }));
+            }
+
             (bool ready, uint256 releasableAmount) = _reserveStructuredRecycle(
                 orbitOwner,
                 level,
@@ -436,6 +490,7 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
                 fromUser: fromUser,
                 sourcePosition: sourcePosition,
                 sourceCycle: sourceCycle,
+                systemChargeAlreadyPaid: false,
                 founderWallets: founderWallets,
                 founderRatios: founderRatios
             }));
@@ -682,8 +737,12 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
             input.orbitOwner,
             input.level
         );
-        uint256 ruleBaseAmount = input.amount;
-        uint256 systemCharge = (input.amount * 10) / 100;
+        uint256 ruleBaseAmount = input.systemChargeAlreadyPaid
+            ? (input.amount * 100) / 90
+            : input.amount;
+        uint256 systemCharge = input.systemChargeAlreadyPaid
+            ? 0
+            : (input.amount * 10) / 100;
         uint256 nftPoolAmount = (systemCharge * 80) / 100;
         uint256 operationsAmount = systemCharge - nftPoolAmount;
         ISettlementChargeRecipients chargeRecipients = ISettlementChargeRecipients(address(this));
@@ -800,6 +859,7 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
                 fromUser: input.orbitOwner,
                 sourcePosition: mirrorPosition,
                 sourceCycle: mirrorCycle,
+                systemChargeAlreadyPaid: false,
                 founderWallets: input.founderWallets,
                 founderRatios: input.founderRatios
             }));
@@ -931,6 +991,21 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
         bytes32 slot = RECYCLE_RESERVE_STORAGE_SLOT;
         assembly {
             layout.slot := slot
+        }
+    }
+
+    function _legacyRecycleMigrationLayout() internal pure returns (LegacyRecycleMigrationLayout storage layout) {
+        bytes32 slot = LEGACY_RECYCLE_MIGRATION_STORAGE_SLOT;
+        assembly {
+            layout.slot := slot
+        }
+    }
+
+    function _consumeLegacyRecycleBypass() internal returns (bool enabled) {
+        bytes32 slot = LEGACY_RECYCLE_BYPASS_STORAGE_SLOT;
+        assembly {
+            enabled := sload(slot)
+            sstore(slot, 0)
         }
     }
 

@@ -39,6 +39,13 @@ module.exports = {
 
   networks: {
     hardhat: {
+      chains: {
+        137: {
+          hardforkHistory: {
+            london: 23850000,
+          },
+        },
+      },
       accounts: {
         count: 30,
         accountsBalance: "10000000000000000000000",

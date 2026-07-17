@@ -63,10 +63,16 @@ the closed cycle's matrix-parent chain.
 
 - Line 1 is positions 1-3. Line 2 is positions 4-12.
 - Parent columns are 1 -> 4/7/10, 2 -> 5/8/11, 3 -> 6/9/12.
-- Every paid arrival is 40% routed + 50% owner/escrow/recycle + 10% charge.
-- Line-1 routed recipient is the eligible matrix parent of the orbit owner.
-- Line-2 routed recipient is the eligible occupant of the corresponding
-  line-1 parent position.
+- Every paid arrival accounts for 40% + 50% + 10% charge, but the wallet
+  receiving the 40% or 50% role is position-dependent.
+- On line 1, the orbit owner receives the 40% role and the 50% role routes to
+  the eligible structural recipient.
+- On line 2, the 40% role routes to the eligible occupant of the corresponding
+  line-1 parent position; the 50% role is assigned to the owner, escrow, or
+  recycle reserve according to the stored rule for that position.
+- Positions 11 and 12 each reserve the 50% role. Position 11 creates the first
+  half of the recycle requirement; position 12 adds the second half and
+  triggers reactivation.
 - Inactive structural candidates are skipped before snapshots and settlement.
 
 ## P39
@@ -75,6 +81,9 @@ the closed cycle's matrix-parent chain.
 - Line-2 parent columns repeat under positions 1-3.
 - Line-3 parent columns repeat under positions 4-12.
 - Every paid arrival is 20% + 20% + 50% + 10% charge.
+- The owner role is position-dependent: the owner can receive the first 20%,
+  second 20%, or 50% component. The remaining participant components route
+  through the structural recipients selected for that position.
 - Line 1 routes through the eligible matrix parent and eligible matrix
   grandparent.
 - Line 2 routes through the eligible line-1 parent and eligible owner matrix
@@ -82,6 +91,32 @@ the closed cycle's matrix-parent chain.
 - Line 3 routes through the eligible line-2 parent and eligible line-1
   grandparent.
 - Each routed role is eligibility-normalized independently.
+- Positions 38 and 39 each reserve the 50% role. Position 38 creates the first
+  half of the recycle requirement; position 39 adds the second half and
+  triggers reactivation.
+
+## Production Continuity Rules
+
+- A proxy upgrade must preserve every existing level flag, sponsor, matrix
+  position, matrix parent, current-cycle cursor, historical cycle, escrow
+  balance, recycle reserve, and accounting total.
+- Existing positions and completed cycles are never rebuilt, renumbered, or
+  reassigned. Corrected routing applies only to settlements created after the
+  upgrade transaction.
+- A partially filled current cycle continues from its stored next position.
+  It does not restart merely because recipient resolution changed.
+- Partial escrow and recycle reserves remain credited to their existing owner
+  and transition. A future qualifying arrival adds to that preserved amount;
+  the exact requirement releases once and cannot be consumed twice.
+- Historical payments to a wallet whose exact level was inactive are retained
+  as immutable historical transactions and handled through a separate
+  reconciliation decision. The upgrade does not claw back funds or fabricate
+  retroactive positions.
+- Terminal ID1 fallback remains founder distribution and does not create a
+  participant mirror solely to represent the fallback.
+- Migration is acceptable only if storage validation passes for Registration,
+  LevelManager, P4, P12, and P39 and representative continuation tests pass for
+  every production boundary-state class.
 
 ## Placement And Accounting
 
