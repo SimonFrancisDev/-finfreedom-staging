@@ -200,7 +200,7 @@ contract P39Orbit is BaseOrbit {
         }
 
         if (parent == address(0)) parent = ILevelManagerReader(levelManager).id1Wallet();
-        matrixPlacementParent[user][level] = parent;
+        if (parent != user) matrixPlacementParent[user][level] = parent;
     }
 
     function matrixParentOf(address user, uint8 level) public view returns (address) {

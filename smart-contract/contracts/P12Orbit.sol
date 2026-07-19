@@ -136,14 +136,14 @@ contract P12Orbit is BaseOrbit {
             if (parent == address(0)) parent = ILevelManagerReader(levelManager).id1Wallet();
         }
 
-        matrixPlacementParent[user][level] = parent;
+        if (parent != user) matrixPlacementParent[user][level] = parent;
     }
 
     function matrixParentOf(address user, uint8 level) public view returns (address) {
-        address id1 = ILevelManagerReader(levelManager).id1Wallet();
         address storedParent = matrixPlacementParent[user][level];
-        if (storedParent != address(0)) return storedParent;
-        return id1;
+        return storedParent != address(0)
+            ? storedParent
+            : ILevelManagerReader(levelManager).id1Wallet();
     }
 
     function _resolveRecipients(

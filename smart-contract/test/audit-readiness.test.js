@@ -36,7 +36,7 @@ async function deployCoreSystem(options = {}) {
   );
   await registration.waitForDeployment();
 
-  const LevelManager = await ethers.getContractFactory("LevelManager");
+  const LevelManager = await ethers.getContractFactory(options.levelManagerContract || "LevelManager");
   const levelManager = await upgrades.deployProxy(
     LevelManager,
     [
@@ -1018,8 +1018,8 @@ describe("Audit readiness contract invariants", function () {
     expect(recycleReentry.mirrorEscrowLockAmount).to.equal(mirrorAmount);
   });
 
-  it("mirrors no-referrer P12 recycle fallback into ID1 as a qualifying arrival", async function () {
-    const { owner, users, registration, p12, register, activateToLevel } = await deployCoreSystem();
+  it("routes no-referrer P12 recycle fallback to founders without an ID1 position", async function () {
+    const { owner, users, registration, levelManager, router, p12, usdt, register, activateToLevel } = await deployCoreSystem();
     const orbitOwner = users[8];
     const fillers = users.slice(9, 19);
     const recycleTrigger = users[19];
@@ -1047,19 +1047,193 @@ describe("Audit readiness contract invariants", function () {
     expect(recycledPosition.occupant).to.equal(recycleTrigger.address);
 
     await register(finalRecycleTrigger, orbitOwner.address);
-    await registration.connect(finalRecycleTrigger).activateLevel(2);
+    const id1OrbitBefore = await p12.getUserOrbit(owner.address, 2);
+    const id1PositionBefore = await p12.getPosition(owner.address, 2, 1);
+    const founderWallets = users.slice(0, 8);
+    const observed = await balanceDeltas(
+      usdt,
+      founderWallets,
+      () => registration.connect(finalRecycleTrigger).activateLevel(2)
+    );
 
     const finalCounts = await p12.getLinePaymentCounts(orbitOwner.address, 2);
     expect(finalCounts.line2Count).to.equal(0);
 
-    const id1Mirror = await p12.getPosition(owner.address, 2, 2);
-    expect(id1Mirror.occupant).to.equal(orbitOwner.address);
+    const id1Orbit = await p12.getUserOrbit(owner.address, 2);
+    const id1Position = await p12.getPosition(owner.address, 2, 1);
+    const founderDelta = observed.deltas.reduce((total, delta) => total + delta, 0n);
+    const fallback = parseEvents(observed.receipt, router, "PayoutNotDelivered")
+      .find((event) => event.args.reasonCode === ethers.encodeBytes32String("RECYCLE_FALLBACK_ID1"));
+    const recycleReceipt = parseEvents(observed.receipt, levelManager, "DetailedPayoutReceiptRecorded")
+      .find((event) => event.args.receiptType === 4n);
 
-    const id1MirrorArrival = await p12.getPositionLineArrivalNumber(owner.address, 2, 2);
-    expect(id1MirrorArrival).to.equal(1);
+    expect(id1Orbit.currentPosition).to.equal(id1OrbitBefore.currentPosition);
+    expect(id1Position.occupant).to.equal(id1PositionBefore.occupant);
+    expect(founderDelta).to.equal(usdtUnits(18));
+    expect(fallback.args.reasonCode).to.equal(ethers.encodeBytes32String("RECYCLE_FALLBACK_ID1"));
+    expect(recycleReceipt.args.receiver).to.equal(owner.address);
+    expect(recycleReceipt.args.mirroredPosition).to.equal(0);
 
     const recycleEvent = findEvent(receipt, p12, "PositionFilled");
     expect(recycleEvent).to.not.equal(undefined);
+  });
+
+  it("preserves a P12 recycle placement when ID1 is the legitimate eligible sponsor", async function () {
+    const { owner, users, registration, levelManager, router, p12, usdt, register, activateToLevel } = await deployCoreSystem({
+      levelManagerContract: "MockLevelManagerRecycleHarness",
+    });
+    const orbitOwner = users[8];
+    const firstTrigger = users[9];
+    const finalTrigger = users[10];
+
+    await register(orbitOwner, owner.address);
+    await activateToLevel(orbitOwner, 2);
+    const before = await p12.getUserOrbit(owner.address, 2);
+
+    await usdt.mint(levelManager.target, usdtUnits(20));
+    await levelManager.testHandleRecycle(
+      orbitOwner.address, 2, usdtUnits(10), 97901, firstTrigger.address, 11, 1
+    );
+    const tx = await levelManager.testHandleRecycle(
+      orbitOwner.address, 2, usdtUnits(10), 97902, finalTrigger.address, 12, 1
+    );
+    const receipt = await tx.wait();
+    const after = await p12.getUserOrbit(owner.address, 2);
+    const fills = parseEvents(receipt, p12, "PositionFilled")
+      .filter((event) => event.args.orbitOwner === owner.address && event.args.user === orbitOwner.address);
+    const fallback = parseEvents(receipt, router, "PayoutNotDelivered")
+      .find((event) => event.args.reasonCode === ethers.encodeBytes32String("RECYCLE_FALLBACK_ID1"));
+
+    expect(after.currentPosition).to.be.greaterThan(before.currentPosition);
+    expect(fills).to.have.length(2);
+    expect(fallback).to.equal(undefined);
+  });
+
+  it("redirects a P12 recycle self-component to ID1 without a self mirror or self parent", async function () {
+    const { owner, users, registration, levelManager, router, p12, usdt, escrow, register, activateToLevel } = await deployCoreSystem({
+      levelManagerContract: "MockLevelManagerRecycleHarness",
+    });
+    const founderWallets = users.slice(0, 8);
+    const sponsor = users[8];
+    const orbitOwner = users[9];
+    const [firstArrival, thirdArrival, fourthArrival, recycleTrigger, finalRecycleTrigger] = users.slice(10, 15);
+    const levelManagerSigner = await impersonateLevelManager(levelManager);
+
+    await register(sponsor, owner.address);
+    await activateToLevel(sponsor, 2);
+    await p12.connect(levelManagerSigner).recyclePositionDetailed(
+      sponsor.address, 2, firstArrival.address, usdtUnits(20), usdtUnits(20), 98001
+    );
+
+    await register(orbitOwner, sponsor.address);
+    await activateToLevel(orbitOwner, 2);
+    await p12.connect(levelManagerSigner).recyclePositionDetailed(
+      sponsor.address, 2, thirdArrival.address, usdtUnits(20), usdtUnits(20), 98002
+    );
+    await p12.connect(levelManagerSigner).recyclePositionDetailed(
+      sponsor.address, 2, fourthArrival.address, usdtUnits(20), usdtUnits(20), 98003
+    );
+    expect((await p12.getPosition(sponsor.address, 2, 2)).occupant).to.equal(orbitOwner.address);
+    expect(await p12.matrixParentOf(orbitOwner.address, 2)).to.equal(sponsor.address);
+
+    expect((await p12.getPosition(sponsor.address, 2, 4)).occupant).to.equal(fourthArrival.address);
+    await usdt.mint(levelManager.target, usdtUnits(20));
+    await levelManager.testHandleRecycle(
+      orbitOwner.address, 2, usdtUnits(10), 98101, recycleTrigger.address, 11, 1
+    );
+
+    const ownerBalanceBefore = await usdt.balanceOf(orbitOwner.address);
+    const sponsorEscrowBefore = await escrow.getLockedAmount(sponsor.address, 2, 3);
+    const observed = await balanceDeltas(
+      usdt,
+      founderWallets,
+      () => levelManager.testHandleRecycle(
+        orbitOwner.address, 2, usdtUnits(10), 98102, finalRecycleTrigger.address, 12, 1
+      )
+    );
+    const ownerBalanceAfter = await usdt.balanceOf(orbitOwner.address);
+    const sponsorEscrowAfter = await escrow.getLockedAmount(sponsor.address, 2, 3);
+
+    const reentry = await p12.getPosition(sponsor.address, 2, 5);
+    const ownerNewCyclePosition = await p12.getPosition(orbitOwner.address, 2, 1);
+    const founderDelta = observed.deltas.reduce((total, delta) => total + delta, 0n);
+    const recycleReceipts = parseEvents(observed.receipt, levelManager, "DetailedPayoutReceiptRecorded")
+      .filter((event) => event.args.receiptType === 4n);
+    const fallback = parseEvents(observed.receipt, router, "PayoutNotDelivered")
+      .find((event) => event.args.reasonCode === ethers.encodeBytes32String("RECYCLE_FALLBACK_ID1"));
+
+    expect(reentry.occupant).to.equal(orbitOwner.address);
+    expect(ownerBalanceAfter - ownerBalanceBefore).to.equal(0n);
+    expect(sponsorEscrowAfter - sponsorEscrowBefore).to.equal(usdtUnits(10));
+    expect(founderDelta).to.equal(usdtUnits(8));
+    expect(ownerNewCyclePosition.occupant).to.equal(ethers.ZeroAddress);
+    expect(await p12.matrixParentOf(orbitOwner.address, 2)).to.equal(sponsor.address);
+    expect(recycleReceipts.some((event) => event.args.receiver === orbitOwner.address)).to.equal(false);
+    expect(recycleReceipts.some((event) => event.args.receiver === owner.address && event.args.grossAmount === usdtUnits(8))).to.equal(true);
+    expect(fallback).to.not.equal(undefined);
+  });
+
+  it("redirects a P39 recycle self-component to ID1 without disturbing other components", async function () {
+    const { owner, users, registration, levelManager, router, p39, usdt, register, activateToLevel } = await deployCoreSystem({
+      levelManagerContract: "MockLevelManagerRecycleHarness",
+    });
+    const founderWallets = users.slice(0, 8);
+    const sponsor = users[8];
+    const orbitOwner = users[9];
+    const [firstArrival, thirdArrival, fourthArrival, recycleTrigger, finalRecycleTrigger] = users.slice(10, 15);
+    const levelManagerSigner = await impersonateLevelManager(levelManager);
+
+    await register(sponsor, owner.address);
+    await activateToLevel(sponsor, 3);
+    await p39.connect(levelManagerSigner).recyclePositionDetailed(
+      sponsor.address, 3, firstArrival.address, usdtUnits(40), usdtUnits(40), 98201
+    );
+
+    await register(orbitOwner, sponsor.address);
+    await activateToLevel(orbitOwner, 3);
+    await p39.connect(levelManagerSigner).recyclePositionDetailed(
+      sponsor.address, 3, thirdArrival.address, usdtUnits(40), usdtUnits(40), 98202
+    );
+    await p39.connect(levelManagerSigner).recyclePositionDetailed(
+      sponsor.address, 3, fourthArrival.address, usdtUnits(40), usdtUnits(40), 98203
+    );
+
+    expect((await p39.getPosition(sponsor.address, 3, 2)).occupant).to.equal(orbitOwner.address);
+    expect((await p39.getPosition(sponsor.address, 3, 4)).occupant).to.equal(fourthArrival.address);
+    expect(await p39.matrixParentOf(orbitOwner.address, 3)).to.equal(sponsor.address);
+
+    await usdt.mint(levelManager.target, usdtUnits(40));
+    await levelManager.testHandleRecycle(
+      orbitOwner.address, 3, usdtUnits(20), 98301, recycleTrigger.address, 38, 1
+    );
+
+    const ownerBalanceBefore = await usdt.balanceOf(orbitOwner.address);
+    const observed = await balanceDeltas(
+      usdt,
+      founderWallets,
+      () => levelManager.testHandleRecycle(
+        orbitOwner.address, 3, usdtUnits(20), 98302, finalRecycleTrigger.address, 39, 1
+      )
+    );
+    const ownerBalanceAfter = await usdt.balanceOf(orbitOwner.address);
+
+    const reentry = await p39.getPosition(sponsor.address, 3, 5);
+    const ownerNewCyclePosition = await p39.getPosition(orbitOwner.address, 3, 1);
+    const recycleReceipts = parseEvents(observed.receipt, levelManager, "DetailedPayoutReceiptRecorded")
+      .filter((event) => event.args.receiptType === 4n);
+    const fallback = parseEvents(observed.receipt, router, "PayoutNotDelivered")
+      .find((event) =>
+        event.args.reasonCode === ethers.encodeBytes32String("RECYCLE_FALLBACK_ID1") &&
+        event.args.expectedAmount === usdtUnits(8)
+      );
+
+    expect(reentry.occupant).to.equal(orbitOwner.address);
+    expect(ownerBalanceAfter - ownerBalanceBefore).to.equal(0n);
+    expect(ownerNewCyclePosition.occupant).to.equal(ethers.ZeroAddress);
+    expect(await p39.matrixParentOf(orbitOwner.address, 3)).to.equal(sponsor.address);
+    expect(recycleReceipts.some((event) => event.args.receiver === orbitOwner.address)).to.equal(false);
+    expect(recycleReceipts.some((event) => event.args.receiver === owner.address && event.args.grossAmount === usdtUnits(8))).to.equal(true);
+    expect(fallback).to.not.equal(undefined);
   });
 
   it("continues chained P4 recycle through every newly completed upline orbit", async function () {

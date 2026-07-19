@@ -371,12 +371,12 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
             }
         }
 
-        if (upline == address(0)) {
+        if (upline == address(0) || upline == orbitOwner) {
             upline = id1Wallet;
             fallbackToId1 = true;
         }
 
-        if (upline != address(0)) {
+        if (upline != address(0) && !fallbackToId1) {
             uint256 mirrorOwnerLiquid;
             (mirroredPosition, mirroredCycle, mirrorOwnerLiquid, recycleEscrowLocked, mirrorRecycleAmount) = _mirrorFill(
                 orbitType,
@@ -731,7 +731,8 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
             uint32 mirrorCycle
         )
     {
-        recycleReceiver = _resolveActiveUpline(
+        bool fallbackToId1;
+        (recycleReceiver, fallbackToId1) = _resolveActiveUpline(
             input.registration,
             input.id1Wallet,
             input.orbitOwner,
@@ -766,6 +767,66 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
                 nftPool,
                 operationsWallet
             );
+        }
+
+        if (fallbackToId1) {
+            uint256 founderAmount = input.amount - systemCharge;
+            _distributeFounders(
+                founderAmount,
+                input.activationId,
+                input.fromUser,
+                input.level,
+                input.founderWallets,
+                input.founderRatios,
+                REASON_RECYCLE_FALLBACK
+            );
+            _recordExternalEarning(input.orbitType, address(0), input.p12Orbit, input.p39Orbit, input.id1Wallet, input.level, founderAmount);
+            _emitRecycleReceipt(
+                input.id1Wallet,
+                input.activationId,
+                input.level,
+                input.fromUser,
+                input.orbitOwner,
+                input.sourcePosition,
+                input.sourceCycle,
+                0,
+                0,
+                founderAmount,
+                0,
+                founderAmount
+            );
+            emit PayoutNotDelivered(
+                input.orbitOwner,
+                input.fromUser,
+                input.level,
+                input.orbitType,
+                input.sourcePosition,
+                input.sourceCycle,
+                founderAmount,
+                input.id1Wallet,
+                founderAmount,
+                RECEIPT_RECYCLE,
+                ROLE_RECYCLE_CODE,
+                REASON_RECYCLE_FALLBACK,
+                ACTION_NO_ACTION,
+                input.activationId
+            );
+            emit RecycleCompletedDetailed(
+                input.activationId,
+                input.orbitOwner,
+                input.level,
+                input.fromUser,
+                input.sourcePosition,
+                input.sourceCycle,
+                input.id1Wallet,
+                input.amount,
+                founderAmount,
+                0,
+                0,
+                0,
+                true
+            );
+            return (input.id1Wallet, founderAmount, 0, 0, 0);
         }
 
         address orbitAddress = input.orbitType == 12 ? input.p12Orbit : input.p39Orbit;
@@ -810,7 +871,9 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
             recycleEscrowLocked += toEscrow;
         }
 
-        (uint8 spillover1MirrorPosition, uint32 spillover1MirrorCycle) = _mirrorRecyclePayout(
+        uint8 spillover1MirrorPosition;
+        uint32 spillover1MirrorCycle;
+        (spillover1Recipient, spillover1MirrorPosition, spillover1MirrorCycle) = _prepareRecyclePayout(
             input,
             spillover1Recipient,
             toSpillover1
@@ -825,7 +888,9 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
             2
         );
 
-        (uint8 spillover2MirrorPosition, uint32 spillover2MirrorCycle) = _mirrorRecyclePayout(
+        uint8 spillover2MirrorPosition;
+        uint32 spillover2MirrorCycle;
+        (spillover2Recipient, spillover2MirrorPosition, spillover2MirrorCycle) = _prepareRecyclePayout(
             input,
             spillover2Recipient,
             toSpillover2
@@ -884,13 +949,49 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
         );
     }
 
+    function _normalizeRecycleRecipient(
+        StructuredRecycleInput memory input,
+        address receiver,
+        uint256 amount
+    ) internal returns (address) {
+        if (receiver != input.orbitOwner || amount == 0) return receiver;
+
+        emit PayoutNotDelivered(
+            input.orbitOwner,
+            input.fromUser,
+            input.level,
+            input.orbitType,
+            input.sourcePosition,
+            input.sourceCycle,
+            amount,
+            input.id1Wallet,
+            amount,
+            RECEIPT_RECYCLE,
+            ROLE_RECYCLE_CODE,
+            REASON_RECYCLE_FALLBACK,
+            ACTION_NO_ACTION,
+            input.activationId
+        );
+        return input.id1Wallet;
+    }
+
+    function _prepareRecyclePayout(
+        StructuredRecycleInput memory input,
+        address receiver,
+        uint256 amount
+    ) internal returns (address normalized, uint8 position, uint32 cycleNumber) {
+        bool selfFallback = receiver == input.orbitOwner && amount > 0;
+        normalized = _normalizeRecycleRecipient(input, receiver, amount);
+        if (selfFallback) return (normalized, 0, 0);
+        (position, cycleNumber) = _mirrorRecyclePayout(input, normalized, amount);
+    }
+
     function _mirrorRecyclePayout(
         StructuredRecycleInput memory input,
         address receiver,
         uint256 amount
     ) internal returns (uint8 position, uint32 cycleNumber) {
         if (receiver == address(0) || amount == 0) return (0, 0);
-        if (receiver == input.id1Wallet) return (0, 0);
 
         address orbitAddress = input.orbitType == 12 ? input.p12Orbit : input.p39Orbit;
         (
@@ -917,7 +1018,7 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
         address id1Wallet,
         address orbitOwner,
         uint8 level
-    ) internal view returns (address upline) {
+    ) internal view returns (address upline, bool fallbackToId1) {
         upline = IRegistration(registration).getReferrer(orbitOwner);
         uint8 depth = 0;
 
@@ -929,8 +1030,9 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
             }
         }
 
-        if (upline == address(0)) {
+        if (upline == address(0) || upline == orbitOwner) {
             upline = id1Wallet;
+            fallbackToId1 = true;
         }
     }
 
