@@ -1,0 +1,10 @@
+{
+  "generatedAt": "2026-07-21T18:03:07.235Z",
+  "chainId": 137,
+  "signer": "0x884e48f9897E8633238747b608DD49dE12bF94df",
+  "implementation": "0x2F2c5E43eBBf666E00a1a2d699256B2Eae6268f5",
+  "transactionHash": "0x521429ad386631945c2494c5465112d74cce49f818896a08a1f7801dffac606d",
+  "blockNumber": 90634659,
+  "runtimeCodeHash": "0x404c268314cf440a1f0076cbe1c4fc73c3ee732ef1b1a60cab13e17d86fd60d5",
+  "productionProxyChanged": false
+}

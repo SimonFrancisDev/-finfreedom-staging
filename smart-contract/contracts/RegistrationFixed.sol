@@ -69,7 +69,6 @@ contract RegistrationFixed is
     mapping(address => address) public referrerOf;
     mapping(address => mapping(uint8 => bool)) public levelActivated;
     mapping(address => bool) private _noReferrer;
-    mapping(address => mapping(uint8 => address)) public currentMatrixParentOf;
 
     uint256 public registeredCount;
 
@@ -88,6 +87,7 @@ contract RegistrationFixed is
     error UplineSearchTooDeep(address startCandidate, uint8 level);
 
     uint256[] public levelPrices;
+    mapping(address => mapping(uint8 => address)) public currentMatrixParentOf;
 
     function _validateLevel(uint8 level) internal pure {
         require(level >= MIN_LEVEL && level <= MAX_LEVEL, "Invalid level");
