@@ -575,9 +575,7 @@ abstract contract BaseOrbit is Initializable, OwnableUpgradeable, UUPSUpgradeabl
         OrbitConfig memory config = levelConfig[level];
 
         uint8 existingPosition = _findUserPosition(orbitOwner, level, newUser);
-        if (existingPosition != 0) {
-            return existingPosition;
-        }
+        if (existingPosition != 0) return existingPosition;
 
         address placementReferrer = isMirror
             ? referrer
@@ -622,64 +620,57 @@ abstract contract BaseOrbit is Initializable, OwnableUpgradeable, UUPSUpgradeabl
 
 
     function _placeReentryInOrbitDetailed(
-    address orbitOwner,
-    uint8 level,
-    address newUser,
-    address referrer,
-    uint256 amount,
-    uint256 activationId,
-    bool isMirror
-) internal returns (uint8 position) {
-    _initializeOrbitIfNeeded(orbitOwner, level);
+        address orbitOwner,
+        uint8 level,
+        address newUser,
+        address referrer,
+        uint256 amount,
+        uint256 activationId,
+        bool isMirror
+    ) internal returns (uint8 position) {
+        _initializeOrbitIfNeeded(orbitOwner, level);
 
-    OrbitData storage orbit = userOrbits[orbitOwner][level];
-    OrbitConfig memory config = levelConfig[level];
+        OrbitData storage orbit = userOrbits[orbitOwner][level];
+        OrbitConfig memory config = levelConfig[level];
+        address placementReferrer = referrer == newUser
+            ? IRegistration(registration).getReferrer(newUser)
+            : referrer;
 
-    // IMPORTANT:
-    // Re-entry must NOT reuse old position.
-    // It must occupy a fresh available slot in the orbit.
-    position = _findPlacementPosition(
-        orbitOwner,
-        level,
-        newUser,
-        IRegistration(registration).getReferrer(newUser)
-    );
+        position = _findPlacementPosition(orbitOwner, level, newUser, placementReferrer);
+        if (orbit.positions[position].user != address(0)) revert ReentryTargetNotEmpty();
 
-    if (orbit.positions[position].user != address(0)) revert ReentryTargetNotEmpty();
+        orbit.positions[position] = Position({
+            user: newUser,
+            amount: amount,
+            timestamp: block.timestamp,
+            referrer: referrer,
+            isActive: true
+        });
 
-    orbit.positions[position] = Position({
-        user: newUser,
-        amount: amount,
-        timestamp: block.timestamp,
-        referrer: referrer,
-        isActive: true
-    });
+        _afterPositionPlaced(orbitOwner, level, newUser, position);
+        positionActivationId[orbitOwner][level][position] = activationId;
+        positionIsMirror[orbitOwner][level][position] = isMirror;
 
-    _afterPositionPlaced(orbitOwner, level, newUser, position);
+        emit PositionActivationLinked(
+            orbitOwner,
+            level,
+            position,
+            uint32(orbit.totalCycles + 1),
+            activationId,
+            isMirror
+        );
 
-    positionActivationId[orbitOwner][level][position] = activationId;
-    positionIsMirror[orbitOwner][level][position] = isMirror;
+        uint8 line = _getLineFromPosition(position, config);
+        if (line == 1) {
+            unchecked { orbit.positionsInLine1++; }
+        } else if (line == 2) {
+            unchecked { orbit.positionsInLine2++; }
+        } else {
+            unchecked { orbit.positionsInLine3++; }
+        }
 
-    emit PositionActivationLinked(
-        orbitOwner,
-        level,
-        position,
-        uint32(orbit.totalCycles + 1),
-        activationId,
-        isMirror
-    );
-
-    uint8 line = _getLineFromPosition(position, config);
-    if (line == 1) {
-        unchecked { orbit.positionsInLine1++; }
-    } else if (line == 2) {
-        unchecked { orbit.positionsInLine2++; }
-    } else {
-        unchecked { orbit.positionsInLine3++; }
+        orbit.currentPosition = _syncCurrentPosition(orbit, config);
     }
-
-    orbit.currentPosition = _syncCurrentPosition(orbit, config);
-}
 
     function _syncCurrentPosition(
         OrbitData storage orbit,
@@ -1439,23 +1430,18 @@ returns (MirrorPositionDetailedResult memory result)
         );
         placedFreshPosition = true;
     } else {
-        // Normal mirror behaviour: reuse existing position if already present
-        uint8 existingPosition = _findUserPosition(orbitOwner, level, newUser);
-
-        if (existingPosition != 0) {
-            result.position = existingPosition;
-        } else {
-            result.position = _placeUserInOrbitDetailed(
-                orbitOwner,
-                level,
-                newUser,
-                referrer,
-                amount,
-                activationId,
-                true
-            );
-            placedFreshPosition = true;
-        }
+        // Every non-terminal routed component has its own payment occurrence.
+        // It must not reuse an older mirror or replace the user's real parent.
+        result.position = _placeReentryInOrbitDetailed(
+            orbitOwner,
+            level,
+            newUser,
+            referrer,
+            amount,
+            activationId,
+            true
+        );
+        placedFreshPosition = true;
     }
 
     OrbitData storage orbit = userOrbits[orbitOwner][level];

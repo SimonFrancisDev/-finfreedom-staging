@@ -15,4 +15,7 @@ interface IRegistration {
     function triggerAutoUpgrade(address user, uint8 fromLevel) external;
     function totalParticipants() external view returns (uint256);
     function isParticipant(address user) external view returns (bool);
+    function currentMatrixParentOf(address user, uint8 level) external view returns (address);
+    function recordCurrentMatrixParent(address user, uint8 level, address parent) external;
+    function matrixParentMigrationFinalized() external view returns (bool);
 }

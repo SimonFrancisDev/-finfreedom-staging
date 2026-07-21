@@ -1,0 +1,167 @@
+{
+  "generatedAt": "2026-07-21T14:48:02.042Z",
+  "forkBlock": 90625169,
+  "exactPackageFile": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\migration-packages\\production-migration-1784644003027.json",
+  "exactPackageActionsExecuted": 26,
+  "ledgerGeneratedAt": "2026-07-21T14:07:46.280Z",
+  "ledgerSummary": {
+    "chainId": 137,
+    "liveSnapshotCount": 98,
+    "historicalCycleSnapshotCount": 4,
+    "rawOccurrenceCount": 246,
+    "dedupedOccurrenceCount": 246,
+    "seedCount": 240,
+    "unresolvedCount": 0,
+    "ignoredLegacyAnomalyCount": 0,
+    "excludedNoReferrerFounderRecordCount": 3,
+    "repeatedOccupantLevelCount": 6,
+    "conflictingParentCount": 3,
+    "byOrbit": {
+      "P12": 159,
+      "P39": 81
+    }
+  },
+  "before": {
+    "block": 90625169,
+    "implementations": {
+      "registration": "0x1827E36A2753bB6aF107df26B461d63A5eA46073",
+      "levelManager": "0xC8775241Aef436Eb3A72D628146a6070C3cb8324",
+      "p4": "0x9aF9d0A76B182DE97e8e378f18fC1FeC0Cb82343",
+      "p12": "0x02723190cA12fE2F63E9Dc56B680B135b18CE511",
+      "p39": "0x57fE43E1B433E433907A9C6587f082B0ddCcDe8b"
+    },
+    "levelManager": {
+      "owner": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "guardian": "0x290c2300296379BD0048aFe9099Ed6Fc81BF75fC",
+      "registration": "0x02ECA97e944Ac66b0444fd5F61A716917E83CfF5",
+      "escrow": "0x8b3db2AC7e30749479f2dbad14105C8eD4a377d4",
+      "id1Wallet": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "nextActivationId": "561"
+    },
+    "registration": {
+      "owner": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "id1Wallet": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "levelManager": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53"
+    },
+    "balances": {
+      "registration": "0",
+      "levelManager": "10000000",
+      "escrow": "1056000000",
+      "p4": "0",
+      "p12": "0",
+      "p39": "0"
+    },
+    "affectedP12": {
+      "0x863447369632ea4aac724683c1d448c68e2f1ade": [
+        "12",
+        "0",
+        false,
+        "3",
+        "8",
+        "0",
+        "0",
+        "112000000"
+      ],
+      "0xc0545331e20587208d4b27b2a3e4920cc481133a": [
+        "12",
+        "0",
+        false,
+        "3",
+        "8",
+        "0",
+        "0",
+        "94000000"
+      ]
+    }
+  },
+  "after": {
+    "block": 90625195,
+    "implementations": {
+      "registration": "0x940d8D53FaE06721883B6c77fd9EC769B389e8F1",
+      "levelManager": "0x36017dd046653654dCF2CE52C2a44A1914b3998A",
+      "p4": "0xDCDF3e86B417eFfA411B75373F6596863f9B7bd8",
+      "p12": "0xCD673bc614Ad2C1d6Bc4F888df7b31A7a468d078",
+      "p39": "0x9255eD0c56371039Dd2fA70acA23421b1A530455"
+    },
+    "levelManager": {
+      "owner": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "guardian": "0x290c2300296379BD0048aFe9099Ed6Fc81BF75fC",
+      "registration": "0x02ECA97e944Ac66b0444fd5F61A716917E83CfF5",
+      "escrow": "0x8b3db2AC7e30749479f2dbad14105C8eD4a377d4",
+      "id1Wallet": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "nextActivationId": "561",
+      "settlementRouter": "0xC1F7d1E68A624B896DA2881AFfC7De5B18a75B44",
+      "paused": false
+    },
+    "registration": {
+      "owner": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "id1Wallet": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "levelManager": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "matrixParentMigrationFinalized": true
+    },
+    "balances": {
+      "registration": "0",
+      "levelManager": "10000000",
+      "escrow": "1056000000",
+      "p4": "0",
+      "p12": "0",
+      "p39": "0"
+    },
+    "affectedP12": {
+      "0x863447369632ea4aac724683c1d448c68e2f1ade": [
+        "12",
+        "0",
+        false,
+        "3",
+        "8",
+        "0",
+        "0",
+        "112000000"
+      ],
+      "0xc0545331e20587208d4b27b2a3e4920cc481133a": [
+        "12",
+        "0",
+        false,
+        "3",
+        "8",
+        "0",
+        "0",
+        "94000000"
+      ]
+    },
+    "parentSeedChecks": {
+      "checked": 240,
+      "mismatches": []
+    }
+  },
+  "newImplementations": {
+    "registration": "0x940d8D53FaE06721883B6c77fd9EC769B389e8F1",
+    "levelManager": "0x36017dd046653654dCF2CE52C2a44A1914b3998A",
+    "p4": "0xDCDF3e86B417eFfA411B75373F6596863f9B7bd8",
+    "p12": "0xCD673bc614Ad2C1d6Bc4F888df7b31A7a468d078",
+    "p39": "0x9255eD0c56371039Dd2fA70acA23421b1A530455",
+    "router": "0xC1F7d1E68A624B896DA2881AFfC7De5B18a75B44"
+  },
+  "preserved": {
+    "levelManagerOwner": true,
+    "levelManagerGuardian": true,
+    "registrationDependency": true,
+    "escrowDependency": true,
+    "id1Wallet": true,
+    "nextActivationId": true,
+    "registrationOwner": true,
+    "registrationId1Wallet": true,
+    "registrationLevelManager": true,
+    "registrationMigrationFinalized": true,
+    "balances": true,
+    "affectedP12": true,
+    "allParentsSeeded": true,
+    "managerUnpaused": true
+  },
+  "skippedAsPreviouslyCertified": [
+    "grandfather transaction rehearsal",
+    "Levels 1-10 behavioral rehearsal"
+  ],
+  "verdict": "PASS",
+  "failed": []
+}

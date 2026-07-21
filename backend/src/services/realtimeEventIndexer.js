@@ -143,6 +143,7 @@ function buildListenerSpecs() {
     ['levelManager', 'ActivationFinancialSummaryRecorded'],
     ['levelManager', 'PayoutNotDelivered'],
     ['levelManager', 'RecycleCompletedDetailed'],
+    ['levelManager', 'RecycleReserveUpdated'],
     ['levelManager', 'AutoUpgradeCompleted'],
     ['levelManager', 'FounderDistributionDetailed'],
     ['levelManager', 'SystemChargeDistributedDetailed'],
@@ -262,6 +263,7 @@ async function processRealtimeEvent({ contract, eventName, label, log }) {
         [
           'PayoutNotDelivered',
           'RecycleCompletedDetailed',
+          'RecycleReserveUpdated',
           'AutoUpgradeCompleted',
           'FounderDistributionDetailed',
           'SystemChargeDistributedDetailed',

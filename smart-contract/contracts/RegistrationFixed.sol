@@ -69,6 +69,7 @@ contract RegistrationFixed is
     mapping(address => address) public referrerOf;
     mapping(address => mapping(uint8 => bool)) public levelActivated;
     mapping(address => bool) private _noReferrer;
+    mapping(address => mapping(uint8 => address)) public currentMatrixParentOf;
 
     uint256 public registeredCount;
 
@@ -78,6 +79,13 @@ contract RegistrationFixed is
     event ID1WalletSet(address indexed id1Wallet);
     event LevelManagerSet(address indexed levelManager);
     event GuardianUpdated(address indexed oldGuardian, address indexed newGuardian);
+    event CurrentMatrixParentRecorded(address indexed user, uint8 indexed level, address indexed parent);
+    event MatrixParentMigrationFinalized();
+
+    error MatrixParentMigrationClosed();
+    error MatrixParentSeedLengthMismatch();
+    error MatrixParentSeedConflict(address user, uint8 level, address existingParent, address requestedParent);
+    error UplineSearchTooDeep(address startCandidate, uint8 level);
 
     uint256[] public levelPrices;
 
@@ -327,7 +335,7 @@ contract RegistrationFixed is
             if (current == address(0)) return fallbackRecipient;
         }
 
-        return fallbackRecipient;
+        revert UplineSearchTooDeep(candidate, level);
     }
 
     function getReferrer(address user) external view returns (address) {
@@ -420,7 +428,52 @@ contract RegistrationFixed is
         return count;
     }
 
-    uint256[50] private __gap;
+    function recordCurrentMatrixParent(address user, uint8 level, address parent) external {
+        bool managerWrite = msg.sender == address(levelManager);
+        bool migrationWrite = msg.sender == owner() && !matrixParentMigrationFinalized;
+        require(managerWrite || migrationWrite, "Unauthorized parent writer");
+        require(user != address(0) && parent != address(0) && user != parent, "Invalid matrix parent");
+        _validateLevel(level);
+        currentMatrixParentOf[user][level] = parent;
+        emit CurrentMatrixParentRecorded(user, level, parent);
+    }
+
+    function seedCurrentMatrixParents(
+        address[] calldata users,
+        uint8[] calldata levels,
+        address[] calldata parents
+    ) external onlyOwner {
+        if (matrixParentMigrationFinalized) revert MatrixParentMigrationClosed();
+        if (users.length != levels.length || users.length != parents.length) {
+            revert MatrixParentSeedLengthMismatch();
+        }
+
+        for (uint256 index = 0; index < users.length; ++index) {
+            address user = users[index];
+            address parent = parents[index];
+            uint8 level = levels[index];
+            require(user != address(0) && parent != address(0) && user != parent, "Invalid matrix parent");
+            _validateLevel(level);
+
+            address existing = currentMatrixParentOf[user][level];
+            if (existing != address(0) && existing != parent) {
+                revert MatrixParentSeedConflict(user, level, existing, parent);
+            }
+            if (existing == address(0)) {
+                currentMatrixParentOf[user][level] = parent;
+                emit CurrentMatrixParentRecorded(user, level, parent);
+            }
+        }
+    }
+
+    function finalizeMatrixParentMigration() external onlyOwner {
+        if (matrixParentMigrationFinalized) revert MatrixParentMigrationClosed();
+        matrixParentMigrationFinalized = true;
+        emit MatrixParentMigrationFinalized();
+    }
+
+    bool public matrixParentMigrationFinalized;
+    uint256[48] private __gap;
 }
 
 

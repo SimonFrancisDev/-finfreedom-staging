@@ -4,6 +4,39 @@ pragma solidity ^0.8.24;
 interface ILevelSettlementRouter {
     function validatesConfig(address expectedLevelManager, address expectedUsdt) external view returns (bool);
 
+    function recordStructuralPlacement(
+        address registration,
+        address orbit,
+        uint8 orbitType,
+        address orbitOwner,
+        address user,
+        uint8 level,
+        uint8 position,
+        uint32 cycleNumber
+    ) external returns (address parent);
+
+    function fillAndRecordStructuralPosition(
+        address registration,
+        address orbit,
+        uint8 orbitType,
+        address orbitOwner,
+        address user,
+        address referrer,
+        uint8 level,
+        uint256 amount,
+        uint256 activationId
+    ) external returns (
+        uint8 sourcePosition,
+        uint32 sourceCycle,
+        uint256 toOwner,
+        uint256 toSpillover1,
+        address spillover1Recipient,
+        uint256 toSpillover2,
+        address spillover2Recipient,
+        uint256 toEscrow,
+        uint256 toRecycle
+    );
+
     function consumeLegacyRecycleTransition(
         uint8 orbitType,
         address orbitOwner,

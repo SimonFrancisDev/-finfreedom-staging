@@ -1,0 +1,596 @@
+{
+  "generatedAt": "2026-07-21T14:24:31.181Z",
+  "forkBlock": 90625169,
+  "ledgerGeneratedAt": "2026-07-21T14:07:46.280Z",
+  "ledgerSummary": {
+    "chainId": 137,
+    "liveSnapshotCount": 98,
+    "historicalCycleSnapshotCount": 4,
+    "rawOccurrenceCount": 246,
+    "dedupedOccurrenceCount": 246,
+    "seedCount": 240,
+    "unresolvedCount": 0,
+    "ignoredLegacyAnomalyCount": 0,
+    "excludedNoReferrerFounderRecordCount": 3,
+    "repeatedOccupantLevelCount": 6,
+    "conflictingParentCount": 3,
+    "byOrbit": {
+      "P12": 159,
+      "P39": 81
+    }
+  },
+  "before": {
+    "block": 90625169,
+    "implementations": {
+      "registration": "0x1827E36A2753bB6aF107df26B461d63A5eA46073",
+      "levelManager": "0xC8775241Aef436Eb3A72D628146a6070C3cb8324",
+      "p4": "0x9aF9d0A76B182DE97e8e378f18fC1FeC0Cb82343",
+      "p12": "0x02723190cA12fE2F63E9Dc56B680B135b18CE511",
+      "p39": "0x57fE43E1B433E433907A9C6587f082B0ddCcDe8b"
+    },
+    "levelManager": {
+      "owner": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "guardian": "0x290c2300296379BD0048aFe9099Ed6Fc81BF75fC",
+      "registration": "0x02ECA97e944Ac66b0444fd5F61A716917E83CfF5",
+      "escrow": "0x8b3db2AC7e30749479f2dbad14105C8eD4a377d4",
+      "id1Wallet": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "nextActivationId": "561"
+    },
+    "registration": {
+      "owner": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "id1Wallet": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "levelManager": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53"
+    },
+    "balances": {
+      "registration": "0",
+      "levelManager": "10000000",
+      "escrow": "1056000000",
+      "p4": "0",
+      "p12": "0",
+      "p39": "0"
+    },
+    "affectedP12": {
+      "0x863447369632ea4aac724683c1d448c68e2f1ade": [
+        "12",
+        "0",
+        false,
+        "3",
+        "8",
+        "0",
+        "0",
+        "112000000"
+      ],
+      "0xc0545331e20587208d4b27b2a3e4920cc481133a": [
+        "12",
+        "0",
+        false,
+        "3",
+        "8",
+        "0",
+        "0",
+        "94000000"
+      ]
+    }
+  },
+  "after": {
+    "block": 90625196,
+    "implementations": {
+      "registration": "0x2C45cbbad9709EbC4170FdDa5F0B533E44c60Fa3",
+      "levelManager": "0x8688AF0AF7EE54083A8ebbfA4A014239FE433fcD",
+      "p4": "0x6a079d979764266ea021958Df42158f0af166CB3",
+      "p12": "0x43548e82DBcbdB547AECFbAEef2A98e7424C9ebc",
+      "p39": "0xE4004e60f0Ffb1e42847169a2E514c42653e27eE"
+    },
+    "levelManager": {
+      "owner": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "guardian": "0x290c2300296379BD0048aFe9099Ed6Fc81BF75fC",
+      "registration": "0x02ECA97e944Ac66b0444fd5F61A716917E83CfF5",
+      "escrow": "0x8b3db2AC7e30749479f2dbad14105C8eD4a377d4",
+      "id1Wallet": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "nextActivationId": "561",
+      "settlementRouter": "0x6f66Fa3C61810771aDa14B64daFeAD92Ba648dE4",
+      "paused": false
+    },
+    "registration": {
+      "owner": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "id1Wallet": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "levelManager": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "matrixParentMigrationFinalized": true
+    },
+    "balances": {
+      "registration": "0",
+      "levelManager": "10000000",
+      "escrow": "1056000000",
+      "p4": "0",
+      "p12": "0",
+      "p39": "0"
+    },
+    "affectedP12": {
+      "0x863447369632ea4aac724683c1d448c68e2f1ade": [
+        "12",
+        "0",
+        false,
+        "3",
+        "8",
+        "0",
+        "0",
+        "112000000"
+      ],
+      "0xc0545331e20587208d4b27b2a3e4920cc481133a": [
+        "12",
+        "0",
+        false,
+        "3",
+        "8",
+        "0",
+        "0",
+        "94000000"
+      ]
+    },
+    "parentSeedChecks": {
+      "checked": 240,
+      "mismatches": []
+    }
+  },
+  "newImplementations": {
+    "registration": "0x2C45cbbad9709EbC4170FdDa5F0B533E44c60Fa3",
+    "levelManager": "0x8688AF0AF7EE54083A8ebbfA4A014239FE433fcD",
+    "p4": "0x6a079d979764266ea021958Df42158f0af166CB3",
+    "p12": "0x43548e82DBcbdB547AECFbAEef2A98e7424C9ebc",
+    "p39": "0xE4004e60f0Ffb1e42847169a2E514c42653e27eE",
+    "router": "0x6f66Fa3C61810771aDa14B64daFeAD92Ba648dE4"
+  },
+  "preserved": {
+    "levelManagerOwner": true,
+    "levelManagerGuardian": true,
+    "registrationDependency": true,
+    "escrowDependency": true,
+    "id1Wallet": true,
+    "nextActivationId": true,
+    "registrationOwner": true,
+    "registrationId1Wallet": true,
+    "registrationLevelManager": true,
+    "registrationMigrationFinalized": true,
+    "balances": true,
+    "affectedP12": true,
+    "allParentsSeeded": true,
+    "managerUnpaused": true
+  },
+  "transactionRehearsal": [
+    {
+      "legacyOwner": "0x863447369632ea4aac724683c1d448c68e2f1ade",
+      "participant": "0x64c3de7c2ddA81EBBae6317fF55459feF7538515",
+      "transactionHash": "0x8c805a4e91b673b590e5047e802b3abe3516f1a5b684f119de2962bc3682c01c",
+      "stateBefore": [
+        "12",
+        "0",
+        false,
+        "3",
+        "8",
+        "0",
+        "0",
+        "112000000"
+      ],
+      "stateAfter": [
+        "1",
+        "0",
+        false,
+        "0",
+        "0",
+        "0",
+        "1",
+        "112000000"
+      ],
+      "eventCounts": {
+        "legacyTransition": 1,
+        "reserveUpdated": 0,
+        "recycleCompleted": 1,
+        "orbitReset": 2,
+        "positionFilled": 3
+      },
+      "recycleEvents": [
+        {
+          "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+          "name": "RecycleCompletedDetailed",
+          "args": [
+            "562",
+            "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+            "2",
+            "0x64c3de7c2ddA81EBBae6317fF55459feF7538515",
+            "12",
+            "1",
+            "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+            "18000000",
+            "18000000",
+            "0",
+            "2",
+            "1",
+            false
+          ]
+        }
+      ],
+      "resetEvents": [
+        {
+          "address": "0xCF998d8f7E9DD4f3FacFbA45e656dE07142f824b",
+          "name": "OrbitReset",
+          "args": [
+            "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+            "2",
+            "1"
+          ]
+        },
+        {
+          "address": "0xCF998d8f7E9DD4f3FacFbA45e656dE07142f824b",
+          "name": "OrbitReset",
+          "args": [
+            "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+            "2",
+            "2"
+          ]
+        }
+      ],
+      "positionEvents": [
+        {
+          "address": "0xCF998d8f7E9DD4f3FacFbA45e656dE07142f824b",
+          "name": "PositionFilled",
+          "args": [
+            "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+            "0x64c3de7c2ddA81EBBae6317fF55459feF7538515",
+            "2",
+            "12",
+            "20000000",
+            "1784642928"
+          ]
+        },
+        {
+          "address": "0xCF998d8f7E9DD4f3FacFbA45e656dE07142f824b",
+          "name": "PositionFilled",
+          "args": [
+            "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+            "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+            "2",
+            "2",
+            "18000000",
+            "1784642928"
+          ]
+        },
+        {
+          "address": "0xCF998d8f7E9DD4f3FacFbA45e656dE07142f824b",
+          "name": "PositionFilled",
+          "args": [
+            "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+            "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+            "2",
+            "12",
+            "10000000",
+            "1784642928"
+          ]
+        }
+      ],
+      "passed": true
+    },
+    {
+      "legacyOwner": "0xc0545331e20587208d4b27b2a3e4920cc481133a",
+      "participant": "0x0Ba18Cc5f5189755194f74a2481Dc8A0941Cdd31",
+      "transactionHash": "0x84dd1fbfdb5ec6deed214fe43f204ead430480709846d5f2ea076bb164586111",
+      "stateBefore": [
+        "12",
+        "0",
+        false,
+        "3",
+        "8",
+        "0",
+        "0",
+        "94000000"
+      ],
+      "stateAfter": [
+        "1",
+        "0",
+        false,
+        "0",
+        "0",
+        "0",
+        "1",
+        "94000000"
+      ],
+      "eventCounts": {
+        "legacyTransition": 1,
+        "reserveUpdated": 0,
+        "recycleCompleted": 1,
+        "orbitReset": 1,
+        "positionFilled": 3
+      },
+      "recycleEvents": [
+        {
+          "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+          "name": "RecycleCompletedDetailed",
+          "args": [
+            "562",
+            "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+            "2",
+            "0x0Ba18Cc5f5189755194f74a2481Dc8A0941Cdd31",
+            "12",
+            "1",
+            "0x3F02D99D7398ACdb29b2F6DCA50a0E35908629C1",
+            "18000000",
+            "18000000",
+            "0",
+            "1",
+            "2",
+            false
+          ]
+        }
+      ],
+      "resetEvents": [
+        {
+          "address": "0xCF998d8f7E9DD4f3FacFbA45e656dE07142f824b",
+          "name": "OrbitReset",
+          "args": [
+            "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+            "2",
+            "1"
+          ]
+        }
+      ],
+      "positionEvents": [
+        {
+          "address": "0xCF998d8f7E9DD4f3FacFbA45e656dE07142f824b",
+          "name": "PositionFilled",
+          "args": [
+            "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+            "0x0Ba18Cc5f5189755194f74a2481Dc8A0941Cdd31",
+            "2",
+            "12",
+            "20000000",
+            "1784643587"
+          ]
+        },
+        {
+          "address": "0xCF998d8f7E9DD4f3FacFbA45e656dE07142f824b",
+          "name": "PositionFilled",
+          "args": [
+            "0x3F02D99D7398ACdb29b2F6DCA50a0E35908629C1",
+            "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+            "2",
+            "1",
+            "18000000",
+            "1784643587"
+          ]
+        },
+        {
+          "address": "0xCF998d8f7E9DD4f3FacFbA45e656dE07142f824b",
+          "name": "PositionFilled",
+          "args": [
+            "0xa1B5a30fAF2032471fBAc7d5A89842c0d80b2372",
+            "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+            "2",
+            "3",
+            "10000000",
+            "1784643587"
+          ]
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "fullLevelRehearsal": {
+    "passed": true,
+    "participant": "0x0C3CADA4e0d01B02e70933CebF2BcDf3A24f48e8",
+    "fundingTransfers": [
+      {
+        "holder": "0xbafafb77a090d7f989aa64d4f867b1b942a50591",
+        "amount": "1622976859"
+      },
+      {
+        "holder": "0xb673c9d14da920f187d25cc793f1955a43284622",
+        "amount": "1278467070"
+      },
+      {
+        "holder": "0x98ba988eb79b1828d9925b9197324bcc611009c8",
+        "amount": "923903943"
+      },
+      {
+        "holder": "0x3f02d99d7398acdb29b2f6dca50a0e35908629c1",
+        "amount": "779001570"
+      },
+      {
+        "holder": "0xc0545331e20587208d4b27b2a3e4920cc481133a",
+        "amount": "432723164"
+      },
+      {
+        "holder": "0xbdfc98b5ae74f3829de02221d627e4bd6a0943ef",
+        "amount": "424468344"
+      },
+      {
+        "holder": "0x41b65562ccdb4baf1f9ab67a1e01c160fcfcddc3",
+        "amount": "404007913"
+      },
+      {
+        "holder": "0x3fd47bc432b2c0681d7687adfe77ac0307f1f8f4",
+        "amount": "324027504"
+      },
+      {
+        "holder": "0x88d350bd016751b08baf6508e1bdf186a1b1305b",
+        "amount": "1290000000"
+      },
+      {
+        "holder": "0x5fd791b457ad32a8e2a2e81fc211238639824127",
+        "amount": "1290000000"
+      },
+      {
+        "holder": "0xa2033515f0f35a5fa4803edde306c293a81c2da9",
+        "amount": "71250000"
+      },
+      {
+        "holder": "0xf73d4ae3a9efebab76ab9053cd055b4503929231",
+        "amount": "40250000"
+      },
+      {
+        "holder": "0xb850f836d0e3cfed4a7dbdcaa7a4c78afac0d911",
+        "amount": "593125050"
+      },
+      {
+        "holder": "0x435363dad972a7abb2a739525c461f06a45ce294",
+        "amount": "77125228"
+      },
+      {
+        "holder": "0xf4f83f8181cd9a8c96a33f4d9af487b444353a15",
+        "amount": "23250032"
+      },
+      {
+        "holder": "0x120fbeeeb36c003caee1f4b37ac9297c88d51d42",
+        "amount": "10250030"
+      },
+      {
+        "holder": "0x8b3db2ac7e30749479f2dbad14105c8ed4a377d4",
+        "amount": "645173293"
+      }
+    ],
+    "levels": [
+      {
+        "level": 1,
+        "active": true
+      },
+      {
+        "level": 2,
+        "active": true
+      },
+      {
+        "level": 3,
+        "active": true
+      },
+      {
+        "level": 4,
+        "active": true
+      },
+      {
+        "level": 5,
+        "active": true
+      },
+      {
+        "level": 6,
+        "active": true
+      },
+      {
+        "level": 7,
+        "active": true
+      },
+      {
+        "level": 8,
+        "active": true
+      },
+      {
+        "level": 9,
+        "active": true
+      },
+      {
+        "level": 10,
+        "active": true
+      }
+    ],
+    "transactions": [
+      {
+        "level": 1,
+        "transactionHash": "0x0553411b919ad3eec980715078f3b5825da400b3ab4943d0842ee28a733866ac",
+        "gasUsed": "1379141",
+        "activationEvents": 2,
+        "positionEvents": 1,
+        "detailedPayouts": 1,
+        "ineligibleReceivers": [],
+        "passed": true
+      },
+      {
+        "level": 2,
+        "transactionHash": "0xef0cf7885eb15d0da9881e86d0dc1f9e8b62ef2a84669da0a36e7e3444031c70",
+        "gasUsed": "4227976",
+        "activationEvents": 2,
+        "positionEvents": 2,
+        "detailedPayouts": 1,
+        "ineligibleReceivers": [],
+        "passed": true
+      },
+      {
+        "level": 3,
+        "transactionHash": "0xec186f4114943edead6226a4578809f0cf36d073e19d7d527c1085526e9ea539",
+        "gasUsed": "2676092",
+        "activationEvents": 2,
+        "positionEvents": 3,
+        "detailedPayouts": 3,
+        "ineligibleReceivers": [],
+        "passed": true
+      },
+      {
+        "level": 4,
+        "transactionHash": "0xd8c27787805638f49c5a64bd458fbfee639b4041db325e82e7ab3b21fba9c120",
+        "gasUsed": "1142029",
+        "activationEvents": 2,
+        "positionEvents": 1,
+        "detailedPayouts": 1,
+        "ineligibleReceivers": [],
+        "passed": true
+      },
+      {
+        "level": 5,
+        "transactionHash": "0x3cd13b260c1be5f8e7eb381378559217bd86b2e06158a6c38e44b7e8850c8e91",
+        "gasUsed": "1318503",
+        "activationEvents": 2,
+        "positionEvents": 1,
+        "detailedPayouts": 2,
+        "ineligibleReceivers": [],
+        "passed": true
+      },
+      {
+        "level": 6,
+        "transactionHash": "0xc0c150de41982b39d372339219aa6a3d431265efb222b86e25d6424df1dfe5d7",
+        "gasUsed": "2031894",
+        "activationEvents": 2,
+        "positionEvents": 2,
+        "detailedPayouts": 3,
+        "ineligibleReceivers": [],
+        "passed": true
+      },
+      {
+        "level": 7,
+        "transactionHash": "0x71f4c3818aba4e737862c3c12cef90ab317a037f7482ee24d1fb24bfd02dd5cb",
+        "gasUsed": "1126161",
+        "activationEvents": 2,
+        "positionEvents": 1,
+        "detailedPayouts": 1,
+        "ineligibleReceivers": [],
+        "passed": true
+      },
+      {
+        "level": 8,
+        "transactionHash": "0x61251d4b1eb23259e86b1b8a6f58ebfb1652c4aace30a2b1bf75faadb0473ea9",
+        "gasUsed": "1319103",
+        "activationEvents": 2,
+        "positionEvents": 1,
+        "detailedPayouts": 2,
+        "ineligibleReceivers": [],
+        "passed": true
+      },
+      {
+        "level": 9,
+        "transactionHash": "0xdd3b4911659a048c009b53e3234cd94d0f56b36abb9eefc0b9e1e73109f612e8",
+        "gasUsed": "1569525",
+        "activationEvents": 2,
+        "positionEvents": 1,
+        "detailedPayouts": 3,
+        "ineligibleReceivers": [],
+        "passed": true
+      },
+      {
+        "level": 10,
+        "transactionHash": "0x85fc4cc88f0b6eab60ae111d1b6243070f34b98fc5cfc8d014564fa5324aca45",
+        "gasUsed": "1184412",
+        "activationEvents": 2,
+        "positionEvents": 1,
+        "detailedPayouts": 1,
+        "ineligibleReceivers": [],
+        "passed": true
+      }
+    ]
+  },
+  "verdict": "PASS",
+  "failed": []
+}

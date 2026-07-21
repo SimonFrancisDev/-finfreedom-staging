@@ -866,13 +866,6 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
         address routedRecipientB = spillover2Recipient;
         uint256 routedAmountB = toSpillover2;
 
-        // If both routed roles point to the same recipient, merge them.
-        if (routedRecipientA != address(0) && routedRecipientA == routedRecipientB) {
-            routedAmountA += routedAmountB;
-            routedRecipientB = address(0);
-            routedAmountB = 0;
-        }
-
         if (toSpillover1 > 0 && spillover1Recipient == address(0)) {
             _emitPayoutNotDelivered(
                 sponsor,
@@ -930,12 +923,6 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
             mirrorRuleBaseAmount,
             activationId
         );
-
-        uint256 splitAEntitlement = splitA.liquidAmount + splitA.escrowLocked + splitA.recycleAmount;
-        if (splitAEntitlement > routedAmountA && routedAmountB > 0) {
-            uint256 extraEntitlement = splitAEntitlement - routedAmountA;
-            routedAmountB = routedAmountB > extraEntitlement ? routedAmountB - extraEntitlement : 0;
-        }
 
         uint256 mirrorRuleBaseAmountB = (orbitType == 12 || orbitType == 39)
             ? activationAmount
@@ -1135,14 +1122,30 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
             uint256 toRecycle
         )
     {
-        return IOrbitDetailed(_getOrbitAddress(orbitType)).fillPositionDetailed(
-            orbitOwner,
-            level,
-            user,
-            referrer,
-            amount,
-            activationId
-        );
+        (
+            sourcePosition,
+            sourceCycle,
+            toOwner,
+            toSpillover1,
+            spillover1Recipient,
+            toSpillover2,
+            spillover2Recipient,
+            toEscrow,
+            toRecycle
+        ) = abi.decode(_delegateToSettlementRouterWithResult(abi.encodeCall(
+            ILevelSettlementRouter.fillAndRecordStructuralPosition,
+            (
+                address(registration),
+                _getOrbitAddress(orbitType),
+                orbitType,
+                orbitOwner,
+                user,
+                referrer,
+                level,
+                amount,
+                activationId
+            )
+        )), (uint8, uint32, uint256, uint256, address, uint256, address, uint256, uint256));
     }
 
     function _consumeLegacyRecycleTransition(
@@ -1282,15 +1285,22 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
 
     function _delegateToSettlementRouter(bytes memory data) internal {
         _requireSettlementRouter();
-        (bool ok, ) = address(settlementRouter).delegatecall(data);
-        if (!ok) revert SettlementRouterCallFailed();
+        (bool ok, bytes memory reason) = address(settlementRouter).delegatecall(data);
+        if (!ok) _revertWithReason(reason);
     }
 
     function _delegateToSettlementRouterWithResult(bytes memory data) internal returns (bytes memory result) {
         _requireSettlementRouter();
         bool ok;
         (ok, result) = address(settlementRouter).delegatecall(data);
-        if (!ok) revert SettlementRouterCallFailed();
+        if (!ok) _revertWithReason(result);
+    }
+
+    function _revertWithReason(bytes memory reason) internal pure {
+        if (reason.length == 0) revert SettlementRouterCallFailed();
+        assembly ("memory-safe") {
+            revert(add(reason, 32), mload(reason))
+        }
     }
 
     function _sendPayoutWithContext(
@@ -1348,6 +1358,22 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
                 founderRatios
             )
         )), (address, uint256, uint256, uint8, uint32));
+
+        if (result.mirrorPosition != 0 && result.actualRecycleReceiver != id1Wallet) {
+            _delegateToSettlementRouter(abi.encodeCall(
+                ILevelSettlementRouter.recordStructuralPlacement,
+                (
+                    address(registration),
+                    _getOrbitAddress(orbitType),
+                    orbitType,
+                    result.actualRecycleReceiver,
+                    orbitOwner,
+                    level,
+                    result.mirrorPosition,
+                    result.mirrorCycle
+                )
+            ));
+        }
 
         result.recycleGross = amount;
         if (result.recycleEscrowLocked > 0 && result.actualRecycleReceiver != id1Wallet) {

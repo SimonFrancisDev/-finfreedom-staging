@@ -7,6 +7,35 @@ import "./interfaces/ILevelSettlementRouter.sol";
 import "./interfaces/IRegistration.sol";
 
 interface ISettlementOrbitDetailed {
+    function fillPositionDetailed(
+        address orbitOwner,
+        uint8 level,
+        address newUser,
+        address referrer,
+        uint256 amount,
+        uint256 activationId
+    ) external returns (
+        uint8 sourcePosition,
+        uint32 sourceCycle,
+        uint256 toOwner,
+        uint256 toSpillover1,
+        address spillover1Recipient,
+        uint256 toSpillover2,
+        address spillover2Recipient,
+        uint256 toEscrow,
+        uint256 toRecycle
+    );
+
+    function getPosition(address orbitOwner, uint8 level, uint8 position)
+        external
+        view
+        returns (address occupant, uint256 amount, uint256 timestamp, address referrer, bool isActive);
+
+    function getHistoricalPosition(address orbitOwner, uint8 level, uint256 cycleNumber, uint8 position)
+        external
+        view
+        returns (address occupant, uint256 amount, uint256 timestamp, address referrer, bool isActive);
+
     function mirrorPositionDetailed(
         address orbitOwner,
         uint8 level,
@@ -66,6 +95,7 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
     error OnlyLevelManager();
     error OnlyDelegateCall();
     error InvalidConfig();
+    error InvalidStructuralParent(address user, address orbitOwner, address parent, uint8 level, uint8 position);
     error UplineSearchTooDeep(address startUser, uint8 level);
 
     IERC20 public immutable usdt;
@@ -285,6 +315,92 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
 
     function validatesConfig(address expectedLevelManager, address expectedUsdt) external view returns (bool) {
         return expectedLevelManager == levelManager && expectedUsdt == address(usdt);
+    }
+
+    function recordStructuralPlacement(
+        address registration,
+        address orbit,
+        uint8 orbitType,
+        address orbitOwner,
+        address user,
+        uint8 level,
+        uint8 position,
+        uint32 cycleNumber
+    ) external onlyDelegateCall returns (address parent) {
+        return _recordStructuralPlacement(registration, orbit, orbitType, orbitOwner, user, level, position, cycleNumber);
+    }
+
+    function fillAndRecordStructuralPosition(
+        address registration,
+        address orbit,
+        uint8 orbitType,
+        address orbitOwner,
+        address user,
+        address referrer,
+        uint8 level,
+        uint256 amount,
+        uint256 activationId
+    ) external onlyDelegateCall returns (
+        uint8 sourcePosition,
+        uint32 sourceCycle,
+        uint256 toOwner,
+        uint256 toSpillover1,
+        address spillover1Recipient,
+        uint256 toSpillover2,
+        address spillover2Recipient,
+        uint256 toEscrow,
+        uint256 toRecycle
+    ) {
+        (
+            sourcePosition,
+            sourceCycle,
+            toOwner,
+            toSpillover1,
+            spillover1Recipient,
+            toSpillover2,
+            spillover2Recipient,
+            toEscrow,
+            toRecycle
+        ) = ISettlementOrbitDetailed(orbit).fillPositionDetailed(
+            orbitOwner, level, user, referrer, amount, activationId
+        );
+        _recordStructuralPlacement(registration, orbit, orbitType, orbitOwner, user, level, sourcePosition, sourceCycle);
+    }
+
+    function _recordStructuralPlacement(
+        address registration,
+        address orbit,
+        uint8 orbitType,
+        address orbitOwner,
+        address user,
+        uint8 level,
+        uint8 position,
+        uint32 cycleNumber
+    ) internal returns (address parent) {
+        parent = orbitOwner;
+        uint8 parentPosition;
+
+        if (orbitType == 12 && position > 3) {
+            parentPosition = uint8(((position - 4) % 3) + 1);
+        } else if (orbitType == 39) {
+            if (position > 12) parentPosition = uint8(4 + ((position - 13) % 9));
+            else if (position > 3) parentPosition = uint8(((position - 4) % 3) + 1);
+        }
+
+        if (parentPosition != 0) {
+            (parent, , , , ) = ISettlementOrbitDetailed(orbit).getPosition(orbitOwner, level, parentPosition);
+            if (parent == address(0)) {
+                (parent, , , , ) = ISettlementOrbitDetailed(orbit).getHistoricalPosition(
+                    orbitOwner, level, cycleNumber, parentPosition
+                );
+            }
+        }
+
+        if (parent == user) parent = orbitOwner;
+        if (parent == address(0) || parent == user) {
+            revert InvalidStructuralParent(user, orbitOwner, parent, level, position);
+        }
+        IRegistration(registration).recordCurrentMatrixParent(user, level, parent);
     }
 
     modifier onlyDelegateCall() {

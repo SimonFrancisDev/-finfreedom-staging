@@ -2016,5 +2016,49 @@
     ],
     "stateMutability": "view",
     "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidLinePayment",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidP12Line",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidP12Position",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "UnsupportedP12Level",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "internalType": "uint8",
+        "name": "level",
+        "type": "uint8"
+      }
+    ],
+    "name": "matrixParentOf",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   }
 ]

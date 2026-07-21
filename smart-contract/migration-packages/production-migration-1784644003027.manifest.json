@@ -1,0 +1,54 @@
+{
+  "generatedAt": "2026-07-21T15:52:00.000Z",
+  "network": "polygon",
+  "chainId": 137,
+  "certifiedForkBlock": 90625169,
+  "package": {
+    "file": "production-migration-1784644003027.json",
+    "sha256": "35FFDB91E8C543696BAD558D7B5D0F3208F3BB6C46E794ABCBC3042DD535FCA6",
+    "actions": 26,
+    "preapprovals": 10,
+    "migrationActions": 16
+  },
+  "deploymentArtifact": {
+    "file": "implementations-1784642442711.json",
+    "sha256": "F4125041DE19A8B849F0D04A0FFA447D7AC9517CB2AE99777CAD52E4D7DF388A"
+  },
+  "exactPackageReport": {
+    "file": "production-exact-package-latest.json",
+    "sha256": "CC2166A27E524D26E93957084BB0D4326DD12B7A0C05EC0BF302C73A96003889",
+    "verdict": "PASS"
+  },
+  "parentLedger": {
+    "file": "production-matrix-parent-ledger-90625169.json",
+    "sha256": "D430548306894A858D87DAA3A142533377C4AA5520027E2451CD53FF9F3D1F60",
+    "seedCount": 240,
+    "unresolvedCount": 0
+  },
+  "implementations": {
+    "registration": {
+      "address": "0x940d8D53FaE06721883B6c77fd9EC769B389e8F1",
+      "runtimeCodeHash": "0xfe99d78ebfd8c1a2c1d1eb34eee36aa9e0ebc0ad142b51a879e69bbb6f4846b9"
+    },
+    "levelManager": {
+      "address": "0x36017dd046653654dCF2CE52C2a44A1914b3998A",
+      "runtimeCodeHash": "0xe3f60d9b5f81177d6d01fbce29a60c3ead3805b0fa85b9a45b508afbaa69bf90"
+    },
+    "p4": {
+      "address": "0xDCDF3e86B417eFfA411B75373F6596863f9B7bd8",
+      "runtimeCodeHash": "0xc2d10c0032d459c8d7883473cc61779a19f73a6794fdff7a52f22ff08b0f7b46"
+    },
+    "p12": {
+      "address": "0xCD673bc614Ad2C1d6Bc4F888df7b31A7a468d078",
+      "runtimeCodeHash": "0x8809ad478174b8bc2ff1752b4c93ecb7bba50c5d39876f76e7a0e9076431fc85"
+    },
+    "p39": {
+      "address": "0x9255eD0c56371039Dd2fA70acA23421b1A530455",
+      "runtimeCodeHash": "0xe0ed983773d2300acdbbae880221e887b3dcabaa674037b8a6aa44297cacd2cc"
+    },
+    "router": {
+      "address": "0xC1F7d1E68A624B896DA2881AFfC7De5B18a75B44",
+      "runtimeCodeHash": "0xb4d2d718825901441455443d14e020518a064f47792af11373a010134bfc6968"
+    }
+  }
+}

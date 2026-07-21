@@ -9,6 +9,7 @@ interface ILevelManager {
 contract MockRegistration {
     mapping(address => address) public ref;
     mapping(address => mapping(uint8 => bool)) public active;
+    mapping(address => mapping(uint8 => address)) public currentMatrixParentOf;
     address public id1Wallet;
     address public levelManager;  // Add this
 
@@ -35,6 +36,10 @@ contract MockRegistration {
 
     function setActiveStatus(address user, uint8 level, bool status) external {
         active[user][level] = status;
+    }
+
+    function recordCurrentMatrixParent(address user, uint8 level, address parent) external {
+        currentMatrixParentOf[user][level] = parent;
     }
 
     function getReferrer(address user) external view returns(address) {

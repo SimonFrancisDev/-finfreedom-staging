@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-07-21T14:00:42.710Z",
+  "network": "polygon",
+  "chainId": 137,
+  "deployer": "0x884e48f9897E8633238747b608DD49dE12bF94df",
+  "productionProxiesUnchanged": true,
+  "contracts": {
+    "registration": {
+      "address": "0x940d8D53FaE06721883B6c77fd9EC769B389e8F1",
+      "transactionHash": "0xf98d45fa8c551cb8db44efd63a39566825e86f6a52b342e41839e6b9e7bc981e",
+      "blockNumber": null,
+      "reused": true
+    },
+    "levelManager": {
+      "address": "0x36017dd046653654dCF2CE52C2a44A1914b3998A",
+      "transactionHash": "0x047e0ecd317f080e29b29c89d41489163e5067b6894eee244de7fbf7561f7a02",
+      "blockNumber": 90624951
+    },
+    "p4": {
+      "address": "0xDCDF3e86B417eFfA411B75373F6596863f9B7bd8",
+      "transactionHash": "0xf7edd15cead1520e702722dde0279d0ec5d0faf02dae464268f8c997fb8ac7cd",
+      "blockNumber": 90624954
+    },
+    "p12": {
+      "address": "0xCD673bc614Ad2C1d6Bc4F888df7b31A7a468d078",
+      "transactionHash": "0x4ba71f682271156e0710949fabf3caea509b6f3e08093c9ca35e5b8cd30f4985",
+      "blockNumber": 90624957
+    },
+    "p39": {
+      "address": "0x9255eD0c56371039Dd2fA70acA23421b1A530455",
+      "transactionHash": "0xdf07f3d9d7ba9e21d86d09fbcf8b236c2eb85d55bea962e288c2d6db283bb853",
+      "blockNumber": 90624960
+    },
+    "router": {
+      "address": "0xC1F7d1E68A624B896DA2881AFfC7De5B18a75B44",
+      "transactionHash": "0x72eab1de8c48f312d631350bad49e4d981d9b0243ad4c628c4a0b53944ebe567",
+      "blockNumber": 90624963
+    }
+  }
+}

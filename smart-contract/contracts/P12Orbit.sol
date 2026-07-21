@@ -121,25 +121,12 @@ contract P12Orbit is BaseOrbit {
         return 3; // 6, 9, 12
     }
 
-    function _afterPositionPlaced(
-        address orbitOwner,
-        uint8 level,
-        address user,
-        uint8 position
-    ) internal override {
-        address parent;
-        if (position <= 3) {
-            parent = orbitOwner;
-        } else {
-            uint8 parentPos = _line2ParentPosition(position);
-            parent = userOrbits[orbitOwner][level].positions[parentPos].user;
-            if (parent == address(0)) parent = ILevelManagerReader(levelManager).id1Wallet();
-        }
-
-        if (parent != user) matrixPlacementParent[user][level] = parent;
-    }
-
     function matrixParentOf(address user, uint8 level) public view returns (address) {
+        if (registration.code.length != 0) {
+            try IRegistration(registration).currentMatrixParentOf(user, level) returns (address canonicalParent) {
+                if (canonicalParent != address(0)) return canonicalParent;
+            } catch {}
+        }
         address storedParent = matrixPlacementParent[user][level];
         return storedParent != address(0)
             ? storedParent
