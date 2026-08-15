@@ -1,0 +1,52 @@
+{
+  "generatedAt": "2026-07-15T21:40:38.947Z",
+  "network": "polygon",
+  "chainId": 137,
+  "deployer": "0x884e48f9897E8633238747b608DD49dE12bF94df",
+  "productionProxiesUnchanged": true,
+  "contracts": {
+    "registration": {
+      "address": "0x1827E36A2753bB6aF107df26B461d63A5eA46073",
+      "transactionHash": "0xa259d24f7c5d1588ad4f0b7273aabacf8913a10528fc268b5cc7e5cab824c3dd",
+      "blockNumber": null,
+      "reused": true
+    },
+    "levelManager": {
+      "address": "0xC8775241Aef436Eb3A72D628146a6070C3cb8324",
+      "transactionHash": "0xe07f4ad7986ff243514678fd756ff14210e870daaaaa83710b81f2873c233d43",
+      "blockNumber": null,
+      "reused": true
+    },
+    "p4": {
+      "address": "0x9aF9d0A76B182DE97e8e378f18fC1FeC0Cb82343",
+      "transactionHash": "0xb62494f8c7fcaa72d76c573277290b40577cf6512362cfb7a35f110223893ecb",
+      "blockNumber": null,
+      "reused": true
+    },
+    "p12": {
+      "address": "0x02723190cA12fE2F63E9Dc56B680B135b18CE511",
+      "transactionHash": "0x0fd7a75f952f896e77a5274b171c537e0572ce587f8cd02744723ed465f0e5be",
+      "blockNumber": 90297749
+    },
+    "p39": {
+      "address": "0x57fE43E1B433E433907A9C6587f082B0ddCcDe8b",
+      "transactionHash": "0x20862001c388c6d9c0d7f30295abaee544b1d9a64057c072b600c5f4cbe70d52",
+      "blockNumber": 90297752
+    },
+    "orbitSeeder": {
+      "address": "0x9D791bF4037CcE72688b231BfD77B7D3aB1274f4",
+      "transactionHash": "0x4ff092af20ed1b8055d3967636a194433fdbb0fb708bbafd708d3a5da68e838c",
+      "blockNumber": 90297755
+    },
+    "managerConfigurator": {
+      "address": "0x6686f5FA7526CeE81C4b0603859d140960cf74C5",
+      "transactionHash": "0x954b3d6a20afd0716bd71e53666206986737a92d13cbd0e5bd1df09bdbf4e5b5",
+      "blockNumber": 90297759
+    },
+    "router": {
+      "address": "0xF8Bc6350dDB2f9517FdFcAc61bf6F67931E90847",
+      "transactionHash": "0x0771d88767f8ba3bd341521b55e0387e9b6b1a5157ab8e9663247ba630362309",
+      "blockNumber": 90297763
+    }
+  }
+}

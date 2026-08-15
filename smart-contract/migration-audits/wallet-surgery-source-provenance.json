@@ -1,0 +1,421 @@
+{
+  "generatedAt": "2026-08-02T15:14:34.927Z",
+  "chainId": 137,
+  "blockNumber": 91319104,
+  "rows": [
+    {
+      "name": "RegistrationFixed",
+      "proxy": "0x02ECA97e944Ac66b0444fd5F61A716917E83CfF5",
+      "implementation": "0x2F2c5E43eBBf666E00a1a2d699256B2Eae6268f5",
+      "liveHash": "0x404c268314cf440a1f0076cbe1c4fc73c3ee732ef1b1a60cab13e17d86fd60d5",
+      "liveExecutableHash": "0xb9430b9af0cf20bcc4ef449bcbb98890cd19524cbf0227db68e7645d5f2ffae9",
+      "liveRuntimeLength": 10555,
+      "staging": {
+        "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\artifacts\\contracts\\RegistrationFixed.sol\\RegistrationFixed.json",
+        "exists": true,
+        "runtimeHash": "0x22d3a9890a8092761133e687882cd481f0dfebc4d1ea49884926bcaecc1645b3",
+        "executableHash": "0xb9430b9af0cf20bcc4ef449bcbb98890cd19524cbf0227db68e7645d5f2ffae9",
+        "immutableReferences": [
+          {
+            "length": 32,
+            "start": 4387
+          },
+          {
+            "length": 32,
+            "start": 4598
+          }
+        ],
+        "runtimeLength": 10555,
+        "matches": false,
+        "executableMatches": true
+      },
+      "production": {
+        "file": "C:\\DevProjects\\f-freedom-stable\\Smart-Contract\\artifacts\\contracts\\RegistrationFixed.sol\\RegistrationFixed.json",
+        "exists": true,
+        "runtimeHash": "0x49a148043a9c667f0f4efd775aeab06b5bfe737b81e128f9993afcb42bab3685",
+        "executableHash": "0xfa2a97471922db257821856242ad5295c93828ca8fc00122819918c8653ca498",
+        "immutableReferences": [
+          {
+            "length": 32,
+            "start": 3747
+          },
+          {
+            "length": 32,
+            "start": 3953
+          }
+        ],
+        "runtimeLength": 8899,
+        "matches": false,
+        "executableMatches": false
+      }
+    },
+    {
+      "name": "LevelManager",
+      "proxy": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "implementation": "0x36017dd046653654dCF2CE52C2a44A1914b3998A",
+      "liveHash": "0xe3f60d9b5f81177d6d01fbce29a60c3ead3805b0fa85b9a45b508afbaa69bf90",
+      "liveExecutableHash": "0xab4f2784125f74a7ebcc149b5552edd9d6f03be60c8d7e890d09304aa1232c1c",
+      "liveRuntimeLength": 24301,
+      "staging": {
+        "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\artifacts\\contracts\\LevelManager.sol\\LevelManager.json",
+        "exists": true,
+        "runtimeHash": "0x999035f2ed92a63b79d5d92a45da1d15872b6e0a16bb296d1886ac58a6f156cb",
+        "executableHash": "0xab4f2784125f74a7ebcc149b5552edd9d6f03be60c8d7e890d09304aa1232c1c",
+        "immutableReferences": [
+          {
+            "length": 32,
+            "start": 4428
+          },
+          {
+            "length": 32,
+            "start": 4635
+          }
+        ],
+        "runtimeLength": 24301,
+        "matches": false,
+        "executableMatches": true
+      },
+      "production": {
+        "file": "C:\\DevProjects\\f-freedom-stable\\Smart-Contract\\artifacts\\contracts\\LevelManager.sol\\LevelManager.json",
+        "exists": true,
+        "runtimeHash": "0x1595cbf092b422e31bb92eade40e44d5110bf2944125f1bbd0e616de7905dea7",
+        "executableHash": "0xbeb2699e876ef45f37fa0cb9ddb10ad10104342e1e96819f9acdccd04ec279b6",
+        "immutableReferences": [
+          {
+            "length": 32,
+            "start": 4428
+          },
+          {
+            "length": 32,
+            "start": 4635
+          }
+        ],
+        "runtimeLength": 24541,
+        "matches": false,
+        "executableMatches": false
+      }
+    },
+    {
+      "name": "AutoUpgradeEscrow",
+      "proxy": "0x8b3db2AC7e30749479f2dbad14105C8eD4a377d4",
+      "implementation": "0x48c512362E047288d83Fe949614a571401aDA075",
+      "liveHash": "0x3decc642a764cd34879948ba1f5dfa8253be0ba0196c3274b47f61d6951df288",
+      "liveExecutableHash": "0x399873cadf3926d03d1a17185cb9836a66edb2db006740731c0486b7be1ff679",
+      "liveRuntimeLength": 7483,
+      "staging": {
+        "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\artifacts\\contracts\\AutoUpgradeEscrow.sol\\AutoUpgradeEscrow.json",
+        "exists": true,
+        "runtimeHash": "0x0e0d5b39b36f04ff900aaadc760924a373e983d2b6779481b476bb7645ccdd98",
+        "executableHash": "0x399873cadf3926d03d1a17185cb9836a66edb2db006740731c0486b7be1ff679",
+        "immutableReferences": [
+          {
+            "length": 32,
+            "start": 2782
+          },
+          {
+            "length": 32,
+            "start": 2988
+          }
+        ],
+        "runtimeLength": 7483,
+        "matches": false,
+        "executableMatches": true
+      },
+      "production": {
+        "file": "C:\\DevProjects\\f-freedom-stable\\Smart-Contract\\artifacts\\contracts\\AutoUpgradeEscrow.sol\\AutoUpgradeEscrow.json",
+        "exists": true,
+        "runtimeHash": "0xa879ee7960a44373646cc1ff291003c14f586fce4ecaeda6b6d18e11865bd4bf",
+        "executableHash": "0x399873cadf3926d03d1a17185cb9836a66edb2db006740731c0486b7be1ff679",
+        "immutableReferences": [
+          {
+            "length": 32,
+            "start": 2782
+          },
+          {
+            "length": 32,
+            "start": 2988
+          }
+        ],
+        "runtimeLength": 7483,
+        "matches": false,
+        "executableMatches": true
+      }
+    },
+    {
+      "name": "P4Orbit",
+      "proxy": "0x1ED0b443c880Ba88F732c3F5915561A07B21F6B4",
+      "implementation": "0xDCDF3e86B417eFfA411B75373F6596863f9B7bd8",
+      "liveHash": "0xc2d10c0032d459c8d7883473cc61779a19f73a6794fdff7a52f22ff08b0f7b46",
+      "liveExecutableHash": "0xdccdc758af1615cb4e4d8c14e7444c6348665d6c76d9139a656fa2c5b8cf84f2",
+      "liveRuntimeLength": 23752,
+      "staging": {
+        "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\artifacts\\contracts\\P4Orbit.sol\\P4Orbit.json",
+        "exists": true,
+        "runtimeHash": "0x5860beb2f8d9d6758074b151be20b87b147e40708101dc384c1a49a6f282ad92",
+        "executableHash": "0xdccdc758af1615cb4e4d8c14e7444c6348665d6c76d9139a656fa2c5b8cf84f2",
+        "immutableReferences": [
+          {
+            "length": 32,
+            "start": 7746
+          },
+          {
+            "length": 32,
+            "start": 7958
+          }
+        ],
+        "runtimeLength": 23752,
+        "matches": false,
+        "executableMatches": true
+      },
+      "production": {
+        "file": "C:\\DevProjects\\f-freedom-stable\\Smart-Contract\\artifacts\\contracts\\P4Orbit.sol\\P4Orbit.json",
+        "exists": true,
+        "runtimeHash": "0xc76ab947449de01ce1f75f5e9a25fd81be7ee9ee2f5687814a0ec8c92136a01b",
+        "executableHash": "0xf07cc26039630faa7fa22cd310191bb769153b94595e6a441585cd32eec5b76f",
+        "immutableReferences": [
+          {
+            "length": 32,
+            "start": 7280
+          },
+          {
+            "length": 32,
+            "start": 7492
+          }
+        ],
+        "runtimeLength": 22972,
+        "matches": false,
+        "executableMatches": false
+      }
+    },
+    {
+      "name": "P12Orbit",
+      "proxy": "0xCF998d8f7E9DD4f3FacFbA45e656dE07142f824b",
+      "implementation": "0xCD673bc614Ad2C1d6Bc4F888df7b31A7a468d078",
+      "liveHash": "0x8809ad478174b8bc2ff1752b4c93ecb7bba50c5d39876f76e7a0e9076431fc85",
+      "liveExecutableHash": "0x07fe5c1e68525058d3e0a487d3b9923c22b52784c18aaab98ad789eb5bd59177",
+      "liveRuntimeLength": 24172,
+      "staging": {
+        "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\artifacts\\contracts\\P12Orbit.sol\\P12Orbit.json",
+        "exists": true,
+        "runtimeHash": "0xe6163fa4a0e0c70b1e871b9bf0666c546018006ef22e1204a46e1049563b9bb6",
+        "executableHash": "0x07fe5c1e68525058d3e0a487d3b9923c22b52784c18aaab98ad789eb5bd59177",
+        "immutableReferences": [
+          {
+            "length": 32,
+            "start": 7693
+          },
+          {
+            "length": 32,
+            "start": 7905
+          }
+        ],
+        "runtimeLength": 24172,
+        "matches": false,
+        "executableMatches": true
+      },
+      "production": {
+        "file": "C:\\DevProjects\\f-freedom-stable\\Smart-Contract\\artifacts\\contracts\\P12Orbit.sol\\P12Orbit.json",
+        "exists": true,
+        "runtimeHash": "0x85b6470d6100e27f24565df8f7bc35c55c7b66501e6f441780fff8be31d5899e",
+        "executableHash": "0x8428c3b27f841ad7b6180e5c65b775d3b21fa59de705ca6cc391b7b6f4aa0799",
+        "immutableReferences": [
+          {
+            "length": 32,
+            "start": 7105
+          },
+          {
+            "length": 32,
+            "start": 7317
+          }
+        ],
+        "runtimeLength": 23765,
+        "matches": false,
+        "executableMatches": false
+      }
+    },
+    {
+      "name": "P39Orbit",
+      "proxy": "0xEaD39819B8C4DBb0669320542B6B847D4c31b8Fb",
+      "implementation": "0x9255eD0c56371039Dd2fA70acA23421b1A530455",
+      "liveHash": "0xe0ed983773d2300acdbbae880221e887b3dcabaa674037b8a6aa44297cacd2cc",
+      "liveExecutableHash": "0x57ab8296991d2f6aeb53bf4f59d4d33c30585da4418a8002fb814a40d118ce5d",
+      "liveRuntimeLength": 23938,
+      "staging": {
+        "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\artifacts\\contracts\\P39Orbit.sol\\P39Orbit.json",
+        "exists": true,
+        "runtimeHash": "0xdf41386c213f3c432f033d832e079a832a608403905ab0febd8ff23056349bf3",
+        "executableHash": "0x57ab8296991d2f6aeb53bf4f59d4d33c30585da4418a8002fb814a40d118ce5d",
+        "immutableReferences": [
+          {
+            "length": 32,
+            "start": 7712
+          },
+          {
+            "length": 32,
+            "start": 7955
+          }
+        ],
+        "runtimeLength": 23938,
+        "matches": false,
+        "executableMatches": true
+      },
+      "production": {
+        "file": "C:\\DevProjects\\f-freedom-stable\\Smart-Contract\\artifacts\\contracts\\P39Orbit.sol\\P39Orbit.json",
+        "exists": true,
+        "runtimeHash": "0xa286ec5f1b0235ea2026ec2dedb9abdc5d514e632d8c03720089eb6cc9df5a9a",
+        "executableHash": "0xfd2ddcbf320b5802af95a2290668aab51e3c522e80dafe2bd5aab629788df001",
+        "immutableReferences": [
+          {
+            "length": 32,
+            "start": 7140
+          },
+          {
+            "length": 32,
+            "start": 7383
+          }
+        ],
+        "runtimeLength": 23865,
+        "matches": false,
+        "executableMatches": false
+      }
+    },
+    {
+      "name": "FreedomTokenController",
+      "proxy": "0x2Ee32EDfE1990408FE70bcADBDBDA8c2f9AdBb62",
+      "implementation": "0xc1849FAAb6b28657A52542fb077547b2003E625f",
+      "liveHash": "0xc2c7a7de1335e25e2b6d1f9aecf37477ae3af766a4f09934ef5ab9f3f74676f9",
+      "liveExecutableHash": "0x1d98f63e9ca4649915e3d53290f877a3483675e48ba5c0dbbc5851c9c5df5569",
+      "liveRuntimeLength": 14120,
+      "staging": {
+        "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\artifacts\\contracts\\FreedomTokenController.sol\\FreedomTokenController.json",
+        "exists": true,
+        "runtimeHash": "0x7428a33ed176bfdc2437459945a5dc416285551f1eb4c62283d2cb44a1570435",
+        "executableHash": "0x1d98f63e9ca4649915e3d53290f877a3483675e48ba5c0dbbc5851c9c5df5569",
+        "immutableReferences": [
+          {
+            "length": 32,
+            "start": 3535
+          },
+          {
+            "length": 32,
+            "start": 3852
+          }
+        ],
+        "runtimeLength": 14120,
+        "matches": false,
+        "executableMatches": true
+      },
+      "production": {
+        "file": "C:\\DevProjects\\f-freedom-stable\\Smart-Contract\\artifacts\\contracts\\FreedomTokenController.sol\\FreedomTokenController.json",
+        "exists": true,
+        "runtimeHash": "0x6f47dbea98f7e7051c431adb5e030c3ed4fdb2c1b1e167c9c31e9ba0e160d514",
+        "executableHash": "0x1d98f63e9ca4649915e3d53290f877a3483675e48ba5c0dbbc5851c9c5df5569",
+        "immutableReferences": [
+          {
+            "length": 32,
+            "start": 3535
+          },
+          {
+            "length": 32,
+            "start": 3852
+          }
+        ],
+        "runtimeLength": 14120,
+        "matches": false,
+        "executableMatches": true
+      }
+    },
+    {
+      "name": "FGTToken",
+      "proxy": "0x615201edaddB5CFD839Cc4eE693Dc464F6E2B5E4",
+      "implementation": "0x435295Ef236841fd2a162062cB86464C4808DE26",
+      "liveHash": "0x1e0df468cb2b95cd03d3b9a1cb530d657e36d67bb99cc9f9121f616b3ff9f6a2",
+      "liveExecutableHash": "0x2cfff73cbcb095414443f86ef68fd86b6f4b9c4f09f2488b647e89d77bb53daa",
+      "liveRuntimeLength": 6667,
+      "staging": {
+        "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\artifacts\\contracts\\tokens\\FGTToken.sol\\FGTToken.json",
+        "exists": true,
+        "runtimeHash": "0x5f62ff4f109290d91ca4b35b3a0b775a94edba19016f2989dffd1fef28b04146",
+        "executableHash": "0x2cfff73cbcb095414443f86ef68fd86b6f4b9c4f09f2488b647e89d77bb53daa",
+        "immutableReferences": [
+          {
+            "length": 32,
+            "start": 2371
+          },
+          {
+            "length": 32,
+            "start": 2577
+          }
+        ],
+        "runtimeLength": 6667,
+        "matches": false,
+        "executableMatches": true
+      },
+      "production": {
+        "file": "C:\\DevProjects\\f-freedom-stable\\Smart-Contract\\artifacts\\contracts\\tokens\\FGTToken.sol\\FGTToken.json",
+        "exists": true,
+        "runtimeHash": "0x25bee9e5690af588f90b30118cda059a37080ae5cdbf26c07ca02965f1ae47e5",
+        "executableHash": "0x2cfff73cbcb095414443f86ef68fd86b6f4b9c4f09f2488b647e89d77bb53daa",
+        "immutableReferences": [
+          {
+            "length": 32,
+            "start": 2371
+          },
+          {
+            "length": 32,
+            "start": 2577
+          }
+        ],
+        "runtimeLength": 6667,
+        "matches": false,
+        "executableMatches": true
+      }
+    },
+    {
+      "name": "FGTrToken",
+      "proxy": "0xAaD41296b6Ec358b9C16dD7161C555fD3a464Bc3",
+      "implementation": "0xC6cF732CF49faDDF2E614f1154294a3c2f786cfF",
+      "liveHash": "0x3c6ab63b2626b42f730f6e04a2e532bf16e86c83195ad28ab724845332ce8277",
+      "liveExecutableHash": "0x4a093525b90822f45b412ddacf2438735d5611d9baad20417315e3fe54b3a903",
+      "liveRuntimeLength": 6714,
+      "staging": {
+        "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\artifacts\\contracts\\tokens\\FGTrToken.sol\\FGTrToken.json",
+        "exists": true,
+        "runtimeHash": "0x14e074ffa83994312a8379ffc793dbe168c62c34b9e2a9a9d6a485c1e534b374",
+        "executableHash": "0x4a093525b90822f45b412ddacf2438735d5611d9baad20417315e3fe54b3a903",
+        "immutableReferences": [
+          {
+            "length": 32,
+            "start": 2371
+          },
+          {
+            "length": 32,
+            "start": 2577
+          }
+        ],
+        "runtimeLength": 6714,
+        "matches": false,
+        "executableMatches": true
+      },
+      "production": {
+        "file": "C:\\DevProjects\\f-freedom-stable\\Smart-Contract\\artifacts\\contracts\\tokens\\FGTrToken.sol\\FGTrToken.json",
+        "exists": true,
+        "runtimeHash": "0x3f256123fdbc655260ab53a4ee294936598fd819585983691e334d0f99e6c33e",
+        "executableHash": "0x4a093525b90822f45b412ddacf2438735d5611d9baad20417315e3fe54b3a903",
+        "immutableReferences": [
+          {
+            "length": 32,
+            "start": 2371
+          },
+          {
+            "length": 32,
+            "start": 2577
+          }
+        ],
+        "runtimeLength": 6714,
+        "matches": false,
+        "executableMatches": true
+      }
+    }
+  ]
+}

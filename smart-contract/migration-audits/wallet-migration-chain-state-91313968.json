@@ -1,0 +1,2151 @@
+{
+  "generatedAt": "2026-08-02T13:16:57.405Z",
+  "chainId": 137,
+  "frozenBlock": 91313968,
+  "observedHead": 91314399,
+  "contracts": {
+    "registration": "0x02ECA97e944Ac66b0444fd5F61A716917E83CfF5",
+    "levelManager": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+    "escrow": "0x8b3db2AC7e30749479f2dbad14105C8eD4a377d4",
+    "p4": "0x1ED0b443c880Ba88F732c3f5915561A07B21F6B4",
+    "p12": "0xCF998d8f7E9DD4f3FacFbA45e656dE07142f824b",
+    "p39": "0xEaD39819B8C4DBb0669320542B6B847D4c31b8Fb",
+    "usdt": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+    "fgt": "0x615201edaddB5CFD839Cc4eE693Dc464F6E2B5E4",
+    "fgtr": "0xAaD41296b6Ec358b9C16dD7161C555fD3a464Bc3",
+    "multisig": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+    "guardian": "0x290c2300296379BD0048aFe9099Ed6Fc81BF75fC"
+  },
+  "wallets": {
+    "wp98hbOld": {
+      "wallet": "0xc0545331e20587208d4b27b2a3e4920cc481133a",
+      "registered": true,
+      "sponsor": "0x3F02D99D7398ACdb29b2F6DCA50a0E35908629C1",
+      "balances": {
+        "native": "2938704730807143054",
+        "usdt": "452723164",
+        "fgt": "150000000",
+        "fgtr": "15000000"
+      },
+      "privilegedAddressMatches": {
+        "multisig": false,
+        "guardian": false
+      },
+      "levels": [
+        {
+          "level": 1,
+          "orbitType": "P4",
+          "active": true,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "1",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "3",
+            "81000000"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 1,
+              "toLevel": 2,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [],
+            "historical": [
+              {
+                "cycle": 1,
+                "positions": [
+                  {
+                    "position": 1,
+                    "data": [
+                      "0x41BAab62394BeefE994128FCfAfC45aB34De7dcF",
+                      "10000000",
+                      "1779891675",
+                      "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+                      true
+                    ],
+                    "activation": [
+                      "61",
+                      false
+                    ]
+                  },
+                  {
+                    "position": 2,
+                    "data": [
+                      "0x2F1E28756A42A3680b5AD42C58A0c3887C9e60bA",
+                      "10000000",
+                      "1779891839",
+                      "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+                      true
+                    ],
+                    "activation": [
+                      "65",
+                      false
+                    ]
+                  },
+                  {
+                    "position": 3,
+                    "data": [
+                      "0x16E5b21EB13D8F0381d61770834df07F37BB802e",
+                      "10000000",
+                      "1779892949",
+                      "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+                      true
+                    ],
+                    "activation": [
+                      "75",
+                      false
+                    ]
+                  },
+                  {
+                    "position": 4,
+                    "data": [
+                      "0x03D0343C4138e42804774638F0CF0866381763A2",
+                      "10000000",
+                      "1779894736",
+                      "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+                      true
+                    ],
+                    "activation": [
+                      "100",
+                      false
+                    ]
+                  }
+                ]
+              },
+              {
+                "cycle": 2,
+                "positions": [
+                  {
+                    "position": 1,
+                    "data": [
+                      "0xeb752486beaD4844C7EF8416ed6c6B9881fdf7Ee",
+                      "10000000",
+                      "1779897985",
+                      "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+                      true
+                    ],
+                    "activation": [
+                      "115",
+                      false
+                    ]
+                  },
+                  {
+                    "position": 2,
+                    "data": [
+                      "0xEE0d8E1152fB067e8276e0E8C10ED33dC0D4D0D8",
+                      "10000000",
+                      "1779958371",
+                      "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+                      true
+                    ],
+                    "activation": [
+                      "165",
+                      false
+                    ]
+                  },
+                  {
+                    "position": 3,
+                    "data": [
+                      "0x16E5b21EB13D8F0381d61770834df07F37BB802e",
+                      "9000000",
+                      "1780931142",
+                      "0x16E5b21EB13D8F0381d61770834df07F37BB802e",
+                      true
+                    ],
+                    "activation": [
+                      "261",
+                      true
+                    ]
+                  },
+                  {
+                    "position": 4,
+                    "data": [
+                      "0xcC0aF2Eacf2937A1526F23F137644D4F94821899",
+                      "10000000",
+                      "1781189520",
+                      "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+                      true
+                    ],
+                    "activation": [
+                      "274",
+                      false
+                    ]
+                  }
+                ]
+              },
+              {
+                "cycle": 3,
+                "positions": [
+                  {
+                    "position": 1,
+                    "data": [
+                      "0x3734223B5dB7438DC86d8508aA76805AfcCb202F",
+                      "10000000",
+                      "1781728253",
+                      "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+                      true
+                    ],
+                    "activation": [
+                      "302",
+                      false
+                    ]
+                  },
+                  {
+                    "position": 2,
+                    "data": [
+                      "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+                      "10000000",
+                      "1783261157",
+                      "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+                      true
+                    ],
+                    "activation": [
+                      "336",
+                      false
+                    ]
+                  },
+                  {
+                    "position": 3,
+                    "data": [
+                      "0x16E5b21EB13D8F0381d61770834df07F37BB802e",
+                      "9000000",
+                      "1783530065",
+                      "0x16E5b21EB13D8F0381d61770834df07F37BB802e",
+                      true
+                    ],
+                    "activation": [
+                      "346",
+                      true
+                    ]
+                  },
+                  {
+                    "position": 4,
+                    "data": [
+                      "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+                      "9000000",
+                      "1784710195",
+                      "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+                      true
+                    ],
+                    "activation": [
+                      "581",
+                      true
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "level": 2,
+          "orbitType": "P12",
+          "active": true,
+          "matrixParent": "0xBb030B134070Caed7B61986A589eF058c41fCd43",
+          "summary": [
+            "12",
+            "0",
+            false,
+            "3",
+            "8",
+            "0",
+            "0",
+            "94000000"
+          ],
+          "lineCounts": [
+            "3",
+            "8",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 2,
+              "toLevel": 3,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [
+              {
+                "position": 1,
+                "data": [
+                  "0x41BAab62394BeefE994128FCfAfC45aB34De7dcF",
+                  "20000000",
+                  "1779891969",
+                  "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+                  true
+                ],
+                "activation": [
+                  "66",
+                  "1",
+                  false
+                ]
+              },
+              {
+                "position": 2,
+                "data": [
+                  "0x2F1E28756A42A3680b5AD42C58A0c3887C9e60bA",
+                  "20000000",
+                  "1779892028",
+                  "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+                  true
+                ],
+                "activation": [
+                  "68",
+                  "1",
+                  false
+                ]
+              },
+              {
+                "position": 3,
+                "data": [
+                  "0x03D0343C4138e42804774638F0CF0866381763A2",
+                  "20000000",
+                  "1779894769",
+                  "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+                  true
+                ],
+                "activation": [
+                  "101",
+                  "1",
+                  false
+                ]
+              },
+              {
+                "position": 4,
+                "data": [
+                  "0xeb752486beaD4844C7EF8416ed6c6B9881fdf7Ee",
+                  "20000000",
+                  "1779898461",
+                  "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+                  true
+                ],
+                "activation": [
+                  "117",
+                  "1",
+                  false
+                ]
+              },
+              {
+                "position": 5,
+                "data": [
+                  "0x16E5b21EB13D8F0381d61770834df07F37BB802e",
+                  "20000000",
+                  "1779922447",
+                  "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+                  true
+                ],
+                "activation": [
+                  "152",
+                  "1",
+                  false
+                ]
+              },
+              {
+                "position": 6,
+                "data": [
+                  "0x6F6036351989d89890c1A1E5a5e0E405d532d414",
+                  "10000000",
+                  "1779918462",
+                  "0x03D0343C4138e42804774638F0CF0866381763A2",
+                  true
+                ],
+                "activation": [
+                  "149",
+                  "1",
+                  true
+                ]
+              },
+              {
+                "position": 7,
+                "data": [
+                  "0xcC0aF2Eacf2937A1526F23F137644D4F94821899",
+                  "20000000",
+                  "1781189907",
+                  "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+                  true
+                ],
+                "activation": [
+                  "275",
+                  "1",
+                  false
+                ]
+              },
+              {
+                "position": 8,
+                "data": [
+                  "0x0fDeD89D00403C941f94e44185e5400b322042Bd",
+                  "10000000",
+                  "1779968936",
+                  "0x2F1E28756A42A3680b5AD42C58A0c3887C9e60bA",
+                  true
+                ],
+                "activation": [
+                  "169",
+                  "1",
+                  true
+                ]
+              },
+              {
+                "position": 9,
+                "data": [
+                  "0x3734223B5dB7438DC86d8508aA76805AfcCb202F",
+                  "20000000",
+                  "1782625451",
+                  "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+                  true
+                ],
+                "activation": [
+                  "332",
+                  "1",
+                  false
+                ]
+              },
+              {
+                "position": 10,
+                "data": [
+                  "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+                  "20000000",
+                  "1783267139",
+                  "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+                  true
+                ],
+                "activation": [
+                  "341",
+                  "1",
+                  false
+                ]
+              },
+              {
+                "position": 11,
+                "data": [
+                  "0xa4e1197A882D91EBdB3614b7b02a21F1c1c2dBA2",
+                  "10000000",
+                  "1779992046",
+                  "0x2F1E28756A42A3680b5AD42C58A0c3887C9e60bA",
+                  true
+                ],
+                "activation": [
+                  "183",
+                  "1",
+                  true
+                ]
+              }
+            ],
+            "historical": []
+          }
+        },
+        {
+          "level": 3,
+          "orbitType": "P39",
+          "active": true,
+          "matrixParent": "0x3F02D99D7398ACdb29b2F6DCA50a0E35908629C1",
+          "summary": [
+            "9",
+            "0",
+            false,
+            "3",
+            "5",
+            "6",
+            "0",
+            "160000000"
+          ],
+          "lineCounts": [
+            "3",
+            "5",
+            "6"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 3,
+              "toLevel": 4,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [
+              {
+                "position": 1,
+                "data": [
+                  "0x2F1E28756A42A3680b5AD42C58A0c3887C9e60bA",
+                  "40000000",
+                  "1779892091",
+                  "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+                  true
+                ],
+                "activation": [
+                  "69",
+                  "1",
+                  false
+                ]
+              },
+              {
+                "position": 2,
+                "data": [
+                  "0x6F6036351989d89890c1A1E5a5e0E405d532d414",
+                  "40000000",
+                  "1779918548",
+                  "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+                  true
+                ],
+                "activation": [
+                  "150",
+                  "1",
+                  false
+                ]
+              },
+              {
+                "position": 3,
+                "data": [
+                  "0xcC0aF2Eacf2937A1526F23F137644D4F94821899",
+                  "40000000",
+                  "1781203119",
+                  "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+                  true
+                ],
+                "activation": [
+                  "276",
+                  "1",
+                  false
+                ]
+              },
+              {
+                "position": 4,
+                "data": [
+                  "0xa4e1197A882D91EBdB3614b7b02a21F1c1c2dBA2",
+                  "8000000",
+                  "1779999204",
+                  "0x2F1E28756A42A3680b5AD42C58A0c3887C9e60bA",
+                  true
+                ],
+                "activation": [
+                  "189",
+                  "1",
+                  true
+                ]
+              },
+              {
+                "position": 5,
+                "data": [
+                  "0x16E5b21EB13D8F0381d61770834df07F37BB802e",
+                  "40000000",
+                  "1782428791",
+                  "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+                  true
+                ],
+                "activation": [
+                  "329",
+                  "1",
+                  false
+                ]
+              },
+              {
+                "position": 6,
+                "data": [
+                  "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+                  "40000000",
+                  "1783267178",
+                  "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+                  true
+                ],
+                "activation": [
+                  "342",
+                  "1",
+                  false
+                ]
+              },
+              {
+                "position": 7,
+                "data": [
+                  "0xcB3169aCcB5CB0ca2F86F609d5765c5a256782dF",
+                  "8000000",
+                  "1783696274",
+                  "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+                  true
+                ],
+                "activation": [
+                  "372",
+                  "1",
+                  true
+                ]
+              },
+              {
+                "position": 8,
+                "data": [
+                  "0x3Fd47bC432B2c0681d7687AdfE77Ac0307F1f8f4",
+                  "20000000",
+                  "1783786676",
+                  "0x41b65562CCDb4BaF1f9aB67A1E01c160fcFCDDc3",
+                  true
+                ],
+                "activation": [
+                  "395",
+                  "1",
+                  true
+                ]
+              },
+              {
+                "position": 13,
+                "data": [
+                  "0x70c25E9DfE4cc26E8Bd10e00bE5bB699DCbc5728",
+                  "20000000",
+                  "1779999487",
+                  "0xa4e1197A882D91EBdB3614b7b02a21F1c1c2dBA2",
+                  true
+                ],
+                "activation": [
+                  "190",
+                  "1",
+                  true
+                ]
+              },
+              {
+                "position": 14,
+                "data": [
+                  "0x9a754946bbb6c95Bad936d8c743CB8Cf761c3FBd",
+                  "8000000",
+                  "1783530308",
+                  "0x16E5b21EB13D8F0381d61770834df07F37BB802e",
+                  true
+                ],
+                "activation": [
+                  "348",
+                  "1",
+                  true
+                ]
+              },
+              {
+                "position": 15,
+                "data": [
+                  "0x03e71Ce23133e07f7C9422451A65ef7b9885BE7b",
+                  "8000000",
+                  "1783270313",
+                  "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+                  true
+                ],
+                "activation": [
+                  "345",
+                  "1",
+                  true
+                ]
+              },
+              {
+                "position": 23,
+                "data": [
+                  "0xB5a38aFB208f6BF3e27027Ee23aaa65661eA9D3C",
+                  "20000000",
+                  "1785104412",
+                  "0x16E5b21EB13D8F0381d61770834df07F37BB802e",
+                  true
+                ],
+                "activation": [
+                  "710",
+                  "1",
+                  true
+                ]
+              },
+              {
+                "position": 24,
+                "data": [
+                  "0x41b65562CCDb4BaF1f9aB67A1E01c160fcFCDDc3",
+                  "8000000",
+                  "1783544587",
+                  "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+                  true
+                ],
+                "activation": [
+                  "351",
+                  "1",
+                  true
+                ]
+              },
+              {
+                "position": 33,
+                "data": [
+                  "0x31fc72c65d7c180290CBFc2694c11c3918f013d8",
+                  "20000000",
+                  "1783613920",
+                  "0x41b65562CCDb4BaF1f9aB67A1E01c160fcFCDDc3",
+                  true
+                ],
+                "activation": [
+                  "355",
+                  "1",
+                  true
+                ]
+              }
+            ],
+            "historical": []
+          }
+        },
+        {
+          "level": 4,
+          "orbitType": "P4",
+          "active": true,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "4",
+            "160000000",
+            true,
+            "3",
+            "0",
+            "0",
+            "0",
+            "216000000"
+          ],
+          "lineCounts": [
+            "3",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 4,
+              "toLevel": 5,
+              "amount": "88000000"
+            }
+          ],
+          "positions": {
+            "current": [
+              {
+                "position": 1,
+                "data": [
+                  "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+                  "80000000",
+                  "1783639868",
+                  "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+                  true
+                ],
+                "activation": [
+                  "360",
+                  "1",
+                  false
+                ]
+              },
+              {
+                "position": 2,
+                "data": [
+                  "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+                  "72000000",
+                  "1784729119",
+                  "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+                  true
+                ],
+                "activation": [
+                  "604",
+                  "1",
+                  true
+                ]
+              },
+              {
+                "position": 3,
+                "data": [
+                  "0xcC0aF2Eacf2937A1526F23F137644D4F94821899",
+                  "80000000",
+                  "1784994130",
+                  "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+                  true
+                ],
+                "activation": [
+                  "690",
+                  "1",
+                  false
+                ]
+              }
+            ],
+            "historical": []
+          }
+        },
+        {
+          "level": 5,
+          "orbitType": "P12",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 5,
+              "toLevel": 6,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        },
+        {
+          "level": 6,
+          "orbitType": "P39",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "2",
+            "0",
+            false,
+            "1",
+            "1",
+            "0",
+            "0",
+            "224000000"
+          ],
+          "lineCounts": [
+            "1",
+            "1",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 6,
+              "toLevel": 7,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [
+              {
+                "position": 1,
+                "data": [
+                  "0x41b65562CCDb4BaF1f9aB67A1E01c160fcFCDDc3",
+                  "64000000",
+                  "1783803929",
+                  "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+                  true
+                ],
+                "activation": [
+                  "400",
+                  "1",
+                  true
+                ]
+              },
+              {
+                "position": 4,
+                "data": [
+                  "0x3Fd47bC432B2c0681d7687AdfE77Ac0307F1f8f4",
+                  "160000000",
+                  "1783808656",
+                  "0x41b65562CCDb4BaF1f9aB67A1E01c160fcFCDDc3",
+                  true
+                ],
+                "activation": [
+                  "403",
+                  "1",
+                  true
+                ]
+              }
+            ],
+            "historical": []
+          }
+        },
+        {
+          "level": 7,
+          "orbitType": "P4",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 7,
+              "toLevel": 8,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        },
+        {
+          "level": 8,
+          "orbitType": "P12",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 8,
+              "toLevel": 9,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        },
+        {
+          "level": 9,
+          "orbitType": "P39",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 9,
+              "toLevel": 10,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        },
+        {
+          "level": 10,
+          "orbitType": "P4",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        }
+      ]
+    },
+    "wp98hbNew": {
+      "wallet": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B",
+      "registered": false,
+      "sponsor": "0x0000000000000000000000000000000000000000",
+      "balances": {
+        "native": "0",
+        "usdt": "0",
+        "fgt": "0",
+        "fgtr": "0"
+      },
+      "privilegedAddressMatches": {
+        "multisig": false,
+        "guardian": false
+      },
+      "levels": [
+        {
+          "level": 1,
+          "orbitType": "P4",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 1,
+              "toLevel": 2,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        },
+        {
+          "level": 2,
+          "orbitType": "P12",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 2,
+              "toLevel": 3,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        },
+        {
+          "level": 3,
+          "orbitType": "P39",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 3,
+              "toLevel": 4,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        },
+        {
+          "level": 4,
+          "orbitType": "P4",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 4,
+              "toLevel": 5,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        },
+        {
+          "level": 5,
+          "orbitType": "P12",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 5,
+              "toLevel": 6,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        },
+        {
+          "level": 6,
+          "orbitType": "P39",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 6,
+              "toLevel": 7,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        },
+        {
+          "level": 7,
+          "orbitType": "P4",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 7,
+              "toLevel": 8,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        },
+        {
+          "level": 8,
+          "orbitType": "P12",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 8,
+              "toLevel": 9,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        },
+        {
+          "level": 9,
+          "orbitType": "P39",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 9,
+              "toLevel": 10,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        },
+        {
+          "level": 10,
+          "orbitType": "P4",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        }
+      ]
+    },
+    "rymqk4Old": {
+      "wallet": "0x2f1e28756a42a3680b5ad42c58a0c3887c9e60ba",
+      "registered": true,
+      "sponsor": "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+      "balances": {
+        "native": "10172853226406350720",
+        "usdt": "0",
+        "fgt": "70000000",
+        "fgtr": "0"
+      },
+      "privilegedAddressMatches": {
+        "multisig": false,
+        "guardian": false
+      },
+      "levels": [
+        {
+          "level": 1,
+          "orbitType": "P4",
+          "active": true,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "3",
+            "0",
+            false,
+            "2",
+            "0",
+            "0",
+            "0",
+            "18000000"
+          ],
+          "lineCounts": [
+            "2",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 1,
+              "toLevel": 2,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [
+              {
+                "position": 1,
+                "data": [
+                  "0x0fDeD89D00403C941f94e44185e5400b322042Bd",
+                  "10000000",
+                  "1779893463",
+                  "0x2F1E28756A42A3680b5AD42C58A0c3887C9e60bA",
+                  true
+                ],
+                "activation": [
+                  "80",
+                  "1",
+                  false
+                ]
+              },
+              {
+                "position": 2,
+                "data": [
+                  "0xa4e1197A882D91EBdB3614b7b02a21F1c1c2dBA2",
+                  "10000000",
+                  "1779902763",
+                  "0x2F1E28756A42A3680b5AD42C58A0c3887C9e60bA",
+                  true
+                ],
+                "activation": [
+                  "132",
+                  "1",
+                  false
+                ]
+              }
+            ],
+            "historical": []
+          }
+        },
+        {
+          "level": 2,
+          "orbitType": "P12",
+          "active": true,
+          "matrixParent": "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+          "summary": [
+            "5",
+            "0",
+            false,
+            "3",
+            "4",
+            "0",
+            "0",
+            "64000000"
+          ],
+          "lineCounts": [
+            "3",
+            "4",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 2,
+              "toLevel": 3,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [
+              {
+                "position": 1,
+                "data": [
+                  "0x16E5b21EB13D8F0381d61770834df07F37BB802e",
+                  "8000000",
+                  "1779922447",
+                  "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+                  true
+                ],
+                "activation": [
+                  "152",
+                  "1",
+                  true
+                ]
+              },
+              {
+                "position": 2,
+                "data": [
+                  "0x0fDeD89D00403C941f94e44185e5400b322042Bd",
+                  "20000000",
+                  "1779968936",
+                  "0x2F1E28756A42A3680b5AD42C58A0c3887C9e60bA",
+                  true
+                ],
+                "activation": [
+                  "169",
+                  "1",
+                  false
+                ]
+              },
+              {
+                "position": 3,
+                "data": [
+                  "0xa4e1197A882D91EBdB3614b7b02a21F1c1c2dBA2",
+                  "20000000",
+                  "1779992046",
+                  "0x2F1E28756A42A3680b5AD42C58A0c3887C9e60bA",
+                  true
+                ],
+                "activation": [
+                  "183",
+                  "1",
+                  false
+                ]
+              },
+              {
+                "position": 4,
+                "data": [
+                  "0xfD73bDbCbAD5B765f615f786cf326A5470f4ac35",
+                  "10000000",
+                  "1779924960",
+                  "0x16E5b21EB13D8F0381d61770834df07F37BB802e",
+                  true
+                ],
+                "activation": [
+                  "155",
+                  "1",
+                  true
+                ]
+              },
+              {
+                "position": 6,
+                "data": [
+                  "0x70c25E9DfE4cc26E8Bd10e00bE5bB699DCbc5728",
+                  "10000000",
+                  "1779998673",
+                  "0xa4e1197A882D91EBdB3614b7b02a21F1c1c2dBA2",
+                  true
+                ],
+                "activation": [
+                  "188",
+                  "1",
+                  true
+                ]
+              },
+              {
+                "position": 7,
+                "data": [
+                  "0xecC942BE909DeEE333a498AC15aAA9f373A298d9",
+                  "10000000",
+                  "1780203339",
+                  "0x16E5b21EB13D8F0381d61770834df07F37BB802e",
+                  true
+                ],
+                "activation": [
+                  "214",
+                  "1",
+                  true
+                ]
+              },
+              {
+                "position": 10,
+                "data": [
+                  "0xB5a38aFB208f6BF3e27027Ee23aaa65661eA9D3C",
+                  "10000000",
+                  "1780931242",
+                  "0x16E5b21EB13D8F0381d61770834df07F37BB802e",
+                  true
+                ],
+                "activation": [
+                  "262",
+                  "1",
+                  true
+                ]
+              }
+            ],
+            "historical": []
+          }
+        },
+        {
+          "level": 3,
+          "orbitType": "P39",
+          "active": true,
+          "matrixParent": "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+          "summary": [
+            "2",
+            "0",
+            false,
+            "1",
+            "1",
+            "0",
+            "0",
+            "16000000"
+          ],
+          "lineCounts": [
+            "1",
+            "1",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 3,
+              "toLevel": 4,
+              "amount": "8000000"
+            }
+          ],
+          "positions": {
+            "current": [
+              {
+                "position": 1,
+                "data": [
+                  "0xa4e1197A882D91EBdB3614b7b02a21F1c1c2dBA2",
+                  "40000000",
+                  "1779999204",
+                  "0x2F1E28756A42A3680b5AD42C58A0c3887C9e60bA",
+                  true
+                ],
+                "activation": [
+                  "189",
+                  "1",
+                  false
+                ]
+              },
+              {
+                "position": 4,
+                "data": [
+                  "0x70c25E9DfE4cc26E8Bd10e00bE5bB699DCbc5728",
+                  "8000000",
+                  "1779999487",
+                  "0xa4e1197A882D91EBdB3614b7b02a21F1c1c2dBA2",
+                  true
+                ],
+                "activation": [
+                  "190",
+                  "1",
+                  true
+                ]
+              }
+            ],
+            "historical": []
+          }
+        },
+        {
+          "level": 4,
+          "orbitType": "P4",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 4,
+              "toLevel": 5,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        },
+        {
+          "level": 5,
+          "orbitType": "P12",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 5,
+              "toLevel": 6,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        },
+        {
+          "level": 6,
+          "orbitType": "P39",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 6,
+              "toLevel": 7,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        },
+        {
+          "level": 7,
+          "orbitType": "P4",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 7,
+              "toLevel": 8,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        },
+        {
+          "level": 8,
+          "orbitType": "P12",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 8,
+              "toLevel": 9,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        },
+        {
+          "level": 9,
+          "orbitType": "P39",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 9,
+              "toLevel": 10,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        },
+        {
+          "level": 10,
+          "orbitType": "P4",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        }
+      ]
+    },
+    "rymqk4New": {
+      "wallet": "0xFb8D46674f51882baaA2c9606122484434FF2DC2",
+      "registered": false,
+      "sponsor": "0x0000000000000000000000000000000000000000",
+      "balances": {
+        "native": "0",
+        "usdt": "0",
+        "fgt": "0",
+        "fgtr": "0"
+      },
+      "privilegedAddressMatches": {
+        "multisig": false,
+        "guardian": false
+      },
+      "levels": [
+        {
+          "level": 1,
+          "orbitType": "P4",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 1,
+              "toLevel": 2,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        },
+        {
+          "level": 2,
+          "orbitType": "P12",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 2,
+              "toLevel": 3,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        },
+        {
+          "level": 3,
+          "orbitType": "P39",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 3,
+              "toLevel": 4,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        },
+        {
+          "level": 4,
+          "orbitType": "P4",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 4,
+              "toLevel": 5,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        },
+        {
+          "level": 5,
+          "orbitType": "P12",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 5,
+              "toLevel": 6,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        },
+        {
+          "level": 6,
+          "orbitType": "P39",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 6,
+              "toLevel": 7,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        },
+        {
+          "level": 7,
+          "orbitType": "P4",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 7,
+              "toLevel": 8,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        },
+        {
+          "level": 8,
+          "orbitType": "P12",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 8,
+              "toLevel": 9,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        },
+        {
+          "level": 9,
+          "orbitType": "P39",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [
+            {
+              "fromLevel": 9,
+              "toLevel": 10,
+              "amount": "0"
+            }
+          ],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        },
+        {
+          "level": 10,
+          "orbitType": "P4",
+          "active": false,
+          "matrixParent": "0x0000000000000000000000000000000000000000",
+          "summary": [
+            "0",
+            "0",
+            false,
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "lineCounts": [
+            "0",
+            "0",
+            "0"
+          ],
+          "lockedTransitions": [],
+          "positions": {
+            "current": [],
+            "historical": []
+          }
+        }
+      ]
+    }
+  }
+}

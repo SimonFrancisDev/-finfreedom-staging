@@ -1,0 +1,142 @@
+{
+  "generatedAt": "2026-08-03T20:08:54.497Z",
+  "chainId": 137,
+  "blockNumber": 91388472,
+  "owner": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+  "guardian": "0x290c2300296379BD0048aFe9099Ed6Fc81BF75fC",
+  "deploymentFile": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\deployments-production-migration\\wallet-replacement-migrators-1785787466646.json",
+  "verdict": "PASS",
+  "governanceActionsRequired": [
+    {
+      "key": "escrow",
+      "action": "APPROVE_PROXY",
+      "proxy": "0x8b3db2AC7e30749479f2dbad14105C8eD4a377d4"
+    },
+    {
+      "key": "escrow",
+      "action": "APPROVE_PERMANENT_IMPLEMENTATION",
+      "proxy": "0x8b3db2AC7e30749479f2dbad14105C8eD4a377d4",
+      "implementation": "0x48c512362E047288d83Fe949614a571401aDA075"
+    },
+    {
+      "key": "fgt",
+      "action": "APPROVE_PROXY",
+      "proxy": "0x615201edaddB5CFD839Cc4eE693Dc464F6E2B5E4"
+    },
+    {
+      "key": "fgt",
+      "action": "APPROVE_PERMANENT_IMPLEMENTATION",
+      "proxy": "0x615201edaddB5CFD839Cc4eE693Dc464F6E2B5E4",
+      "implementation": "0x435295Ef236841fd2a162062cB86464C4808DE26"
+    },
+    {
+      "key": "fgtr",
+      "action": "APPROVE_PROXY",
+      "proxy": "0xAaD41296b6Ec358b9C16dD7161C555fD3a464Bc3"
+    },
+    {
+      "key": "fgtr",
+      "action": "APPROVE_PERMANENT_IMPLEMENTATION",
+      "proxy": "0xAaD41296b6Ec358b9C16dD7161C555fD3a464Bc3",
+      "implementation": "0xC6cF732CF49faDDF2E614f1154294a3c2f786cfF"
+    }
+  ],
+  "rows": [
+    {
+      "key": "registration",
+      "proxy": "0x02ECA97e944Ac66b0444fd5F61A716917E83CfF5",
+      "permanent": "0x2F2c5E43eBBf666E00a1a2d699256B2Eae6268f5",
+      "temporary": "0x2e30A51C4FeEE4370B6Fb19ed98A1eCBDE408f72",
+      "contractName": "RegistrationWalletReplacementMigrator",
+      "executableHash": "0x58da91df7a3898e96f1b1ab3f59be2f270808d3d30565c7f389edd3689bd254c",
+      "proxyApproved": true,
+      "permanentApproved": true,
+      "temporaryApproved": false,
+      "paused": false
+    },
+    {
+      "key": "levelManager",
+      "proxy": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "permanent": "0x36017dd046653654dCF2CE52C2a44A1914b3998A",
+      "temporary": "0xc8064bf96Fba0BD3A7a9a087E61523039e0564e3",
+      "contractName": "LevelManagerWalletReplacementMigrator",
+      "executableHash": "0x243120d62a89e714d9bdc0e89f4eb89dd65b4e52d1a68fcd39417ee570b39bd1",
+      "proxyApproved": true,
+      "permanentApproved": true,
+      "temporaryApproved": false,
+      "paused": false
+    },
+    {
+      "key": "escrow",
+      "proxy": "0x8b3db2AC7e30749479f2dbad14105C8eD4a377d4",
+      "permanent": "0x48c512362E047288d83Fe949614a571401aDA075",
+      "temporary": "0x4E5C085227DEb7E2E75aB92d9372819a95bDb6C2",
+      "contractName": "AutoUpgradeEscrowWalletReplacementMigrator",
+      "executableHash": "0xcc496267710f55929241dfa66f03d97cbb8665743d201b42e3806261c97536b2",
+      "proxyApproved": false,
+      "permanentApproved": false,
+      "temporaryApproved": false,
+      "paused": false
+    },
+    {
+      "key": "p4",
+      "proxy": "0x1ED0b443c880Ba88F732c3F5915561A07B21F6B4",
+      "permanent": "0xDCDF3e86B417eFfA411B75373F6596863f9B7bd8",
+      "temporary": "0x25E09FC493904D6706E129315513693407c03722",
+      "contractName": "P4OrbitWalletReplacementMigrator",
+      "executableHash": "0x36093f9f3e22fedd2d0843ca9516ebc08c17a8436672f9f691e4925b6952da8a",
+      "proxyApproved": true,
+      "permanentApproved": true,
+      "temporaryApproved": false,
+      "paused": false
+    },
+    {
+      "key": "p12",
+      "proxy": "0xCF998d8f7E9DD4f3FacFbA45e656dE07142f824b",
+      "permanent": "0xCD673bc614Ad2C1d6Bc4F888df7b31A7a468d078",
+      "temporary": "0x3B0b51B8c80B8A649601811647f40E08bF1C3A59",
+      "contractName": "P12OrbitWalletReplacementMigrator",
+      "executableHash": "0x78d548d13441b0c0dc11dd28e29598d39da9e103508190fb8c9570c8bcbbca34",
+      "proxyApproved": true,
+      "permanentApproved": true,
+      "temporaryApproved": false,
+      "paused": false
+    },
+    {
+      "key": "p39",
+      "proxy": "0xEaD39819B8C4DBb0669320542B6B847D4c31b8Fb",
+      "permanent": "0x9255eD0c56371039Dd2fA70acA23421b1A530455",
+      "temporary": "0x566A0ce0bC8b4118e74940876E36a2Cf6e0cce9a",
+      "contractName": "P39OrbitWalletReplacementMigrator",
+      "executableHash": "0x3d155ffd2df9a642f8ca2a8ec9a5a8d2eeb27d00b2967142e24f3b4b56ccc5db",
+      "proxyApproved": true,
+      "permanentApproved": true,
+      "temporaryApproved": false,
+      "paused": false
+    },
+    {
+      "key": "fgt",
+      "proxy": "0x615201edaddB5CFD839Cc4eE693Dc464F6E2B5E4",
+      "permanent": "0x435295Ef236841fd2a162062cB86464C4808DE26",
+      "temporary": "0x33534E581EEF904c76ACA42410faEE14FEe7FC0D",
+      "contractName": "FGTWalletReplacementMigrator",
+      "executableHash": "0xde2d686dfebedb952295b58f400aff85a200bad543b5310409633ea9412afc36",
+      "proxyApproved": false,
+      "permanentApproved": false,
+      "temporaryApproved": false,
+      "paused": false
+    },
+    {
+      "key": "fgtr",
+      "proxy": "0xAaD41296b6Ec358b9C16dD7161C555fD3a464Bc3",
+      "permanent": "0xC6cF732CF49faDDF2E614f1154294a3c2f786cfF",
+      "temporary": "0x9f06F9453173713660aC92aCF5Bd362AE442a975",
+      "contractName": "FGTrWalletReplacementMigrator",
+      "executableHash": "0x8dbc013208fcaf9856d07ad2edc885c247b3b647aa4f0e9388387bae6e89f89b",
+      "proxyApproved": false,
+      "permanentApproved": false,
+      "temporaryApproved": false,
+      "paused": false
+    }
+  ]
+}

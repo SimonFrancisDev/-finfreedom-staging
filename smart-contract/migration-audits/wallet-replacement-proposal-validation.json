@@ -1,0 +1,13 @@
+{
+  "generatedAt": "2026-08-03T20:12:31.591Z",
+  "chainId": 137,
+  "packageFile": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\migration-packages\\wallet-replacement-latest.json",
+  "packageHash": "0xc8ee18a55d77c565e385f18804b7ac15c1f7dcbfe84ec84b3a26a102a5fb5880",
+  "verdict": "PASS",
+  "actions": 35,
+  "nextTransactionId": 77,
+  "finalTransactionId": 111,
+  "confirmations": 3,
+  "timelockSeconds": 120,
+  "submitter": "0x884e48f9897E8633238747b608DD49dE12bF94df"
+}

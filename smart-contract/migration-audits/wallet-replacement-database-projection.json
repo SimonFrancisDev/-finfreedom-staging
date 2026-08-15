@@ -1,0 +1,103 @@
+{
+  "generatedAt": "2026-08-02T21:30:07.732Z",
+  "database": "finfreedom",
+  "mode": "READ_ONLY_PROJECTED_POST_STATE",
+  "identities": [
+    {
+      "shortCode": "FFN-WP98HB",
+      "old": "0xc0545331e20587208d4b27b2a3e4920cc481133a",
+      "replacement": "0x1ea5513e017b4e25847e91abc84ac8686331f80b"
+    },
+    {
+      "shortCode": "FFN-RYMQK4",
+      "old": "0x2f1e28756a42a3680b5ad42c58a0c3887c9e60ba",
+      "replacement": "0xfb8d46674f51882baaa2c9606122484434ff2dc2"
+    }
+  ],
+  "projection": [
+    {
+      "collection": "indexedactivationsummaries",
+      "action": "CANONICALIZE_NORMALIZED_FIELDS",
+      "count": 7,
+      "remainingOldReferences": 0
+    },
+    {
+      "collection": "indexedescrowevents",
+      "action": "CANONICALIZE_NORMALIZED_FIELDS",
+      "count": 3,
+      "remainingOldReferences": 0
+    },
+    {
+      "collection": "indexedfinancialevents",
+      "action": "CANONICALIZE_NORMALIZED_FIELDS",
+      "count": 35,
+      "remainingOldReferences": 0
+    },
+    {
+      "collection": "indexedorbitevents",
+      "action": "CANONICALIZE_NORMALIZED_FIELDS",
+      "count": 259,
+      "remainingOldReferences": 0
+    },
+    {
+      "collection": "indexedreceipts",
+      "action": "CANONICALIZE_NORMALIZED_FIELDS",
+      "count": 78,
+      "remainingOldReferences": 0
+    },
+    {
+      "collection": "indexedregistrationevents",
+      "action": "CANONICALIZE_NORMALIZED_FIELDS",
+      "count": 19,
+      "remainingOldReferences": 0
+    },
+    {
+      "collection": "notificationdeliveryattempts",
+      "action": "CANONICALIZE_NORMALIZED_FIELDS",
+      "count": 84,
+      "remainingOldReferences": 0
+    },
+    {
+      "collection": "notificationpreferences",
+      "action": "CANONICALIZE_NORMALIZED_FIELDS",
+      "count": 1,
+      "remainingOldReferences": 0
+    },
+    {
+      "collection": "notifications",
+      "action": "CANONICALIZE_NORMALIZED_FIELDS",
+      "count": 84,
+      "remainingOldReferences": 0
+    },
+    {
+      "collection": "orbitcyclesnapshots",
+      "action": "CANONICALIZE_NORMALIZED_FIELDS",
+      "count": 9,
+      "remainingOldReferences": 0
+    },
+    {
+      "collection": "orbitlevelsnapshots",
+      "action": "DELETE_FOR_CHAIN_REBUILD",
+      "count": 13
+    },
+    {
+      "collection": "orbitpositionsnapshots",
+      "action": "DELETE_FOR_CHAIN_REBUILD",
+      "count": 2
+    },
+    {
+      "collection": "referralcodes",
+      "action": "CANONICALIZE_NORMALIZED_FIELDS",
+      "count": 2,
+      "remainingOldReferences": 0
+    },
+    {
+      "collection": "telegramsubscriptions",
+      "action": "CANONICALIZE_NORMALIZED_FIELDS",
+      "count": 1,
+      "remainingOldReferences": 0
+    }
+  ],
+  "verdict": "PASS",
+  "failures": []
+}

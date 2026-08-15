@@ -1,0 +1,246 @@
+{
+  "generatedAt": "2026-08-02T21:18:31.285Z",
+  "database": "finfreedom",
+  "source": "production MongoDB secondary; read-only impact inventory",
+  "identities": [
+    {
+      "id": "FFN-WP98HB",
+      "old": "0xc0545331e20587208d4b27b2a3e4920cc481133a",
+      "replacement": "0x1ea5513e017b4e25847e91abc84ac8686331f80b"
+    },
+    {
+      "id": "FFN-RYMQK4",
+      "old": "0x2f1e28756a42a3680b5ad42c58a0c3887c9e60ba",
+      "replacement": "0xfb8d46674f51882baaa2c9606122484434ff2dc2"
+    }
+  ],
+  "scannedCollections": 24,
+  "scannedFieldPaths": 23,
+  "impact": [
+    {
+      "collection": "indexedactivationsummaries",
+      "id": "FFN-WP98HB",
+      "oldFields": {
+        "user": 4
+      },
+      "replacementFields": {}
+    },
+    {
+      "collection": "indexedactivationsummaries",
+      "id": "FFN-RYMQK4",
+      "oldFields": {
+        "user": 3
+      },
+      "replacementFields": {}
+    },
+    {
+      "collection": "indexedescrowevents",
+      "id": "FFN-WP98HB",
+      "oldFields": {
+        "user": 2
+      },
+      "replacementFields": {}
+    },
+    {
+      "collection": "indexedescrowevents",
+      "id": "FFN-RYMQK4",
+      "oldFields": {
+        "user": 1
+      },
+      "replacementFields": {}
+    },
+    {
+      "collection": "indexedfinancialevents",
+      "id": "FFN-WP98HB",
+      "oldFields": {
+        "user": 11,
+        "sourceUser": 1,
+        "affectedUser": 9,
+        "actualReceiver": 9,
+        "orbitOwner": 4,
+        "recycleReceiver": 4
+      },
+      "replacementFields": {}
+    },
+    {
+      "collection": "indexedfinancialevents",
+      "id": "FFN-RYMQK4",
+      "oldFields": {
+        "user": 6,
+        "affectedUser": 1,
+        "actualReceiver": 1
+      },
+      "replacementFields": {}
+    },
+    {
+      "collection": "indexedorbitevents",
+      "id": "FFN-WP98HB",
+      "oldFields": {
+        "user": 25,
+        "orbitOwner": 178
+      },
+      "replacementFields": {}
+    },
+    {
+      "collection": "indexedorbitevents",
+      "id": "FFN-RYMQK4",
+      "oldFields": {
+        "user": 12,
+        "orbitOwner": 47
+      },
+      "replacementFields": {}
+    },
+    {
+      "collection": "indexedreceipts",
+      "id": "FFN-WP98HB",
+      "oldFields": {
+        "receiver": 39,
+        "fromUser": 8,
+        "orbitOwner": 42
+      },
+      "replacementFields": {}
+    },
+    {
+      "collection": "indexedreceipts",
+      "id": "FFN-RYMQK4",
+      "oldFields": {
+        "receiver": 11,
+        "fromUser": 6,
+        "orbitOwner": 9
+      },
+      "replacementFields": {}
+    },
+    {
+      "collection": "indexedregistrationevents",
+      "id": "FFN-WP98HB",
+      "oldFields": {
+        "user": 5,
+        "referrer": 9
+      },
+      "replacementFields": {}
+    },
+    {
+      "collection": "indexedregistrationevents",
+      "id": "FFN-RYMQK4",
+      "oldFields": {
+        "user": 4,
+        "referrer": 2
+      },
+      "replacementFields": {}
+    },
+    {
+      "collection": "notificationdeliveryattempts",
+      "id": "FFN-WP98HB",
+      "oldFields": {
+        "walletAddress": 66
+      },
+      "replacementFields": {}
+    },
+    {
+      "collection": "notificationdeliveryattempts",
+      "id": "FFN-RYMQK4",
+      "oldFields": {
+        "walletAddress": 18
+      },
+      "replacementFields": {}
+    },
+    {
+      "collection": "notificationpreferences",
+      "id": "FFN-RYMQK4",
+      "oldFields": {
+        "walletAddress": 1
+      },
+      "replacementFields": {}
+    },
+    {
+      "collection": "notifications",
+      "id": "FFN-WP98HB",
+      "oldFields": {
+        "walletAddress": 66
+      },
+      "replacementFields": {}
+    },
+    {
+      "collection": "notifications",
+      "id": "FFN-RYMQK4",
+      "oldFields": {
+        "walletAddress": 18
+      },
+      "replacementFields": {}
+    },
+    {
+      "collection": "orbitcyclesnapshots",
+      "id": "FFN-WP98HB",
+      "oldFields": {
+        "address": 2,
+        "positions.occupant": 3,
+        "positions.indexedReceipts.receiver": 6,
+        "positions.indexedReceipts.fromUser": 2,
+        "positions.indexedReceipts.orbitOwner": 2,
+        "positions.indexedEvents.orbitOwner": 2,
+        "positions.indexedEvents.user": 3
+      },
+      "replacementFields": {}
+    },
+    {
+      "collection": "orbitcyclesnapshots",
+      "id": "FFN-RYMQK4",
+      "oldFields": {
+        "positions.occupant": 2,
+        "positions.indexedReceipts.fromUser": 1,
+        "positions.indexedEvents.user": 2
+      },
+      "replacementFields": {}
+    },
+    {
+      "collection": "orbitlevelsnapshots",
+      "id": "FFN-WP98HB",
+      "oldFields": {
+        "address": 4,
+        "positions.occupant": 6
+      },
+      "replacementFields": {}
+    },
+    {
+      "collection": "orbitlevelsnapshots",
+      "id": "FFN-RYMQK4",
+      "oldFields": {
+        "address": 3,
+        "positions.occupant": 4
+      },
+      "replacementFields": {}
+    },
+    {
+      "collection": "orbitpositionsnapshots",
+      "id": "FFN-WP98HB",
+      "oldFields": {
+        "address": 2
+      },
+      "replacementFields": {}
+    },
+    {
+      "collection": "referralcodes",
+      "id": "FFN-WP98HB",
+      "oldFields": {
+        "walletAddress": 1
+      },
+      "replacementFields": {}
+    },
+    {
+      "collection": "referralcodes",
+      "id": "FFN-RYMQK4",
+      "oldFields": {
+        "walletAddress": 1
+      },
+      "replacementFields": {}
+    },
+    {
+      "collection": "telegramsubscriptions",
+      "id": "FFN-RYMQK4",
+      "oldFields": {
+        "walletAddress": 1
+      },
+      "replacementFields": {}
+    }
+  ]
+}

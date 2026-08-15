@@ -1,0 +1,288 @@
+{
+  "packageHash": "0xc8ee18a55d77c565e385f18804b7ac15c1f7dcbfe84ec84b3a26a102a5fb5880",
+  "packageFile": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\migration-packages\\wallet-replacement-latest.json",
+  "startTransactionId": 77,
+  "submitted": [
+    {
+      "actionIndex": 0,
+      "stage": "AUTHORIZE",
+      "label": "Authorize registration migration and restoration implementations",
+      "multisigTxId": 77,
+      "submissionTransactionHash": "0x267cecbef0eceae0cb59909455dfd28404a94d027d2bd609a351cf94bdb74b78",
+      "executeAfter": 1785788175
+    },
+    {
+      "actionIndex": 1,
+      "stage": "AUTHORIZE",
+      "label": "Authorize levelManager migration and restoration implementations",
+      "multisigTxId": 78,
+      "submissionTransactionHash": "0x8bd5b291884c1b1cbd1a49d50fdfcc37fa6487be785e7771344bccae775f6835",
+      "executeAfter": 1785788180
+    },
+    {
+      "actionIndex": 2,
+      "stage": "AUTHORIZE",
+      "label": "Authorize escrow proxy",
+      "multisigTxId": 79,
+      "submissionTransactionHash": "0xc45a4ef4ab97cfa6a963787700756a1e59379e9119f8f76d15bcab4a15af1cd0",
+      "executeAfter": 1785788186
+    },
+    {
+      "actionIndex": 3,
+      "stage": "AUTHORIZE",
+      "label": "Authorize escrow migration and restoration implementations",
+      "multisigTxId": 80,
+      "submissionTransactionHash": "0xdb4ec58b274d57e9083cf576d64e143d092c6b640dd85007fa15385bf61edbe0",
+      "executeAfter": 1785788189
+    },
+    {
+      "actionIndex": 4,
+      "stage": "AUTHORIZE",
+      "label": "Authorize p4 migration and restoration implementations",
+      "multisigTxId": 81,
+      "submissionTransactionHash": "0xd269891e7ae74ce4dcf0e5256c8bad82993f3eafc62ff500e1fff25281d592b6",
+      "executeAfter": 1785788192
+    },
+    {
+      "actionIndex": 5,
+      "stage": "AUTHORIZE",
+      "label": "Authorize p12 migration and restoration implementations",
+      "multisigTxId": 82,
+      "submissionTransactionHash": "0x62c2da20898d254f719ccd2975935260f4354638c74f581b2685369c0737e2a7",
+      "executeAfter": 1785788196
+    },
+    {
+      "actionIndex": 6,
+      "stage": "AUTHORIZE",
+      "label": "Authorize p39 migration and restoration implementations",
+      "multisigTxId": 83,
+      "submissionTransactionHash": "0xb5f6bf8f2832704811ad020f7cf27d08329078ea7b538d231f2f1479c6adce06",
+      "executeAfter": 1785788199
+    },
+    {
+      "actionIndex": 7,
+      "stage": "AUTHORIZE",
+      "label": "Authorize fgt proxy",
+      "multisigTxId": 84,
+      "submissionTransactionHash": "0x77bcfc7606abc0c748a88c9be2624449bb32a850f484bb1766d1e79e49ce49cf",
+      "executeAfter": 1785788202
+    },
+    {
+      "actionIndex": 8,
+      "stage": "AUTHORIZE",
+      "label": "Authorize fgt migration and restoration implementations",
+      "multisigTxId": 85,
+      "submissionTransactionHash": "0xcf19da968e218286f14c8a0f5920902f4b9def64bc3f84c12cf56c5473d19d53",
+      "executeAfter": 1785788207
+    },
+    {
+      "actionIndex": 9,
+      "stage": "AUTHORIZE",
+      "label": "Authorize fgtr proxy",
+      "multisigTxId": 86,
+      "submissionTransactionHash": "0xc562ec98272583263b05fe995426569332e46fb602bb21dc85b21a2756adfa3b",
+      "executeAfter": 1785788211
+    },
+    {
+      "actionIndex": 10,
+      "stage": "AUTHORIZE",
+      "label": "Authorize fgtr migration and restoration implementations",
+      "multisigTxId": 87,
+      "submissionTransactionHash": "0xc6bb86d3743c58fa374fbe7db06f5f086f57acde0ee58a4bd2ea072984f5828c",
+      "executeAfter": 1785788214
+    },
+    {
+      "actionIndex": 11,
+      "stage": "PAUSE",
+      "label": "Pause registration",
+      "multisigTxId": 88,
+      "submissionTransactionHash": "0x7b18bfe6ed502ae73e53ed63bd31651895199fba781ae47552382644b4483d8a",
+      "executeAfter": 1785788217
+    },
+    {
+      "actionIndex": 12,
+      "stage": "PAUSE",
+      "label": "Pause levelManager",
+      "multisigTxId": 89,
+      "submissionTransactionHash": "0xbb3898cfb9e2151aed50ff948058565cb33452c6f2a267cc18cd0b9e11d5699c",
+      "executeAfter": 1785788222
+    },
+    {
+      "actionIndex": 13,
+      "stage": "PAUSE",
+      "label": "Pause escrow",
+      "multisigTxId": 90,
+      "submissionTransactionHash": "0x77f353182524cc32c7a7050ae2151c6b03e2e8d585d35f5091da018bdfb42807",
+      "executeAfter": 1785788226
+    },
+    {
+      "actionIndex": 14,
+      "stage": "PAUSE",
+      "label": "Pause p4",
+      "multisigTxId": 91,
+      "submissionTransactionHash": "0xec8e6681841825dad4ada8f95e6ac1cce3990b216b94b070a041a04621db8776",
+      "executeAfter": 1785788229
+    },
+    {
+      "actionIndex": 15,
+      "stage": "PAUSE",
+      "label": "Pause p12",
+      "multisigTxId": 92,
+      "submissionTransactionHash": "0x70b384d07fb245a00d123b38daf057f412fe7ca840a6efb6de7e60903128160f",
+      "executeAfter": 1785788232
+    },
+    {
+      "actionIndex": 16,
+      "stage": "PAUSE",
+      "label": "Pause p39",
+      "multisigTxId": 93,
+      "submissionTransactionHash": "0x3120b4484b73c3933522163bd24e7b2d8fac379e3fa1f29eb7c0d3281b7e71fe",
+      "executeAfter": 1785788235
+    },
+    {
+      "actionIndex": 17,
+      "stage": "PAUSE",
+      "label": "Pause fgt",
+      "multisigTxId": 94,
+      "submissionTransactionHash": "0xea99d24ce9b71baade5df4abbec4c1490cca42c86e1c2705c2e917b42c819023",
+      "executeAfter": 1785788238
+    },
+    {
+      "actionIndex": 18,
+      "stage": "PAUSE",
+      "label": "Pause fgtr",
+      "multisigTxId": 95,
+      "submissionTransactionHash": "0x2835bb1a81299cd316527b934e70ac90c6e0cf119fd3cb9731a6378bddd1a3d1",
+      "executeAfter": 1785788244
+    },
+    {
+      "actionIndex": 19,
+      "stage": "MIGRATE",
+      "label": "Install p4 migrator and atomically migrate approved state",
+      "multisigTxId": 96,
+      "submissionTransactionHash": "0xe234766b93f6157a0d63465619ece4d8361205509b5116fb1542239b8c0d0245",
+      "executeAfter": 1785788247
+    },
+    {
+      "actionIndex": 20,
+      "stage": "MIGRATE",
+      "label": "Install p12 migrator and atomically migrate approved state",
+      "multisigTxId": 97,
+      "submissionTransactionHash": "0x5d9f1deb553daad1683548b89112058532d63c32ff65d9887dd7bf0dcbf82786",
+      "executeAfter": 1785788250
+    },
+    {
+      "actionIndex": 21,
+      "stage": "MIGRATE",
+      "label": "Install p39 migrator and atomically migrate approved state",
+      "multisigTxId": 98,
+      "submissionTransactionHash": "0x9d88afb60fe797326d72e1b4c9fd041da5b4bb79a53e88cf88bc3ab5b277c46a",
+      "executeAfter": 1785788253
+    },
+    {
+      "actionIndex": 22,
+      "stage": "MIGRATE",
+      "label": "Install escrow migrator and atomically migrate approved state",
+      "multisigTxId": 99,
+      "submissionTransactionHash": "0x9186feae181c0ef572c1f639ce7446f8ce9f26614bf2ce06bac38d12bfc629c0",
+      "executeAfter": 1785788256
+    },
+    {
+      "actionIndex": 23,
+      "stage": "MIGRATE",
+      "label": "Install levelManager migrator and atomically migrate approved state",
+      "multisigTxId": 100,
+      "submissionTransactionHash": "0xf74490163325e16b5ad1c99f4fa33a6e4d90fcc8fad24d4543628d6b5d530d2a",
+      "executeAfter": 1785788261
+    },
+    {
+      "actionIndex": 24,
+      "stage": "MIGRATE",
+      "label": "Install fgt migrator and atomically migrate approved state",
+      "multisigTxId": 101,
+      "submissionTransactionHash": "0xa1d242d23b83f50ae60e31c1b5cb59778866b82fa131ac7e1b61e1a4acdafae7",
+      "executeAfter": 1785788264
+    },
+    {
+      "actionIndex": 25,
+      "stage": "MIGRATE",
+      "label": "Install fgtr migrator and atomically migrate approved state",
+      "multisigTxId": 102,
+      "submissionTransactionHash": "0x422cf8f38322b46a529458752db0e3e619d93f099ac3cff39076a9974342d9ec",
+      "executeAfter": 1785788268
+    },
+    {
+      "actionIndex": 26,
+      "stage": "MIGRATE",
+      "label": "Install registration migrator and atomically migrate approved state",
+      "multisigTxId": 103,
+      "submissionTransactionHash": "0xec29acd2d1a86d340bc73aeb6cd1c567934127a1a64d8867d58952835772ce68",
+      "executeAfter": 1785788271
+    },
+    {
+      "actionIndex": 27,
+      "stage": "RESTORE",
+      "label": "Restore permanent p4 implementation and unpause",
+      "multisigTxId": 104,
+      "submissionTransactionHash": "0xf4445ce9e45af022e0d178f7c13af8551f244a602a7ed6b0c30990ac7c52a8e1",
+      "executeAfter": 1785788274
+    },
+    {
+      "actionIndex": 28,
+      "stage": "RESTORE",
+      "label": "Restore permanent p12 implementation and unpause",
+      "multisigTxId": 105,
+      "submissionTransactionHash": "0x9cf7826c51e5a375ba2b22cca386f02f3b30759ed148e0d2622c56902daf3108",
+      "executeAfter": 1785788279
+    },
+    {
+      "actionIndex": 29,
+      "stage": "RESTORE",
+      "label": "Restore permanent p39 implementation and unpause",
+      "multisigTxId": 106,
+      "submissionTransactionHash": "0xc4c208f625ea349e6b4b969978d63fc99dcc514aa74e79f3f5a791ea28b1d4de",
+      "executeAfter": 1785788282
+    },
+    {
+      "actionIndex": 30,
+      "stage": "RESTORE",
+      "label": "Restore permanent escrow implementation and unpause",
+      "multisigTxId": 107,
+      "submissionTransactionHash": "0xe732fcbfa5e59c99c7dac29fc5e8b7ff0d3adc2bb08ecc89c95bf67026d9b5c6",
+      "executeAfter": 1785788286
+    },
+    {
+      "actionIndex": 31,
+      "stage": "RESTORE",
+      "label": "Restore permanent fgt implementation and unpause",
+      "multisigTxId": 108,
+      "submissionTransactionHash": "0xc4fff2a4a180dc7d27421f96dc7f9d3f50c9860cacf4b27a1faa0b7795b6f510",
+      "executeAfter": 1785788289
+    },
+    {
+      "actionIndex": 32,
+      "stage": "RESTORE",
+      "label": "Restore permanent fgtr implementation and unpause",
+      "multisigTxId": 109,
+      "submissionTransactionHash": "0x768809f887daaf80fe78be7a68535de0728f0e91399994ff997a4a81fc64cdd4",
+      "executeAfter": 1785788292
+    },
+    {
+      "actionIndex": 33,
+      "stage": "RESTORE",
+      "label": "Restore permanent registration implementation and unpause",
+      "multisigTxId": 110,
+      "submissionTransactionHash": "0xe2a0f8e6b8e9b23c05b77b0539d656df515366b99638c5bf6faaff951e16a035",
+      "executeAfter": 1785788297
+    },
+    {
+      "actionIndex": 34,
+      "stage": "RESTORE",
+      "label": "Restore permanent levelManager implementation and unpause",
+      "multisigTxId": 111,
+      "submissionTransactionHash": "0x61fb821afe9eda53c6de04d5a5640b6e25a16a20cddb0cba68c884d1deb673dc",
+      "executeAfter": 1785788301
+    }
+  ],
+  "updatedAt": "2026-08-03T20:16:21.098Z"
+}

@@ -1,0 +1,497 @@
+{
+  "hash": "0x1c4568498aa3b619d6f76865ed03c1edb381fd5345585ba20f2a90d47ea1a66b",
+  "blockNumber": 90682748,
+  "status": 1,
+  "from": "0x0372cf602bc4Af8aE9A2413DCDE59de1f3B05caD",
+  "to": "0x02ECA97e944Ac66b0444fd5F61A716917E83CfF5",
+  "events": [
+    {
+      "logIndex": 3138,
+      "contract": "P4Orbit",
+      "event": "PositionActivationLinked",
+      "args": {
+        "orbitOwner": "0x41b65562CCDb4BaF1f9aB67A1E01c160fcFCDDc3",
+        "level": "4",
+        "position": "4",
+        "cycleNumber": "1",
+        "activationId": "604",
+        "isMirror": false
+      }
+    },
+    {
+      "logIndex": 3139,
+      "contract": "P4Orbit",
+      "event": "LinePaymentTracked",
+      "args": {
+        "orbitOwner": "0x41b65562CCDb4BaF1f9aB67A1E01c160fcFCDDc3",
+        "level": "4",
+        "line": "1",
+        "position": "4",
+        "linePaymentNumber": "4"
+      }
+    },
+    {
+      "logIndex": 3140,
+      "contract": "P4Orbit",
+      "event": "PaymentRuleApplied",
+      "args": {
+        "orbitOwner": "0x41b65562CCDb4BaF1f9aB67A1E01c160fcFCDDc3",
+        "level": "4",
+        "position": "4",
+        "line": "1",
+        "linePaymentNumber": "4",
+        "toOwner": "0",
+        "toSpillover1": "0",
+        "toSpillover2": "0",
+        "toEscrow": "0",
+        "toRecycle": "72000000"
+      }
+    },
+    {
+      "logIndex": 3141,
+      "contract": "P4Orbit",
+      "event": "PositionFilled",
+      "args": {
+        "orbitOwner": "0x41b65562CCDb4BaF1f9aB67A1E01c160fcFCDDc3",
+        "user": "0x0372cf602bc4Af8aE9A2413DCDE59de1f3B05caD",
+        "level": "4",
+        "position": "4",
+        "amount": "80000000",
+        "timestamp": "1784729119"
+      }
+    },
+    {
+      "logIndex": 3142,
+      "contract": "P4Orbit",
+      "event": "OrbitReset",
+      "args": {
+        "user": "0x41b65562CCDb4BaF1f9aB67A1E01c160fcFCDDc3",
+        "level": "4",
+        "cycleNumber": "1"
+      }
+    },
+    {
+      "logIndex": 3147,
+      "contract": "RegistrationFixed",
+      "event": "CurrentMatrixParentRecorded",
+      "args": {
+        "user": "0x0372cf602bc4Af8aE9A2413DCDE59de1f3B05caD",
+        "level": "4",
+        "parent": "0x41b65562CCDb4BaF1f9aB67A1E01c160fcFCDDc3"
+      }
+    },
+    {
+      "logIndex": 3148,
+      "contract": "LevelManager",
+      "event": "PayoutNotDelivered",
+      "args": {
+        "affectedUser": "0x41b65562CCDb4BaF1f9aB67A1E01c160fcFCDDc3",
+        "sourceUser": "0x0372cf602bc4Af8aE9A2413DCDE59de1f3B05caD",
+        "level": "4",
+        "orbitType": "4",
+        "sourcePosition": "0",
+        "sourceCycle": "0",
+        "expectedAmount": "0",
+        "actualReceiver": "0x41b65562CCDb4BaF1f9aB67A1E01c160fcFCDDc3",
+        "actualAmount": "0",
+        "receiptType": "2",
+        "routedRole": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "reasonCode": "0x5a45524f5f414d4f554e54000000000000000000000000000000000000000000",
+        "actionCode": "0x535550504f52545f524556494557000000000000000000000000000000000000",
+        "activationId": "0"
+      }
+    },
+    {
+      "logIndex": 3149,
+      "contract": "LevelManager",
+      "event": "PayoutNotDelivered",
+      "args": {
+        "affectedUser": "0x41b65562CCDb4BaF1f9aB67A1E01c160fcFCDDc3",
+        "sourceUser": "0x0372cf602bc4Af8aE9A2413DCDE59de1f3B05caD",
+        "level": "4",
+        "orbitType": "4",
+        "sourcePosition": "4",
+        "sourceCycle": "1",
+        "expectedAmount": "0",
+        "actualReceiver": "0x41b65562CCDb4BaF1f9aB67A1E01c160fcFCDDc3",
+        "actualAmount": "0",
+        "receiptType": "2",
+        "routedRole": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "reasonCode": "0x5a45524f5f414d4f554e54000000000000000000000000000000000000000000",
+        "actionCode": "0x535550504f52545f524556494557000000000000000000000000000000000000",
+        "activationId": "604"
+      }
+    },
+    {
+      "logIndex": 3150,
+      "contract": "P4Orbit",
+      "event": "PositionActivationLinked",
+      "args": {
+        "orbitOwner": "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+        "level": "4",
+        "position": "4",
+        "cycleNumber": "1",
+        "activationId": "604",
+        "isMirror": true
+      }
+    },
+    {
+      "logIndex": 3151,
+      "contract": "P4Orbit",
+      "event": "LinePaymentTracked",
+      "args": {
+        "orbitOwner": "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+        "level": "4",
+        "line": "1",
+        "position": "4",
+        "linePaymentNumber": "4"
+      }
+    },
+    {
+      "logIndex": 3152,
+      "contract": "P4Orbit",
+      "event": "PositionFilled",
+      "args": {
+        "orbitOwner": "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+        "user": "0x41b65562CCDb4BaF1f9aB67A1E01c160fcFCDDc3",
+        "level": "4",
+        "position": "4",
+        "amount": "72000000",
+        "timestamp": "1784729119"
+      }
+    },
+    {
+      "logIndex": 3153,
+      "contract": "P4Orbit",
+      "event": "PaymentRuleApplied",
+      "args": {
+        "orbitOwner": "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+        "level": "4",
+        "position": "4",
+        "line": "1",
+        "linePaymentNumber": "4",
+        "toOwner": "0",
+        "toSpillover1": "0",
+        "toSpillover2": "0",
+        "toEscrow": "0",
+        "toRecycle": "72000000"
+      }
+    },
+    {
+      "logIndex": 3154,
+      "contract": "P4Orbit",
+      "event": "OrbitReset",
+      "args": {
+        "user": "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+        "level": "4",
+        "cycleNumber": "1"
+      }
+    },
+    {
+      "logIndex": 3159,
+      "contract": "LevelManager",
+      "event": "PayoutReceiptRecorded",
+      "args": {
+        "receiver": "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+        "level": "4",
+        "receiptType": "4",
+        "fromUser": "0x41b65562CCDb4BaF1f9aB67A1E01c160fcFCDDc3",
+        "orbitOwner": "0x41b65562CCDb4BaF1f9aB67A1E01c160fcFCDDc3",
+        "grossAmount": "72000000",
+        "escrowLocked": "0",
+        "liquidPaid": "0"
+      }
+    },
+    {
+      "logIndex": 3160,
+      "contract": "LevelManager",
+      "event": "DetailedPayoutReceiptRecorded",
+      "args": {
+        "receiver": "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+        "activationId": "604",
+        "level": "4",
+        "receiptType": "4",
+        "fromUser": "0x0372cf602bc4Af8aE9A2413DCDE59de1f3B05caD",
+        "orbitOwner": "0x41b65562CCDb4BaF1f9aB67A1E01c160fcFCDDc3",
+        "sourcePosition": "4",
+        "sourceCycle": "1",
+        "mirroredPosition": "4",
+        "mirroredCycle": "1",
+        "routedRole": "4",
+        "grossAmount": "72000000",
+        "escrowLocked": "0",
+        "liquidPaid": "0"
+      }
+    },
+    {
+      "logIndex": 3161,
+      "contract": "LevelManager",
+      "event": "RecycleCompletedDetailed",
+      "args": {
+        "activationId": "604",
+        "orbitOwner": "0x41b65562CCDb4BaF1f9aB67A1E01c160fcFCDDc3",
+        "level": "4",
+        "sourceUser": "0x0372cf602bc4Af8aE9A2413DCDE59de1f3B05caD",
+        "sourcePosition": "4",
+        "sourceCycle": "1",
+        "recycleReceiver": "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+        "recycleGross": "72000000",
+        "recycleLiquidPaid": "0",
+        "recycleEscrowLocked": "0",
+        "mirrorPosition": "4",
+        "mirrorCycle": "1",
+        "triggeredOrbitReset": false
+      }
+    },
+    {
+      "logIndex": 3162,
+      "contract": "P4Orbit",
+      "event": "PositionActivationLinked",
+      "args": {
+        "orbitOwner": "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+        "level": "4",
+        "position": "2",
+        "cycleNumber": "1",
+        "activationId": "604",
+        "isMirror": true
+      }
+    },
+    {
+      "logIndex": 3163,
+      "contract": "P4Orbit",
+      "event": "LinePaymentTracked",
+      "args": {
+        "orbitOwner": "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+        "level": "4",
+        "line": "1",
+        "position": "2",
+        "linePaymentNumber": "2"
+      }
+    },
+    {
+      "logIndex": 3164,
+      "contract": "P4Orbit",
+      "event": "EscrowUpdated",
+      "args": {
+        "user": "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+        "level": "4",
+        "newBalance": "88000000"
+      }
+    },
+    {
+      "logIndex": 3165,
+      "contract": "P4Orbit",
+      "event": "PositionFilled",
+      "args": {
+        "orbitOwner": "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+        "user": "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+        "level": "4",
+        "position": "2",
+        "amount": "72000000",
+        "timestamp": "1784729119"
+      }
+    },
+    {
+      "logIndex": 3166,
+      "contract": "P4Orbit",
+      "event": "PaymentRuleApplied",
+      "args": {
+        "orbitOwner": "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+        "level": "4",
+        "position": "2",
+        "line": "1",
+        "linePaymentNumber": "2",
+        "toOwner": "0",
+        "toSpillover1": "0",
+        "toSpillover2": "0",
+        "toEscrow": "72000000",
+        "toRecycle": "0"
+      }
+    },
+    {
+      "logIndex": 3167,
+      "contract": "LevelManager",
+      "event": "PayoutNotDelivered",
+      "args": {
+        "affectedUser": "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+        "sourceUser": "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+        "level": "4",
+        "orbitType": "4",
+        "sourcePosition": "4",
+        "sourceCycle": "1",
+        "expectedAmount": "72000000",
+        "actualReceiver": "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+        "actualAmount": "0",
+        "receiptType": "4",
+        "routedRole": "0x52454359434c4500000000000000000000000000000000000000000000000000",
+        "reasonCode": "0x455343524f575f494e53544541445f4f465f4c49515549440000000000000000",
+        "actionCode": "0x4e4f5f414354494f4e0000000000000000000000000000000000000000000000",
+        "activationId": "604"
+      }
+    },
+    {
+      "logIndex": 3168,
+      "contract": "LevelManager",
+      "event": "PayoutReceiptRecorded",
+      "args": {
+        "receiver": "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+        "level": "4",
+        "receiptType": "4",
+        "fromUser": "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+        "orbitOwner": "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+        "grossAmount": "72000000",
+        "escrowLocked": "72000000",
+        "liquidPaid": "0"
+      }
+    },
+    {
+      "logIndex": 3169,
+      "contract": "LevelManager",
+      "event": "DetailedPayoutReceiptRecorded",
+      "args": {
+        "receiver": "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+        "activationId": "604",
+        "level": "4",
+        "receiptType": "4",
+        "fromUser": "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+        "orbitOwner": "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+        "sourcePosition": "4",
+        "sourceCycle": "1",
+        "mirroredPosition": "2",
+        "mirroredCycle": "1",
+        "routedRole": "4",
+        "grossAmount": "72000000",
+        "escrowLocked": "72000000",
+        "liquidPaid": "0"
+      }
+    },
+    {
+      "logIndex": 3170,
+      "contract": "LevelManager",
+      "event": "RecycleCompletedDetailed",
+      "args": {
+        "activationId": "604",
+        "orbitOwner": "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+        "level": "4",
+        "sourceUser": "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+        "sourcePosition": "4",
+        "sourceCycle": "1",
+        "recycleReceiver": "0xC0545331E20587208d4b27b2A3e4920Cc481133a",
+        "recycleGross": "72000000",
+        "recycleLiquidPaid": "0",
+        "recycleEscrowLocked": "72000000",
+        "mirrorPosition": "2",
+        "mirrorCycle": "1",
+        "triggeredOrbitReset": false
+      }
+    },
+    {
+      "logIndex": 3171,
+      "contract": "RegistrationFixed",
+      "event": "CurrentMatrixParentRecorded",
+      "args": {
+        "user": "0x41b65562CCDb4BaF1f9aB67A1E01c160fcFCDDc3",
+        "level": "4",
+        "parent": "0xD39dB4B1535bcC980915Bb5e92C601783213F06A"
+      }
+    },
+    {
+      "logIndex": 3174,
+      "contract": "AutoUpgradeEscrow",
+      "event": "FundsLocked",
+      "args": {
+        "user": "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+        "fromLevel": "4",
+        "toLevel": "5",
+        "amount": "72000000"
+      }
+    },
+    {
+      "logIndex": 3175,
+      "contract": "AutoUpgradeEscrow",
+      "event": "EscrowLocked",
+      "args": {
+        "user": "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+        "fromLevel": "4",
+        "toLevel": "5",
+        "amount": "72000000",
+        "newLockedTotal": "72000000",
+        "currentEscrowLockedGlobal": "1174000000"
+      }
+    },
+    {
+      "logIndex": 3178,
+      "contract": "LevelManager",
+      "event": "SystemChargeDistributed",
+      "args": {
+        "nftPoolAmount": "6400000",
+        "operationsAmount": "1600000"
+      }
+    },
+    {
+      "logIndex": 3179,
+      "contract": "LevelManager",
+      "event": "SystemChargeDistributedDetailed",
+      "args": {
+        "activationId": "604",
+        "user": "0x0372cf602bc4Af8aE9A2413DCDE59de1f3B05caD",
+        "level": "4",
+        "systemChargeTotal": "8000000",
+        "nftPoolAmount": "6400000",
+        "operationsAmount": "1600000",
+        "nftPool": "0xf8F60Da42681b73DFeCa7731E78b29C8707C184b",
+        "operationsWallet": "0x3ee9B4913e175c15B2Ef76Ac352B6737210248Fb"
+      }
+    },
+    {
+      "logIndex": 3180,
+      "contract": "LevelManager",
+      "event": "ActivationFinancialSummaryRecorded",
+      "args": {
+        "activationId": "604",
+        "user": "0x0372cf602bc4Af8aE9A2413DCDE59de1f3B05caD",
+        "level": "4",
+        "activationAmount": "80000000",
+        "systemCharge": "8000000",
+        "nftPoolAmount": "6400000",
+        "operationsAmount": "1600000",
+        "totalLiquidPaid": "0",
+        "totalEscrowLocked": "72000000",
+        "totalRecycleAllocated": "72000000",
+        "isAutoUpgrade": false,
+        "isFounderRepFreeActivation": false
+      }
+    },
+    {
+      "logIndex": 3181,
+      "contract": "LevelManager",
+      "event": "LevelActivated",
+      "args": {
+        "user": "0x0372cf602bc4Af8aE9A2413DCDE59de1f3B05caD",
+        "level": "4",
+        "amount": "80000000"
+      }
+    },
+    {
+      "logIndex": 3182,
+      "contract": "LevelManager",
+      "event": "LevelActivatedInOrbit",
+      "args": {
+        "user": "0x0372cf602bc4Af8aE9A2413DCDE59de1f3B05caD",
+        "level": "4",
+        "orbit": "0x1ED0b443c880Ba88F732c3F5915561A07B21F6B4",
+        "netAmount": "80000000"
+      }
+    },
+    {
+      "logIndex": 3187,
+      "contract": "RegistrationFixed",
+      "event": "LevelActivated",
+      "args": {
+        "user": "0x0372cf602bc4Af8aE9A2413DCDE59de1f3B05caD",
+        "level": "4",
+        "price": "80000000"
+      }
+    }
+  ]
+}

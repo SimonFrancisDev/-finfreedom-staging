@@ -1,0 +1,67 @@
+{
+  "generatedAt": "2026-08-03T20:04:26.645Z",
+  "chainId": 137,
+  "deployer": "0x884e48f9897E8633238747b608DD49dE12bF94df",
+  "productionProxiesUnchanged": true,
+  "purpose": "temporary-wallet-replacement-migrators-checkpoint",
+  "contracts": {
+    "registration": {
+      "contractName": "RegistrationWalletReplacementMigrator",
+      "address": "0x2e30A51C4FeEE4370B6Fb19ed98A1eCBDE408f72",
+      "executableHash": "0x58da91df7a3898e96f1b1ab3f59be2f270808d3d30565c7f389edd3689bd254c",
+      "transactionHash": null,
+      "blockNumber": null,
+      "reused": true
+    },
+    "levelManager": {
+      "contractName": "LevelManagerWalletReplacementMigrator",
+      "address": "0xc8064bf96Fba0BD3A7a9a087E61523039e0564e3",
+      "executableHash": "0x243120d62a89e714d9bdc0e89f4eb89dd65b4e52d1a68fcd39417ee570b39bd1",
+      "transactionHash": null,
+      "blockNumber": null,
+      "reused": true
+    },
+    "escrow": {
+      "contractName": "AutoUpgradeEscrowWalletReplacementMigrator",
+      "address": "0x4E5C085227DEb7E2E75aB92d9372819a95bDb6C2",
+      "executableHash": "0xcc496267710f55929241dfa66f03d97cbb8665743d201b42e3806261c97536b2",
+      "transactionHash": null,
+      "blockNumber": null,
+      "reused": true
+    },
+    "p4": {
+      "contractName": "P4OrbitWalletReplacementMigrator",
+      "address": "0x25E09FC493904D6706E129315513693407c03722",
+      "executableHash": "0x36093f9f3e22fedd2d0843ca9516ebc08c17a8436672f9f691e4925b6952da8a",
+      "transactionHash": null,
+      "blockNumber": null,
+      "reused": true
+    },
+    "p12": {
+      "contractName": "P12OrbitWalletReplacementMigrator",
+      "address": "0x3B0b51B8c80B8A649601811647f40E08bF1C3A59",
+      "executableHash": "0x78d548d13441b0c0dc11dd28e29598d39da9e103508190fb8c9570c8bcbbca34",
+      "transactionHash": null,
+      "blockNumber": null,
+      "reused": true
+    },
+    "p39": {
+      "contractName": "P39OrbitWalletReplacementMigrator",
+      "address": "0x566A0ce0bC8b4118e74940876E36a2Cf6e0cce9a",
+      "transactionHash": "0x95efe2e2062587abc30b8b5631cd1ec1fcd8dd62759b41c7b0e39b85abdeea02",
+      "blockNumber": 91388287
+    },
+    "fgt": {
+      "contractName": "FGTWalletReplacementMigrator",
+      "address": "0x33534E581EEF904c76ACA42410faEE14FEe7FC0D",
+      "transactionHash": "0x3207b415437cc3c0328f66ef4218216a2dbb69c83b12a579e9dc91edb7438795",
+      "blockNumber": 91388290
+    },
+    "fgtr": {
+      "contractName": "FGTrWalletReplacementMigrator",
+      "address": "0x9f06F9453173713660aC92aCF5Bd362AE442a975",
+      "transactionHash": "0xd5a2a17996f5fcbedcd7d1630b5594b5e077d86d13fde444df622a95530d4f5c",
+      "blockNumber": 91388293
+    }
+  }
+}

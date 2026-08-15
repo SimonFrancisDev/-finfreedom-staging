@@ -1,0 +1,10 @@
+{
+  "generatedAt": "2026-08-03T19:39:32.991Z",
+  "source": "production MongoDB index used only to detect activity during chain-read window",
+  "snapshotStartBlock": 91387091,
+  "snapshotEndBlock": 91387205,
+  "affectedOwnerCount": 5,
+  "eventCount": 0,
+  "consistent": true,
+  "events": []
+}

@@ -1,0 +1,83 @@
+{
+  "fixId": "RECYCLE_SELF_PAYMENT_V1",
+  "sourceCommit": "f8981bc",
+  "generatedAt": "2026-07-20T10:44:20.517Z",
+  "chainId": 137,
+  "multisig": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+  "requiredConfirmations": 3,
+  "addresses": {
+    "multisig": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+    "guardian": "0x290c2300296379BD0048aFe9099Ed6Fc81BF75fC",
+    "manager": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+    "p12Proxy": "0xCF998d8f7E9DD4f3FacFbA45e656dE07142f824b",
+    "p39Proxy": "0xEaD39819B8C4DBb0669320542B6B847D4c31b8Fb",
+    "p12Implementation": "0x437A8846c3dD1efE970fe0731bB71779Fd6699a7",
+    "p39Implementation": "0x8d3190Ad251c0c621eee0DD97A5Cc303930948E0",
+    "router": "0x7c978Ed8EA43b16aF4088998bf6FF0EB1567a3Be"
+  },
+  "actions": [
+    {
+      "index": 0,
+      "stage": "PREAPPROVAL",
+      "label": "Approve P12 recycle-self-fix implementation",
+      "target": "0x290c2300296379BD0048aFe9099Ed6Fc81BF75fC",
+      "value": "0",
+      "data": "0x8492e671000000000000000000000000cf998d8f7e9dd4f3facfba45e656de07142f824b000000000000000000000000437a8846c3dd1efe970fe0731bb71779fd6699a70000000000000000000000000000000000000000000000000000000000000001"
+    },
+    {
+      "index": 1,
+      "stage": "PREAPPROVAL",
+      "label": "Approve P39 recycle-self-fix implementation",
+      "target": "0x290c2300296379BD0048aFe9099Ed6Fc81BF75fC",
+      "value": "0",
+      "data": "0x8492e671000000000000000000000000ead39819b8c4dbb0669320542b6b847d4c31b8fb0000000000000000000000008d3190ad251c0c621eee0dd97a5cc303930948e00000000000000000000000000000000000000000000000000000000000000001"
+    },
+    {
+      "index": 2,
+      "stage": "EXECUTION",
+      "label": "Pause LevelManager for targeted recycle fix",
+      "target": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "value": "0",
+      "data": "0x8456cb59"
+    },
+    {
+      "index": 3,
+      "stage": "EXECUTION",
+      "label": "Upgrade P12 for recycle self-parent guard",
+      "target": "0xCF998d8f7E9DD4f3FacFbA45e656dE07142f824b",
+      "value": "0",
+      "data": "0x4f1ef286000000000000000000000000437a8846c3dd1efe970fe0731bb71779fd6699a700000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "index": 4,
+      "stage": "EXECUTION",
+      "label": "Upgrade P39 for recycle self-parent guard",
+      "target": "0xEaD39819B8C4DBb0669320542B6B847D4c31b8Fb",
+      "value": "0",
+      "data": "0x4f1ef2860000000000000000000000008d3190ad251c0c621eee0dd97a5cc303930948e000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "index": 5,
+      "stage": "EXECUTION",
+      "label": "Set recycle self-payment settlement router",
+      "target": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "value": "0",
+      "data": "0x117b109a0000000000000000000000007c978ed8ea43b16af4088998bf6ff0eb1567a3be"
+    },
+    {
+      "index": 6,
+      "stage": "FINALIZE",
+      "label": "Unpause LevelManager after targeted verification",
+      "target": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "value": "0",
+      "data": "0x3f4ba83a"
+    }
+  ],
+  "executionRules": [
+    "Execute actions 0 and 1 before action 2.",
+    "Suspend the production worker and block user activations before action 2.",
+    "Execute actions 2 through 5 strictly in order.",
+    "Verify implementations, router, balances, positions, cycles, escrow, migration state and ownership before action 6.",
+    "Execute action 6 only after all post-upgrade checks pass."
+  ]
+}

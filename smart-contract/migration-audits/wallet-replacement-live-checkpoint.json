@@ -1,0 +1,575 @@
+{
+  "generatedAt": "2026-08-04T22:30:40.575Z",
+  "block": 91451743,
+  "result": "PASS",
+  "checks": 96,
+  "rows": [
+    {
+      "label": "registration temporary implementation installed",
+      "pass": true,
+      "detail": {
+        "actual": "0x2e30A51C4FeEE4370B6Fb19ed98A1eCBDE408f72",
+        "expected": "0x2e30A51C4FeEE4370B6Fb19ed98A1eCBDE408f72"
+      }
+    },
+    {
+      "label": "registration remains paused",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "levelManager temporary implementation installed",
+      "pass": true,
+      "detail": {
+        "actual": "0xc8064bf96Fba0BD3A7a9a087E61523039e0564e3",
+        "expected": "0xc8064bf96Fba0BD3A7a9a087E61523039e0564e3"
+      }
+    },
+    {
+      "label": "levelManager remains paused",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "escrow temporary implementation installed",
+      "pass": true,
+      "detail": {
+        "actual": "0x4E5C085227DEb7E2E75aB92d9372819a95bDb6C2",
+        "expected": "0x4E5C085227DEb7E2E75aB92d9372819a95bDb6C2"
+      }
+    },
+    {
+      "label": "escrow remains paused",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "p4 temporary implementation installed",
+      "pass": true,
+      "detail": {
+        "actual": "0x25E09FC493904D6706E129315513693407c03722",
+        "expected": "0x25E09FC493904D6706E129315513693407c03722"
+      }
+    },
+    {
+      "label": "p4 remains paused",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "p12 temporary implementation installed",
+      "pass": true,
+      "detail": {
+        "actual": "0x3B0b51B8c80B8A649601811647f40E08bF1C3A59",
+        "expected": "0x3B0b51B8c80B8A649601811647f40E08bF1C3A59"
+      }
+    },
+    {
+      "label": "p12 remains paused",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "p39 temporary implementation installed",
+      "pass": true,
+      "detail": {
+        "actual": "0x566A0ce0bC8b4118e74940876E36a2Cf6e0cce9a",
+        "expected": "0x566A0ce0bC8b4118e74940876E36a2Cf6e0cce9a"
+      }
+    },
+    {
+      "label": "p39 remains paused",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "fgt temporary implementation installed",
+      "pass": true,
+      "detail": {
+        "actual": "0x33534E581EEF904c76ACA42410faEE14FEe7FC0D",
+        "expected": "0x33534E581EEF904c76ACA42410faEE14FEe7FC0D"
+      }
+    },
+    {
+      "label": "fgt remains paused",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "fgtr temporary implementation installed",
+      "pass": true,
+      "detail": {
+        "actual": "0x9f06F9453173713660aC92aCF5Bd362AE442a975",
+        "expected": "0x9f06F9453173713660aC92aCF5Bd362AE442a975"
+      }
+    },
+    {
+      "label": "fgtr remains paused",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "WP replacement registered",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "RY replacement registered",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "WP old identity disabled",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "RY old identity disabled",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "WP sponsor preserved",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "RY sponsor canonicalized to WP replacement",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "sponsor rewrite 0x41BAab62394BeefE994128FCfAfC45aB34De7dcF",
+      "pass": true,
+      "detail": {
+        "actual": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B",
+        "expected": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B"
+      }
+    },
+    {
+      "label": "sponsor rewrite 0xFb8D46674f51882baaA2c9606122484434FF2DC2",
+      "pass": true,
+      "detail": {
+        "actual": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B",
+        "expected": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B"
+      }
+    },
+    {
+      "label": "sponsor rewrite 0x16E5b21EB13D8F0381d61770834df07F37BB802e",
+      "pass": true,
+      "detail": {
+        "actual": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B",
+        "expected": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B"
+      }
+    },
+    {
+      "label": "sponsor rewrite 0x03D0343C4138e42804774638F0CF0866381763A2",
+      "pass": true,
+      "detail": {
+        "actual": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B",
+        "expected": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B"
+      }
+    },
+    {
+      "label": "sponsor rewrite 0xeb752486beaD4844C7EF8416ed6c6B9881fdf7Ee",
+      "pass": true,
+      "detail": {
+        "actual": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B",
+        "expected": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B"
+      }
+    },
+    {
+      "label": "sponsor rewrite 0xEE0d8E1152fB067e8276e0E8C10ED33dC0D4D0D8",
+      "pass": true,
+      "detail": {
+        "actual": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B",
+        "expected": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B"
+      }
+    },
+    {
+      "label": "sponsor rewrite 0xcC0aF2Eacf2937A1526F23F137644D4F94821899",
+      "pass": true,
+      "detail": {
+        "actual": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B",
+        "expected": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B"
+      }
+    },
+    {
+      "label": "sponsor rewrite 0x3734223B5dB7438DC86d8508aA76805AfcCb202F",
+      "pass": true,
+      "detail": {
+        "actual": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B",
+        "expected": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B"
+      }
+    },
+    {
+      "label": "sponsor rewrite 0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+      "pass": true,
+      "detail": {
+        "actual": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B",
+        "expected": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B"
+      }
+    },
+    {
+      "label": "sponsor rewrite 0x0fDeD89D00403C941f94e44185e5400b322042Bd",
+      "pass": true,
+      "detail": {
+        "actual": "0xFb8D46674f51882baaA2c9606122484434FF2DC2",
+        "expected": "0xFb8D46674f51882baaA2c9606122484434FF2DC2"
+      }
+    },
+    {
+      "label": "sponsor rewrite 0xa4e1197A882D91EBdB3614b7b02a21F1c1c2dBA2",
+      "pass": true,
+      "detail": {
+        "actual": "0xFb8D46674f51882baaA2c9606122484434FF2DC2",
+        "expected": "0xFb8D46674f51882baaA2c9606122484434FF2DC2"
+      }
+    },
+    {
+      "label": "registration matrix parent 0x03D0343C4138e42804774638F0CF0866381763A2 L2",
+      "pass": true,
+      "detail": {
+        "actual": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B",
+        "expected": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B"
+      }
+    },
+    {
+      "label": "registration matrix parent 0x0fDeD89D00403C941f94e44185e5400b322042Bd L2",
+      "pass": true,
+      "detail": {
+        "actual": "0xFb8D46674f51882baaA2c9606122484434FF2DC2",
+        "expected": "0xFb8D46674f51882baaA2c9606122484434FF2DC2"
+      }
+    },
+    {
+      "label": "registration matrix parent 0x16E5b21EB13D8F0381d61770834df07F37BB802e L2",
+      "pass": true,
+      "detail": {
+        "actual": "0xFb8D46674f51882baaA2c9606122484434FF2DC2",
+        "expected": "0xFb8D46674f51882baaA2c9606122484434FF2DC2"
+      }
+    },
+    {
+      "label": "registration matrix parent 0xFb8D46674f51882baaA2c9606122484434FF2DC2 L2",
+      "pass": true,
+      "detail": {
+        "actual": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B",
+        "expected": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B"
+      }
+    },
+    {
+      "label": "registration matrix parent 0x41BAab62394BeefE994128FCfAfC45aB34De7dcF L2",
+      "pass": true,
+      "detail": {
+        "actual": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B",
+        "expected": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B"
+      }
+    },
+    {
+      "label": "registration matrix parent 0xa4e1197A882D91EBdB3614b7b02a21F1c1c2dBA2 L2",
+      "pass": true,
+      "detail": {
+        "actual": "0xFb8D46674f51882baaA2c9606122484434FF2DC2",
+        "expected": "0xFb8D46674f51882baaA2c9606122484434FF2DC2"
+      }
+    },
+    {
+      "label": "registration matrix parent 0xFb8D46674f51882baaA2c9606122484434FF2DC2 L3",
+      "pass": true,
+      "detail": {
+        "actual": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B",
+        "expected": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B"
+      }
+    },
+    {
+      "label": "registration matrix parent 0x6F6036351989d89890c1A1E5a5e0E405d532d414 L3",
+      "pass": true,
+      "detail": {
+        "actual": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B",
+        "expected": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B"
+      }
+    },
+    {
+      "label": "registration matrix parent 0xa4e1197A882D91EBdB3614b7b02a21F1c1c2dBA2 L3",
+      "pass": true,
+      "detail": {
+        "actual": "0xFb8D46674f51882baaA2c9606122484434FF2DC2",
+        "expected": "0xFb8D46674f51882baaA2c9606122484434FF2DC2"
+      }
+    },
+    {
+      "label": "registration matrix parent 0xcC0aF2Eacf2937A1526F23F137644D4F94821899 L3",
+      "pass": true,
+      "detail": {
+        "actual": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B",
+        "expected": "0x1EA5513e017b4e25847e91aBc84aC8686331f80B"
+      }
+    },
+    {
+      "label": "WP LevelManager L1",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "RY LevelManager L1",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "WP old LevelManager L1 cleared",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "RY old LevelManager L1 cleared",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "WP LevelManager L2",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "RY LevelManager L2",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "WP old LevelManager L2 cleared",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "RY old LevelManager L2 cleared",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "WP LevelManager L3",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "RY LevelManager L3",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "WP old LevelManager L3 cleared",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "RY old LevelManager L3 cleared",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "WP LevelManager L4",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "RY LevelManager L4",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "WP old LevelManager L4 cleared",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "RY old LevelManager L4 cleared",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "WP LevelManager L5",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "RY LevelManager L5",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "WP old LevelManager L5 cleared",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "RY old LevelManager L5 cleared",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "WP LevelManager L6",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "RY LevelManager L6",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "WP old LevelManager L6 cleared",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "RY old LevelManager L6 cleared",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "WP LevelManager L7",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "RY LevelManager L7",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "WP old LevelManager L7 cleared",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "RY old LevelManager L7 cleared",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "WP LevelManager L8",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "RY LevelManager L8",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "WP old LevelManager L8 cleared",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "RY old LevelManager L8 cleared",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "WP LevelManager L9",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "RY LevelManager L9",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "WP old LevelManager L9 cleared",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "RY old LevelManager L9 cleared",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "WP LevelManager L10",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "RY LevelManager L10",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "WP old LevelManager L10 cleared",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "RY old LevelManager L10 cleared",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "WP escrow moved",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "RY escrow moved",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "WP old escrow cleared",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "RY old escrow cleared",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "WP FGT moved",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "RY FGT moved",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "WP old FGT cleared",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "RY old FGT cleared",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "WP FGTr moved",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "RY FGTr remains zero",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "WP old FGTr cleared",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "invalid WP P39 Level 6 quarantined",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "label": "WP P4 Level 4 orbit escrow preserved",
+      "pass": true,
+      "detail": null
+    }
+  ]
+}
