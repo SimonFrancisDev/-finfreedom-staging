@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-08-15",
+  "archiveRoot": "C:/DevProjects/f-freedom-stable/tmp/workspace-cleanup-20260815",
+  "archives": [
+    {
+      "source": "Fin-Freedom-Web2 - Copy/tmp-production-build",
+      "classification": "generated production build snapshot",
+      "file": "production-frontend-tmp-production-build.zip",
+      "sizeBytes": 305963243,
+      "sha256": "6ee40001d3088d44b6d99b2ca253a4c552532330df4a20ba0a474af060c5a85e",
+      "verifiedBeforeRemoval": true
+    }
+  ]
+}

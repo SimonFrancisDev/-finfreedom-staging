@@ -10,10 +10,15 @@ Production folders remain:
 
 Staging folders are:
 
-- `frontend` - frontend worktree on `staging-frontend-testing`
-- `backend` - backend worktree on `staging-backend-testing`
-- `smart-contract` - smart contract worktree on `staging-contract-testing`
+- `frontend` - frontend source tracked by this staging monorepository
+- `backend` - backend source tracked by this staging monorepository
+- `smart-contract` - canonical contract source and staging deployment tooling
 - `env-files` - non-secret staging env templates and safety notes
+- `operations` - non-secret production/staging baselines and audit indexes
+
+The old staging branch names may still exist in sibling repositories, but
+these directories are not independent worktrees. Git operations for staging
+must be run from this repository root.
 
 ## Non-Negotiable Rules
 

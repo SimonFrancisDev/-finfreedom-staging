@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "environment": "production",
+  "network": { "name": "Polygon Mainnet", "chainId": 137, "explorer": "https://polygonscan.com/" },
+  "runtimeRepositories": {
+    "backend": { "remote": "https://github.com/SimonFrancisDev/fin-freedom-backend.git", "branch": "main", "observedLocalHead": "9425b34ca6182dca0fa11acdff48e45451fdd314" },
+    "frontend": { "remote": "https://github.com/SimonFrancisDev/ffn-frontend", "branch": "main", "observedLocalHead": "a6e4cd78e3f3d7db02429ba8ef132f5741120473" },
+    "contracts": { "remote": "https://github.com/SimonFrancisDev/-finfreedom-staging.git", "branch": "main", "observedLocalHead": "2334dcf202a31a775c4397c67c7423192c53cc75", "canonicalPath": "smart-contract" }
+  },
+  "contracts": {
+    "usdt": { "proxy": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F", "startBlock": 87490069 },
+    "registration": { "proxy": "0x02ECA97e944Ac66b0444fd5F61A716917E83CfF5", "implementation": "0x2f2c5e43ebbf666e00a1a2d699256b2eae6268f5", "startBlock": 87489991 },
+    "levelManager": { "proxy": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53", "implementation": "0x36017dd046653654dcf2ce52c2a44a1914b3998a", "startBlock": 87490007 },
+    "levelSettlementRouter": { "proxy": "0x66683F35b2cd42b8B66C0E078acc7005CB558F25", "startBlock": 87490009 },
+    "escrow": { "proxy": "0x8b3db2AC7e30749479f2dbad14105C8eD4a377d4", "startBlock": 87489988 },
+    "p4": { "proxy": "0x1ED0b443c880Ba88F732c3F5915561A07B21F6B4", "implementation": "0xdcdf3e86b417effa411b75373f6596863f9b7bd8", "startBlock": 87490025 },
+    "p12": { "proxy": "0xCF998d8f7E9DD4f3FacFbA45e656dE07142f824b", "implementation": "0xcd673bc614ad2c1d6bc4f888df7b31a7a468d078", "startBlock": 87490033 },
+    "p39": { "proxy": "0xEaD39819B8C4DBb0669320542B6B847D4c31b8Fb", "implementation": "0x9255ed0c56371039dd2fa70aca23421b1a530455", "startBlock": 87490041 },
+    "fgt": { "proxy": "0x615201edaddB5CFD839Cc4eE693Dc464F6E2B5E4", "implementation": "0x435295Ef236841fd2a162062cB86464C4808DE26", "startBlock": 87489981 },
+    "fgtr": { "proxy": "0xAaD41296b6Ec358b9C16dD7161C555fD3a464Bc3", "implementation": "0xC6cF732CF49faDDF2E614f1154294a3c2f786cfF", "startBlock": 87489985 },
+    "freedomTokenController": { "proxy": "0x2Ee32EDfE1990408FE70bcADBDBDA8c2f9AdBb62", "implementation": "0xc1849FAAb6b28657A52542fb077547b2003E625f" },
+    "multisig": { "address": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d" },
+    "guardian": { "address": "0x290c2300296379BD0048aFe9099Ed6Fc81BF75fC" },
+    "nftPoolVault": { "address": "0xf8F60Da42681b73DFeCa7731E78b29C8707C184b", "startBlock": 87488919 },
+    "operationsVault": { "address": "0x3ee9B4913e175c15B2Ef76Ac352B6737210248Fb", "startBlock": 87488921 }
+  },
+  "evidence": {
+    "sourceProvenance": "smart-contract/migration-audits/wallet-surgery-source-provenance.json",
+    "status": "core executable bytecode matched canonical artifacts during the recorded provenance audit"
+  }
+}

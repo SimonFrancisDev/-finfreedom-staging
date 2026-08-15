@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "environment": "staging",
+  "network": { "name": "Polygon Amoy", "chainId": 80002, "explorer": "https://amoy.polygonscan.com/" },
+  "repository": { "remote": "https://github.com/SimonFrancisDev/-finfreedom-staging.git", "branch": "main", "observedLocalHead": "2334dcf202a31a775c4397c67c7423192c53cc75" },
+  "contracts": {
+    "usdt": { "address": "0x7b7E39f3D177B3356368431C5C285bca58b43A60" },
+    "registration": { "address": "0x462DDc6C3Ba984b8BFd343948eADf321f8607792", "startBlock": 42234144 },
+    "levelManager": { "address": "0x83dA1D3fF64411b1D2e73f236C8525bF08483fEb", "startBlock": 42234154 },
+    "levelSettlementRouter": { "address": "0xb7Fc5B65122149D17759de894ea3d90ceaD87CC2", "startBlock": 42234157 },
+    "escrow": { "address": "0xBdc077952E3711cd7749e1325D4Cc3195A5d7eBb", "startBlock": 42234139 },
+    "p4": { "address": "0x9A8d3708ff88F98E02cF1bf072fCa7AC9D2A72db", "startBlock": 42234170 },
+    "p12": { "address": "0xD3E2B02A18172513AEDbeaE3C11AB5c28A55cb9b", "startBlock": 42234175 },
+    "p39": { "address": "0xAFFD9Dcb638F0bFC81331EdCEB0c0c01652E4d4C", "startBlock": 42234181 },
+    "fgt": { "address": "0xf5C0815fd2bDa5dBa0b7A48F14b4c3740bB088Fa", "startBlock": 42234130 },
+    "fgtr": { "address": "0xF1CFc6BD514aD9E8b2ad2E17770Ee8d08d42592d", "startBlock": 42234134 },
+    "freedomTokenController": { "address": "0x526a3af0F97279d1c4e8d471b07B03574e82B6A2" },
+    "multisig": { "address": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A" },
+    "guardian": { "address": "0x52F22c1e396dF20c2078B4a86b4A0ac3b51a9911" },
+    "nftPoolVault": { "address": "0x1AF1e23b2820935AF9D8FD4DE0024B79E6119aaA", "startBlock": 42234121 },
+    "operationsVault": { "address": "0x8C53D90348A4C73C73db2E21dF07DAa29144A823", "startBlock": 42234123 }
+  },
+  "deployment": {
+    "startBlock": 42234111,
+    "manifest": "smart-contract/deployments-staging/deployment-1784052622990.json",
+    "multisigManifest": "smart-contract/deployments-staging/multisig-deployment-1784052045577.json"
+  }
+}
