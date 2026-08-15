@@ -28,6 +28,14 @@
       "sha256": "55d62fe5b5605d189804369b1fb17d2f0a51bd19dc0e9b8a1338e6a328d16846",
       "verifiedBeforeRemoval": true,
       "commitAllowed": false
+    },
+    {
+      "source": "Smart-Contract divergent dirty state",
+      "classification": "legacy contract changes excluded from canonical source",
+      "file": "legacy-smart-contract-dirty-state.zip",
+      "sizeBytes": 21039,
+      "sha256": "869f29d50af5d874b725a6b04857563dc61a0ee22766ce3384b2a2f1fa782a61",
+      "verifiedBeforeRemoval": true
     }
   ]
 }
