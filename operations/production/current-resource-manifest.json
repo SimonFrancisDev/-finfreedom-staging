@@ -1,0 +1,189 @@
+{
+  "schemaVersion": 1,
+  "environment": "production",
+  "verifiedAt": "2026-08-16T14:38:52.1015543Z",
+  "verificationBlock": 92123900,
+  "network": {
+    "name": "Polygon Mainnet",
+    "chainId": 137,
+    "explorer": "https://polygonscan.com/"
+  },
+  "repositories": {
+    "backend": {
+      "remote": "https://github.com/SimonFrancisDev/fin-freedom-backend.git",
+      "branch": "main",
+      "currentHead": "1c1367bd679f6cbb1635c79a9201ea7f0f03b98f",
+      "originMain": "1c1367bd679f6cbb1635c79a9201ea7f0f03b98f",
+      "platformDeployedCommit": "unverified"
+    },
+    "frontend": {
+      "remote": "https://github.com/SimonFrancisDev/ffn-frontend",
+      "branch": "main",
+      "currentHead": "b2be4b83e901a7d7007e46878a26d57aee359224",
+      "originMain": "b2be4b83e901a7d7007e46878a26d57aee359224",
+      "platformDeployedCommit": "unverified"
+    },
+    "contracts": {
+      "remote": "https://github.com/SimonFrancisDev/-finfreedom-staging.git",
+      "branch": "main",
+      "currentHead": "4bc72ff55f0034a1d63af8b2744cc86dff23a9f2",
+      "originMain": "4bc72ff55f0034a1d63af8b2744cc86dff23a9f2",
+      "canonicalPath": "smart-contract",
+      "note": "The sibling Smart-Contract repository is legacy and is not production canonical."
+    }
+  },
+  "services": {
+    "frontend": {
+      "url": "https://www.finfreedomnetwork.io",
+      "status": 200,
+      "liveBundleConfigurationMatched": true
+    },
+    "api": {
+      "url": "https://fin-freedom-backend-3.onrender.com",
+      "healthUrl": "https://fin-freedom-backend-3.onrender.com/api/health",
+      "status": 200,
+      "environment": "production",
+      "databaseConnected": true,
+      "indexerEnabled": false
+    },
+    "worker": {
+      "url": "https://fin-freedom-backend-4-bg-worker.onrender.com",
+      "healthUrl": "https://fin-freedom-backend-4-bg-worker.onrender.com/api/health",
+      "status": 200,
+      "environment": "production",
+      "databaseConnected": true,
+      "indexerEnabled": true
+    },
+    "database": {
+      "name": "finfreedom",
+      "credentialsStoredInRepository": false
+    }
+  },
+  "contracts": {
+    "usdt": {
+      "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      "startBlock": 87490069,
+      "codePresent": true
+    },
+    "registration": {
+      "proxy": "0x02ECA97e944Ac66b0444fd5F61A716917E83CfF5",
+      "implementation": "0x2F2c5E43eBBf666E00a1a2d699256B2Eae6268f5",
+      "startBlock": 87489991,
+      "owner": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d"
+    },
+    "levelManager": {
+      "proxy": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "implementation": "0x36017dd046653654dCF2CE52C2a44A1914b3998A",
+      "startBlock": 87490007,
+      "owner": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d"
+    },
+    "levelSettlementRouter": {
+      "address": "0x66683F35b2cd42b8B66C0E078acc7005CB558F25",
+      "startBlock": 87490009,
+      "levelManager": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "usdt": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F"
+    },
+    "escrow": {
+      "proxy": "0x8b3db2AC7e30749479f2dbad14105C8eD4a377d4",
+      "implementation": "0x48c512362E047288d83Fe949614a571401aDA075",
+      "startBlock": 87489988,
+      "owner": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d"
+    },
+    "p4": {
+      "proxy": "0x1ED0b443c880Ba88F732c3F5915561A07B21F6B4",
+      "implementation": "0xDCDF3e86B417eFfA411B75373F6596863f9B7bd8",
+      "startBlock": 87490025,
+      "owner": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "levelManager": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53"
+    },
+    "p12": {
+      "proxy": "0xCF998d8f7E9DD4f3FacFbA45e656dE07142f824b",
+      "implementation": "0xCD673bc614Ad2C1d6Bc4F888df7b31A7a468d078",
+      "startBlock": 87490033,
+      "owner": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "levelManager": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53"
+    },
+    "p39": {
+      "proxy": "0xEaD39819B8C4DBb0669320542B6B847D4c31b8Fb",
+      "implementation": "0x9255eD0c56371039Dd2fA70acA23421b1A530455",
+      "startBlock": 87490041,
+      "owner": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "levelManager": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53"
+    },
+    "fgt": {
+      "proxy": "0x615201edaddB5CFD839Cc4eE693Dc464F6E2B5E4",
+      "implementation": "0x435295Ef236841fd2a162062cB86464C4808DE26",
+      "startBlock": 87489981,
+      "owner": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d"
+    },
+    "fgtr": {
+      "proxy": "0xAaD41296b6Ec358b9C16dD7161C555fD3a464Bc3",
+      "implementation": "0xC6cF732CF49faDDF2E614f1154294a3c2f786cfF",
+      "startBlock": 87489985,
+      "owner": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d"
+    },
+    "freedomTokenController": {
+      "proxy": "0x2Ee32EDfE1990408FE70bcADBDBDA8c2f9AdBb62",
+      "implementation": "0xc1849FAAb6b28657A52542fb077547b2003E625f",
+      "owner": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d"
+    },
+    "guardian": {
+      "address": "0x290c2300296379BD0048aFe9099Ed6Fc81BF75fC",
+      "codePresent": true
+    },
+    "nftPoolVault": {
+      "address": "0xf8F60Da42681b73DFeCa7731E78b29C8707C184b",
+      "startBlock": 87488919,
+      "codePresent": true
+    },
+    "operationsVault": {
+      "address": "0x3ee9B4913e175c15B2Ef76Ac352B6737210248Fb",
+      "startBlock": 87488921,
+      "codePresent": true
+    }
+  },
+  "governance": {
+    "multisig": {
+      "address": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "owners": [
+        "0x17Fb12B3d5A2bbb4dD10bd3C5C35618baDA3D2D6",
+        "0x67E138a2f46AEF2a0031CfCb5Ae843b41c973f41",
+        "0x04eaa54e7896C24aF2622b804Bf35E4C662bf12f",
+        "0xEA51893495D285D737db5062500C4F003E2b3A4D"
+      ],
+      "requiredConfirmations": 3,
+      "timelockDelaySeconds": 120,
+      "transactionCountAtVerification": 113
+    },
+    "founderDistribution": {
+      "wallets": [
+        "0x88d350Bd016751B08Baf6508e1bdF186A1B1305B",
+        "0x5fd791B457aD32A8E2A2e81FC211238639824127",
+        "0xa2033515F0f35A5FA4803eDde306c293a81c2da9",
+        "0xf73d4Ae3a9EFeBAb76ab9053Cd055b4503929231",
+        "0xb850f836d0e3CfeD4A7DbDCAa7A4c78aFac0d911",
+        "0x435363daD972a7abb2A739525c461F06A45CE294",
+        "0xf4F83F8181cD9A8C96a33f4d9aF487b444353a15",
+        "0x120FBeeeb36c003CAEE1F4B37Ac9297C88d51D42"
+      ],
+      "ratiosBasisPoints": [1250, 1250, 1250, 1250, 1250, 1250, 1250, 1250]
+    },
+    "founderRepresentatives": [
+      "0x3176A012618aB6F527eD1Bd038b64A179725ef07",
+      "0xFB142123C6EfC9b9f406EeeD0Df763B9c8Bc856E",
+      "0xF6C5b0600566d032fE67302A34fA774c0456bFEF",
+      "0xEf0De871F2baF44aa2FF77D03862Eba281c1d5AD"
+    ]
+  },
+  "verification": {
+    "localProductionBackendMatchesBaseline": true,
+    "localProductionFrontendMatchesBaseline": true,
+    "liveFrontendBundleMatchesExpectedPublicConfiguration": true,
+    "liveProxyImplementationsMatchBaseline": true,
+    "liveOwnershipMatchesMultisig": true,
+    "liveContractWiringMatchesBaseline": true,
+    "allConfiguredAddressesContainCode": true,
+    "secretsIncluded": false,
+    "platformCommitVerification": "pending manual confirmation in Render and Vercel dashboards"
+  }
+}
