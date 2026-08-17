@@ -20,6 +20,7 @@ import AccountPage from './Pages/Account/AccountPage'
 import PreferencesPage from './Pages/Preferences/PreferencesPage'
 import SecurityPage from './Pages/Security/SecurityPage'
 import ActivityPage from './Pages/Activity/ActivityPage'
+import FreedomPlusPage from './Pages/FreedomPlus/FreedomPlusPage'
 import { AdminPanel } from './Pages/AdminPanel'
 import NotificationModal from './components/Modals/NotificationModal/NotificationModal'
 import { useWallet } from './hooks/useWallet'
@@ -56,6 +57,9 @@ import { DollarSign, TrendingUp, Wrench, Bell, Calendar, Megaphone } from 'lucid
 
 const navItems = [
   { label: 'Home', href: 'home', active: false },
+  ...(String(import.meta.env.VITE_FREEDOM_PLUS_ENABLED || 'false').toLowerCase() === 'true'
+    ? [{ label: 'Freedom-Plus', href: 'freedomPlus', active: false }]
+    : []),
   { label: 'About Us', href: 'about', active: false },
   { label: 'Community', href: 'community', active: false },
   { label: 'Support', href: 'support', active: false },
@@ -94,6 +98,7 @@ const WALLET_RETURN_ROUTE_KEY = 'finfreedom_wallet_return_route_v1'
 const LAUNCH_GATE_MODE = String(import.meta.env.VITE_LAUNCH_GATE_MODE || 'open').toLowerCase()
 const EARLY_ACCESS_CODE = String(import.meta.env.VITE_EARLY_ACCESS_CODE || '').trim()
 const PUBLIC_LAUNCH_AT = String(import.meta.env.VITE_PUBLIC_LAUNCH_AT || '').trim()
+const FREEDOM_PLUS_ENABLED = String(import.meta.env.VITE_FREEDOM_PLUS_ENABLED || 'false').toLowerCase() === 'true'
 
 const scopedStorageKey = (baseKey, wallet) => {
   const suffix = wallet ? String(wallet).trim().toLowerCase() : 'guest'
@@ -106,6 +111,7 @@ const routeMap = {
   '/about': 'about',
   '/dashboard': 'dashboard',
   '/f-freedom-program': 'fFreedomProgram',
+  '/freedom-plus': 'freedomPlus',
   '/my-tokens': 'myTokens',
   '/activation': 'activation',
   '/ref': 'activation',
@@ -132,6 +138,7 @@ const pageToPathMap = {
   about: '/about',
   dashboard: '/dashboard',
   fFreedomProgram: '/f-freedom-program',
+  freedomPlus: '/freedom-plus',
   myTokens: '/my-tokens', // Add this
   activation: '/activation',
   orbits: '/orbits',
@@ -1313,6 +1320,10 @@ function App() {
                 path="/f-freedom-program"
                 element={<FFreedomProgramPage onNavigate={handleNavigate} />}
               />
+
+              {FREEDOM_PLUS_ENABLED && (
+                <Route path="/freedom-plus" element={<FreedomPlusPage />} />
+              )}
 
               <Route path="/about" element={<AboutPage onNavigate={handleNavigate} />} />
               <Route path="/community" element={<CommunityPage />} />

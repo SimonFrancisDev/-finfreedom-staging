@@ -16,6 +16,7 @@ import {
   stopFreedomPlusIndexer,
 } from './services/freedomPlusIndexerService.js';
 import { verifyFreedomPlusContracts } from './blockchain/freedomPlusContracts.js';
+import { buildFreedomPlusRewardSnapshot } from './services/freedomPlusRewardSnapshotService.js';
 
 function parseCliArgs(argv) {
   const [command, ...rest] = argv;
@@ -82,6 +83,15 @@ async function runReplayCommand(args) {
     });
 
     console.log('[INDEXER_REPLAY_OPEN_GAPS_RESULT]', result);
+    return;
+  }
+
+  if (args.command === 'freedom-plus-reward-snapshot') {
+    const result = await buildFreedomPlusRewardSnapshot({
+      year: Number(requireCliValue(args, 'year')),
+      month: Number(requireCliValue(args, 'month')),
+    });
+    console.log('[FREEDOM_PLUS_REWARD_SNAPSHOT]', result);
     return;
   }
 

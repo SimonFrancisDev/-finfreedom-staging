@@ -9,6 +9,10 @@ import FreedomPlusSyncState from '../../models/FreedomPlusSyncState.js';
 import FreedomPlusLedgerEntry from '../../models/FreedomPlusLedgerEntry.js';
 import { getProvider } from '../../blockchain/provider.js';
 import { getFreedomPlusContracts } from '../../blockchain/freedomPlusContracts.js';
+import {
+  freedomPlusRewardProof,
+  listFreedomPlusRewardPeriods,
+} from '../freedomPlusRewardSnapshotService.js';
 
 function wallet(value) {
   try { return getAddress(value).toLowerCase(); } catch { throw new Error('Invalid wallet address'); }
@@ -119,3 +123,5 @@ export async function freedomPlusEvents(address, query = {}) {
   ]);
   return { page, limit, total, items };
 }
+
+export { freedomPlusRewardProof, listFreedomPlusRewardPeriods };
