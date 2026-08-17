@@ -8,6 +8,7 @@ contract FreedomPlusOrbitManagerHarness {
         IFreedomPlusOrbit orbit,
         address orbitOwner,
         address participant,
+        address matrixAnchor,
         uint8 level,
         bytes32 activationId,
         bytes32 placementId,
@@ -18,6 +19,7 @@ contract FreedomPlusOrbitManagerHarness {
         return orbit.recordPosition(
             orbitOwner,
             participant,
+            matrixAnchor,
             level,
             activationId,
             placementId,

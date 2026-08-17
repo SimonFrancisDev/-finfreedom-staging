@@ -58,6 +58,7 @@ interface IFreedomPlusOrbit {
     function recordPosition(
         address orbitOwner,
         address participant,
+        address matrixAnchor,
         uint8 level,
         bytes32 activationId,
         bytes32 placementId,

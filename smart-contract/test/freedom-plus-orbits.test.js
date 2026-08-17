@@ -49,11 +49,13 @@ describe("Freedom-Plus orbit engines", function () {
     kind = ACTIVATION,
     financial = true,
     targetOrbitOwner = orbitOwner.address,
+    targetMatrixAnchor = targetOrbitOwner,
   }) {
     return manager.record(
       await orbit.getAddress(),
       targetOrbitOwner,
       participant,
+      targetMatrixAnchor,
       level,
       id(activationLabel),
       id(placementLabel),
@@ -277,6 +279,7 @@ describe("Freedom-Plus orbit engines", function () {
       orbit.recordPosition(
         orbitOwner.address,
         participants[0].address,
+        orbitOwner.address,
         2,
         id("direct-activation"),
         id("direct-placement"),
@@ -295,5 +298,57 @@ describe("Freedom-Plus orbit engines", function () {
         placementLabel: "wrong-level-placement",
       })
     ).to.be.revertedWithCustomError(orbit, "UnsupportedLevel");
+  });
+
+  it("keeps descendants under the exact P12 matrix branch instead of the next global branch", async function () {
+    const orbit = await deployOrbit("P12PlusOrbit");
+    const first = participants[0].address;
+    const second = participants[1].address;
+    const third = participants[2].address;
+
+    for (const [index, participant] of [first, second, third].entries()) {
+      await record({
+        orbit,
+        participant,
+        level: 3,
+        activationLabel: `p12-first-ring-activation-${index}`,
+        placementLabel: `p12-first-ring-placement-${index}`,
+      });
+    }
+
+    for (let child = 0; child < 3; child++) {
+      await record({
+        orbit,
+        participant: participants[3 + child].address,
+        level: 3,
+        activationLabel: `p12-third-branch-activation-${child}`,
+        placementLabel: `p12-third-branch-placement-${child}`,
+        kind: ROUTED_PAYMENT,
+        targetMatrixAnchor: third,
+      });
+    }
+
+    for (const position of [6, 9, 12]) {
+      const stored = await orbit.positionAt(orbitOwner.address, 3, 0, position);
+      expect(stored.participant).to.not.equal(ethers.ZeroAddress);
+      expect(stored.structuralParent).to.equal(third);
+    }
+    for (const position of [4, 5, 7, 8, 10, 11]) {
+      expect(
+        (await orbit.positionAt(orbitOwner.address, 3, 0, position)).participant
+      ).to.equal(ethers.ZeroAddress);
+    }
+
+    await expect(
+      record({
+        orbit,
+        participant: participants[6].address,
+        level: 3,
+        activationLabel: "p12-overflow-activation",
+        placementLabel: "p12-overflow-placement",
+        kind: ROUTED_PAYMENT,
+        targetMatrixAnchor: third,
+      })
+    ).to.be.revertedWithCustomError(orbit, "MatrixBranchFull");
   });
 });

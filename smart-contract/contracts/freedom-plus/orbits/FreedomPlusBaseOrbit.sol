@@ -38,6 +38,8 @@ abstract contract FreedomPlusBaseOrbit is
     error InvalidActivationId();
     error CycleAlreadyClosed(address orbitOwner, uint8 level, uint256 cycle);
     error MissingParentPosition(address orbitOwner, uint8 level, uint256 cycle, uint8 position);
+    error MatrixAnchorNotFound(address orbitOwner, uint8 level, uint256 cycle, address anchor);
+    error MatrixBranchFull(address orbitOwner, uint8 level, uint256 cycle, address anchor);
     error InvalidPlacementId();
     error DuplicatePlacement(bytes32 placementId);
     error InvalidGenesisFinancialState();
@@ -104,6 +106,7 @@ abstract contract FreedomPlusBaseOrbit is
     function recordPosition(
         address orbitOwner,
         address participant,
+        address matrixAnchor,
         uint8 level,
         bytes32 activationId,
         bytes32 placementId,
@@ -116,7 +119,9 @@ abstract contract FreedomPlusBaseOrbit is
         uint8 ring,
         address structuralParent
     ) {
-        if (orbitOwner == address(0) || participant == address(0)) revert InvalidAddress();
+        if (orbitOwner == address(0) || participant == address(0) || matrixAnchor == address(0)) {
+            revert InvalidAddress();
+        }
         if (!supportsLevel(level)) revert UnsupportedLevel(level);
         if (activationId == bytes32(0)) revert InvalidActivationId();
         if (placementId == bytes32(0)) revert InvalidPlacementId();
@@ -135,7 +140,14 @@ abstract contract FreedomPlusBaseOrbit is
         if (cycleData.closed) revert CycleAlreadyClosed(orbitOwner, level, cycle);
 
         uint8 capacity = FreedomPlusConfig.positionCount(orbitType());
-        position = cycleData.filledPositions + 1;
+        position = _selectPosition(
+            cycleData,
+            orbitOwner,
+            matrixAnchor,
+            level,
+            cycle,
+            capacity
+        );
         ring = FreedomPlusConfig.ringForPosition(orbitType(), position);
 
         uint8 parentSlot = FreedomPlusConfig.parentPosition(orbitType(), position);
@@ -146,6 +158,9 @@ abstract contract FreedomPlusBaseOrbit is
             if (structuralParent == address(0)) {
                 revert MissingParentPosition(orbitOwner, level, cycle, parentSlot);
             }
+        }
+        if (matrixAnchor != orbitOwner && structuralParent != matrixAnchor) {
+            revert MatrixAnchorNotFound(orbitOwner, level, cycle, matrixAnchor);
         }
 
         cycleData.positions[position] = Position({
@@ -158,7 +173,7 @@ abstract contract FreedomPlusBaseOrbit is
             kind: kind,
             financial: financial
         });
-        cycleData.filledPositions = position;
+        cycleData.filledPositions += 1;
         placementRecorded[placementId] = true;
 
         if (kind == PlacementKind.Activation || kind == PlacementKind.Recycle) {
@@ -189,7 +204,7 @@ abstract contract FreedomPlusBaseOrbit is
             financial
         );
 
-        if (position == capacity) {
+        if (cycleData.filledPositions == capacity) {
             cycleData.closed = true;
             emit CycleClosed(orbitOwner, level, cycle);
             _currentCycles[orbitOwner][level] = cycle + 1;
@@ -236,6 +251,43 @@ abstract contract FreedomPlusBaseOrbit is
 
     function supportsLevel(uint8 level) public pure virtual returns (bool);
     function orbitType() public pure virtual returns (FreedomPlusConfig.OrbitType);
+
+    function _selectPosition(
+        CycleData storage cycleData,
+        address orbitOwner,
+        address matrixAnchor,
+        uint8 level,
+        uint256 cycle,
+        uint8 capacity
+    ) internal view returns (uint8) {
+        if (matrixAnchor == orbitOwner) {
+            for (uint8 candidate = 1; candidate <= capacity; candidate++) {
+                if (cycleData.positions[candidate].participant == address(0)) return candidate;
+            }
+            revert CycleAlreadyClosed(orbitOwner, level, cycle);
+        }
+
+        uint8 anchorPosition;
+        for (uint8 cursor = capacity; cursor > 0; cursor--) {
+            if (cycleData.positions[cursor].participant == matrixAnchor) {
+                anchorPosition = cursor;
+                break;
+            }
+        }
+        if (anchorPosition == 0) {
+            revert MatrixAnchorNotFound(orbitOwner, level, cycle, matrixAnchor);
+        }
+
+        for (uint8 candidate = 1; candidate <= capacity; candidate++) {
+            if (
+                cycleData.positions[candidate].participant == address(0)
+                    && FreedomPlusConfig.parentPosition(orbitType(), candidate) == anchorPosition
+            ) {
+                return candidate;
+            }
+        }
+        revert MatrixBranchFull(orbitOwner, level, cycle, matrixAnchor);
+    }
 
     function _requireContract(address target) internal view {
         if (target == address(0) || target.code.length == 0) revert InvalidContract(target);
