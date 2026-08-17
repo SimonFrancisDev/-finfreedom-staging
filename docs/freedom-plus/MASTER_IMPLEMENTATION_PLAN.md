@@ -376,16 +376,20 @@ All later paid activity uses that state and follows ordinary financial rules.
 
 ### 13.7 Monthly distribution
 
-1. Use a deterministic on-chain distribution period identifier.
-2. Count only wallets active and sufficiently locked for their highest tier.
-3. Allocate the available pool 50/30/20.
-4. Prevent a wallet from participating in more than one tier.
-5. Prevent duplicate claims for one period.
-6. Keep zero-member tier allocations in the vault unless governance approves a different rule.
-7. Carry integer rounding dust forward in the vault.
-8. Use a scalable claim model rather than an unbounded push loop.
-
-The exact calendar cutoff, claim window, and unclaimed-reward expiry remain deployment configuration items requiring founder approval before NFT production launch.
+1. The monthly eligibility cutoff is the first day of every month at 00:00 UTC.
+2. Use the UTC year and month as the deterministic on-chain period identifier.
+3. Count only wallets active and sufficiently locked for their highest tier at that cutoff.
+4. Allocate the available pool 50/30/20.
+5. Prevent a wallet from participating in more than one tier.
+6. Finalized monthly entitlements do not expire.
+7. A later freeze, unlock, upgrade, or downgrade cannot remove an entitlement already earned at a previous cutoff.
+8. On claim, transfer the entitlement directly from the NFT Pool Vault to the eligible wallet.
+9. Prevent duplicate claims for one period.
+10. Keep zero-member tier allocations unreserved in the vault.
+11. Keep integer rounding dust unreserved in the vault.
+12. Reserved unclaimed entitlements cannot be withdrawn or allocated to a later period.
+13. Use a scalable Merkle-claim model rather than an unbounded push loop.
+14. The multisig-published eligibility root must be generated from chain state at the exact cutoff and remain independently reproducible by the indexer and audit tooling.
 
 ## 14. Contract Architecture
 

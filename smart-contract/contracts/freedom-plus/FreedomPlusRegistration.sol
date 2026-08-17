@@ -27,6 +27,7 @@ contract FreedomPlusRegistration is
     address public id1Wallet;
 
     uint256 public registeredCount;
+    bool public genesisInitialized;
     mapping(address => bool) public isRegistered;
     mapping(address => address) public sponsorOf;
     mapping(address => uint256) public participantNumber;
@@ -45,6 +46,7 @@ contract FreedomPlusRegistration is
     );
     event LevelManagerUpdated(address indexed previousManager, address indexed newManager);
     event GuardianUpdated(address indexed previousGuardian, address indexed newGuardian);
+    event GenesisInitialized(address indexed id1Wallet, address[4] representatives);
 
     error InvalidAddress();
     error InvalidContract(address target);
@@ -56,6 +58,8 @@ contract FreedomPlusRegistration is
     error LevelAlreadyActive(address participant, uint8 level);
     error PreviousLevelInactive(address participant, uint8 requiredLevel);
     error LevelOneRequiresRegistration();
+    error GenesisAlreadyInitialized();
+    error InvalidRepresentativeCount();
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -110,6 +114,56 @@ contract FreedomPlusRegistration is
 
         emit ParticipantRegistered(participant, sponsor, number, activationId);
         emit LevelActivated(participant, MIN_LEVEL, activationId);
+    }
+
+    function initializeGenesis(address[4] calldata representatives)
+        external onlyOwner whenNotPaused nonReentrant
+    {
+        if (genesisInitialized) revert GenesisAlreadyInitialized();
+        if (registeredCount != 1) revert InvalidRepresentativeCount();
+        genesisInitialized = true;
+
+        for (uint8 level = MIN_LEVEL; level <= MAX_LEVEL; level++) {
+            _levelActive[id1Wallet][level] = true;
+            bytes32 activationId = levelManager.activateGenesisLevel(
+                id1Wallet,
+                id1Wallet,
+                level,
+                false
+            );
+            emit LevelActivated(id1Wallet, level, activationId);
+        }
+
+        for (uint8 index = 0; index < representatives.length; index++) {
+            address representative = representatives[index];
+            if (representative == address(0) || representative == id1Wallet) revert InvalidAddress();
+            if (isRegistered[representative]) revert AlreadyRegistered(representative);
+            for (uint8 prior = 0; prior < index; prior++) {
+                if (representatives[prior] == representative) {
+                    revert AlreadyRegistered(representative);
+                }
+            }
+
+            uint256 number = registeredCount + 1;
+            isRegistered[representative] = true;
+            sponsorOf[representative] = id1Wallet;
+            participantNumber[representative] = number;
+            registeredCount = number;
+
+            for (uint8 level = MIN_LEVEL; level <= MAX_LEVEL; level++) {
+                _levelActive[representative][level] = true;
+                bytes32 activationId = levelManager.activateGenesisLevel(
+                    representative,
+                    id1Wallet,
+                    level,
+                    true
+                );
+                emit LevelActivated(representative, level, activationId);
+            }
+            emit ParticipantRegistered(representative, id1Wallet, number, bytes32(0));
+        }
+
+        emit GenesisInitialized(id1Wallet, representatives);
     }
 
     function activateLevel(uint8 level) external whenNotPaused nonReentrant {

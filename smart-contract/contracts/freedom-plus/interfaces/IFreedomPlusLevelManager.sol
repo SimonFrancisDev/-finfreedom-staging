@@ -7,4 +7,11 @@ interface IFreedomPlusLevelManager {
         address sponsor,
         uint8 level
     ) external returns (bytes32 activationId);
+
+    function activateGenesisLevel(
+        address participant,
+        address sponsor,
+        uint8 level,
+        bool createPlacement
+    ) external returns (bytes32 activationId);
 }

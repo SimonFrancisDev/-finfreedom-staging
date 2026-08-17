@@ -80,6 +80,10 @@ interface IFreedomPlusOrbit {
         external
         view
         returns (address);
+    function ringFilledCount(address orbitOwner, uint8 level, uint256 cycle, uint8 ring)
+        external
+        view
+        returns (uint8);
     function orbitType() external pure returns (FreedomPlusConfig.OrbitType);
     function supportsLevel(uint8 level) external pure returns (bool);
 }

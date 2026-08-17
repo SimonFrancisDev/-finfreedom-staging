@@ -35,6 +35,7 @@ contract FreedomPlusLevelManager is
     uint256 public activationNonce;
 
     mapping(bytes32 => bool) public activationProcessed;
+    mapping(bytes32 => bool) public recycleRewardProcessed;
 
     event RegistrationConfigured(address indexed registration);
     event SettlementRouterConfigured(address indexed router);
@@ -47,6 +48,13 @@ contract FreedomPlusLevelManager is
         address sponsor,
         uint256 price
     );
+    event GenesisActivationRecorded(
+        address indexed participant,
+        uint8 indexed level,
+        bytes32 indexed activationId,
+        address sponsor,
+        bool placementCreated
+    );
 
     error OnlyRegistration();
     error InvalidAddress();
@@ -56,6 +64,8 @@ contract FreedomPlusLevelManager is
     error SettlementRouterNotConfigured();
     error InvalidLevel(uint8 level);
     error IncorrectTransferredAmount(uint256 expected, uint256 received);
+    error OnlySettlementRouter();
+    error RecycleRewardAlreadyProcessed(bytes32 recycleActivationId);
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() { _disableInitializers(); }
@@ -128,6 +138,59 @@ contract FreedomPlusLevelManager is
         activationProcessed[activationId] = true;
 
         emit PaidActivationSettled(participant, level, activationId, sponsor, config.price);
+    }
+
+    function activateGenesisLevel(
+        address participant,
+        address sponsor,
+        uint8 level,
+        bool createPlacement
+    ) external onlyRegistration whenNotPaused returns (bytes32 activationId) {
+        if (participant == address(0) || sponsor == address(0)) revert InvalidAddress();
+        if (level < 1 || level > 7) revert InvalidLevel(level);
+        address routerAddress = address(settlementRouter);
+        if (routerAddress == address(0)) revert SettlementRouterNotConfigured();
+
+        uint256 nonce = activationNonce + 1;
+        activationNonce = nonce;
+        activationId = keccak256(
+            abi.encode("FREEDOM_PLUS_GENESIS", block.chainid, address(this), participant, level, nonce)
+        );
+        if (createPlacement) {
+            settlementRouter.recordGenesisActivation(participant, sponsor, level, activationId);
+        }
+
+        FreedomPlusConfig.LevelConfig memory config = FreedomPlusConfig.levelConfig(level);
+        tokenController.onGenesisActivation(participant, level, config.fptReward);
+        activationProcessed[activationId] = true;
+        emit GenesisActivationRecorded(
+            participant,
+            level,
+            activationId,
+            sponsor,
+            createPlacement
+        );
+    }
+
+    function completeFundedRecycle(
+        address orbitOwner,
+        uint8 level,
+        bytes32 recycleActivationId
+    ) external whenNotPaused {
+        if (msg.sender != address(settlementRouter)) revert OnlySettlementRouter();
+        if (orbitOwner == address(0) || recycleActivationId == bytes32(0)) revert InvalidAddress();
+        if (level < 1 || level > 7) revert InvalidLevel(level);
+        if (recycleRewardProcessed[recycleActivationId]) {
+            revert RecycleRewardAlreadyProcessed(recycleActivationId);
+        }
+        recycleRewardProcessed[recycleActivationId] = true;
+        FreedomPlusConfig.LevelConfig memory config = FreedomPlusConfig.levelConfig(level);
+        tokenController.onFundedRecycle(
+            orbitOwner,
+            level,
+            config.fptrReward,
+            recycleActivationId
+        );
     }
 
     function configureRegistration(address registration_) external onlyOwner {

@@ -22,6 +22,7 @@ abstract contract FreedomPlusBaseOrbit is
         uint8 filledPositions;
         bool closed;
         mapping(uint8 => Position) positions;
+        mapping(uint8 => uint8) ringFilledCounts;
     }
 
     address public manager;
@@ -174,9 +175,10 @@ abstract contract FreedomPlusBaseOrbit is
             financial: financial
         });
         cycleData.filledPositions += 1;
+        cycleData.ringFilledCounts[ring] += 1;
         placementRecorded[placementId] = true;
 
-        if (kind == PlacementKind.Activation || kind == PlacementKind.Recycle) {
+        if (kind != PlacementKind.RoutedPayment) {
             _currentStructuralParents[participant][level] = structuralParent;
             emit StructuralParentRecorded(
                 participant,
@@ -247,6 +249,16 @@ abstract contract FreedomPlusBaseOrbit is
     {
         if (!supportsLevel(level)) revert UnsupportedLevel(level);
         return _currentStructuralParents[participant][level];
+    }
+
+    function ringFilledCount(address orbitOwner, uint8 level, uint256 cycle, uint8 ring)
+        external
+        view
+        returns (uint8)
+    {
+        if (!supportsLevel(level)) revert UnsupportedLevel(level);
+        FreedomPlusConfig.payoutBps(orbitType(), ring);
+        return _cycles[orbitOwner][level][cycle].ringFilledCounts[ring];
     }
 
     function supportsLevel(uint8 level) public pure virtual returns (bool);

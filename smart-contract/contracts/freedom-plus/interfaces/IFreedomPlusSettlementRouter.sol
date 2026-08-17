@@ -9,4 +9,11 @@ interface IFreedomPlusSettlementRouter {
         uint256 price,
         bytes32 activationId
     ) external;
+
+    function recordGenesisActivation(
+        address participant,
+        address sponsor,
+        uint8 level,
+        bytes32 activationId
+    ) external;
 }
