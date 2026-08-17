@@ -1,0 +1,201 @@
+import FreedomPlusParticipant from '../models/FreedomPlusParticipant.js';
+import FreedomPlusLevelState from '../models/FreedomPlusLevelState.js';
+import FreedomPlusPosition from '../models/FreedomPlusPosition.js';
+import FreedomPlusPayment from '../models/FreedomPlusPayment.js';
+import FreedomPlusLedgerEntry from '../models/FreedomPlusLedgerEntry.js';
+
+const orbitTypes = {
+  p39Orbit: 'P39',
+  p14Orbit: 'P14',
+  p12Orbit: 'P12',
+  p6Orbit: 'P6',
+  p4Orbit: 'P4',
+  p3Orbit: 'P3',
+};
+
+export async function projectFreedomPlusEvent(event) {
+  const { chainId, contractKey, eventName, args, txHash, blockNumber, timestamp } = event;
+
+  if (contractKey === 'registration' && eventName === 'GenesisInitialized') {
+    await FreedomPlusParticipant.updateOne(
+      { chainId, wallet: args.id1Wallet },
+      {
+        $set: {
+          sponsor: args.id1Wallet,
+          participantNumber: 1,
+          registered: true,
+          registeredAtBlock: blockNumber,
+          registeredAt: timestamp,
+        },
+      },
+      { upsert: true }
+    );
+    return;
+  }
+
+  if (contractKey === 'registration' && eventName === 'ParticipantRegistered') {
+    await FreedomPlusParticipant.updateOne(
+      { chainId, wallet: args.participant },
+      {
+        $set: {
+          sponsor: args.sponsor,
+          participantNumber: Number(args.participantNumber),
+          registered: true,
+          registeredAtBlock: blockNumber,
+          registeredAt: timestamp,
+        },
+      },
+      { upsert: true }
+    );
+    return;
+  }
+
+  if (contractKey === 'registration' && eventName === 'LevelActivated') {
+    await FreedomPlusLevelState.updateOne(
+      { chainId, wallet: args.participant, level: Number(args.level) },
+      {
+        $set: {
+          active: true,
+          activationId: args.activationId,
+          activatedAtBlock: blockNumber,
+          activatedAt: timestamp,
+        },
+      },
+      { upsert: true }
+    );
+    return;
+  }
+
+  if (contractKey === 'levelManager' && eventName === 'GenesisActivationRecorded') {
+    await FreedomPlusLevelState.updateOne(
+      { chainId, wallet: args.participant, level: Number(args.level) },
+      {
+        $set: {
+          active: true,
+          genesis: true,
+          activationId: args.activationId,
+          activatedAtBlock: blockNumber,
+          activatedAt: timestamp,
+        },
+      },
+      { upsert: true }
+    );
+    return;
+  }
+
+  if (orbitTypes[contractKey] && eventName === 'PositionRecorded') {
+    await FreedomPlusPosition.updateOne(
+      {
+        chainId,
+        orbitType: orbitTypes[contractKey],
+        orbitOwner: args.orbitOwner,
+        level: Number(args.level),
+        cycle: Number(args.cycle),
+        position: Number(args.position),
+      },
+      {
+        $setOnInsert: {
+          participant: args.participant,
+          structuralParent: args.structuralParent,
+          ring: Number(args.ring),
+          kind: Number(args.kind),
+          financial: Boolean(args.financial),
+          amount: args.amount,
+          activationId: args.activationId,
+          placementId: args.placementId,
+          txHash,
+          blockNumber,
+          timestamp,
+        },
+      },
+      { upsert: true }
+    );
+    return;
+  }
+
+  if (contractKey === 'settlementRouter' && eventName === 'ComponentSettled') {
+    await FreedomPlusPayment.updateOne(
+      { chainId, activationId: args.activationId, role: Number(args.role) },
+      {
+        $setOnInsert: {
+          level: Number(args.level),
+          recipient: args.recipient,
+          originalCandidate: args.originalCandidate,
+          bps: Number(args.bps),
+          amount: args.amount,
+          id1Fallback: Boolean(args.id1Fallback),
+          placementId: args.placementId,
+          txHash,
+          blockNumber,
+          timestamp,
+        },
+      },
+      { upsert: true }
+    );
+    return;
+  }
+
+  const ledger = ledgerFields(contractKey, eventName, args);
+  if (ledger) {
+    await FreedomPlusLedgerEntry.updateOne(
+      { chainId, txHash, logIndex: event.logIndex },
+      {
+        $setOnInsert: {
+          ...ledger,
+          activationId: String(args.activationId || args.recycleActivationId || ''),
+          contractKey,
+          eventName,
+          txHash,
+          logIndex: event.logIndex,
+          blockNumber,
+          timestamp,
+          details: args,
+        },
+      },
+      { upsert: true }
+    );
+  }
+}
+
+function ledgerFields(contractKey, eventName, args) {
+  if (contractKey === 'settlementRouter' && eventName === 'SystemChargeSettled') {
+    return { category: 'system_charge', wallet: '', level: Number(args.level), amount: args.grossCharge };
+  }
+  if (contractKey === 'settlementRouter' && eventName === 'RecycleReserveUpdated') {
+    return { category: 'recycle_reserve', wallet: args.orbitOwner, level: Number(args.level), amount: args.added };
+  }
+  if (contractKey === 'settlementRouter' && eventName === 'RecycleCompleted') {
+    return { category: 'recycle', wallet: args.orbitOwner, level: Number(args.level), amount: args.repurchasePrice };
+  }
+  if (contractKey === 'tokenController' && eventName === 'FPTIssued') {
+    return { category: 'fpt', wallet: args.participant, level: Number(args.level), amount: args.amount };
+  }
+  if (contractKey === 'tokenController' && eventName === 'FPTrIssued') {
+    return { category: 'fptr', wallet: args.participant, level: Number(args.level), amount: args.amount };
+  }
+  if ((contractKey === 'fpt' || contractKey === 'fptr') && eventName === 'UtilityLocked') {
+    return { category: 'token_lock', wallet: args.user, level: 0, amount: args.amount };
+  }
+  if ((contractKey === 'fpt' || contractKey === 'fptr') && eventName === 'UtilityUnlocked') {
+    return { category: 'token_unlock', wallet: args.user, level: 0, amount: args.amount };
+  }
+  if ((contractKey === 'fpt' || contractKey === 'fptr') && eventName === 'UtilityBurned') {
+    return { category: 'token_burn', wallet: args.from, level: 0, amount: args.amount };
+  }
+  if (contractKey === 'nftMembership' && ['MembershipMinted', 'MembershipTierChanged'].includes(eventName)) {
+    return { category: 'nft_membership', wallet: args.member, level: 0, amount: '0' };
+  }
+  if (contractKey === 'nftMembership' && ['QualificationUnlocked', 'EligibilityRestored'].includes(eventName)) {
+    return { category: 'nft_eligibility', wallet: args.member, level: 0, amount: '0' };
+  }
+  if (contractKey === 'nftRewardDistributor' && eventName === 'PeriodCreated') {
+    return { category: 'nft_period', wallet: '', level: 0, amount: args.reservedAmount };
+  }
+  if (contractKey === 'nftRewardDistributor' && eventName === 'RewardClaimed') {
+    return { category: 'nft_claim', wallet: args.member, level: 0, amount: args.amount };
+  }
+  if (orbitTypes[contractKey] && eventName === 'CycleClosed') {
+    return { category: 'cycle_close', wallet: args.orbitOwner, level: Number(args.level), amount: '0' };
+  }
+  return null;
+}

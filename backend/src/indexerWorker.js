@@ -11,6 +11,11 @@ import {
   startRealtimeEventIndexer,
   stopRealtimeEventIndexer,
 } from './services/realtimeEventIndexer.js';
+import {
+  startFreedomPlusIndexer,
+  stopFreedomPlusIndexer,
+} from './services/freedomPlusIndexerService.js';
+import { verifyFreedomPlusContracts } from './blockchain/freedomPlusContracts.js';
 
 function parseCliArgs(argv) {
   const [command, ...rest] = argv;
@@ -46,6 +51,11 @@ async function connectWorkerDependencies() {
   const contracts = await verifyContracts();
   console.log('Indexer worker contracts verified:');
   console.log(contracts);
+  const freedomPlusContracts = await verifyFreedomPlusContracts();
+  if (freedomPlusContracts.enabled) {
+    console.log('Freedom-Plus contracts verified:');
+    console.log(freedomPlusContracts);
+  }
 }
 
 async function runReplayCommand(args) {
@@ -90,6 +100,7 @@ async function startWorker() {
     await connectWorkerDependencies();
     await startRealtimeEventIndexer();
     await startIndexer({ processRole: 'worker' });
+    await startFreedomPlusIndexer();
     console.log('Indexer worker started successfully.');
   } catch (error) {
     console.error('Indexer worker failed to start:', error);
@@ -102,6 +113,7 @@ startWorker();
 async function shutdown(signal) {
   console.log(`${signal} received. Stopping indexer worker...`);
   await stopRealtimeEventIndexer();
+  await stopFreedomPlusIndexer();
   await stopIndexer();
   process.exit(0);
 }

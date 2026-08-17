@@ -7,6 +7,7 @@ import env from './config/env.js';
 
 import healthRoutes from './routes/healthRoutes.js';
 import indexerRoutes from './routes/indexerRoutes.js';
+import freedomPlusRoutes from './routes/freedomPlusRoutes.js';
 import receiptRoutes from './routes/receiptRoutes.js';
 import orbitEventRoutes from './routes/orbitEventRoutes.js';
 import orbitRoutes from './routes/orbitRoutes.js';
@@ -96,6 +97,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/health', healthRoutes);
 app.use('/api/indexer', indexerRoutes);
+app.use('/api/freedom-plus', freedomPlusRoutes);
 app.use('/api/receipts', receiptRoutes);
 app.use('/api/orbit-events', orbitEventRoutes);
 app.use('/api/orbits', orbitRoutes);
