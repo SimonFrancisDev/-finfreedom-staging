@@ -144,12 +144,17 @@ Positions 1-3 are direct Ring 1 positions under the orbit owner. Positions 1-2 a
 3. Validate the sponsor or referral ID.
 4. Record the permanent sponsor.
 5. Assign one permanent Freedom-Plus referral ID.
-6. Create the participant profile without silently activating higher levels.
-7. Emit an indexed registration event.
+6. Execute the mandatory paid Level 1 activation in the same transaction.
+7. Collect exactly 50 USDT and settle the Level 1 P39 activation.
+8. Mark Level 1 active and mint exactly 50 FPT.
+9. Do not silently activate Level 2 or any higher level.
+10. Emit indexed registration, activation, placement, payment, charge, and token events.
+
+Registration is not a profile-only state. A non-genesis participant is registered if and only if the same atomic transaction successfully activates Level 1. If payment, placement, settlement, or FPT minting fails, the registration record also reverts.
 
 ### 6.2 Paid activation
 
-1. Verify registration.
+1. Verify registration. Level 1 uses the registration flow; this manual activation entry point handles Levels 2-7.
 2. Verify the requested level is 1-7.
 3. Verify the level is not active.
 4. For levels 2-7, verify the preceding level is active.
@@ -641,4 +646,3 @@ Freedom-Plus is not ready for production until:
 - Runtime bytecode matches the certified build.
 - Deployment and rollback runbooks are approved.
 - Production remains untouched until explicit multisig authorization.
-
