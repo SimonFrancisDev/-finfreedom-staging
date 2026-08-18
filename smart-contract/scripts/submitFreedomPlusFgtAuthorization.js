@@ -37,7 +37,7 @@ async function main() {
   const count = Number(await multisig.getTransactionCount());
   for (let start = 0; start < count; start += 20) {
     const ids = Array.from({ length: Math.min(20, count - start) }, (_, index) => start + index);
-    const transactions = await Promise.all(ids.map((txId) => multisig.getTransaction(txId)));
+    const transactions = await Promise.all(ids.map((txId) => multisig.transactions(txId)));
     for (let index = 0; index < transactions.length; index++) {
       const txId = ids[index];
       const transaction = transactions[index];
