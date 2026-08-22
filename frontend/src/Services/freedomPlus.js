@@ -90,6 +90,7 @@ export function getFreedomPlusReadContracts() {
   return {
     registration: new ethers.Contract(assertAddress('registration'), REGISTRATION_ABI, provider),
     usdt: new ethers.Contract(requiredAddress('USDT', env.VITE_USDT_ADDRESS), USDT_ABI, provider),
+    fgt: new ethers.Contract(requiredAddress('FGT', env.VITE_FGT_TOKEN_ADDRESS), TOKEN_ABI, provider),
     fpt: new ethers.Contract(assertAddress('fpt'), TOKEN_ABI, provider),
     fptr: new ethers.Contract(assertAddress('fptr'), TOKEN_ABI, provider),
     nftMembership: new ethers.Contract(assertAddress('nftMembership'), NFT_MEMBERSHIP_ABI, provider),
@@ -104,6 +105,8 @@ export function getFreedomPlusWriteContracts() {
   return {
     registration: new ethers.Contract(assertAddress('registration'), REGISTRATION_ABI, signer),
     usdt: new ethers.Contract(requiredAddress('USDT', env.VITE_USDT_ADDRESS), USDT_ABI, signer),
+    fgt: new ethers.Contract(requiredAddress('FGT', env.VITE_FGT_TOKEN_ADDRESS), TOKEN_ABI, signer),
+    fpt: new ethers.Contract(assertAddress('fpt'), TOKEN_ABI, signer),
     nftMembership: new ethers.Contract(assertAddress('nftMembership'), NFT_MEMBERSHIP_ABI, signer),
     nftRewardDistributor: new ethers.Contract(assertAddress('nftRewardDistributor'), NFT_REWARD_DISTRIBUTOR_ABI, signer),
   }

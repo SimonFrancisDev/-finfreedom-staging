@@ -71,6 +71,10 @@ const SERVICES = [
         labelKey: 'navbar.menus.services.freedomPlusProgram.links.dashboard',
         target: 'freedomPlusDashboard',
       },
+      {
+        label: 'Freedom-Plus Account',
+        target: 'freedomPlusAccount',
+      },
     ],
   },
   {

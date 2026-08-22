@@ -117,6 +117,7 @@ const routeMap = {
   '/freedom-plus/orbits': 'freedomPlusOrbits',
   '/freedom-plus/tokens': 'freedomPlusTokens',
   '/freedom-plus/activity': 'freedomPlusActivity',
+  '/freedom-plus/account': 'freedomPlusAccount',
   '/freedom-nft': 'freedomNft',
   '/freedom-nft/membership': 'freedomNftMembership',
   '/freedom-nft/rewards': 'freedomNftRewards',
@@ -152,6 +153,7 @@ const pageToPathMap = {
   freedomPlusOrbits: '/freedom-plus/orbits',
   freedomPlusTokens: '/freedom-plus/tokens',
   freedomPlusActivity: '/freedom-plus/activity',
+  freedomPlusAccount: '/freedom-plus/account',
   freedomNft: '/freedom-nft',
   freedomNftMembership: '/freedom-nft/membership',
   freedomNftRewards: '/freedom-nft/rewards',
@@ -1345,6 +1347,7 @@ function App() {
                   <Route path="/freedom-plus/orbits" element={<FreedomPlusPage initialTab="orbits" />} />
                   <Route path="/freedom-plus/tokens" element={<FreedomPlusPage initialTab="tokens" />} />
                   <Route path="/freedom-plus/activity" element={<FreedomPlusPage initialTab="activity" />} />
+                  <Route path="/freedom-plus/account" element={<FreedomPlusPage initialTab="account" />} />
                   <Route path="/freedom-nft" element={<FreedomPlusPage initialTab="nftOverview" />} />
                   <Route path="/freedom-nft/membership" element={<FreedomPlusPage initialTab="membership" />} />
                   <Route path="/freedom-nft/rewards" element={<FreedomPlusPage initialTab="rewards" />} />
