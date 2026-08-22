@@ -8,6 +8,7 @@ import { useToast } from '../../components/feedback'
 import { TransactionStatus } from '../../components/feedback'
 import { InlineAlert } from '../../components/ui'
 import FreedomPlusOrbit from './FreedomPlusOrbit'
+import FreedomPlusOverview from './FreedomPlusOverview'
 import {
   FREEDOM_PLUS_ADDRESSES,
   FREEDOM_PLUS_ENABLED,
@@ -395,13 +396,7 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
 
       {isConnected && data?.chain?.registered && <TransactionStatus txState={txState} onReset={() => setTxState({ status: 'idle', stage: 'idle', hash: '', note: '', error: null })} explorerBaseUrl={`${NETWORK_CONFIG.blockExplorerUrls[0]}/tx`} />}
 
-          {tab === 'overview' && (
-            <section className="fp-panel">
-              <div className="fp-section-heading"><div><span className="fp-kicker">Program structure</span><h2>Seven levels. Six orbit engines.</h2></div><button type="button" onClick={() => openView(data?.chain?.registered ? 'dashboard' : 'levels')}>{data?.chain?.registered ? 'Open dashboard' : 'Register in Freedom-Plus'}<ArrowUpRight /></button></div>
-              <div className="fp-rule-grid"><article><strong>Manual progression</strong><span>Levels activate sequentially from Level 1 through Level 7.</span></article><article><strong>First activation</strong><span>Each paid level issues FPT equal to its USDT level value.</span></article><article><strong>Cycle re-entry</strong><span>A completed orbit reopens the same level and issues FPTr at 50% of FPT.</span></article><article><strong>System allocation</strong><span>Each payable arrival keeps its participant roles and 10% charge separate.</span></article></div>
-              <div className="fp-level-map">{FREEDOM_PLUS_LEVELS.map((item) => <button type="button" key={item.level} onClick={() => openView('levels')}><span>Level {item.level}</span><strong>{item.orbit}</strong><small>{item.price.toLocaleString()} USDT</small><em>{item.rings}</em></button>)}</div>
-            </section>
-          )}
+          {tab === 'overview' && <FreedomPlusOverview registered={Boolean(data?.chain?.registered)} activeLevelCount={activeLevels.size} membershipTier={membership.tier} openView={openView} />}
 
           {tab === 'dashboard' && (
             <section className="fp-panel">
