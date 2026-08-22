@@ -38,7 +38,7 @@ export async function freedomPlusReconciliation() {
   if (!env.FREEDOM_PLUS_ENABLED) return { enabled: false, passed: false };
   const contracts = getFreedomPlusContracts();
   const provider = getProvider();
-  const [head, chainParticipants, databaseParticipants, rawPositions, positions, rawPayments, payments, sync] = await Promise.all([
+  const [head, chainParticipants, databaseParticipants, rawPositions, positions, rawPayments, payments, sync, latestEvent] = await Promise.all([
     provider.getBlockNumber(),
     contracts.registration.registeredCount(),
     FreedomPlusParticipant.countDocuments({ chainId: env.CHAIN_ID, registered: true }),
@@ -47,14 +47,16 @@ export async function freedomPlusReconciliation() {
     FreedomPlusEvent.countDocuments({ chainId: env.CHAIN_ID, eventName: 'ComponentSettled' }),
     FreedomPlusPayment.countDocuments({ chainId: env.CHAIN_ID }),
     FreedomPlusSyncState.find({ chainId: env.CHAIN_ID }).lean(),
+    FreedomPlusEvent.findOne({ chainId: env.CHAIN_ID }).sort({ blockNumber: -1, logIndex: -1 }).select('blockNumber').lean(),
   ]);
   const confirmedHead = Math.max(0, head - env.SYNC_CONFIRMATIONS);
+  const latestEventBlock = Number(latestEvent?.blockNumber || env.FREEDOM_PLUS_START_BLOCK || 0);
   const checks = {
     participants: Number(chainParticipants) === databaseParticipants,
     positions: rawPositions === positions,
     payments: rawPayments === payments,
     checkpoints: sync.length > 0 && sync.every(
-      (state) => state.status !== 'error' && state.lastProcessedBlock >= confirmedHead
+      (state) => state.status !== 'error' && state.lastProcessedBlock >= latestEventBlock
     ),
   };
   return {
@@ -62,6 +64,7 @@ export async function freedomPlusReconciliation() {
     passed: Object.values(checks).every(Boolean),
     head,
     confirmedHead,
+    latestEventBlock,
     checks,
     totals: {
       chainParticipants: Number(chainParticipants),

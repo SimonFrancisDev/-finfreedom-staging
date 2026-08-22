@@ -1,3 +1,4 @@
+import { WebSocketProvider } from 'ethers';
 import env from '../config/env.js';
 import { getProvider } from '../blockchain/provider.js';
 import { getFreedomPlusContractEntries } from '../blockchain/freedomPlusContracts.js';
@@ -39,7 +40,7 @@ async function syncTarget(provider, chainId, contractKey, contract, confirmedBlo
   const state = await FreedomPlusSyncState.findOneAndUpdate(
     { chainId, contractKey },
     { $setOnInsert: { lastProcessedBlock: Math.max(0, initialBlock - 1), status: 'idle' } },
-    { upsert: true, new: true }
+    { upsert: true, returnDocument: 'after' }
   );
   if (state.lastProcessedBlock > 0 && state.lastProcessedBlockHash) {
     const checkpointBlock = await provider.getBlock(state.lastProcessedBlock);
@@ -84,7 +85,7 @@ async function syncTarget(provider, chainId, contractKey, contract, confirmedBlo
           addresses: indexedAddresses(args),
           args,
         };
-        await FreedomPlusEvent.updateOne(
+        const write = await FreedomPlusEvent.updateOne(
           {
             chainId,
             contractAddress: document.contractAddress,
@@ -94,8 +95,10 @@ async function syncTarget(provider, chainId, contractKey, contract, confirmedBlo
           { $setOnInsert: document },
           { upsert: true }
         );
-        await projectFreedomPlusEvent(document);
-        processed += 1;
+        if (write.upsertedCount > 0) {
+          await projectFreedomPlusEvent(document);
+          processed += 1;
+        }
       }
       const terminalBlock = await provider.getBlock(toBlock);
       await FreedomPlusSyncState.updateOne(
@@ -144,6 +147,16 @@ export async function syncFreedomPlusOnce() {
 
 let timer = null;
 let running = false;
+let realtimeProvider = null;
+let realtimeContracts = [];
+let realtimeStarted = false;
+let realtimeStopping = false;
+let reconnectTimer = null;
+let reconnectAttempt = 0;
+let wsIndex = 0;
+let liveQueue = Promise.resolve();
+let socketHandlers = null;
+let confirmationTimer = null;
 
 async function scheduledPass() {
   if (running) return;
@@ -168,15 +181,197 @@ async function scheduledPass() {
 
 export async function startFreedomPlusIndexer() {
   if (!env.FREEDOM_PLUS_ENABLED) return { enabled: false };
-  if (timer) return { enabled: true, alreadyStarted: true };
+  if (env.FREEDOM_PLUS_REALTIME_ENABLED) return startFreedomPlusRealtimeIndexer();
+  if (!env.FREEDOM_PLUS_POLLING_ENABLED) {
+    console.warn('[FREEDOM_PLUS_INDEXER_DISABLED] No realtime or polling mode is enabled');
+    return { enabled: false };
+  }
+  if (timer) return { enabled: true, mode: 'polling', alreadyStarted: true };
   await scheduledPass();
   timer = setInterval(scheduledPass, env.SYNC_POLL_INTERVAL_MS);
   timer.unref?.();
-  return { enabled: true, intervalMs: env.SYNC_POLL_INTERVAL_MS };
+  return { enabled: true, mode: 'polling', intervalMs: env.SYNC_POLL_INTERVAL_MS };
 }
 
 export async function stopFreedomPlusIndexer() {
   if (timer) clearInterval(timer);
   timer = null;
+  realtimeStopping = true;
+  realtimeStarted = false;
+  if (reconnectTimer) clearTimeout(reconnectTimer);
+  reconnectTimer = null;
+  if (confirmationTimer) clearTimeout(confirmationTimer);
+  confirmationTimer = null;
+  await cleanupRealtime();
+  await liveQueue.catch(() => {});
   while (running) await new Promise((resolve) => setTimeout(resolve, 50));
+}
+
+function getSocket(provider) {
+  return provider?.websocket || provider?._websocket || null;
+}
+
+function queueLive(task) {
+  liveQueue = liveQueue.then(task, task).catch((error) => {
+    console.error('[FREEDOM_PLUS_REALTIME_EVENT_FAILED]', {
+      message: String(error?.message || error),
+    });
+  });
+  return liveQueue;
+}
+
+async function buildDocument(provider, chainId, contractKey, contract, log) {
+  let parsed;
+  try { parsed = contract.interface.parseLog(log); } catch { return null; }
+  if (!parsed) return null;
+  const block = await provider.getBlock(log.blockNumber);
+  if (!block) throw new Error(`Missing live block ${log.blockNumber}`);
+  const args = parsedArgs(parsed);
+  return {
+    chainId,
+    contractKey,
+    contractAddress: contract.target.toLowerCase(),
+    eventName: parsed.name,
+    txHash: log.transactionHash.toLowerCase(),
+    logIndex: Number(log.index),
+    blockNumber: Number(log.blockNumber),
+    blockHash: log.blockHash.toLowerCase(),
+    timestamp: new Date(Number(block.timestamp) * 1000),
+    activationId: String(args.activationId || args.recycleActivationId || args.rewardId || '').toLowerCase(),
+    addresses: indexedAddresses(args),
+    args,
+  };
+}
+
+async function ingestLiveLog(provider, chainId, contractKey, contract, log) {
+  if (log.removed) throw new Error(`Removed Freedom-Plus log detected at ${log.blockNumber}`);
+  const document = await buildDocument(provider, chainId, contractKey, contract, log);
+  if (!document) return;
+  const write = await FreedomPlusEvent.updateOne(
+    {
+      chainId,
+      contractAddress: document.contractAddress,
+      txHash: document.txHash,
+      logIndex: document.logIndex,
+    },
+    { $setOnInsert: document },
+    { upsert: true }
+  );
+  if (write.upsertedCount > 0) await projectFreedomPlusEvent(document);
+  scheduleConfirmedRecovery();
+}
+
+function scheduleConfirmedRecovery() {
+  if (realtimeStopping || confirmationTimer) return;
+  confirmationTimer = setTimeout(() => {
+    confirmationTimer = null;
+    queueLive(async () => {
+      const result = await syncFreedomPlusOnce();
+      console.log('[FREEDOM_PLUS_REALTIME_CONFIRMED]', {
+        confirmedBlock: result.confirmedBlock,
+        recoveredEvents: result.targets.reduce((sum, target) => sum + target.processed, 0),
+      });
+    });
+  }, 12000);
+  confirmationTimer.unref?.();
+}
+
+function detachSocketHandlers() {
+  const socket = getSocket(realtimeProvider);
+  if (!socket || !socketHandlers) return;
+  const method = typeof socket.removeEventListener === 'function' ? 'removeEventListener' : 'off';
+  socket[method]?.('close', socketHandlers.close);
+  socket[method]?.('error', socketHandlers.error);
+  socketHandlers = null;
+}
+
+async function cleanupRealtime() {
+  const provider = realtimeProvider;
+  if (!provider) return;
+  detachSocketHandlers();
+  realtimeContracts = [];
+  realtimeProvider = null;
+  // destroy() owns subscription teardown. Calling off() immediately before it leaves
+  // ethers with cancelled eth_unsubscribe requests during worker shutdown.
+  try { await provider.destroy(); } catch {}
+}
+
+function scheduleRealtimeReconnect(error) {
+  if (realtimeStopping || !realtimeStarted || reconnectTimer) return;
+  reconnectAttempt += 1;
+  const delay = Math.min(
+    env.WS_RECONNECT_BASE_DELAY_MS * (2 ** Math.max(0, reconnectAttempt - 1)),
+    env.WS_RECONNECT_MAX_DELAY_MS
+  );
+  console.warn('[FREEDOM_PLUS_REALTIME_RECONNECT_SCHEDULED]', {
+    delay,
+    message: String(error?.message || error || ''),
+  });
+  reconnectTimer = setTimeout(async () => {
+    reconnectTimer = null;
+    wsIndex = (wsIndex + 1) % env.WS_RPC_URLS.length;
+    try {
+      await connectFreedomPlusRealtime();
+    } catch (connectError) {
+      await cleanupRealtime();
+      scheduleRealtimeReconnect(connectError);
+    }
+  }, delay);
+  reconnectTimer.unref?.();
+}
+
+async function connectFreedomPlusRealtime() {
+  await cleanupRealtime();
+  const wsUrl = env.WS_RPC_URLS[wsIndex % env.WS_RPC_URLS.length];
+  const provider = new WebSocketProvider(wsUrl, {
+    chainId: Number(env.CHAIN_ID),
+    name: `chain-${env.CHAIN_ID}`,
+  });
+  realtimeProvider = provider;
+  const network = await provider.getNetwork();
+  const chainId = Number(network.chainId);
+  if (chainId !== Number(env.CHAIN_ID)) {
+    throw new Error(`Freedom-Plus WS chain mismatch: expected ${env.CHAIN_ID}, received ${chainId}`);
+  }
+
+  const entries = getFreedomPlusContractEntries(provider);
+  for (const [contractKey, contract] of entries) {
+    const listener = (log) => queueLive(() => ingestLiveLog(provider, chainId, contractKey, contract, log));
+    realtimeContracts.push([contractKey, contract, listener]);
+    await provider.on({ address: contract.target }, listener);
+  }
+  const socket = getSocket(provider);
+  const disconnect = (error) => {
+    cleanupRealtime().then(() => scheduleRealtimeReconnect(error));
+  };
+  socketHandlers = {
+    close: (event) => disconnect(new Error(`WebSocket closed ${event?.code || ''}`.trim())),
+    error: (error) => disconnect(error),
+  };
+  const method = typeof socket?.addEventListener === 'function' ? 'addEventListener' : 'on';
+  socket?.[method]?.('close', socketHandlers.close);
+  socket?.[method]?.('error', socketHandlers.error);
+
+  // Subscriptions are attached first, so logs emitted during this bounded catch-up are deduplicated.
+  const recovery = await queueLive(() => syncFreedomPlusOnce());
+  reconnectAttempt = 0;
+  console.log('[FREEDOM_PLUS_REALTIME_CONNECTED]', {
+    wsIndex: wsIndex % env.WS_RPC_URLS.length,
+    listeners: entries.length,
+    recoveredEvents: recovery.targets.reduce((sum, target) => sum + target.processed, 0),
+    confirmedBlock: recovery.confirmedBlock,
+  });
+}
+
+async function startFreedomPlusRealtimeIndexer() {
+  if (realtimeStarted) return { enabled: true, mode: 'realtime', alreadyStarted: true };
+  realtimeStarted = true;
+  realtimeStopping = false;
+  try {
+    await connectFreedomPlusRealtime();
+  } catch (error) {
+    await cleanupRealtime();
+    scheduleRealtimeReconnect(error);
+  }
+  return { enabled: true, mode: 'realtime' };
 }

@@ -4,6 +4,8 @@ Freedom-Plus is opt-in. Keep `FREEDOM_PLUS_ENABLED=false` until the deployment m
 
 ```dotenv
 FREEDOM_PLUS_ENABLED=false
+FREEDOM_PLUS_REALTIME_ENABLED=true
+FREEDOM_PLUS_POLLING_ENABLED=false
 FREEDOM_PLUS_START_BLOCK=0
 FREEDOM_PLUS_REGISTRATION_ADDRESS=
 FREEDOM_PLUS_LEVEL_MANAGER_ADDRESS=
@@ -23,4 +25,4 @@ FREEDOM_NFT_POOL_VAULT_ADDRESS=
 FREEDOM_PLUS_OPERATIONS_VAULT_ADDRESS=
 ```
 
-Use the proxy addresses and earliest deployment block from `deployments-freedom-plus-staging/deployment-*.json`. Configure the same values on the API and worker, but only the worker runs the Freedom-Plus indexer.
+Use the proxy addresses and earliest deployment block from `deployments-freedom-plus-staging/deployment-*.json`. Configure the same values on the API and worker, but only the worker runs the Freedom-Plus indexer. Realtime mode performs one bounded checkpoint recovery at startup and after a WebSocket reconnect; it does not run the recurring Freedom-Plus poller.

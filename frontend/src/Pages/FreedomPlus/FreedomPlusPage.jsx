@@ -40,6 +40,7 @@ export default function FreedomPlusPage() {
   const [loading, setLoading] = useState(false)
   const [busy, setBusy] = useState('')
   const [sponsor, setSponsor] = useState('')
+  const [referralId, setReferralId] = useState('')
   const [selectedLevel, setSelectedLevel] = useState(1)
   const [cycle, setCycle] = useState('')
   const [data, setData] = useState(null)
@@ -58,11 +59,12 @@ export default function FreedomPlusPage() {
     setLoading(true)
     try {
       const contracts = getFreedomPlusReadContracts()
-      const [apiData, apiStatus, apiReconciliation, periods, registered, participantNumber, chainSponsor, usdt, fpt, fptr, membershipRaw, levelFlags] = await Promise.all([
+      const [apiData, apiStatus, apiReconciliation, periods, identity, registered, participantNumber, chainSponsor, usdt, fpt, fptr, membershipRaw, levelFlags] = await Promise.all([
         freedomPlusApi.participant(account).catch(() => null),
         freedomPlusApi.status().catch(() => null),
         freedomPlusApi.reconciliation().catch(() => null),
         freedomPlusApi.rewardPeriods().catch(() => []),
+        freedomPlusApi.referralForWallet(account).catch(() => null),
         contracts.registration.isRegistered(account),
         contracts.registration.participantNumber(account),
         contracts.registration.sponsorOf(account),
@@ -89,6 +91,7 @@ export default function FreedomPlusPage() {
       })
       setStatus(apiStatus)
       setReconciliation(apiReconciliation)
+      setReferralId(identity?.referralId || identity?.shortCode || '')
       const enrichedPeriods = await Promise.all((periods || []).map(async (period) => {
         const proof = await freedomPlusApi.rewardProof(period.periodId, account)
         const published = period.status === 'published'
@@ -160,12 +163,31 @@ export default function FreedomPlusPage() {
     return action(contracts)
   }
 
-  const register = () => {
-    if (!ethers.isAddress(sponsor) || sponsor === ZERO || sponsor.toLowerCase() === account?.toLowerCase()) {
-      toast.error('Enter a valid sponsor wallet different from your own wallet.')
-      return
+  const register = async () => {
+    setBusy('register')
+    try {
+      const input = sponsor.trim()
+      const resolved = ethers.isAddress(input)
+        ? { walletAddress: input }
+        : await freedomPlusApi.resolveReferral(input.toUpperCase())
+      const sponsorWallet = resolved?.walletAddress
+      if (!ethers.isAddress(sponsorWallet) || sponsorWallet === ZERO || sponsorWallet.toLowerCase() === account?.toLowerCase()) {
+        throw new Error('Enter a valid sponsor FFN ID different from your own identity.')
+      }
+      const readContracts = getFreedomPlusReadContracts()
+      if (!(await readContracts.registration.isRegistered(sponsorWallet))) {
+        throw new Error('This FFN sponsor has not registered in Freedom-Plus yet.')
+      }
+      const tx = await approveAndRun(50, (contracts) => contracts.registration.register(sponsorWallet))
+      toast.info('Transaction submitted. Waiting for confirmation.')
+      await tx.wait()
+      toast.success('Registration and Level 1 activation confirmed.')
+      await load()
+    } catch (error) {
+      toast.error(error?.shortMessage || error?.reason || error?.message || 'Registration failed.')
+    } finally {
+      setBusy('')
     }
-    transact('register', () => approveAndRun(50, (contracts) => contracts.registration.register(sponsor)), 'Registration and Level 1 activation confirmed.')
   }
 
   const activate = (level, price) => {
@@ -217,7 +239,7 @@ export default function FreedomPlusPage() {
       ) : (
         <>
           <section className="fp-metrics">
-            <article><span>Participant</span><strong>{data?.chain?.registered ? `#${data.chain.participantNumber}` : 'Not registered'}</strong><small>{short(account)}</small></article>
+            <article><span>FFN ID</span><strong>{data?.chain?.registered ? (referralId || 'Resolving...') : 'Not registered'}</strong><small>{short(account)}</small></article>
             <article><span>Active levels</span><strong>{activeLevels.size} / 7</strong><small>Manual progression</small></article>
             <article><span>USDT available</span><strong>{data?.chain?.usdt || '0'} USDT</strong><small>Wallet balance</small></article>
             <article><span>FPT / FPTr</span><strong>{data?.chain?.fpt || '0'} / {data?.chain?.fptr || '0'}</strong><small>Activation / recycle tokens</small></article>
@@ -252,7 +274,7 @@ export default function FreedomPlusPage() {
 
           {tab === 'levels' && (
             <section className="fp-panel">
-              {!data?.chain?.registered && <div className="fp-registration"><div><UserPlus /><h2>Register and activate Level 1</h2><p>Registration and the first 50 USDT P39 activation execute atomically.</p></div><label>Sponsor wallet<input value={sponsor} onChange={(event) => setSponsor(event.target.value.trim())} placeholder="0x..." /></label><button type="button" disabled={busy === 'register'} onClick={register}>{busy === 'register' ? 'Processing...' : 'Register / 50 USDT'}</button></div>}
+              {!data?.chain?.registered && <div className="fp-registration"><div><UserPlus /><h2>Register and activate Level 1</h2><p>Your existing FFN identity is used. Registration and the first 50 USDT P39 activation execute atomically.</p></div><label>Sponsor FFN ID<input value={sponsor} onChange={(event) => setSponsor(event.target.value.trim())} placeholder="FFN-XXXXXX" /></label><button type="button" disabled={busy === 'register'} onClick={register}>{busy === 'register' ? 'Processing...' : 'Register / 50 USDT'}</button></div>}
               <div className="fp-level-grid">
                 {FREEDOM_PLUS_LEVELS.map((item) => {
                   const active = activeLevels.has(item.level)

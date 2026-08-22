@@ -10,6 +10,8 @@ This document converts the approved Freedom-Plus and Freedom NFT descriptions in
 
 Freedom-Plus is separate from F-Freedom. It inherits proven structural rules but does not share level state, cycle state, token balances, receipts, or upgrade escrow.
 
+Freedom-Plus does share the participant's established F-Freedom identity. A wallet keeps one public FFN referral ID across both programs; Freedom-Plus must not issue a second public referral ID.
+
 ## 2. Confirmed Program Rules
 
 1. Freedom-Plus has seven sequential levels.
@@ -54,15 +56,21 @@ Each participant has separate relationships that must never overwrite one anothe
 
 The sponsor is recorded once during registration and remains permanent. It is used for referral display, sponsor-based eligibility traversal, and recycle re-entry.
 
-### 4.2 Structural matrix parent
+### 4.2 Shared public identity
+
+The existing F-Freedom referral ID is the participant's only public FFN identity. Freedom-Plus resolves that ID through the existing registration source of truth and binds the same wallet to its Freedom-Plus state. Internal contract participant numbers may exist for storage and indexing, but they are never presented as a second referral ID.
+
+A Freedom-Plus sponsor may be supplied as an existing FFN referral ID or its resolved wallet. The resolved sponsor wallet must already be registered in Freedom-Plus. Resolution must reject an unknown ID, an ID whose wallet does not match chain truth, and any attempt to bind one FFN identity to a different wallet.
+
+### 4.3 Structural matrix parent
 
 The matrix parent is determined by the participant's real position in a particular orbit, level, and cycle. It is used to represent the actual orbit topology.
 
-### 4.3 Payment-record placement
+### 4.4 Payment-record placement
 
 A routed payment may create a visible payment-linked position. Such a record proves entitlement but cannot replace the participant's real structural parent.
 
-### 4.4 Cycle identity
+### 4.5 Cycle identity
 
 Every position belongs to exactly one orbit owner, level, and cycle. Closing a cycle makes it immutable. A later recycle opens a new cycle and cannot mutate the previous cycle.
 
@@ -141,9 +149,9 @@ Positions 1-3 are direct Ring 1 positions under the orbit owner. Positions 1-2 a
 
 1. Validate chain and wallet.
 2. Reject an already registered wallet.
-3. Validate the sponsor or referral ID.
+3. Resolve and validate the sponsor using the existing F-Freedom referral ID or its chain-verified wallet.
 4. Record the permanent sponsor.
-5. Assign one permanent Freedom-Plus referral ID.
+5. Bind the wallet to its existing FFN referral ID; do not create a Freedom-Plus referral ID.
 6. Execute the mandatory paid Level 1 activation in the same transaction.
 7. Collect exactly 50 USDT and settle the Level 1 P39 activation.
 8. Mark Level 1 active and mint exactly 50 FPT.
@@ -443,6 +451,13 @@ Indexer requirements:
 - One worker owns indexing.
 - Chain/database reconciliation reports are mandatory.
 - Database projections never override chain truth.
+- WebSocket subscriptions are the primary live-ingestion path for Freedom-Plus.
+- Recurring block polling and recurring live-tail scans are disabled for Freedom-Plus.
+- On worker startup, replay only the confirmed range after each durable checkpoint.
+- After a WebSocket reconnect, recover only the bounded confirmed gap after each durable checkpoint before resuming live ingestion.
+- Live events and recovered logs use the same idempotent event key and projection path.
+- A checkpoint advances only through a confirmed, hash-verified block range; an unconfirmed live event cannot falsely advance it.
+- A checkpoint hash mismatch stops that target and requires explicit replay instead of silently accepting a reorganization.
 
 ## 16. Frontend Integration
 
@@ -452,6 +467,7 @@ Required user surfaces:
 
 - Freedom-Plus dashboard.
 - Sponsor-aware registration.
+- Existing FFN referral-ID lookup; no second Freedom-Plus referral identity.
 - Seven-level activation center.
 - Orbit diagrams for all six engines.
 - Structural versus payment-linked placement labels.
@@ -554,6 +570,9 @@ Frontend safety:
 - Unauthorized mint, lock, configuration, upgrade, and withdrawal.
 - Unbounded hierarchy and gas exhaustion scenarios.
 - Duplicate events and indexer replay.
+- WebSocket disconnect during an activation followed by exact gap recovery on reconnect.
+- Duplicate delivery of the same log through live subscription and recovery replay.
+- Worker restart from durable checkpoints without a full historical rescan.
 - Transaction revert after intermediate calculations.
 - Storage collision and implementation incompatibility.
 - Front-running around NFT snapshots and unlocks.

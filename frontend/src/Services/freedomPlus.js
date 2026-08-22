@@ -124,6 +124,8 @@ export const freedomPlusApi = {
   payments: (wallet, level = '') => fetchJson(`/api/freedom-plus/payments/${wallet}${level ? `?level=${level}` : ''}`),
   rewardPeriods: () => fetchJson('/api/freedom-plus/rewards/periods'),
   rewardProof: (periodId, wallet) => fetchJson(`/api/freedom-plus/rewards/${periodId}/${wallet}`),
+  referralForWallet: (wallet) => fetchJson(`/api/referral/code/${wallet}`),
+  resolveReferral: (referralId) => fetchJson(`/api/referral/resolve/${encodeURIComponent(referralId)}`),
 }
 
 export function tokenUnits(value) {
