@@ -1,8 +1,8 @@
 ﻿import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ethers } from 'ethers'
-import { Activity, ArrowUpRight, Check, Coins, History, Network, RefreshCw, ShieldCheck, UserPlus, Wallet } from 'lucide-react'
+import { Activity, ArrowUpRight, Check, Coins, History, LayoutDashboard, LockKeyhole, Network, RefreshCw, ShieldCheck, Trophy, UserPlus, Wallet } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { useWallet } from '../../hooks/useWallet'
-import { web3Service } from '../../Services/web3'
 import { useToast } from '../../components/feedback'
 import {
   FREEDOM_PLUS_ADDRESSES,
@@ -18,6 +18,28 @@ import {
 import './FreedomPlusPage.css'
 
 const ZERO = ethers.ZeroAddress
+const VIEW_ROUTES = {
+  overview: '/freedom-plus',
+  dashboard: '/freedom-plus/dashboard',
+  levels: '/freedom-plus/activation',
+  orbits: '/freedom-plus/orbits',
+  tokens: '/freedom-plus/tokens',
+  activity: '/freedom-plus/activity',
+  nftOverview: '/freedom-nft',
+  membership: '/freedom-nft/membership',
+  rewards: '/freedom-nft/rewards',
+}
+const VIEW_TABS = [
+  ['overview', <LayoutDashboard />, 'Overview'],
+  ['dashboard', <Activity />, 'Dashboard'],
+  ['levels', <Coins />, 'Activation'],
+  ['orbits', <Network />, 'Orbits'],
+  ['tokens', <Coins />, 'FPT / FPTr'],
+  ['activity', <History />, 'Activity'],
+  ['nftOverview', <ShieldCheck />, 'NFT Program'],
+  ['membership', <LockKeyhole />, 'Membership'],
+  ['rewards', <Trophy />, 'Rewards'],
+]
 
 function short(value) {
   return value && ethers.isAddress(value) ? `${value.slice(0, 6)}...${value.slice(-4)}` : 'Not available'
@@ -33,10 +55,11 @@ function normalizeMembership(raw) {
   }
 }
 
-export default function FreedomPlusPage() {
+export default function FreedomPlusPage({ initialTab = 'overview' }) {
+  const navigate = useNavigate()
   const { account, isConnected, connect } = useWallet()
   const toast = useToast()
-  const [tab, setTab] = useState('levels')
+  const [tab, setTab] = useState(initialTab)
   const [loading, setLoading] = useState(false)
   const [busy, setBusy] = useState('')
   const [sponsor, setSponsor] = useState('')
@@ -59,6 +82,15 @@ export default function FreedomPlusPage() {
     () => (data?.payments || []).reduce((total, item) => total + BigInt(item.amount || 0), 0n),
     [data]
   )
+  const ledgerTotal = useMemo(
+    () => (data?.ledger || []).reduce((total, item) => total + BigInt(item.amount || 0), 0n),
+    [data]
+  )
+
+  const openView = (view) => {
+    setTab(view)
+    navigate(VIEW_ROUTES[view])
+  }
 
   const load = useCallback(async () => {
     if (!FREEDOM_PLUS_ENABLED || !account) return
@@ -124,6 +156,7 @@ export default function FreedomPlusPage() {
   }, [account, toast])
 
   useEffect(() => { load() }, [load])
+  useEffect(() => { setTab(initialTab) }, [initialTab])
 
   const loadOrbit = useCallback(async () => {
     if (!account) return
@@ -240,22 +273,63 @@ export default function FreedomPlusPage() {
         <button className="fp-icon-button" type="button" onClick={load} disabled={loading} title="Refresh chain and indexed data"><RefreshCw className={loading ? 'spin' : ''} /></button>
       </header>
 
-      {!isConnected ? (
+      {!isConnected && (
         <section className="fp-connect"><Wallet /><div><h2>Connect your wallet</h2><p>Connect on the configured Polygon network to view or manage Freedom-Plus.</p></div><button type="button" onClick={connect}>Connect</button></section>
-      ) : (
-        <>
-          <section className="fp-metrics">
+      )}
+
+      {isConnected && (
+        <section className="fp-metrics">
             <article><span>FFN ID</span><strong>{data?.chain?.registered ? (referralId || 'Resolving...') : 'Not registered'}</strong><small>{short(account)}</small></article>
             <article><span>Active levels</span><strong>{activeLevels.size} / 7</strong><small>Manual progression</small></article>
             <article><span>USDT available</span><strong>{data?.chain?.usdt || '0'} USDT</strong><small>Wallet balance</small></article>
             <article><span>FPT / FPTr</span><strong>{data?.chain?.fpt || '0'} / {data?.chain?.fptr || '0'}</strong><small>Activation / recycle tokens</small></article>
-          </section>
+        </section>
+      )}
 
-          <nav className="fp-tabs" aria-label="Freedom-Plus views">
-            {[['levels', Coins, 'Levels'], ['orbits', Network, 'Orbits'], ['membership', ShieldCheck, 'Freedom NFT'], ['activity', Activity, 'Activity']].map(([value, Icon, label]) => (
-              <button type="button" className={tab === value ? 'active' : ''} onClick={() => setTab(value)} key={value}><Icon />{label}</button>
+      <nav className="fp-tabs" aria-label="Freedom-Plus views">
+            {VIEW_TABS.map(([value, icon, label]) => (
+              <button type="button" className={tab === value ? 'active' : ''} onClick={() => openView(value)} key={value}>{icon}{label}</button>
             ))}
-          </nav>
+      </nav>
+
+          {tab === 'overview' && (
+            <section className="fp-panel">
+              <div className="fp-section-heading"><div><span className="fp-kicker">Program structure</span><h2>Seven levels. Six orbit engines.</h2></div><button type="button" onClick={() => openView(data?.chain?.registered ? 'dashboard' : 'levels')}>{data?.chain?.registered ? 'Open dashboard' : 'Register in Freedom-Plus'}<ArrowUpRight /></button></div>
+              <div className="fp-rule-grid"><article><strong>Manual progression</strong><span>Levels activate sequentially from Level 1 through Level 7.</span></article><article><strong>First activation</strong><span>Each paid level issues FPT equal to its USDT level value.</span></article><article><strong>Cycle re-entry</strong><span>A completed orbit reopens the same level and issues FPTr at 50% of FPT.</span></article><article><strong>System allocation</strong><span>Each payable arrival keeps its participant roles and 10% charge separate.</span></article></div>
+              <div className="fp-level-map">{FREEDOM_PLUS_LEVELS.map((item) => <button type="button" key={item.level} onClick={() => openView('levels')}><span>Level {item.level}</span><strong>{item.orbit}</strong><small>{item.price.toLocaleString()} USDT</small><em>{item.rings}</em></button>)}</div>
+            </section>
+          )}
+
+          {tab === 'dashboard' && (
+            <section className="fp-panel">
+              <div className="fp-section-heading"><div><span className="fp-kicker">Wallet position</span><h2>Freedom-Plus dashboard</h2></div><button type="button" onClick={() => openView('activity')}>View activity<ArrowUpRight /></button></div>
+              <div className="fp-dashboard-grid"><article><span>Progression</span><strong>{activeLevels.size} of 7 levels</strong><div className="fp-progress"><i style={{ width: `${(activeLevels.size / 7) * 100}%` }} /></div><small>{activeLevels.size === 7 ? 'All levels active' : `Level ${Math.min(activeLevels.size + 1, 7)} is next`}</small></article><article><span>Orbit records</span><strong>{data?.positions?.length || 0}</strong><small>Structural and payment placements</small></article><article><span>Wallet receipts</span><strong>{formatToken(paymentTotal)} USDT</strong><small>{data?.payments?.length || 0} payout components</small></article><article><span>Membership</span><strong>{NFT_TIERS.find((item) => item.tier === membership.tier)?.name || 'Not minted'}</strong><small>{membership.rewardEligible ? 'Reward eligible' : 'Not reward eligible'}</small></article></div>
+              <div className="fp-split"><div><div className="fp-section-title"><Coins /><div><h2>Level progression</h2><p>Current on-chain activation state.</p></div></div><div className="fp-compact-levels">{FREEDOM_PLUS_LEVELS.map((item) => <button type="button" key={item.level} className={activeLevels.has(item.level) ? 'active' : ''} onClick={() => openView('levels')}><span>{item.level}</span><div><strong>{item.orbit}</strong><small>{activeLevels.has(item.level) ? 'Active' : 'Inactive'}</small></div></button>)}</div></div><div><div className="fp-section-title"><History /><div><h2>Recent receipts</h2><p>Latest indexed payout components.</p></div></div><div className="fp-recent-list">{data?.payments?.slice(0, 6).map((item) => <article key={item._id}><div><strong>Level {item.level} / Role {item.role}</strong><small>Block {item.blockNumber}</small></div><span>{formatToken(item.amount)} USDT</span></article>)}{!data?.payments?.length && <p className="fp-note">No payment receipts are indexed for this wallet.</p>}</div></div></div>
+            </section>
+          )}
+
+          {tab === 'tokens' && (
+            <section className="fp-panel">
+              <div className="fp-section-heading"><div><span className="fp-kicker">Utility balances</span><h2>FPT and FPTr</h2></div></div>
+              <div className="fp-token-balances"><article><Coins /><div><span>FPT available</span><strong>{data?.chain?.fpt || '0'}</strong><small>First level activations</small></div></article><article><RefreshCw /><div><span>FPTr available</span><strong>{data?.chain?.fptr || '0'}</strong><small>Completed cycle re-entry</small></div></article><article><Activity /><div><span>Indexed ledger</span><strong>{formatToken(ledgerTotal)}</strong><small>{data?.ledger?.length || 0} records</small></div></article></div>
+              <div className="fp-table-wrap"><table><thead><tr><th>Block</th><th>Level</th><th>Category</th><th>Event</th><th>Amount</th><th>Transaction</th></tr></thead><tbody>{data?.ledger?.length ? data.ledger.map((item) => <tr key={item._id}><td>{item.blockNumber}</td><td>{item.level || '-'}</td><td>{String(item.category || '').replaceAll('_', ' ')}</td><td>{item.eventName}</td><td>{formatToken(item.amount)}</td><td title={item.txHash}>{short(item.txHash)}</td></tr>) : <tr><td colSpan="6" className="fp-no-data">No indexed Freedom-Plus ledger entries.</td></tr>}</tbody></table></div>
+            </section>
+          )}
+
+          {tab === 'nftOverview' && (
+            <section className="fp-panel">
+              <div className="fp-section-heading"><div><span className="fp-kicker">Membership status</span><h2>Freedom NFT Program</h2></div><button type="button" onClick={() => openView('membership')}>Manage membership<ArrowUpRight /></button></div>
+              <div className="fp-nft-tiers">{NFT_TIERS.map((item) => <article key={item.tier} className={membership.tier === item.tier ? 'current' : ''}><span>Tier {item.tier}</span><h3>{item.name}</h3><strong>{item.threshold.toLocaleString()} FGT and/or FPT</strong><div><small>Monthly pool allocation</small><b>{item.poolShare}%</b></div>{membership.tier === item.tier && <em><Check />Current membership</em>}</article>)}</div>
+              <div className="fp-rule-grid"><article><strong>One active tier</strong><span>Only the highest active membership tier participates in its allocation.</span></article><article><strong>Locked qualification</strong><span>FGT and FPT committed to membership are locked, not burned.</span></article><article><strong>Immediate eligibility</strong><span>Unlocking below the threshold freezes reward eligibility immediately.</span></article><article><strong>Direct rewards</strong><span>Published monthly entitlements remain claimable by the eligible wallet.</span></article></div>
+            </section>
+          )}
+
+          {tab === 'rewards' && (
+            <section className="fp-panel">
+              <div className="fp-section-heading"><div><span className="fp-kicker">Monthly distribution</span><h2>Freedom NFT rewards</h2></div></div>
+              <div className="fp-reward-list fp-reward-list--standalone">{rewardPeriods.length ? rewardPeriods.map((period) => <article key={period.periodId}><div><strong>{period.periodId}</strong><span>{period.proof?.eligible ? `${formatToken(period.reward)} USDT` : period.proof?.snapshotAvailable === false ? 'Proof archive unavailable' : 'Not eligible at cutoff'}</span></div><small>{period.status === 'published' ? 'Published on-chain' : 'Awaiting founder publication'}</small>{period.proof?.eligible && period.status === 'published' && <button type="button" disabled={period.claimed || Boolean(busy)} onClick={() => claimReward(period)}>{period.claimed ? <><Check />Claimed</> : <><ArrowUpRight />Claim reward</>}</button>}</article>) : <p className="fp-note">No monthly reward period is available.</p>}</div>
+            </section>
+          )}
 
           {tab === 'membership' && membership.tier > 0 && (
             <section className="fp-panel fp-membership-tools">
@@ -296,8 +370,6 @@ export default function FreedomPlusPage() {
           {tab === 'membership' && <section className="fp-panel fp-membership"><div className="fp-membership-status"><ShieldCheck /><div><span>Current membership</span><h2>{NFT_TIERS.find((item) => item.tier === membership.tier)?.name || 'No active NFT'}</h2><p>{membership.tier ? `${formatToken(membership.lockedFGT)} FGT + ${formatToken(membership.lockedFPT)} FPT locked` : 'Choose a tier and commit an exact qualifying token total.'}</p></div><strong className={membership.rewardEligible ? 'eligible' : ''}>{membership.rewardEligible ? 'Reward eligible' : 'Not eligible'}</strong></div><div className="fp-tier-grid">{NFT_TIERS.map((item) => <button type="button" className={Number(nftForm.tier) === item.tier ? 'selected' : ''} key={item.tier} onClick={() => setNftForm({ tier: item.tier, fgt: '0', fpt: String(item.threshold) })}><span>{item.name}</span><strong>{item.threshold.toLocaleString()} tokens</strong><small>{item.poolShare}% tier allocation</small></button>)}</div><div className="fp-token-form"><label>FGT commitment<input type="number" min="0" value={nftForm.fgt} onChange={(event) => setNftForm((current) => ({ ...current, fgt: event.target.value }))} /></label><label>FPT commitment<input type="number" min="0" value={nftForm.fpt} onChange={(event) => setNftForm((current) => ({ ...current, fpt: event.target.value }))} /></label><button type="button" onClick={submitMembership} disabled={Boolean(busy)}>{busy === 'membership' ? 'Processing...' : membership.tier ? 'Update membership' : 'Mint membership'}</button></div><p className="fp-note">FGT and FPT used for membership are locked, not burned. Removing enough qualifying tokens freezes future reward eligibility immediately; prior finalized monthly entitlements remain claimable.</p></section>}
 
           {tab === 'activity' && <section className="fp-panel"><div className="fp-health"><article><span>Backend indexing</span><strong>{status?.enabled ? 'Enabled' : 'Not enabled'}</strong><small>{status?.events || 0} decoded events</small></article><article><span>Reconciliation</span><strong>{reconciliation?.passed ? 'Passed' : 'Pending'}</strong><small>{reconciliation?.confirmedHead ? `Through block ${reconciliation.confirmedHead}` : 'Awaiting deployment data'}</small></article><article><span>Indexed participants</span><strong>{status?.participants || 0}</strong><small>Chain count {reconciliation?.totals?.chainParticipants ?? '-'}</small></article><article><span>Wallet receipts</span><strong>{formatToken(paymentTotal)} USDT</strong><small>{data?.payments?.length || 0} component receipts shown</small></article></div><div className="fp-section-title"><History /><div><h2>Payment receipts</h2><p>Each payout component remains separate, including its level, role, candidate, fallback state and transaction.</p></div></div><div className="fp-table-wrap"><table><thead><tr><th>Block</th><th>Level</th><th>Role</th><th>Rate</th><th>Amount</th><th>Route</th><th>Transaction</th></tr></thead><tbody>{data?.payments?.length ? data.payments.map((item) => <tr key={item._id}><td>{item.blockNumber}</td><td>{item.level}</td><td>{item.role}</td><td>{Number(item.bps || 0) / 100}%</td><td>{formatToken(item.amount)} USDT</td><td>{item.id1Fallback ? 'ID1 fallback' : `From ${short(item.originalCandidate)}`}</td><td title={item.txHash}>{short(item.txHash)}</td></tr>) : <tr><td colSpan="7" className="fp-no-data">No indexed payments for this wallet.</td></tr>}</tbody></table></div></section>}
-        </>
-      )}
     </main>
   )
 }

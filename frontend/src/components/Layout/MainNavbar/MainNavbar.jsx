@@ -54,26 +54,22 @@ const SERVICES = [
       {
         label: 'Freedom-Plus Overview',
         labelKey: 'navbar.menus.services.freedomPlusProgram.links.overview',
-        target: 'home',
-        section: 'programs',
+        target: 'freedomPlus',
       },
       {
         label: 'Freedom-Plus Activations & Level Manager',
         labelKey: 'navbar.menus.services.freedomPlusProgram.links.activation',
-        target: 'home',
-        section: 'programs',
+        target: 'freedomPlusActivation',
       },
       {
         label: 'My Freedom-Plus Tokens',
         labelKey: 'navbar.menus.services.freedomPlusProgram.links.tokens',
-        target: 'home',
-        section: 'programs',
+        target: 'freedomPlusTokens',
       },
       {
         label: 'Freedom-Plus Program Dashboard',
         labelKey: 'navbar.menus.services.freedomPlusProgram.links.dashboard',
-        target: 'home',
-        section: 'programs',
+        target: 'freedomPlusDashboard',
       },
     ],
   },
@@ -86,38 +82,32 @@ const SERVICES = [
       {
         label: 'NFT Overview',
         labelKey: 'navbar.menus.services.freedomNftProgram.links.overview',
-        target: 'home',
-        section: 'programs',
+        target: 'freedomNft',
       },
       {
         label: 'NFT Foundation',
         labelKey: 'navbar.menus.services.freedomNftProgram.links.foundation',
-        target: 'home',
-        section: 'programs',
+        target: 'freedomNftMembership',
       },
       {
         label: 'NFT Intermediate',
         labelKey: 'navbar.menus.services.freedomNftProgram.links.intermediate',
-        target: 'home',
-        section: 'programs',
+        target: 'freedomNftMembership',
       },
       {
         label: 'NFT Advanced',
         labelKey: 'navbar.menus.services.freedomNftProgram.links.advanced',
-        target: 'home',
-        section: 'programs',
+        target: 'freedomNftMembership',
       },
       {
         label: 'Utility Role',
         labelKey: 'navbar.menus.services.freedomNftProgram.links.utilityRole',
-        target: 'home',
-        section: 'programs',
+        target: 'freedomNft',
       },
       {
         label: 'NFT Program Dashboard',
         labelKey: 'navbar.menus.services.freedomNftProgram.links.dashboard',
-        target: 'home',
-        section: 'programs',
+        target: 'freedomNftRewards',
       },
     ],
   },
@@ -464,7 +454,7 @@ const MainNavbar = ({
 
           <nav className="main-navbar__center">
             {navItems
-              .filter((item) => item.href === 'home' || item.href === 'about')
+              .filter((item) => item.href === 'home' || item.href === 'freedomPlus' || item.href === 'about')
               .map((item) => {
                 const isAbout = item.href === 'about'
 
