@@ -1,0 +1,25 @@
+{
+  "verdict": "PASS",
+  "periodId": 202608,
+  "pool": "1000",
+  "transactions": [
+    {
+      "tier": 1,
+      "member": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+      "amount": "500.0",
+      "hash": "0xd7385b4f1c03efb470126ce8378a77297a381ef7b8e65b32b333cf59301a2767"
+    },
+    {
+      "tier": 2,
+      "member": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+      "amount": "300.0",
+      "hash": "0xc8a4bc33c6cd61c9a003a424da399831d8362cfb206f119c76657fd51605471d"
+    },
+    {
+      "tier": 3,
+      "member": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+      "amount": "200.0",
+      "hash": "0x0065844cd23dfde6a89a35bece17c2aa1b2486ff3daf9071694e4425a5378478"
+    }
+  ]
+}

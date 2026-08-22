@@ -97,6 +97,7 @@ export async function buildFreedomPlusRewardSnapshot({ year, month }) {
     counts: tiers.map((entries) => entries.length),
     eligibility,
     sourceEventCount: events.length,
+    proofDataAvailable: true,
     status: 'draft',
     publishedTxHash: '',
   };
@@ -111,7 +112,9 @@ export async function freedomPlusRewardProof(periodId, address) {
   const numericPeriod = Number(periodId);
   const wallet = getAddress(address).toLowerCase();
   const snapshot = await FreedomPlusRewardSnapshot.findOne({ chainId: env.CHAIN_ID, periodId: numericPeriod }).lean();
-  if (!snapshot) return { periodId: numericPeriod, wallet, snapshotAvailable: false, eligible: false };
+  if (!snapshot || snapshot.proofDataAvailable === false) {
+    return { periodId: numericPeriod, wallet, snapshotAvailable: false, eligible: false };
+  }
   const entry = snapshot.eligibility.find((item) => item.wallet === wallet);
   return {
     periodId: numericPeriod,

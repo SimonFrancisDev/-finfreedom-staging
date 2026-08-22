@@ -18,6 +18,7 @@ const schema = new mongoose.Schema({
   counts: [{ type: Number, required: true }],
   eligibility: [eligibilitySchema],
   sourceEventCount: { type: Number, required: true },
+  proofDataAvailable: { type: Boolean, default: true, index: true },
   status: { type: String, enum: ['draft', 'published'], default: 'draft', index: true },
   publishedTxHash: { type: String, default: '', lowercase: true },
 }, { timestamps: true, versionKey: false });

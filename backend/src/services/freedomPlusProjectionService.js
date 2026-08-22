@@ -138,16 +138,36 @@ export async function projectFreedomPlusEvent(event) {
 
   if (contractKey === 'nftRewardDistributor' && eventName === 'PeriodCreated') {
     const periodId = Number(args.periodId);
-    const snapshot = await FreedomPlusRewardSnapshot.findOne({ chainId, periodId });
-    if (!snapshot) throw new Error(`Missing Freedom-Plus reward snapshot for published period ${periodId}`);
     const roots = Array.from(args.eligibleRoots || []).map((value) => String(value).toLowerCase());
     const counts = Array.from(args.eligibleCounts || []).map(Number);
+    let snapshot = await FreedomPlusRewardSnapshot.findOne({ chainId, periodId });
+    if (!snapshot) {
+      const year = Math.floor(periodId / 100);
+      const month = periodId % 100;
+      snapshot = await FreedomPlusRewardSnapshot.create({
+        chainId,
+        periodId,
+        year,
+        month,
+        cutoff: new Date(Number(args.cutoff) * 1000),
+        cutoffBlock: blockNumber,
+        roots,
+        counts,
+        eligibility: [],
+        sourceEventCount: 0,
+        proofDataAvailable: false,
+        status: 'published',
+        publishedTxHash: txHash,
+      });
+      return;
+    }
     const rootMismatch = roots.length !== 3 || snapshot.roots.some((value, index) => value !== roots[index]);
     const countMismatch = counts.length !== 3 || snapshot.counts.some((value, index) => value !== counts[index]);
     if (rootMismatch || countMismatch) {
       throw new Error(`On-chain Freedom-Plus reward period ${periodId} does not match its audited snapshot`);
     }
     snapshot.status = 'published';
+    snapshot.proofDataAvailable = true;
     snapshot.publishedTxHash = txHash;
     await snapshot.save();
   }

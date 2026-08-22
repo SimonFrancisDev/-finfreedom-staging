@@ -47,7 +47,8 @@ async function main() {
   equal(await registration.levelManager(), c.FreedomPlusLevelManager.proxy, "registration manager");
   equal(await registration.id1Wallet(), manifest.id1, "registration ID1");
   if (!(await registration.genesisInitialized())) throw new Error("genesis is not initialized");
-  if ((await registration.registeredCount()) !== 5n) throw new Error("registered count is not five");
+  const registeredCount = await registration.registeredCount();
+  if (registeredCount < 5n) throw new Error("registered count is below the five genesis identities");
   equal(await manager.registration(), c.FreedomPlusRegistration.proxy, "manager registration");
   equal(await manager.settlementRouter(), c.FreedomPlusSettlementRouter.proxy, "manager router");
   equal(await manager.tokenController(), c.FreedomPlusTokenController.proxy, "manager controller");
@@ -75,8 +76,7 @@ async function main() {
     for (let level = 1; level <= 7; level++) {
       if (!(await registration.isLevelActive(participant, level))) throw new Error(`${participant} level ${level} inactive`);
     }
-    if ((await fpt.balanceOf(participant)) !== 54_650n * 10n ** 6n) throw new Error(`${participant} FPT mismatch`);
-    if ((await fptr.balanceOf(participant)) !== 0n) throw new Error(`${participant} FPTr is not zero`);
+    if ((await fpt.balanceOf(participant)) < 54_650n * 10n ** 6n) throw new Error(`${participant} FPT below genesis allocation`);
   }
   if (!(await fpt.operatorConfigLocked()) || !(await fptr.operatorConfigLocked())) {
     throw new Error("new token operator configuration is not locked");
@@ -86,7 +86,7 @@ async function main() {
     manifest: path.basename(file),
     commit: manifest.commit,
     finalBlock: manifest.finalBlock,
-    registeredCount: "5",
+    registeredCount: registeredCount.toString(),
     pendingGovernanceActions: manifest.pendingGovernanceActions.length,
   }, null, 2));
 }

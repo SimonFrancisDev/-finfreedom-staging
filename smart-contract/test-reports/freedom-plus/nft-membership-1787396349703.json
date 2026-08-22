@@ -1,0 +1,31 @@
+{
+  "verdict": "PASS",
+  "completedAt": "2026-08-22T10:59:09.422Z",
+  "member": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+  "finalTier": 1,
+  "finalTokenId": "3",
+  "lockedFPT": "5700.0",
+  "availableFPT": "48950.0",
+  "transactions": [
+    {
+      "action": "mintFoundational",
+      "hash": "0x6bc557c4a1ebc3d5635102c2de2985a39e0994076ec6cb65dd82c5481db2626f"
+    },
+    {
+      "action": "unlockAndFreeze",
+      "hash": "0xe491e73e2fb88fd772e5e82dcd4426b61f5de2a348299d206ffd998e7a9f6245"
+    },
+    {
+      "action": "restoreEligibility",
+      "hash": "0x0482be70f9a94d7b387a52604a611969152c954bd63657d2782faf3c24db9b9f"
+    },
+    {
+      "action": "upgradeIntermediate",
+      "hash": "0x11cb9ac0eca9b83ca8f850bd7061e59d567f163f6b54c8e93e117c22357b269b"
+    },
+    {
+      "action": "downgradeFoundational",
+      "hash": "0x2faeab14b3c3c7f2aa3bd5146865ee4d2d2f69af8ff25e47883776329f6faf28"
+    }
+  ]
+}

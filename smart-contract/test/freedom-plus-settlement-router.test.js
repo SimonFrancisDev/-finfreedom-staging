@@ -357,6 +357,69 @@ describe("Freedom-Plus ordinary settlement router", function () {
     ).to.be.revertedWithCustomError(system.registration, "GenesisAlreadyInitialized");
   });
 
+  it("keeps normal descendants routable after the four genesis representatives", async function () {
+    const system = await deployGraph();
+    const [, , , , , , , participant, child, child2, child3, child4] = await ethers.getSigners();
+    await system.registration.initializeGenesis([a.address, b.address, c.address, d.address]);
+    await fundAndApprove(system, participant, 50n * UNIT);
+    for (const descendant of [child, child2, child3, child4]) {
+      await fundAndApprove(system, descendant, 50n * UNIT);
+    }
+
+    await system.registration.connect(participant).register(id1.address);
+
+    const participantInId1 = await system.orbits[0].positionAt(id1.address, 1, 0, 5);
+    expect(participantInId1.participant).to.equal(participant.address);
+    expect(participantInId1.structuralParent).to.equal(b.address);
+    expect(participantInId1.kind).to.equal(1);
+
+    const participantInParent = await system.orbits[0].positionAt(b.address, 1, 0, 1);
+    expect(participantInParent.participant).to.equal(participant.address);
+    expect(participantInParent.structuralParent).to.equal(b.address);
+    expect(participantInParent.kind).to.equal(2);
+    expect(await system.orbits[0].currentStructuralParentOf(participant.address, 1))
+      .to.equal(b.address);
+
+    await expect(system.registration.connect(child).register(participant.address))
+      .to.not.be.reverted;
+    await system.registration.connect(child2).register(participant.address);
+    await system.registration.connect(child3).register(participant.address);
+    await expect(system.registration.connect(child4).register(participant.address))
+      .to.not.be.reverted;
+
+    const childSource = await system.orbits[0].positionAt(participant.address, 1, 0, 1);
+    expect(childSource.participant).to.equal(child.address);
+    expect(childSource.structuralParent).to.equal(participant.address);
+    expect(childSource.kind).to.equal(1);
+
+    const childInParent = await system.orbits[0].positionAt(b.address, 1, 0, 4);
+    expect(childInParent.participant).to.equal(child.address);
+    expect(childInParent.structuralParent).to.equal(participant.address);
+    expect(childInParent.kind).to.equal(2);
+    expect(await system.orbits[0].currentStructuralParentOf(child.address, 1))
+      .to.equal(participant.address);
+
+    const secondRingPositions = [4, 7, 10];
+    for (let index = 0; index < secondRingPositions.length; index++) {
+      const routed = await system.orbits[0].positionAt(
+        b.address,
+        1,
+        0,
+        secondRingPositions[index]
+      );
+      expect(routed.participant).to.equal([child, child2, child3][index].address);
+      expect(routed.structuralParent).to.equal(participant.address);
+      expect(routed.kind).to.equal(2);
+    }
+
+    const fourthInParent = await system.orbits[0].positionAt(b.address, 1, 0, 13);
+    expect(fourthInParent.participant).to.equal(child4.address);
+    expect(fourthInParent.structuralParent).to.equal(child.address);
+    expect(fourthInParent.kind).to.equal(2);
+    expect(await system.orbits[0].currentStructuralParentOf(child4.address, 1))
+      .to.equal(child.address);
+  });
+
   it("rejects fee-on-transfer USDT and rolls registration back atomically", async function () {
     const system = await deployGraph("MockFeeOnTransferUSDT");
     await fundAndApprove(system, a, 50n * UNIT);

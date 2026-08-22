@@ -96,7 +96,17 @@ async function syncTarget(provider, chainId, contractKey, contract, confirmedBlo
           { upsert: true }
         );
         if (write.upsertedCount > 0) {
-          await projectFreedomPlusEvent(document);
+          try {
+            await projectFreedomPlusEvent(document);
+          } catch (error) {
+            await FreedomPlusEvent.deleteOne({
+              chainId,
+              contractAddress: document.contractAddress,
+              txHash: document.txHash,
+              logIndex: document.logIndex,
+            });
+            throw error;
+          }
           processed += 1;
         }
       }
@@ -257,7 +267,19 @@ async function ingestLiveLog(provider, chainId, contractKey, contract, log) {
     { $setOnInsert: document },
     { upsert: true }
   );
-  if (write.upsertedCount > 0) await projectFreedomPlusEvent(document);
+  if (write.upsertedCount > 0) {
+    try {
+      await projectFreedomPlusEvent(document);
+    } catch (error) {
+      await FreedomPlusEvent.deleteOne({
+        chainId,
+        contractAddress: document.contractAddress,
+        txHash: document.txHash,
+        logIndex: document.logIndex,
+      });
+      throw error;
+    }
+  }
   scheduleConfirmedRecovery();
 }
 

@@ -481,7 +481,7 @@ contract FreedomPlusSettlementRouter is
         } else if (source.ring == 2) {
             components[0] = Component(1, firstBps, source.parent, source.parent);
             components[1] = Component(2, secondBps, orbitOwner, orbitOwner);
-            components[2] = Component(3, 5_000, parentOutsideOwner, orbitOwner);
+            components[2] = Component(3, 5_000, parentOutsideOwner, source.parent);
         } else {
             uint8 parentSlot = FreedomPlusConfig.parentPosition(source.orbitType, source.position);
             uint8 grandparentSlot = FreedomPlusConfig.parentPosition(source.orbitType, parentSlot);
@@ -511,7 +511,6 @@ contract FreedomPlusSettlementRouter is
         if (
             recipient != id1Wallet
                 && recipient != address(0)
-                && recipient != source.parent
                 && recipient != source.orbitOwner
         ) {
             placementId = keccak256(abi.encode(activationId, "COMPONENT", component.role));
