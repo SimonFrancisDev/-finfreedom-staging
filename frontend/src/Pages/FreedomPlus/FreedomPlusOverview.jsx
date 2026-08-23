@@ -85,7 +85,6 @@ export default function FreedomPlusOverview({ registered, openView }) {
         <div className="fp-program-hero__overlay" />
         <div className="fp-program-hero__content">
           <span className="fp-program-eyebrow"><Sparkles />Advanced participation program</span>
-          <h1><span>Freedom-Plus</span><strong>Program</strong></h1>
           <p className="fp-program-hero__subtitle">Advanced Participation, Earning &amp; Progression Layer</p>
           <p className="fp-program-hero__description">A seven-level program for participants who want deeper ecosystem involvement, intentional manual progression, stronger token positioning and a direct pathway toward Freedom NFT membership.</p>
           <div className="fp-program-hero__actions">
