@@ -1,85 +1,108 @@
+import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import {
   ArrowRight,
   CheckCircle2,
   Coins,
   Layers3,
-  LockKeyhole,
   Orbit,
+  Recycle,
   ShieldCheck,
   Sparkles,
+  X,
 } from 'lucide-react'
-import { FREEDOM_PLUS_LEVELS, NFT_TIERS } from '../../Services/freedomPlus'
 
-export default function FreedomPlusOverview({ registered, activeLevelCount, membershipTier, openView }) {
-  const nextLevel = FREEDOM_PLUS_LEVELS[Math.min(activeLevelCount, FREEDOM_PLUS_LEVELS.length - 1)]
-  const membership = NFT_TIERS.find((item) => item.tier === membershipTier)
+const HERO_IMAGES = {
+  dark: '/images/freedom-plus/freedom-plus-hero-dark.png',
+  light: '/images/freedom-plus/freedom-plus-hero-light.png',
+  mobileDark: '/images/freedom-plus/freedom-plus-hero-mobile-dark.png',
+  mobileLight: '/images/freedom-plus/freedom-plus-hero-mobile-light.png',
+}
+
+const HERO_FEATURES = [
+  { title: '7 Progressive Levels', text: 'Manual advancement from 50 to 36,450 USDT.', icon: Layers3 },
+  { title: 'Six Orbit Engines', text: 'P39, P14, P12, P6, P4 and P3 structures.', icon: Orbit },
+  { title: 'Manual Progression', text: 'You decide when to activate each next level.', icon: CheckCircle2 },
+  { title: 'Automatic Recycling', text: 'Completed cycles reopen the same active level.', icon: Recycle },
+  { title: 'Token Rewards', text: 'FPT on activation and FPTr on recycle.', icon: Coins },
+]
+
+function useThemeMode() {
+  const readTheme = () => document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark'
+  const [theme, setTheme] = useState(readTheme)
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => setTheme(readTheme()))
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
+    return () => observer.disconnect()
+  }, [])
+
+  return theme
+}
+
+function HeroImage() {
+  const theme = useThemeMode()
+  const desktop = theme === 'light' ? HERO_IMAGES.light : HERO_IMAGES.dark
+  const mobile = theme === 'light' ? HERO_IMAGES.mobileLight : HERO_IMAGES.mobileDark
 
   return (
-    <div className="fp-overview-page">
-      <section className="fp-overview-hero">
-        <div className="fp-overview-hero__content">
-          <div className="fp-overview-eyebrow"><Sparkles /><span>Freedom-Plus Program</span></div>
-          <div className="fp-overview-copy">
-            <h2>Advance through seven levels at your own pace.</h2>
-            <p>Use your existing FFN identity and sponsor, activate each level manually, and build qualifying FPT toward Freedom NFT membership.</p>
-          </div>
-          <div className="fp-overview-actions">
-            <button type="button" className="fp-primary-action" onClick={() => openView(registered ? 'dashboard' : 'levels')}>
-              {registered ? 'Open dashboard' : 'Register and activate'}<ArrowRight />
+    <picture className="fp-program-hero__picture">
+      <source media="(max-width: 640px)" srcSet={mobile} />
+      <img src={desktop} alt="Freedom-Plus Program" className="fp-program-hero__image" />
+    </picture>
+  )
+}
+
+function ProgramNotice({ onClose }) {
+  return createPortal(
+    <div className="fp-program-notice" role="dialog" aria-modal="true" aria-labelledby="fp-program-notice-title">
+      <button type="button" className="fp-program-notice__backdrop" onClick={onClose} aria-label="Close program notice" />
+      <div className="fp-program-notice__dialog">
+        <button type="button" className="fp-program-notice__close" onClick={onClose} aria-label="Close"><X /></button>
+        <span className="fp-program-notice__badge"><ShieldCheck />Program notice</span>
+        <h2 id="fp-program-notice-title">Participate with a clear understanding of the rules.</h2>
+        <p>Freedom-Plus uses sequential manual activation. Registration activates Level 1, while Levels 2 through 7 are activated only when you choose to proceed.</p>
+        <div className="fp-program-notice__points">
+          <span><CheckCircle2 />Your existing FFN identity and permanent sponsor are retained.</span>
+          <span><CheckCircle2 />There is no automatic upgrade to a higher level.</span>
+          <span><CheckCircle2 />A completed orbit automatically reopens that same level.</span>
+          <span><CheckCircle2 />All activations, placements, payments and token rewards execute on-chain.</span>
+        </div>
+        <button type="button" className="fp-program-notice__accept" onClick={onClose}>I understand</button>
+      </div>
+    </div>,
+    document.body
+  )
+}
+
+export default function FreedomPlusOverview({ registered, openView }) {
+  const [noticeOpen, setNoticeOpen] = useState(false)
+
+  return (
+    <>
+      <section className="fp-program-hero">
+        <div className="fp-program-hero__background"><HeroImage /></div>
+        <div className="fp-program-hero__overlay" />
+        <div className="fp-program-hero__content">
+          <span className="fp-program-eyebrow"><Sparkles />Advanced participation program</span>
+          <h1><span>Freedom-Plus</span><strong>Program</strong></h1>
+          <p className="fp-program-hero__subtitle">Advanced Participation, Earning &amp; Progression Layer</p>
+          <p className="fp-program-hero__description">A seven-level program for participants who want deeper ecosystem involvement, intentional manual progression, stronger token positioning and a direct pathway toward Freedom NFT membership.</p>
+          <div className="fp-program-hero__actions">
+            <button type="button" className="fp-program-button fp-program-button--primary" onClick={() => openView(registered ? 'dashboard' : 'levels')}>
+              {registered ? 'Open Freedom-Plus Dashboard' : 'Join Freedom-Plus'}<ArrowRight />
             </button>
-            <button type="button" className="fp-secondary-action" onClick={() => openView('orbits')}>Explore orbits<Orbit /></button>
+            <button type="button" className="fp-program-button fp-program-button--ghost" onClick={() => setNoticeOpen(true)}>View Program Notice</button>
           </div>
-          <div className="fp-overview-facts">
-            <span><CheckCircle2 />Manual progression</span>
-            <span><CheckCircle2 />No automatic upgrade</span>
-            <span><CheckCircle2 />Shared FFN sponsor</span>
+          <div className="fp-program-hero__features">
+            {HERO_FEATURES.map((feature) => {
+              const FeatureIcon = feature.icon
+              return <article key={feature.title}><FeatureIcon /><strong>{feature.title}</strong><span>{feature.text}</span></article>
+            })}
           </div>
         </div>
-
-        <aside className="fp-overview-hero__status">
-          <div className="fp-overview-status__header"><span>Your progression</span><strong>{registered ? 'Active' : 'Not started'}</strong></div>
-          <div className="fp-overview-progress-ring" style={{ '--progress': `${(activeLevelCount / 7) * 360}deg` }}>
-            <div><strong>{activeLevelCount}</strong><span>of 7 levels</span></div>
-          </div>
-          <div className="fp-overview-status__next">
-            <span>{activeLevelCount === 7 ? 'Progression complete' : 'Next available level'}</span>
-            <strong>{activeLevelCount === 7 ? 'All levels active' : `Level ${nextLevel.level} · ${nextLevel.orbit}`}</strong>
-            <small>{activeLevelCount === 7 ? 'Continue building orbit cycles.' : `${nextLevel.price.toLocaleString()} USDT`}</small>
-          </div>
-        </aside>
       </section>
-
-      <section className="fp-overview-stat-grid" aria-label="Freedom-Plus program summary">
-        <article><span className="fp-overview-stat__icon"><Layers3 /></span><div><small>Program levels</small><strong>7</strong><p>Sequential manual activation</p></div></article>
-        <article><span className="fp-overview-stat__icon"><Orbit /></span><div><small>Orbit engines</small><strong>6</strong><p>P39 through P3</p></div></article>
-        <article><span className="fp-overview-stat__icon"><Coins /></span><div><small>Activation reward</small><strong>FPT</strong><p>Equal to the level value</p></div></article>
-        <article><span className="fp-overview-stat__icon"><LockKeyhole /></span><div><small>NFT status</small><strong>{membership?.name || 'Not minted'}</strong><p>Highest active tier only</p></div></article>
-      </section>
-
-      <section className="fp-overview-section">
-        <div className="fp-overview-section__heading"><div><span>Progression map</span><h2>Seven levels, one controlled path</h2><p>Every higher level remains locked until the preceding level is active.</p></div><button type="button" onClick={() => openView('levels')}>Manage levels<ArrowRight /></button></div>
-        <div className="fp-overview-level-track">
-          {FREEDOM_PLUS_LEVELS.map((level, index) => (
-            <button type="button" key={level.level} className={index < activeLevelCount ? 'is-active' : index === activeLevelCount ? 'is-next' : ''} onClick={() => openView('levels')}>
-              <span>{index < activeLevelCount ? <CheckCircle2 /> : level.level}</span>
-              <div><small>Level {level.level}</small><strong>{level.orbit}</strong><p>{level.price.toLocaleString()} USDT</p></div>
-            </button>
-          ))}
-        </div>
-      </section>
-
-      <section className="fp-overview-two-column">
-        <article className="fp-overview-program-card">
-          <div className="fp-overview-card__icon"><ShieldCheck /></div>
-          <div><span>Freedom NFT</span><h2>Turn qualifying participation into membership.</h2><p>Available FGT and FPT can be locked toward Foundational, Intermediate, or Advanced membership. Locked tokens are not burned and eligibility updates immediately.</p></div>
-          <button type="button" onClick={() => openView('nftOverview')}>View membership tiers<ArrowRight /></button>
-        </article>
-        <article className="fp-overview-program-card">
-          <div className="fp-overview-card__icon"><Orbit /></div>
-          <div><span>Transparent structure</span><h2>Inspect every orbit position.</h2><p>View the participant, ring, structural parent, cycle, and payment record for each indexed position across all six orbit engines.</p></div>
-          <button type="button" onClick={() => openView('orbits')}>Open orbit viewer<ArrowRight /></button>
-        </article>
-      </section>
-    </div>
+      {noticeOpen && <ProgramNotice onClose={() => setNoticeOpen(false)} />}
+    </>
   )
 }

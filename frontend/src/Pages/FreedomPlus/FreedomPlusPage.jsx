@@ -101,6 +101,7 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
     () => (data?.ledger || []).reduce((total, item) => total + BigInt(item.amount || 0), 0n),
     [data]
   )
+  const isProgramOverview = tab === 'overview'
 
   const openView = (view) => {
     setTab(view)
@@ -370,16 +371,16 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
 
   return (
     <main className="freedom-plus-page">
-      <header className="fp-header">
+      {!isProgramOverview && <header className="fp-header">
         <div><span className="fp-kicker">Advanced participation</span><h1>Freedom-Plus</h1><p>Seven manually activated levels, deterministic orbit placement and long-term Freedom NFT progression.</p></div>
         <button className="fp-icon-button" type="button" onClick={load} disabled={loading} title="Refresh chain and indexed data"><RefreshCw className={loading ? 'spin' : ''} /></button>
-      </header>
+      </header>}
 
-      {!isConnected && (
+      {!isProgramOverview && !isConnected && (
         <section className="fp-connect"><Wallet /><div><h2>Connect your wallet</h2><p>Connect on the configured Polygon network to view or manage Freedom-Plus.</p></div><button type="button" onClick={connect}>Connect</button></section>
       )}
 
-      {isConnected && (
+      {!isProgramOverview && isConnected && (
         <section className="fp-metrics">
             <article><span>FFN ID</span><strong>{data?.chain?.registered ? (referralId || 'Resolving...') : 'Not registered'}</strong><small>{short(account)}</small></article>
             <article><span>Active levels</span><strong>{activeLevels.size} / 7</strong><small>Manual progression</small></article>
@@ -388,11 +389,11 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
         </section>
       )}
 
-      <nav className="fp-tabs" aria-label="Freedom-Plus views">
+      {!isProgramOverview && <nav className="fp-tabs" aria-label="Freedom-Plus views">
             {VIEW_TABS.map(([value, icon, label]) => (
               <button type="button" className={tab === value ? 'active' : ''} onClick={() => openView(value)} key={value}>{icon}{label}</button>
             ))}
-      </nav>
+      </nav>}
 
       {isConnected && data?.chain?.registered && <TransactionStatus txState={txState} onReset={() => setTxState({ status: 'idle', stage: 'idle', hash: '', note: '', error: null })} explorerBaseUrl={`${NETWORK_CONFIG.blockExplorerUrls[0]}/tx`} />}
 
