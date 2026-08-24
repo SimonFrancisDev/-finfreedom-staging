@@ -88,38 +88,20 @@ const ECONOMICS = [
   { level: 7, orbit: 'P3', price: '36,450', distribution: '90% payable', charge: '3,645', gross: '102,060', recycle: '36,450', net: '65,610' },
 ]
 
-function buildOrbitNodes(rings, parents) {
+function buildOrbitNodes(rings) {
   const center = 145
   const radii = rings.length === 1 ? [106] : rings.length === 2 ? [66, 124] : [54, 96, 136]
   const nodes = []
   let firstPosition = 1
 
   rings.forEach((count, ringIndex) => {
-    const ringStart = firstPosition
     for (let offset = 0; offset < count; offset += 1) {
       const position = firstPosition + offset
-      const parentPosition = parents[position - 1]
-      let angle
-
-      if (ringIndex === 0) {
-        angle = -90 + (360 / count) * offset
-      } else {
-        const parent = nodes.find((node) => node.position === parentPosition)
-        const siblings = parents
-          .map((candidate, index) => candidate === parentPosition && index + 1 >= ringStart ? index + 1 : null)
-          .filter(Boolean)
-        const siblingIndex = siblings.indexOf(position)
-        const parentRingCount = rings[ringIndex - 1]
-        const availableSector = (360 / parentRingCount) * 0.72
-        const siblingStep = availableSector / siblings.length
-        angle = parent.angle - (availableSector / 2) + (siblingStep / 2) + siblingIndex * siblingStep
-      }
+      const angle = -90 + (360 / count) * offset
       const radians = angle * Math.PI / 180
       nodes.push({
         position,
-        parent: parentPosition,
         ring: ringIndex + 1,
-        angle,
         x: center + Math.cos(radians) * radii[ringIndex],
         y: center + Math.sin(radians) * radii[ringIndex],
       })
@@ -131,21 +113,20 @@ function buildOrbitNodes(rings, parents) {
 }
 
 function OrbitDiagram({ engine }) {
-  const nodes = buildOrbitNodes(engine.rings, engine.parents)
-  const nodeByPosition = new Map(nodes.map((node) => [node.position, node]))
+  const nodes = buildOrbitNodes(engine.rings)
 
   return (
     <div className={`fp-orbit-diagram fp-orbit-diagram--${engine.rings.length}`} aria-label={`${engine.name}: ${engine.rings.join(', ')} positions grouped by structural parent`}>
       <div className="fp-orbit-diagram__stage">
         <svg viewBox="0 0 290 290" aria-hidden="true">
           {engine.rings.map((_, index) => <circle key={index} cx="145" cy="145" r={engine.rings.length === 1 ? 106 : engine.rings.length === 2 ? [66, 124][index] : [54, 96, 136][index]} className={`fp-orbit-diagram__track fp-orbit-diagram__track--${index + 1}`} />)}
-          {nodes.map((node) => {
-            const parent = node.parent === 0 ? { x: 145, y: 145 } : nodeByPosition.get(node.parent)
-            return <line key={`line-${node.position}`} x1={parent.x} y1={parent.y} x2={node.x} y2={node.y} className={`fp-orbit-diagram__link fp-orbit-diagram__link--ring-${node.ring}`} />
-          })}
         </svg>
         <span className="fp-orbit-diagram__core"><Orbit /></span>
-        {nodes.map((node) => <i key={node.position} className={`fp-orbit-diagram__node fp-orbit-diagram__node--ring-${node.ring}`} style={{ left: `${node.x / 2.9}%`, top: `${node.y / 2.9}%` }}><b>{node.position}</b></i>)}
+        {engine.rings.map((_, ringIndex) => (
+          <span key={ringIndex} className={`fp-orbit-diagram__node-layer fp-orbit-diagram__node-layer--${ringIndex + 1}`}>
+            {nodes.filter((node) => node.ring === ringIndex + 1).map((node) => <i key={node.position} className={`fp-orbit-diagram__node fp-orbit-diagram__node--ring-${node.ring}`} style={{ left: `${node.x / 2.9}%`, top: `${node.y / 2.9}%` }}><b>{node.position}</b></i>)}
+          </span>
+        ))}
       </div>
     </div>
   )
