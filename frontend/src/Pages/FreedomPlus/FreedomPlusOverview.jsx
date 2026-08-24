@@ -21,6 +21,7 @@ import {
   Sparkles,
   Trophy,
   TrendingUp,
+  Wallet,
   X,
 } from 'lucide-react'
 
@@ -67,6 +68,40 @@ const PROGRESSION_LEVELS = [
   { number: 6, title: 'Leadership', orbit: 'P4', price: '12,150', text: 'A higher-commitment P4 stage for deeper ecosystem positioning.', icon: Crown, tone: 'purple' },
   { number: 7, title: 'Zenith', orbit: 'P3', price: '36,450', text: 'The final Freedom-Plus level and highest progression milestone.', icon: Trophy, tone: 'gold' },
 ]
+
+const ORBIT_ENGINES = [
+  { name: 'P39', label: '3 rings', rings: [3, 9, 27], tone: 'blue', description: 'Three first-ring positions, nine second-ring positions and twenty-seven third-ring positions.' },
+  { name: 'P14', label: '3 rings', rings: [2, 4, 8], tone: 'cyan', description: 'A binary structure that expands from two positions to four, then eight.' },
+  { name: 'P12', label: '2 rings', rings: [3, 9], tone: 'green', description: 'Three first-ring positions, each structurally parenting three second-ring positions.' },
+  { name: 'P6', label: '2 rings', rings: [2, 4], tone: 'yellow', description: 'Two first-ring positions, each structurally parenting two second-ring positions.' },
+  { name: 'P4', label: '1 ring', rings: [4], tone: 'orange', description: 'Four direct positions: three payable arrivals and one complete recycle arrival.' },
+  { name: 'P3', label: '1 ring', rings: [3], tone: 'purple', description: 'Three direct positions: two payable arrivals and one complete recycle arrival.' },
+]
+
+const ECONOMICS = [
+  { level: 1, orbit: 'P39', price: '50', distribution: '20% / 20% / 50%', charge: '5', gross: '795', recycle: '50', net: '745' },
+  { level: 2, orbit: 'P14', price: '150', distribution: '15% / 25% / 50%', charge: '15', gross: '795', recycle: '150', net: '645' },
+  { level: 3, orbit: 'P12', price: '450', distribution: '40% / 50%', charge: '45', gross: '2,565', recycle: '450', net: '2,115' },
+  { level: 4, orbit: 'P6', price: '1,350', distribution: '40% / 50%', charge: '135', gross: '3,780', recycle: '1,350', net: '2,430' },
+  { level: 5, orbit: 'P4', price: '4,050', distribution: '90% payable', charge: '405', gross: '14,985', recycle: '4,050', net: '10,935' },
+  { level: 6, orbit: 'P4', price: '12,150', distribution: '90% payable', charge: '1,215', gross: '44,955', recycle: '12,150', net: '32,805' },
+  { level: 7, orbit: 'P3', price: '36,450', distribution: '90% payable', charge: '3,645', gross: '102,060', recycle: '36,450', net: '65,610' },
+]
+
+function OrbitDiagram({ rings }) {
+  return (
+    <div className={`fp-orbit-diagram fp-orbit-diagram--${rings.length}`} aria-label={`${rings.join(', ')} position orbit structure`}>
+      <span className="fp-orbit-diagram__core"><Orbit /></span>
+      {rings.map((count, ringIndex) => (
+        <span key={`${ringIndex}-${count}`} className={`fp-orbit-diagram__ring fp-orbit-diagram__ring--${ringIndex + 1}`}>
+          {Array.from({ length: count }, (_, nodeIndex) => (
+            <i key={nodeIndex} style={{ '--node-index': nodeIndex, '--node-count': count }}><b>{nodeIndex + 1 + rings.slice(0, ringIndex).reduce((sum, value) => sum + value, 0)}</b></i>
+          ))}
+        </span>
+      ))}
+    </div>
+  )
+}
 
 function useThemeMode() {
   const readTheme = () => document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark'
@@ -228,6 +263,54 @@ export default function FreedomPlusOverview({ registered, openView }) {
             <span>Total Levels 1–7</span><strong>54,650 USDT</strong><small>No automatic upgrade to a higher level</small>
           </footer>
         </div>
+      </section>
+      <section className="fp-program-orbits">
+        <div className="fp-program-orbits__inner">
+          <header className="fp-program-section-header">
+            <span>Deterministic placement</span>
+            <h2>Six Orbit Engines</h2>
+            <p>Every position has a fixed ring, sequence and structural parent.</p>
+          </header>
+          <div className="fp-program-orbits__grid">
+            {ORBIT_ENGINES.map((engine) => (
+              <article key={engine.name} className={`fp-program-orbit-card fp-program-orbit-card--${engine.tone}`}>
+                <header><strong>{engine.name}</strong><span>{engine.label}</span></header>
+                <OrbitDiagram rings={engine.rings} />
+                <p>{engine.description}</p>
+                <div>{engine.rings.map((count, index) => <span key={index}>Ring {index + 1}: <b>{count}</b></span>)}</div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+      <section className="fp-program-economics">
+        <div className="fp-program-economics__inner">
+          <header className="fp-program-section-header">
+            <span>Transparent level economics</span>
+            <h2>Price and Income Tables</h2>
+            <p>Confirmed activation prices, payout roles, system charges and completed-cycle figures.</p>
+          </header>
+          <div className="fp-program-price-grid">
+            {ECONOMICS.map((row) => (
+              <article key={row.level}><span>Level {row.level}</span><strong>{row.orbit}</strong><b>{row.price} <small>USDT</small></b></article>
+            ))}
+          </div>
+          <div className="fp-program-income-table" role="region" aria-label="Freedom-Plus completed-cycle income table" tabIndex="0">
+            <table>
+              <thead><tr><th>Level</th><th>Orbit</th><th>Price</th><th>Payout roles</th><th>System charge</th><th>Gross cycle</th><th>Recycle</th><th>Net wallet</th></tr></thead>
+              <tbody>{ECONOMICS.map((row) => <tr key={row.level}><td>{row.level}</td><td><b>{row.orbit}</b></td><td>{row.price}</td><td>{row.distribution}</td><td>{row.charge}</td><td>{row.gross}</td><td>{row.recycle}</td><td><strong>{row.net}</strong></td></tr>)}</tbody>
+            </table>
+          </div>
+          <p className="fp-program-economics__note">All values are in USDT. The 10% system charge applies to payable positions. Recycle-only arrivals reopen the same level without an additional charge.</p>
+        </div>
+      </section>
+      <section className="fp-program-final">
+        <span><Wallet />Ready for intentional progression?</span>
+        <h2>Enter the Freedom-Plus Program.</h2>
+        <p>Use your existing FFN identity, activate Level 1 with registration and progress through the remaining levels when you choose.</p>
+        <button type="button" className="fp-program-button fp-program-button--primary" onClick={() => openView(registered ? 'dashboard' : 'levels')}>
+          {registered ? 'Open Freedom-Plus Dashboard' : 'Join Freedom-Plus'}<ArrowRight />
+        </button>
       </section>
       {noticeOpen && <ProgramNotice onClose={() => setNoticeOpen(false)} />}
     </>
