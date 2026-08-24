@@ -4,7 +4,12 @@ import {
   ArrowRight,
   CheckCircle2,
   Coins,
+  Compass,
+  Eye,
+  Gem,
   Layers3,
+  LockKeyhole,
+  Network,
   Orbit,
   Recycle,
   ShieldCheck,
@@ -25,6 +30,25 @@ const HERO_FEATURES = [
   { title: 'Manual Progression', text: 'You decide when to activate each next level.', icon: CheckCircle2 },
   { title: 'Automatic Recycling', text: 'Completed cycles reopen the same active level.', icon: Recycle },
   { title: 'Token Rewards', text: 'FPT on activation and FPTr on recycle.', icon: Coins },
+]
+
+const WHY_IMAGES = {
+  dark: '/images/freedom-plus/why-freedom-plus-dark.png',
+  light: '/images/freedom-plus/why-freedom-plus-light.png',
+  mobileDark: '/images/freedom-plus/why-freedom-plus-mobile-dark.png',
+  mobileLight: '/images/freedom-plus/why-freedom-plus-mobile-light.png',
+}
+
+const WHY_TRUST_POINTS = [
+  { title: 'Manual Control', text: 'You choose when to activate each next level.', icon: LockKeyhole },
+  { title: 'Defined Execution', text: 'Placements, payments and cycles follow programmed rules.', icon: Eye },
+  { title: 'Structured Opportunity', text: 'Seven levels provide a clear path for deeper participation.', icon: Compass },
+]
+
+const WHY_PILLARS = [
+  { title: 'Advanced Ecosystem Positioning', icon: Network },
+  { title: 'FPT and FPTr Utility', icon: Coins },
+  { title: 'Freedom NFT Qualification Path', icon: Gem },
 ]
 
 function useThemeMode() {
@@ -49,6 +73,19 @@ function HeroImage() {
     <picture className="fp-program-hero__picture">
       <source media="(max-width: 640px)" srcSet={mobile} />
       <img src={desktop} alt="Freedom-Plus Program" className="fp-program-hero__image" />
+    </picture>
+  )
+}
+
+function WhyImage() {
+  const theme = useThemeMode()
+  const desktop = theme === 'light' ? WHY_IMAGES.light : WHY_IMAGES.dark
+  const mobile = theme === 'light' ? WHY_IMAGES.mobileLight : WHY_IMAGES.mobileDark
+
+  return (
+    <picture className="fp-program-why__picture">
+      <source media="(max-width: 640px)" srcSet={mobile} />
+      <img src={desktop} alt="A structured progression pathway through Freedom-Plus" className="fp-program-why__image" />
     </picture>
   )
 }
@@ -99,6 +136,42 @@ export default function FreedomPlusOverview({ registered, openView }) {
               return <article key={feature.title}><FeatureIcon /><strong>{feature.title}</strong><span>{feature.text}</span></article>
             })}
           </div>
+        </div>
+      </section>
+      <section className="fp-program-why">
+        <div className="fp-program-why__background"><WhyImage /></div>
+        <div className="fp-program-why__content">
+          <header className="fp-program-why__header">
+            <span>Fin Freedom Network</span>
+            <h2>Why Freedom-Plus <strong>Matters</strong></h2>
+            <p>Intentional growth, strategic decisions and long-term commitment.</p>
+          </header>
+
+          <div className="fp-program-why__statement">
+            <ShieldCheck />
+            <div><strong>Progress is never forced.</strong><span>You choose when to move forward.</span></div>
+          </div>
+
+          <div className="fp-program-why__explanation">
+            <Orbit />
+            <p>Freedom-Plus is the advanced participation layer for members who want deeper ecosystem involvement, stronger token positioning and a deliberate route toward Freedom NFT membership.</p>
+          </div>
+
+          <div className="fp-program-why__trust-grid">
+            {WHY_TRUST_POINTS.map((point) => {
+              const PointIcon = point.icon
+              return <article key={point.title}><PointIcon /><strong>{point.title}</strong><span>{point.text}</span></article>
+            })}
+          </div>
+
+          <div className="fp-program-why__pillars">
+            {WHY_PILLARS.map((pillar) => {
+              const PillarIcon = pillar.icon
+              return <article key={pillar.title}><PillarIcon /><strong>{pillar.title}</strong></article>
+            })}
+          </div>
+
+          <p className="fp-program-why__slogan">Progress with purpose. Position for the future.</p>
         </div>
       </section>
       {noticeOpen && <ProgramNotice onClose={() => setNoticeOpen(false)} />}
