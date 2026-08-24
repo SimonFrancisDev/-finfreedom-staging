@@ -34,7 +34,7 @@ const HERO_IMAGES = {
 
 const HERO_FEATURES = [
   { title: '7 Progressive Levels', text: 'Manual advancement from 50 to 36,450 USDT.', icon: Layers3 },
-  { title: 'Six Orbit Engines', text: 'P39, P14, P12, P6, P4 and P3 structures.', icon: Orbit },
+  { title: 'Multiple Orbit Engines', text: 'P39, P14, P12, P6, P4 and P3 structures.', icon: Orbit },
   { title: 'Manual Progression', text: 'You decide when to activate each next level.', icon: CheckCircle2 },
   { title: 'Automatic Recycling', text: 'Completed cycles reopen the same active level.', icon: Recycle },
   { title: 'Token Rewards', text: 'FPT on activation and FPTr on recycle.', icon: Coins },
@@ -70,12 +70,12 @@ const PROGRESSION_LEVELS = [
 ]
 
 const ORBIT_ENGINES = [
-  { name: 'P39', label: '3 rings', rings: [3, 9, 27], tone: 'blue', description: 'Three first-ring positions, nine second-ring positions and twenty-seven third-ring positions.' },
-  { name: 'P14', label: '3 rings', rings: [2, 4, 8], tone: 'cyan', description: 'A binary structure that expands from two positions to four, then eight.' },
-  { name: 'P12', label: '2 rings', rings: [3, 9], tone: 'green', description: 'Three first-ring positions, each structurally parenting three second-ring positions.' },
-  { name: 'P6', label: '2 rings', rings: [2, 4], tone: 'yellow', description: 'Two first-ring positions, each structurally parenting two second-ring positions.' },
-  { name: 'P4', label: '1 ring', rings: [4], tone: 'orange', description: 'Four direct positions: three payable arrivals and one complete recycle arrival.' },
-  { name: 'P3', label: '1 ring', rings: [3], tone: 'purple', description: 'Three direct positions: two payable arrivals and one complete recycle arrival.' },
+  { name: 'P39', label: '3 rings', rings: [3, 9, 27], parents: [0, 0, 0, 1, 2, 3, 1, 2, 3, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 4, 5, 6, 7, 8, 9, 10, 11, 12, 4, 5, 6, 7, 8, 9, 10, 11, 12], tone: 'blue', description: 'Three first-ring positions, each parenting three second-ring positions, which each parent three third-ring positions.' },
+  { name: 'P14', label: '3 rings', rings: [2, 4, 8], parents: [0, 0, 1, 2, 1, 2, 3, 4, 5, 6, 3, 4, 5, 6], tone: 'cyan', description: 'Two first-ring positions, each parenting two second-ring positions, which each parent two third-ring positions.' },
+  { name: 'P12', label: '2 rings', rings: [3, 9], parents: [0, 0, 0, 1, 2, 3, 1, 2, 3, 1, 2, 3], tone: 'green', description: 'Three first-ring positions, each structurally parenting three second-ring positions.' },
+  { name: 'P6', label: '2 rings', rings: [2, 4], parents: [0, 0, 1, 2, 1, 2], tone: 'yellow', description: 'Two first-ring positions, each structurally parenting two second-ring positions.' },
+  { name: 'P4', label: '1 ring', rings: [4], parents: [0, 0, 0, 0], tone: 'orange', description: 'Four direct positions: three payable arrivals and one complete recycle arrival.' },
+  { name: 'P3', label: '1 ring', rings: [3], parents: [0, 0, 0], tone: 'purple', description: 'Three direct positions: two payable arrivals and one complete recycle arrival.' },
 ]
 
 const ECONOMICS = [
@@ -88,17 +88,65 @@ const ECONOMICS = [
   { level: 7, orbit: 'P3', price: '36,450', distribution: '90% payable', charge: '3,645', gross: '102,060', recycle: '36,450', net: '65,610' },
 ]
 
-function OrbitDiagram({ rings }) {
+function buildOrbitNodes(rings, parents) {
+  const center = 145
+  const radii = rings.length === 1 ? [106] : rings.length === 2 ? [66, 124] : [54, 96, 136]
+  const nodes = []
+  let firstPosition = 1
+
+  rings.forEach((count, ringIndex) => {
+    const ringStart = firstPosition
+    for (let offset = 0; offset < count; offset += 1) {
+      const position = firstPosition + offset
+      const parentPosition = parents[position - 1]
+      let angle
+
+      if (ringIndex === 0) {
+        angle = -90 + (360 / count) * offset
+      } else {
+        const parent = nodes.find((node) => node.position === parentPosition)
+        const siblings = parents
+          .map((candidate, index) => candidate === parentPosition && index + 1 >= ringStart ? index + 1 : null)
+          .filter(Boolean)
+        const siblingIndex = siblings.indexOf(position)
+        const parentRingCount = rings[ringIndex - 1]
+        const availableSector = (360 / parentRingCount) * 0.72
+        const siblingStep = availableSector / siblings.length
+        angle = parent.angle - (availableSector / 2) + (siblingStep / 2) + siblingIndex * siblingStep
+      }
+      const radians = angle * Math.PI / 180
+      nodes.push({
+        position,
+        parent: parentPosition,
+        ring: ringIndex + 1,
+        angle,
+        x: center + Math.cos(radians) * radii[ringIndex],
+        y: center + Math.sin(radians) * radii[ringIndex],
+      })
+    }
+    firstPosition += count
+  })
+
+  return nodes
+}
+
+function OrbitDiagram({ engine }) {
+  const nodes = buildOrbitNodes(engine.rings, engine.parents)
+  const nodeByPosition = new Map(nodes.map((node) => [node.position, node]))
+
   return (
-    <div className={`fp-orbit-diagram fp-orbit-diagram--${rings.length}`} aria-label={`${rings.join(', ')} position orbit structure`}>
-      <span className="fp-orbit-diagram__core"><Orbit /></span>
-      {rings.map((count, ringIndex) => (
-        <span key={`${ringIndex}-${count}`} className={`fp-orbit-diagram__ring fp-orbit-diagram__ring--${ringIndex + 1}`}>
-          {Array.from({ length: count }, (_, nodeIndex) => (
-            <i key={nodeIndex} style={{ '--node-index': nodeIndex, '--node-count': count }}><b>{nodeIndex + 1 + rings.slice(0, ringIndex).reduce((sum, value) => sum + value, 0)}</b></i>
-          ))}
-        </span>
-      ))}
+    <div className={`fp-orbit-diagram fp-orbit-diagram--${engine.rings.length}`} aria-label={`${engine.name}: ${engine.rings.join(', ')} positions grouped by structural parent`}>
+      <div className="fp-orbit-diagram__stage">
+        <svg viewBox="0 0 290 290" aria-hidden="true">
+          {engine.rings.map((_, index) => <circle key={index} cx="145" cy="145" r={engine.rings.length === 1 ? 106 : engine.rings.length === 2 ? [66, 124][index] : [54, 96, 136][index]} className={`fp-orbit-diagram__track fp-orbit-diagram__track--${index + 1}`} />)}
+          {nodes.map((node) => {
+            const parent = node.parent === 0 ? { x: 145, y: 145 } : nodeByPosition.get(node.parent)
+            return <line key={`line-${node.position}`} x1={parent.x} y1={parent.y} x2={node.x} y2={node.y} className={`fp-orbit-diagram__link fp-orbit-diagram__link--ring-${node.ring}`} />
+          })}
+        </svg>
+        <span className="fp-orbit-diagram__core"><Orbit /></span>
+        {nodes.map((node) => <i key={node.position} className={`fp-orbit-diagram__node fp-orbit-diagram__node--ring-${node.ring}`} style={{ left: `${node.x / 2.9}%`, top: `${node.y / 2.9}%` }}><b>{node.position}</b></i>)}
+      </div>
     </div>
   )
 }
@@ -268,14 +316,14 @@ export default function FreedomPlusOverview({ registered, openView }) {
         <div className="fp-program-orbits__inner">
           <header className="fp-program-section-header">
             <span>Deterministic placement</span>
-            <h2>Six Orbit Engines</h2>
+            <h2>Multiple Orbit Engines</h2>
             <p>Every position has a fixed ring, sequence and structural parent.</p>
           </header>
           <div className="fp-program-orbits__grid">
             {ORBIT_ENGINES.map((engine) => (
               <article key={engine.name} className={`fp-program-orbit-card fp-program-orbit-card--${engine.tone}`}>
                 <header><strong>{engine.name}</strong><span>{engine.label}</span></header>
-                <OrbitDiagram rings={engine.rings} />
+                <OrbitDiagram engine={engine} />
                 <p>{engine.description}</p>
                 <div>{engine.rings.map((count, index) => <span key={index}>Ring {index + 1}: <b>{count}</b></span>)}</div>
               </article>
