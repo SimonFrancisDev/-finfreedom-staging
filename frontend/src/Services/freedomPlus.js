@@ -129,6 +129,7 @@ export const freedomPlusApi = {
   status: () => fetchJson('/api/freedom-plus/status'),
   reconciliation: () => fetchJson('/api/freedom-plus/reconciliation'),
   participant: (wallet) => fetchJson(`/api/freedom-plus/participant/${wallet}`),
+  activationSummary: (wallet) => fetchJson(`/api/freedom-plus/activation-summary/${wallet}`),
   orbit: (wallet, level, cycle) => fetchJson(`/api/freedom-plus/orbit/${wallet}/level/${level}${cycle === '' ? '' : `?cycle=${cycle}`}`),
   payments: (wallet, level = '') => fetchJson(`/api/freedom-plus/payments/${wallet}${level ? `?level=${level}` : ''}`),
   rewardPeriods: () => fetchJson('/api/freedom-plus/rewards/periods'),

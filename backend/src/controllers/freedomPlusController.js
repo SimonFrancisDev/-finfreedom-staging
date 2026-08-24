@@ -2,6 +2,7 @@ import {
   freedomPlusEvents,
   freedomPlusOrbit,
   freedomPlusParticipant,
+  freedomPlusActivationSummary,
   freedomPlusPayments,
   freedomPlusReconciliation,
   freedomPlusStatus,
@@ -19,6 +20,7 @@ function handler(fn) {
 export const getFreedomPlusStatus = handler(() => freedomPlusStatus());
 export const getFreedomPlusReconciliation = handler(() => freedomPlusReconciliation());
 export const getFreedomPlusParticipant = handler((req) => freedomPlusParticipant(req.params.address));
+export const getFreedomPlusActivationSummary = handler((req) => freedomPlusActivationSummary(req.params.address));
 export const getFreedomPlusOrbit = handler((req) => freedomPlusOrbit(req.params.address, req.params.level, req.query));
 export const getFreedomPlusPayments = handler((req) => freedomPlusPayments(req.params.address, req.query));
 export const getFreedomPlusEvents = handler((req) => freedomPlusEvents(req.params.address, req.query));

@@ -92,6 +92,57 @@ export async function freedomPlusParticipant(address) {
   return { wallet: normalized, participant, levels, positions, payments, ledger };
 }
 
+export async function freedomPlusActivationSummary(address) {
+  const normalized = wallet(address);
+  const [participant, levels, positionGroups, latestWalletEvent, sync] = await Promise.all([
+    FreedomPlusParticipant.findOne({ chainId: env.CHAIN_ID, wallet: normalized }).lean(),
+    FreedomPlusLevelState.find({ chainId: env.CHAIN_ID, wallet: normalized }).sort({ level: 1 }).lean(),
+    FreedomPlusPosition.aggregate([
+      { $match: { chainId: env.CHAIN_ID, orbitOwner: normalized } },
+      { $group: {
+        _id: { level: '$level', cycle: '$cycle' },
+        orbitType: { $first: '$orbitType' },
+        filledPositions: { $sum: 1 },
+        latestBlock: { $max: '$blockNumber' },
+      } },
+      { $sort: { '_id.level': 1, '_id.cycle': -1 } },
+    ]),
+    FreedomPlusEvent.findOne({ chainId: env.CHAIN_ID, addresses: normalized })
+      .sort({ blockNumber: -1, logIndex: -1 }).select('blockNumber timestamp txHash eventName').lean(),
+    FreedomPlusSyncState.find({ chainId: env.CHAIN_ID }).select('contractKey lastProcessedBlock status error').lean(),
+  ]);
+
+  const currentByLevel = new Map();
+  for (const group of positionGroups) {
+    const level = Number(group._id.level);
+    if (!currentByLevel.has(level)) currentByLevel.set(level, group);
+  }
+  const indexedThrough = sync.length ? Math.min(...sync.map((item) => Number(item.lastProcessedBlock || 0))) : 0;
+
+  return {
+    wallet: normalized,
+    participant,
+    levels,
+    orbitSummaries: Array.from({ length: 7 }, (_, index) => {
+      const level = index + 1;
+      const current = currentByLevel.get(level);
+      return {
+        level,
+        orbitType: current?.orbitType || '',
+        currentCycle: current ? Number(current._id.cycle) : 0,
+        filledPositions: Number(current?.filledPositions || 0),
+        latestBlock: Number(current?.latestBlock || 0),
+      };
+    }),
+    sync: {
+      indexedThrough,
+      latestWalletEvent: latestWalletEvent || null,
+      healthy: sync.length > 0 && sync.every((item) => item.status !== 'error'),
+      errors: sync.filter((item) => item.status === 'error').map((item) => ({ contractKey: item.contractKey, error: item.error })),
+    },
+  };
+}
+
 export async function freedomPlusOrbit(address, level, query = {}) {
   const normalized = wallet(address);
   const numericLevel = Number(level);

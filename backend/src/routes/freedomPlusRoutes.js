@@ -3,6 +3,7 @@ import {
   getFreedomPlusEvents,
   getFreedomPlusOrbit,
   getFreedomPlusParticipant,
+  getFreedomPlusActivationSummary,
   getFreedomPlusPayments,
   getFreedomPlusReconciliation,
   getFreedomPlusStatus,
@@ -14,6 +15,7 @@ const router = Router();
 router.get('/status', getFreedomPlusStatus);
 router.get('/reconciliation', getFreedomPlusReconciliation);
 router.get('/participant/:address', getFreedomPlusParticipant);
+router.get('/activation-summary/:address', getFreedomPlusActivationSummary);
 router.get('/orbit/:address/level/:level', getFreedomPlusOrbit);
 router.get('/payments/:address', getFreedomPlusPayments);
 router.get('/events/:address', getFreedomPlusEvents);
