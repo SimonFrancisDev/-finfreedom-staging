@@ -61,15 +61,6 @@ const SERVICES = [
         labelKey: 'navbar.menus.services.freedomPlusProgram.links.tokens',
         target: 'freedomPlusTokens',
       },
-      {
-        label: 'Freedom-Plus Program Dashboard',
-        labelKey: 'navbar.menus.services.freedomPlusProgram.links.dashboard',
-        target: 'freedomPlusDashboard',
-      },
-      {
-        label: 'Freedom-Plus Account',
-        target: 'freedomPlusAccount',
-      },
     ],
   },
   {

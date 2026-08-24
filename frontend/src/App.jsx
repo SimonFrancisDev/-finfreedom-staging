@@ -148,12 +148,12 @@ const pageToPathMap = {
   dashboard: '/dashboard',
   fFreedomProgram: '/f-freedom-program',
   freedomPlus: '/freedom-plus',
-  freedomPlusDashboard: '/freedom-plus/dashboard',
+  freedomPlusDashboard: '/dashboard',
   freedomPlusActivation: '/freedom-plus/activation',
-  freedomPlusOrbits: '/freedom-plus/orbits',
+  freedomPlusOrbits: '/freedom-plus/activation',
   freedomPlusTokens: '/freedom-plus/tokens',
-  freedomPlusActivity: '/freedom-plus/activity',
-  freedomPlusAccount: '/freedom-plus/account',
+  freedomPlusActivity: '/activity',
+  freedomPlusAccount: '/account',
   freedomNft: '/freedom-nft',
   freedomNftMembership: '/freedom-nft/membership',
   freedomNftRewards: '/freedom-nft/rewards',
@@ -1342,12 +1342,12 @@ function App() {
               {FREEDOM_PLUS_ENABLED && (
                 <>
                   <Route path="/freedom-plus" element={<FreedomPlusPage initialTab="overview" />} />
-                  <Route path="/freedom-plus/dashboard" element={<FreedomPlusPage initialTab="dashboard" />} />
+                  <Route path="/freedom-plus/dashboard" element={<Navigate to="/dashboard" replace />} />
                   <Route path="/freedom-plus/activation" element={<FreedomPlusPage initialTab="levels" />} />
-                  <Route path="/freedom-plus/orbits" element={<FreedomPlusPage initialTab="orbits" />} />
+                  <Route path="/freedom-plus/orbits" element={<Navigate to="/freedom-plus/activation" replace />} />
                   <Route path="/freedom-plus/tokens" element={<FreedomPlusPage initialTab="tokens" />} />
-                  <Route path="/freedom-plus/activity" element={<FreedomPlusPage initialTab="activity" />} />
-                  <Route path="/freedom-plus/account" element={<FreedomPlusPage initialTab="account" />} />
+                  <Route path="/freedom-plus/activity" element={<Navigate to="/activity" replace />} />
+                  <Route path="/freedom-plus/account" element={<Navigate to="/account" replace />} />
                   <Route path="/freedom-nft" element={<FreedomPlusPage initialTab="nftOverview" />} />
                   <Route path="/freedom-nft/membership" element={<FreedomPlusPage initialTab="membership" />} />
                   <Route path="/freedom-nft/rewards" element={<FreedomPlusPage initialTab="rewards" />} />

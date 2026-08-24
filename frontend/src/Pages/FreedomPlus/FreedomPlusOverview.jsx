@@ -206,8 +206,8 @@ export default function FreedomPlusOverview({ registered, openView }) {
           <p className="fp-program-hero__subtitle">Advanced Participation, Earning &amp; Progression Layer</p>
           <p className="fp-program-hero__description">A seven-level program for participants who want deeper ecosystem involvement, intentional manual progression, stronger token positioning and a direct pathway toward Freedom NFT membership.</p>
           <div className="fp-program-hero__actions">
-            <button type="button" className="fp-program-button fp-program-button--primary" onClick={() => openView(registered ? 'dashboard' : 'levels')}>
-              {registered ? 'Open Freedom-Plus Dashboard' : 'Join Freedom-Plus'}<ArrowRight />
+            <button type="button" className="fp-program-button fp-program-button--primary" onClick={() => openView('levels')}>
+              {registered ? 'Open Level Manager' : 'Join Freedom-Plus'}<ArrowRight />
             </button>
             <button type="button" className="fp-program-button fp-program-button--ghost" onClick={() => setNoticeOpen(true)}>View Program Notice</button>
           </div>
@@ -337,8 +337,8 @@ export default function FreedomPlusOverview({ registered, openView }) {
         <span><Wallet />Ready for intentional progression?</span>
         <h2>Enter the Freedom-Plus Program.</h2>
         <p>Use your existing FFN identity, activate Level 1 with registration and progress through the remaining levels when you choose.</p>
-        <button type="button" className="fp-program-button fp-program-button--primary" onClick={() => openView(registered ? 'dashboard' : 'levels')}>
-          {registered ? 'Open Freedom-Plus Dashboard' : 'Join Freedom-Plus'}<ArrowRight />
+        <button type="button" className="fp-program-button fp-program-button--primary" onClick={() => openView('levels')}>
+          {registered ? 'Open Level Manager' : 'Join Freedom-Plus'}<ArrowRight />
         </button>
       </section>
       {noticeOpen && <ProgramNotice onClose={() => setNoticeOpen(false)} />}

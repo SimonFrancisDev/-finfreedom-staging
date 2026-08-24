@@ -84,32 +84,38 @@ function requiredAddress(label, value) {
   return value
 }
 
-export function getFreedomPlusReadContracts() {
+export function getFreedomPlusReadContracts({ includeNft = false } = {}) {
   assertEnabled()
   const provider = web3Service.getReadProvider()
-  return {
+  const contracts = {
     registration: new ethers.Contract(assertAddress('registration'), REGISTRATION_ABI, provider),
     usdt: new ethers.Contract(requiredAddress('USDT', env.VITE_USDT_ADDRESS), USDT_ABI, provider),
     fgt: new ethers.Contract(requiredAddress('FGT', env.VITE_FGT_TOKEN_ADDRESS), TOKEN_ABI, provider),
     fpt: new ethers.Contract(assertAddress('fpt'), TOKEN_ABI, provider),
     fptr: new ethers.Contract(assertAddress('fptr'), TOKEN_ABI, provider),
-    nftMembership: new ethers.Contract(assertAddress('nftMembership'), NFT_MEMBERSHIP_ABI, provider),
-    nftRewardDistributor: new ethers.Contract(assertAddress('nftRewardDistributor'), NFT_REWARD_DISTRIBUTOR_ABI, provider),
   }
+  if (includeNft) {
+    contracts.nftMembership = new ethers.Contract(assertAddress('nftMembership'), NFT_MEMBERSHIP_ABI, provider)
+    contracts.nftRewardDistributor = new ethers.Contract(assertAddress('nftRewardDistributor'), NFT_REWARD_DISTRIBUTOR_ABI, provider)
+  }
+  return contracts
 }
 
-export function getFreedomPlusWriteContracts() {
+export function getFreedomPlusWriteContracts({ includeNft = false } = {}) {
   assertEnabled()
   const signer = web3Service.getSigner()
   if (!signer) throw new Error('Connect your wallet before continuing.')
-  return {
+  const contracts = {
     registration: new ethers.Contract(assertAddress('registration'), REGISTRATION_ABI, signer),
     usdt: new ethers.Contract(requiredAddress('USDT', env.VITE_USDT_ADDRESS), USDT_ABI, signer),
     fgt: new ethers.Contract(requiredAddress('FGT', env.VITE_FGT_TOKEN_ADDRESS), TOKEN_ABI, signer),
     fpt: new ethers.Contract(assertAddress('fpt'), TOKEN_ABI, signer),
-    nftMembership: new ethers.Contract(assertAddress('nftMembership'), NFT_MEMBERSHIP_ABI, signer),
-    nftRewardDistributor: new ethers.Contract(assertAddress('nftRewardDistributor'), NFT_REWARD_DISTRIBUTOR_ABI, signer),
   }
+  if (includeNft) {
+    contracts.nftMembership = new ethers.Contract(assertAddress('nftMembership'), NFT_MEMBERSHIP_ABI, signer)
+    contracts.nftRewardDistributor = new ethers.Contract(assertAddress('nftRewardDistributor'), NFT_REWARD_DISTRIBUTOR_ABI, signer)
+  }
+  return contracts
 }
 
 async function fetchJson(path) {

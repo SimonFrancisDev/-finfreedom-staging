@@ -8,6 +8,7 @@ import { fetchAddressReceiptsApi, fetchOrbitLevelsApi, fetchUserSummaryApi } fro
 import { getProfileReadAuthIfLocked } from '../../Services/profilePrivacyApi'
 import { useToast } from '../../components/feedback'
 import { NETWORK_CONFIG } from '../../constants/addresses'
+import { FREEDOM_PLUS_ENABLED, freedomPlusApi } from '../../Services/freedomPlus'
 
 const ACTIVITY_PAGE_SIZE = 8
 const RECEIPTS_PAGE_SIZE = 6
@@ -24,6 +25,7 @@ const ActivityPage = () => {
   const [levelActivations, setLevelActivations] = useState([])
   const [registrationInfo, setRegistrationInfo] = useState(null)
   const [filter, setFilter] = useState('all')
+  const [programFilter, setProgramFilter] = useState('all')
   const [timeRange, setTimeRange] = useState('all')
   const [loading, setLoading] = useState(true)
   const [stats, setStats] = useState({
@@ -194,6 +196,7 @@ const ActivityPage = () => {
           cycle: receipt.sourceCycle,
           hash: receipt.txHash || receipt.transactionHash || null,
           status: 'completed',
+          program: 'f-freedom',
           raw: receipt,
         }
       })
@@ -201,7 +204,7 @@ const ActivityPage = () => {
       setReceipts(receiptsData)
 
       setActivities((prev) => {
-        const nonReceiptActivities = prev.filter((a) => a.type !== 'payout' && a.type !== 'receipt')
+        const nonReceiptActivities = prev.filter((a) => a.program === 'freedom-plus' || (a.type !== 'payout' && a.type !== 'receipt'))
         return [...nonReceiptActivities, ...receiptActivities].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))
       })
 
@@ -272,6 +275,7 @@ const ActivityPage = () => {
             timestamp: realTimestamp,
             pendingTimestamp: !realTimestamp,
             status: 'completed',
+            program: 'f-freedom',
           });
         }
       }
@@ -279,7 +283,7 @@ const ActivityPage = () => {
       setLevelActivations(activations);
 
       setActivities((prev) => {
-        const nonActivation = prev.filter(a => a.type !== 'activation');
+        const nonActivation = prev.filter(a => a.program === 'freedom-plus' || a.type !== 'activation');
         return [...nonActivation, ...activationActivities]
           .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
       });
@@ -291,8 +295,59 @@ const ActivityPage = () => {
     }
   }, [contracts, account, activityT, normalizeTimestamp, toast]);
 
+  const fetchFreedomPlusActivities = useCallback(async () => {
+    if (!FREEDOM_PLUS_ENABLED || !account) return
+    try {
+      const result = await freedomPlusApi.participant(account)
+      const paymentActivities = (result?.payments || []).map((payment, index) => ({
+        id: `freedom-plus-payment-${payment._id || `${payment.txHash}-${index}`}`,
+        type: 'payout',
+        title: 'Freedom-Plus payment received',
+        description: `Level ${payment.level}, payout role ${payment.role}${payment.id1Fallback ? ', ID1 fallback' : ''}`,
+        amount: normalizeUsdtAmount(payment.amount),
+        timestamp: normalizeTimestamp(payment.timestamp || payment.createdAt),
+        level: payment.level,
+        position: payment.sourcePosition,
+        cycle: payment.sourceCycle,
+        hash: payment.txHash,
+        status: 'completed',
+        program: 'freedom-plus',
+        raw: payment,
+      }))
+      const ledgerActivities = (result?.ledger || []).filter((entry) => !String(entry.category || '').toLowerCase().startsWith('nft_')).map((entry, index) => {
+        const category = String(entry.category || '').toLowerCase()
+        const eventName = String(entry.eventName || 'Freedom-Plus record')
+        const type = category.includes('activ') ? 'activation' : category.includes('recycl') ? 'cycle' : 'receipt'
+        return {
+          id: `freedom-plus-ledger-${entry._id || `${entry.txHash}-${entry.logIndex || index}`}`,
+          type,
+          title: eventName.replaceAll('_', ' '),
+          description: `Freedom-Plus${entry.level ? ` Level ${entry.level}` : ''} ${category.replaceAll('_', ' ') || 'ledger record'}`,
+          amount: normalizeUsdtAmount(entry.amount),
+          timestamp: normalizeTimestamp(entry.timestamp || entry.createdAt),
+          level: entry.level,
+          hash: entry.txHash,
+          status: 'completed',
+          program: 'freedom-plus',
+          raw: entry,
+        }
+      })
+      setActivities((current) => [
+        ...current.filter((item) => item.program !== 'freedom-plus'),
+        ...paymentActivities,
+        ...ledgerActivities,
+      ].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0)))
+    } catch (error) {
+      console.error('Error fetching Freedom-Plus activity:', error)
+      toast.warning('Freedom-Plus activity could not be refreshed.', { dedupeKey: 'activity-freedom-plus-failed' })
+    }
+  }, [account, normalizeTimestamp, normalizeUsdtAmount, toast])
+
   const getFilteredActivities = useCallback(() => {
     let filtered = [...activities]
+    if (programFilter !== 'all') {
+      filtered = filtered.filter((activity) => activity.program === programFilter)
+    }
     if (filter !== 'all') {
       filtered = filtered.filter((a) => a.type === filter)
     }
@@ -308,7 +363,7 @@ const ActivityPage = () => {
       }
     }
     return filtered
-  }, [activities, filter, timeRange, normalizeTimestamp])
+  }, [activities, filter, programFilter, timeRange, normalizeTimestamp])
 
   useEffect(() => {
     if (isConnected) {
@@ -324,22 +379,24 @@ const ActivityPage = () => {
           fetchRegistrationInfo(),
           fetchReceiptsAndActivities(),
           fetchLevelActivations(),
+          fetchFreedomPlusActivities(),
         ])
         setLoading(false)
         setLastUpdated(new Date().toLocaleTimeString())
       }
       loadData()
     }
-  }, [contracts, account, fetchRegistrationInfo, fetchReceiptsAndActivities, fetchLevelActivations])
+  }, [contracts, account, fetchRegistrationInfo, fetchReceiptsAndActivities, fetchLevelActivations, fetchFreedomPlusActivities])
 
   useEffect(() => {
     if (!contracts || !account) return
     const interval = setInterval(() => {
       fetchReceiptsAndActivities()
+      fetchFreedomPlusActivities()
       setLastUpdated(new Date().toLocaleTimeString())
     }, 30000)
     return () => clearInterval(interval)
-  }, [contracts, account, fetchReceiptsAndActivities])
+  }, [contracts, account, fetchReceiptsAndActivities, fetchFreedomPlusActivities])
 
   const filteredActivities = useMemo(() => getFilteredActivities(), [getFilteredActivities])
   const visibleActivities = filteredActivities.slice(0, activityVisibleCount)
@@ -349,7 +406,7 @@ const ActivityPage = () => {
 
   useEffect(() => {
     setActivityVisibleCount(ACTIVITY_PAGE_SIZE)
-  }, [filter, timeRange])
+  }, [filter, programFilter, timeRange])
 
   const exportJson = () => {
     const data = JSON.stringify(activities, null, 2)
@@ -485,6 +542,12 @@ const ActivityPage = () => {
 
       <div className="activity-filters glass-panel">
         <div className="filter-group">
+          <span className="filter-label">Program:</span>
+          <button type="button" className={`filter-btn ${programFilter === 'all' ? 'active' : ''}`} onClick={() => setProgramFilter('all')}>All</button>
+          <button type="button" className={`filter-btn ${programFilter === 'f-freedom' ? 'active' : ''}`} onClick={() => setProgramFilter('f-freedom')}>F-Freedom</button>
+          <button type="button" className={`filter-btn ${programFilter === 'freedom-plus' ? 'active' : ''}`} onClick={() => setProgramFilter('freedom-plus')}>Freedom-Plus</button>
+        </div>
+        <div className="filter-group">
           <span className="filter-label">{activityT('filters.type', 'Type:')}</span>
           <button type="button" className={`filter-btn ${filter === 'all' ? 'active' : ''}`} onClick={() => setFilter('all')}>{activityT('filters.all', 'All')}</button>
           <button type="button" className={`filter-btn ${filter === 'payout' ? 'active' : ''}`} onClick={() => setFilter('payout')}>{activityT('filters.payouts', 'Payouts')}</button>
@@ -519,6 +582,7 @@ const ActivityPage = () => {
                   <div key={activity.id || idx} className="activity-feed__item glass-panel">
                     <div className={`activity-feed__icon ${getActivityTone(activity.type)}`}>{getActivityIcon(activity.type)}</div>
                     <div className="activity-feed__content">
+                      <span className={`activity-program-badge activity-program-badge--${activity.program || 'f-freedom'}`}>{activity.program === 'freedom-plus' ? 'Freedom-Plus' : 'F-Freedom'}</span>
                       <h3 className="activity-feed__title">{activity.title}</h3>
                       <p className="activity-feed__text soft-text">
                         {activity.description}

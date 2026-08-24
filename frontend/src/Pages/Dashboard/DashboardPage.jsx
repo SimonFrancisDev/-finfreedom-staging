@@ -6,6 +6,7 @@ import { getApiUrl } from '../../Services/apiConfig'
 import { getProfileReadAuthIfLocked } from '../../Services/profilePrivacyApi'
 import { useToast } from '../../components/feedback'
 import { MetricSparkline } from '../../components/charts/InstitutionalCharts'
+import FreedomPlusSharedSummary from '../../components/freedomPlus/FreedomPlusSharedSummary'
 import { CONTRACT_ADDRESSES, NETWORK_CONFIG } from '../../constants/addresses'
 import {
   Activity,
@@ -1122,6 +1123,8 @@ const DashboardPage = () => {
           </div>
         </div>
       </section>
+
+      <FreedomPlusSharedSummary wallet={account} variant="dashboard" />
 
       <section className="dashboard-activity dashboard-surface dashboard-section-full">
         <div className="dashboard-section-heading dashboard-section-heading--row">

@@ -12,6 +12,7 @@ import { getApiUrl } from '../../Services/apiConfig'
 import { resolveIdentity } from '../../utils/identityResolver'
 import { NETWORK_CONFIG } from '../../constants/addresses'
 import { useToast } from '../../components/feedback'
+import FreedomPlusSharedSummary from '../../components/freedomPlus/FreedomPlusSharedSummary'
 import { 
   FaUserFriends, FaCoins, FaArrowRight, FaTelegram, 
   FaWhatsapp, FaWallet, FaShieldAlt, FaExternalLinkAlt, FaCopy 
@@ -701,6 +702,8 @@ const shouldShowUpgradeProgress =
           </section>
       </div>
       
+      <FreedomPlusSharedSummary wallet={resolvedAddress} variant="account" />
+
       <footer className="account-footer">
         {accountT('footer.verifiedSync', 'Verified on-chain synchronization: {{time}}', { time: lastUpdated })}
       </footer>
