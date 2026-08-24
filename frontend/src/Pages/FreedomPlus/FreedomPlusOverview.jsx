@@ -3,10 +3,15 @@ import { createPortal } from 'react-dom'
 import {
   ArrowRight,
   CheckCircle2,
+  ChevronsUp,
   Coins,
   Compass,
+  Crown,
+  DoorOpen,
   Eye,
+  Expand,
   Gem,
+  Gauge,
   Layers3,
   LockKeyhole,
   Network,
@@ -14,6 +19,8 @@ import {
   Recycle,
   ShieldCheck,
   Sparkles,
+  Trophy,
+  TrendingUp,
   X,
 } from 'lucide-react'
 
@@ -49,6 +56,16 @@ const WHY_PILLARS = [
   { title: 'Advanced Ecosystem Positioning', icon: Network },
   { title: 'FPT and FPTr Utility', icon: Coins },
   { title: 'Freedom NFT Qualification Path', icon: Gem },
+]
+
+const PROGRESSION_LEVELS = [
+  { number: 1, title: 'Foundation', orbit: 'P39', price: '50', text: 'Registration activates Level 1 and begins your Freedom-Plus journey.', icon: DoorOpen, tone: 'blue' },
+  { number: 2, title: 'Positioning', orbit: 'P14', price: '150', text: 'Your first participant-controlled progression into a new orbit structure.', icon: TrendingUp, tone: 'cyan' },
+  { number: 3, title: 'Expansion', orbit: 'P12', price: '450', text: 'A broader participation stage built around two structured rings.', icon: Expand, tone: 'green' },
+  { number: 4, title: 'Momentum', orbit: 'P6', price: '1,350', text: 'A focused six-position orbit for deliberate continued progression.', icon: Gauge, tone: 'yellow' },
+  { number: 5, title: 'Elevation', orbit: 'P4', price: '4,050', text: 'An advanced four-position orbit with participant-controlled entry.', icon: ChevronsUp, tone: 'orange' },
+  { number: 6, title: 'Leadership', orbit: 'P4', price: '12,150', text: 'A higher-commitment P4 stage for deeper ecosystem positioning.', icon: Crown, tone: 'purple' },
+  { number: 7, title: 'Zenith', orbit: 'P3', price: '36,450', text: 'The final Freedom-Plus level and highest progression milestone.', icon: Trophy, tone: 'gold' },
 ]
 
 function useThemeMode() {
@@ -172,6 +189,44 @@ export default function FreedomPlusOverview({ registered, openView }) {
           </div>
 
           <p className="fp-program-why__slogan">Progress with purpose. Position for the future.</p>
+        </div>
+      </section>
+      <section className="fp-program-levels">
+        <div className="fp-program-levels__inner">
+          <header className="fp-program-levels__header">
+            <span>Your</span>
+            <h2>Freedom-Plus</h2>
+            <strong>Progression Levels</strong>
+            <p>Seven sequential levels. Six orbit engines. Progress only when you choose.</p>
+          </header>
+
+          <div className="fp-program-levels__rules" aria-label="Freedom-Plus progression rules">
+            <span><CheckCircle2 />Level 1 activates with registration</span>
+            <span><LockKeyhole />Levels 2–7 are activated manually</span>
+            <span><Recycle />Recycling reopens the same level</span>
+          </div>
+
+          <div className="fp-program-levels__board">
+            {PROGRESSION_LEVELS.map((level) => {
+              const LevelIcon = level.icon
+              return (
+                <article key={level.number} className={`fp-program-level-card fp-program-level-card--${level.tone}`}>
+                  <div className="fp-program-level-card__number"><span>Level</span><strong>{level.number}</strong></div>
+                  <div className="fp-program-level-card__icon"><LevelIcon /></div>
+                  <div className="fp-program-level-card__content">
+                    <div className="fp-program-level-card__heading"><h3>{level.title}</h3><span>{level.orbit} Orbit</span></div>
+                    <strong className="fp-program-level-card__price">{level.price} <small>USDT</small></strong>
+                    <p>{level.text}</p>
+                    <div className="fp-program-level-card__rewards"><span>FPT on first activation</span><span>FPTr on recycle</span></div>
+                  </div>
+                </article>
+              )
+            })}
+          </div>
+
+          <footer className="fp-program-levels__footer">
+            <span>Total Levels 1–7</span><strong>54,650 USDT</strong><small>No automatic upgrade to a higher level</small>
+          </footer>
         </div>
       </section>
       {noticeOpen && <ProgramNotice onClose={() => setNoticeOpen(false)} />}
