@@ -175,3 +175,75 @@
   .freedom-plus-activation-page .activation-help-card dl div { align-items: flex-start; flex-direction: column; gap: 0.2rem; }
   .freedom-plus-activation-page .activation-help-card dd { text-align: left; }
 }
+/* Freedom NFT program experience */
+.fn-program-page{display:grid;gap:34px;margin-top:18px;color:var(--ffn-text)}
+.fn-program-hero{position:relative;min-height:560px;overflow:hidden;border-top:1px solid var(--ffn-border);border-bottom:1px solid var(--ffn-border);background:#101820;isolation:isolate}
+.fn-program-hero__media,.fn-program-hero__scrim{position:absolute;inset:0}
+.fn-program-hero__media img{width:100%;height:100%;object-fit:cover;object-position:center}
+.fn-program-hero__scrim{z-index:1;background:linear-gradient(90deg,rgba(5,11,17,.94) 0%,rgba(5,11,17,.8) 44%,rgba(5,11,17,.2) 76%,rgba(5,11,17,.05) 100%)}
+.fn-program-hero__content{position:relative;z-index:2;display:flex;min-height:560px;max-width:680px;padding:68px 48px;flex-direction:column;justify-content:center;align-items:flex-start;color:#fff}
+.fn-program-kicker,.fn-program-section>header>span,.fn-program-section>div>span{font-size:12px;font-weight:850;text-transform:uppercase;color:#5ee0b5}
+.fn-program-hero h1{margin:10px 0 14px;font-size:64px;line-height:1.02;letter-spacing:0;color:#fff}
+.fn-program-hero__content>p{max-width:610px;margin:0;color:rgba(255,255,255,.8);font-size:18px;line-height:1.65}
+.fn-program-hero__actions{display:flex;gap:10px;margin-top:28px}
+.fn-program-hero__actions button{display:inline-flex;min-height:44px;padding:0 18px;align-items:center;justify-content:center;gap:8px;border:1px solid #23a77f;border-radius:5px;background:#168764;color:#fff;font-weight:800}
+.fn-program-hero__actions button.secondary{border-color:rgba(255,255,255,.35);background:rgba(5,11,17,.42)}
+.fn-program-hero__actions svg{width:17px}
+.fn-program-hero__status{display:grid;width:min(100%,560px);margin-top:34px;padding:14px 16px;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;border-top:1px solid rgba(255,255,255,.22);border-bottom:1px solid rgba(255,255,255,.22)}
+.fn-program-hero__status>svg{width:24px;color:#5ee0b5}
+.fn-program-hero__status span,.fn-program-hero__status strong{display:block}
+.fn-program-hero__status span{font-size:11px;color:rgba(255,255,255,.62)}
+.fn-program-hero__status strong{margin-top:2px;font-size:15px}
+.fn-program-hero__status em{padding:5px 8px;border:1px solid rgba(255,190,92,.45);border-radius:4px;color:#ffc66d;font-size:11px;font-style:normal;font-weight:800}
+.fn-program-hero__status em.eligible{border-color:rgba(94,224,181,.45);color:#5ee0b5}
+.fn-program-section{padding:44px 38px;border-top:1px solid var(--ffn-border);border-bottom:1px solid var(--ffn-border);background:var(--ffn-surface)}
+.fn-program-section>header{max-width:760px;margin-bottom:26px}
+.fn-program-section h2{margin:7px 0 9px;color:var(--ffn-text);font-size:32px;line-height:1.18}
+.fn-program-section header p{margin:0;color:var(--ffn-text-muted);line-height:1.65}
+.fn-program-tier-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.fn-program-tier-grid article{min-width:0;padding:22px;border:1px solid var(--ffn-border);border-radius:6px;background:var(--ffn-surface-muted);box-shadow:var(--ffn-elevation-1)}
+.fn-program-tier-grid article.current{border-top:3px solid var(--ffn-primary)}
+.fn-program-tier-grid__head{display:flex;justify-content:space-between;align-items:center;gap:10px;color:var(--ffn-text-muted);font-size:11px;font-weight:800;text-transform:uppercase}
+.fn-program-tier-grid__head em{display:flex;align-items:center;gap:4px;color:var(--ffn-primary);font-style:normal}
+.fn-program-tier-grid__head svg{width:14px}
+.fn-program-tier-grid h3{margin:18px 0 7px;font-size:20px}
+.fn-program-tier-grid article>strong{display:block;color:var(--ffn-primary);font-size:32px}
+.fn-program-tier-grid article>small{color:var(--ffn-text-muted)}
+.fn-program-tier-grid__allocation{display:flex;margin-top:22px;padding-top:15px;justify-content:space-between;align-items:center;border-top:1px solid var(--ffn-border)}
+.fn-program-tier-grid__allocation span{color:var(--ffn-text-muted);font-size:12px}
+.fn-program-tier-grid__allocation b{font-size:22px}
+.fn-program-section--principles{background:var(--ffn-surface-muted)}
+.fn-program-principles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--ffn-border)}
+.fn-program-principles article{display:flex;min-height:150px;padding:24px;gap:16px;background:var(--ffn-surface)}
+.fn-program-principles svg{flex:0 0 auto;width:24px;color:var(--ffn-primary)}
+.fn-program-principles h3{margin:0 0 8px;font-size:17px}
+.fn-program-principles p{margin:0;color:var(--ffn-text-muted);font-size:14px;line-height:1.55}
+.fn-program-section--journey{display:grid;grid-template-columns:minmax(240px,.75fr) minmax(0,1.25fr);gap:40px;align-items:start}
+.fn-program-section--journey h2{margin-top:8px}
+.fn-program-section--journey ol{display:grid;margin:0;padding:0;list-style:none}
+.fn-program-section--journey li{display:grid;padding:16px 0;grid-template-columns:42px 1fr;gap:12px;border-bottom:1px solid var(--ffn-border)}
+.fn-program-section--journey li:first-child{padding-top:0}
+.fn-program-section--journey li>b{color:var(--ffn-primary);font-size:13px}
+.fn-program-section--journey li strong,.fn-program-section--journey li span{display:block}
+.fn-program-section--journey li span{margin-top:4px;color:var(--ffn-text-muted);font-size:13px;line-height:1.5}
+.fn-program-locked{grid-column:2;margin:0;padding:13px 0;border-top:1px solid var(--ffn-border);color:var(--ffn-text-muted);font-size:13px}
+.fn-program-locked strong{color:var(--ffn-text)}
+@media(max-width:900px){.fn-program-hero{min-height:680px}.fn-program-hero__content{min-height:680px;padding:50px 28px}.fn-program-hero h1{font-size:52px}.fn-program-tier-grid{grid-template-columns:1fr}.fn-program-section--journey{grid-template-columns:1fr}.fn-program-locked{grid-column:1}}
+@media(max-width:620px){.fn-program-page{gap:20px;margin-top:10px}.fn-program-hero{display:flex;min-height:auto;padding-top:280px;flex-direction:column}.fn-program-hero__media{height:280px}.fn-program-hero__media img{object-position:center}.fn-program-hero__scrim{display:none}.fn-program-hero__content{min-height:auto;max-width:none;padding:30px 18px 34px;background:#0b151c}.fn-program-hero h1{font-size:42px}.fn-program-hero__content>p{font-size:15px}.fn-program-hero__actions{width:100%;flex-direction:column}.fn-program-hero__actions button{width:100%}.fn-program-hero__status{grid-template-columns:auto 1fr}.fn-program-hero__status em{grid-column:2;justify-self:start}.fn-program-section{padding:32px 18px}.fn-program-section h2{font-size:27px}.fn-program-principles{grid-template-columns:1fr}.fn-program-principles article{min-height:auto;padding:20px}.fn-program-section--journey{gap:20px}}
+.fn-membership-page,.fn-rewards-page{border-top:3px solid var(--ffn-primary)}
+.fn-membership-page .fp-membership-status{padding:4px 0 24px}
+.fn-membership-page .fp-tier-grid{gap:14px;margin:24px 0}
+.fn-membership-page .fp-tier-grid button{min-height:128px;padding:20px;border-radius:6px;background:var(--ffn-surface-muted)}
+.fn-membership-page .fp-token-form{padding:20px;border-top:1px solid var(--ffn-border);border-bottom:1px solid var(--ffn-border);background:var(--ffn-surface-muted)}
+.fn-rewards-intro{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:24px}
+.fn-rewards-intro h2{margin:5px 0 8px;font-size:30px}
+.fn-rewards-intro p{max-width:700px;margin:0;color:var(--ffn-text-muted);line-height:1.6}
+.fn-rewards-intro>svg{width:38px;height:38px;color:var(--ffn-primary)}
+.fn-reward-allocation{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-bottom:22px;border-top:1px solid var(--ffn-border);border-bottom:1px solid var(--ffn-border)}
+.fn-reward-allocation article{padding:18px 20px;border-right:1px solid var(--ffn-border)}
+.fn-reward-allocation article:last-child{border-right:0}
+.fn-reward-allocation span,.fn-reward-allocation strong,.fn-reward-allocation small{display:block}
+.fn-reward-allocation span{color:var(--ffn-text-muted);font-size:12px}
+.fn-reward-allocation strong{margin:4px 0;color:var(--ffn-primary);font-size:28px}
+.fn-reward-allocation small{color:var(--ffn-text-soft)}
+@media(max-width:620px){.fn-membership-page .fp-token-form{padding:14px}.fn-rewards-intro h2{font-size:26px}.fn-reward-allocation{grid-template-columns:1fr}.fn-reward-allocation article{border-right:0;border-bottom:1px solid var(--ffn-border)}.fn-reward-allocation article:last-child{border-bottom:0}}

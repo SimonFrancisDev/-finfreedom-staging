@@ -58,7 +58,10 @@ import { DollarSign, TrendingUp, Wrench, Bell, Calendar, Megaphone } from 'lucid
 const navItems = [
   { label: 'Home', href: 'home', active: false },
   ...(String(import.meta.env.VITE_FREEDOM_PLUS_ENABLED || 'false').toLowerCase() === 'true'
-    ? [{ label: 'Freedom-Plus', href: 'freedomPlus', active: false }]
+    ? [
+        { label: 'Freedom-Plus', href: 'freedomPlus', active: false },
+        { label: 'Freedom NFT', href: 'freedomNft', active: false },
+      ]
     : []),
   { label: 'About Us', href: 'about', active: false },
   { label: 'Community', href: 'community', active: false },
