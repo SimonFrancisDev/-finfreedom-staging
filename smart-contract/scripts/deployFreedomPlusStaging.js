@@ -116,6 +116,13 @@ async function main() {
     [await manager.getAddress(), id1, deployer.address, guardian],
     manifest
   );
+  const fFreedomRegistration = requiredAddress("REGISTRATION_ADDRESS");
+  await send(
+    "registration.setFFreedomRegistration",
+    registration.setFFreedomRegistration(fFreedomRegistration),
+    manifest
+  );
+  manifest.fFreedomRegistration = fFreedomRegistration;
   const nftVault = await deployProxy("FreedomNFTPoolVault", [deployer.address, guardian], manifest);
   const operationsVault = await deployProxy("FreedomPlusOperationsVault", [deployer.address, guardian], manifest);
 

@@ -12,6 +12,12 @@ interface IFreedomPlusRegistrationGuardian {
     function validateUpgrade(address proxy, address implementation) external view returns (bool);
 }
 
+interface IFFreedomGatewayRegistration {
+    function isRegistered(address participant) external view returns (bool);
+    function isLevelActivated(address participant, uint8 level) external view returns (bool);
+    function getReferrer(address participant) external view returns (address);
+}
+
 contract FreedomPlusRegistration is
     Initializable,
     OwnableUpgradeable,
@@ -32,6 +38,7 @@ contract FreedomPlusRegistration is
     mapping(address => address) public sponsorOf;
     mapping(address => uint256) public participantNumber;
     mapping(address => mapping(uint8 => bool)) private _levelActive;
+    address public fFreedomRegistration;
 
     event ParticipantRegistered(
         address indexed participant,
@@ -47,6 +54,7 @@ contract FreedomPlusRegistration is
     event LevelManagerUpdated(address indexed previousManager, address indexed newManager);
     event GuardianUpdated(address indexed previousGuardian, address indexed newGuardian);
     event GenesisInitialized(address indexed id1Wallet, address[4] representatives);
+    event FFreedomRegistrationUpdated(address indexed previousRegistration, address indexed newRegistration);
 
     error InvalidAddress();
     error InvalidContract(address target);
@@ -60,6 +68,9 @@ contract FreedomPlusRegistration is
     error LevelOneRequiresRegistration();
     error GenesisAlreadyInitialized();
     error InvalidRepresentativeCount();
+    error FFreedomGatewayNotConfigured();
+    error FFreedomLevelOneInactive(address participant);
+    error PermanentSponsorMismatch(address expectedSponsor, address suppliedSponsor);
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -101,6 +112,14 @@ contract FreedomPlusRegistration is
         address participant = msg.sender;
         if (isRegistered[participant]) revert AlreadyRegistered(participant);
         if (sponsor == participant) revert SelfSponsorship();
+        address gateway = fFreedomRegistration;
+        if (gateway == address(0)) revert FFreedomGatewayNotConfigured();
+        IFFreedomGatewayRegistration fFreedom = IFFreedomGatewayRegistration(gateway);
+        if (!fFreedom.isRegistered(participant) || !fFreedom.isLevelActivated(participant, MIN_LEVEL)) {
+            revert FFreedomLevelOneInactive(participant);
+        }
+        address permanentSponsor = fFreedom.getReferrer(participant);
+        if (sponsor != permanentSponsor) revert PermanentSponsorMismatch(permanentSponsor, sponsor);
         if (sponsor == address(0) || !isRegistered[sponsor]) revert SponsorNotRegistered(sponsor);
 
         uint256 number = registeredCount + 1;
@@ -205,6 +224,13 @@ contract FreedomPlusRegistration is
         emit GuardianUpdated(previous, guardian_);
     }
 
+    function setFFreedomRegistration(address registration_) external onlyOwner {
+        _requireContract(registration_);
+        address previous = fFreedomRegistration;
+        fFreedomRegistration = registration_;
+        emit FFreedomRegistrationUpdated(previous, registration_);
+    }
+
     function pause() external onlyOwner { _pause(); }
     function unpause() external onlyOwner { _unpause(); }
 
@@ -212,5 +238,5 @@ contract FreedomPlusRegistration is
         if (target == address(0) || target.code.length == 0) revert InvalidContract(target);
     }
 
-    uint256[43] private __gap;
+    uint256[42] private __gap;
 }

@@ -13,6 +13,7 @@ describe("Freedom-Plus registration and token controller", function () {
   let outsider;
   let guardian;
   let manager;
+  let gateway;
 
   beforeEach(async function () {
     [owner, id1, participant, participantTwo, outsider] = await ethers.getSigners();
@@ -22,17 +23,42 @@ describe("Freedom-Plus registration and token controller", function () {
 
     const Manager = await ethers.getContractFactory("MockFreedomPlusLevelManager");
     manager = await Manager.deploy();
+
+    const Gateway = await ethers.getContractFactory("MockFFreedomGatewayRegistration");
+    gateway = await Gateway.deploy();
+    await gateway.setParticipant(participant.address, id1.address, true, true);
+    await gateway.setParticipant(participantTwo.address, id1.address, true, true);
   });
 
   async function deployRegistration() {
     const Registration = await ethers.getContractFactory("FreedomPlusRegistration");
-    return upgrades.deployProxy(
+    const registration = await upgrades.deployProxy(
       Registration,
       [await manager.getAddress(), id1.address, owner.address, await guardian.getAddress()],
       { kind: "uups" }
     );
+    await registration.setFFreedomRegistration(await gateway.getAddress());
+    return registration;
   }
 
+  it("requires F-Freedom registration, active Level 1, and the exact permanent sponsor", async function () {
+    const registration = await deployRegistration();
+
+    await gateway.setParticipant(outsider.address, id1.address, false, false);
+    await expect(registration.connect(outsider).register(id1.address))
+      .to.be.revertedWithCustomError(registration, "FFreedomLevelOneInactive")
+      .withArgs(outsider.address);
+
+    await gateway.setParticipant(outsider.address, id1.address, true, false);
+    await expect(registration.connect(outsider).register(id1.address))
+      .to.be.revertedWithCustomError(registration, "FFreedomLevelOneInactive")
+      .withArgs(outsider.address);
+
+    await gateway.setParticipant(outsider.address, participant.address, true, true);
+    await expect(registration.connect(outsider).register(id1.address))
+      .to.be.revertedWithCustomError(registration, "PermanentSponsorMismatch")
+      .withArgs(participant.address, id1.address);
+  });
   it("makes registration and paid Level 1 activation one atomic state transition", async function () {
     const registration = await deployRegistration();
 
@@ -72,10 +98,12 @@ describe("Freedom-Plus registration and token controller", function () {
     await expect(
       registration.connect(participant).register(participant.address)
     ).to.be.revertedWithCustomError(registration, "SelfSponsorship");
+    await gateway.setParticipant(participant.address, outsider.address, true, true);
     await expect(
       registration.connect(participant).register(outsider.address)
     ).to.be.revertedWithCustomError(registration, "SponsorNotRegistered");
 
+    await gateway.setParticipant(participant.address, id1.address, true, true);
     await registration.connect(participant).register(id1.address);
     await expect(
       registration.connect(participant).register(id1.address)

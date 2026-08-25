@@ -55,6 +55,10 @@ describe("Freedom-Plus LevelManager custody boundary", function () {
       [await manager.getAddress(), id1.address, owner.address, await guardian.getAddress()],
       { kind: "uups" }
     );
+    const Gateway = await ethers.getContractFactory("MockFFreedomGatewayRegistration");
+    const gateway = await Gateway.deploy();
+    await gateway.setParticipant(participant.address, id1.address, true, true);
+    await registration.setFFreedomRegistration(await gateway.getAddress());
 
     const Router = await ethers.getContractFactory("MockFreedomPlusSettlementRouter");
     const router = await Router.deploy();

@@ -49,6 +49,9 @@ describe("Freedom-Plus ordinary settlement router", function () {
       [await manager.getAddress(), id1.address, owner.address, await guardian.getAddress()],
       { kind: "uups" }
     );
+    const Gateway = await ethers.getContractFactory("MockFFreedomGatewayRegistration");
+    const gateway = await Gateway.deploy();
+    await registration.setFFreedomRegistration(await gateway.getAddress());
 
     const orbitSpecs = [
       ["P39PlusOrbit", 0],
@@ -99,9 +102,13 @@ describe("Freedom-Plus ordinary settlement router", function () {
     await fpt.setAuthorizedOperator(await controller.getAddress(), true);
     await fptr.setAuthorizedOperator(await controller.getAddress(), true);
 
-    return { usdt, fpt, fptr, controller, manager, registration, router, orbits, nftVault, operationsVault };
+    return { usdt, fpt, fptr, controller, manager, registration, router, orbits, nftVault, operationsVault, gateway };
   }
 
+  async function register(system, signer, sponsor) {
+    await system.gateway.setParticipant(signer.address, sponsor, true, true);
+    return system.registration.connect(signer).register(sponsor);
+  }
   async function fundAndApprove(system, signer, amount) {
     await system.usdt.mint(signer.address, amount);
     await system.usdt.connect(signer).approve(await system.manager.getAddress(), amount);
@@ -117,8 +124,8 @@ describe("Freedom-Plus ordinary settlement router", function () {
     const system = await deployGraph();
     for (const signer of [a, b, c]) await fundAndApprove(system, signer, 50n * UNIT);
 
-    await system.registration.connect(a).register(id1.address);
-    await system.registration.connect(b).register(a.address);
+    await register(system, a, id1.address);
+    await register(system, b, a.address);
 
     const bBefore = await system.usdt.balanceOf(b.address);
     const aBefore = await system.usdt.balanceOf(a.address);
@@ -126,7 +133,7 @@ describe("Freedom-Plus ordinary settlement router", function () {
     const nftBefore = await system.usdt.balanceOf(await system.nftVault.getAddress());
     const operationsBefore = await system.usdt.balanceOf(await system.operationsVault.getAddress());
 
-    const tx = await system.registration.connect(c).register(b.address);
+    const tx = await register(system, c, b.address);
     const receipt = await tx.wait();
 
     expect((await system.usdt.balanceOf(b.address)) - bBefore).to.equal(10n * UNIT);
@@ -164,7 +171,7 @@ describe("Freedom-Plus ordinary settlement router", function () {
     const system = await deployGraph();
     await fundAndApprove(system, a, 50n * UNIT);
 
-    await system.registration.connect(a).register(id1.address);
+    await register(system, a, id1.address);
 
     expect(await system.usdt.balanceOf(id1.address)).to.equal(45n * UNIT);
     expect(await system.usdt.balanceOf(await system.nftVault.getAddress())).to.equal(4n * UNIT);
@@ -177,17 +184,17 @@ describe("Freedom-Plus ordinary settlement router", function () {
     const system = await deployGraph();
     for (const signer of [a, b, c, d]) await fundAndApprove(system, signer, 50n * UNIT);
 
-    await system.registration.connect(a).register(id1.address);
-    await system.registration.connect(b).register(a.address);
-    await system.registration.connect(c).register(a.address);
-    await system.registration.connect(d).register(a.address);
+    await register(system, a, id1.address);
+    await register(system, b, a.address);
+    await register(system, c, a.address);
+    await register(system, d, a.address);
 
     const extra = (await ethers.getSigners())[6];
     await fundAndApprove(system, extra, 50n * UNIT);
     const bBefore = await system.usdt.balanceOf(b.address);
     const aBefore = await system.usdt.balanceOf(a.address);
     const id1Before = await system.usdt.balanceOf(id1.address);
-    await system.registration.connect(extra).register(a.address);
+    await register(system, extra, a.address);
 
     expect((await system.usdt.balanceOf(b.address)) - bBefore).to.equal(10n * UNIT);
     expect((await system.usdt.balanceOf(a.address)) - aBefore).to.equal(10n * UNIT);
@@ -201,10 +208,10 @@ describe("Freedom-Plus ordinary settlement router", function () {
     const system = await deployGraph();
     for (const signer of [a, b]) await fundAndApprove(system, signer, 650n * UNIT);
 
-    await system.registration.connect(a).register(id1.address);
+    await register(system, a, id1.address);
     await system.registration.connect(a).activateLevel(2);
     await system.registration.connect(a).activateLevel(3);
-    await system.registration.connect(b).register(a.address);
+    await register(system, b, a.address);
     await system.registration.connect(b).activateLevel(2);
 
     const aBefore = await system.usdt.balanceOf(a.address);
@@ -222,9 +229,9 @@ describe("Freedom-Plus ordinary settlement router", function () {
     await fundAndApprove(system, a, fullCost);
     await fundAndApprove(system, b, fullCost);
 
-    await system.registration.connect(a).register(id1.address);
+    await register(system, a, id1.address);
     await activateThrough(system, a, 7);
-    await system.registration.connect(b).register(a.address);
+    await register(system, b, a.address);
 
     const cases = [
       [2, 22_500_000n, 112_500_000n, 12_000_000n, 3_000_000n],
@@ -257,10 +264,10 @@ describe("Freedom-Plus ordinary settlement router", function () {
     const system = await deployGraph();
     for (const signer of [a, b, c, d]) await fundAndApprove(system, signer, 1_300n * UNIT);
 
-    await system.registration.connect(a).register(id1.address);
+    await register(system, a, id1.address);
     await activateThrough(system, a, 3);
-    await system.registration.connect(b).register(a.address);
-    await system.registration.connect(c).register(b.address);
+    await register(system, b, a.address);
+    await register(system, c, b.address);
     await system.registration.connect(c).activateLevel(2);
 
     const aBeforeSkipped = await system.usdt.balanceOf(a.address);
@@ -271,7 +278,7 @@ describe("Freedom-Plus ordinary settlement router", function () {
 
     await system.registration.connect(b).activateLevel(2);
     await system.registration.connect(b).activateLevel(3);
-    await system.registration.connect(d).register(b.address);
+    await register(system, d, b.address);
     await system.registration.connect(d).activateLevel(2);
 
     const bBeforeRecovery = await system.usdt.balanceOf(b.address);
@@ -366,7 +373,7 @@ describe("Freedom-Plus ordinary settlement router", function () {
       await fundAndApprove(system, descendant, 50n * UNIT);
     }
 
-    await system.registration.connect(participant).register(id1.address);
+    await register(system, participant, id1.address);
 
     const participantInId1 = await system.orbits[0].positionAt(id1.address, 1, 0, 5);
     expect(participantInId1.participant).to.equal(participant.address);
@@ -380,11 +387,11 @@ describe("Freedom-Plus ordinary settlement router", function () {
     expect(await system.orbits[0].currentStructuralParentOf(participant.address, 1))
       .to.equal(b.address);
 
-    await expect(system.registration.connect(child).register(participant.address))
+    await expect(register(system, child, participant.address))
       .to.not.be.reverted;
-    await system.registration.connect(child2).register(participant.address);
-    await system.registration.connect(child3).register(participant.address);
-    await expect(system.registration.connect(child4).register(participant.address))
+    await register(system, child2, participant.address);
+    await register(system, child3, participant.address);
+    await expect(register(system, child4, participant.address))
       .to.not.be.reverted;
 
     const childSource = await system.orbits[0].positionAt(participant.address, 1, 0, 1);
@@ -424,7 +431,7 @@ describe("Freedom-Plus ordinary settlement router", function () {
     const system = await deployGraph("MockFeeOnTransferUSDT");
     await fundAndApprove(system, a, 50n * UNIT);
     await expect(
-      system.registration.connect(a).register(id1.address)
+      register(system, a, id1.address)
     ).to.be.revertedWithCustomError(system.manager, "IncorrectTransferredAmount");
     expect(await system.registration.isRegistered(a.address)).to.equal(false);
     expect(await system.registration.registeredCount()).to.equal(1);
@@ -437,17 +444,17 @@ describe("Freedom-Plus ordinary settlement router", function () {
     const signers = (await ethers.getSigners()).slice(2, 10);
     for (const signer of signers) await fundAndApprove(system, signer, 650n * UNIT);
     const [top, ...chain] = signers;
-    await system.registration.connect(top).register(id1.address);
+    await register(system, top, id1.address);
     await activateThrough(system, top, 3);
     let sponsor = top;
     for (const signer of chain) {
-      await system.registration.connect(signer).register(sponsor.address);
+      await register(system, signer, sponsor.address);
       sponsor = signer;
     }
     const payer = ethers.Wallet.createRandom().connect(ethers.provider);
     await owner.sendTransaction({ to: payer.address, value: ethers.parseEther("0.2") });
     await fundAndApprove(system, payer, 650n * UNIT);
-    await system.registration.connect(payer).register(sponsor.address);
+    await register(system, payer, sponsor.address);
     await system.registration.connect(payer).activateLevel(2);
     const topBefore = await system.usdt.balanceOf(top.address);
     await system.registration.connect(payer).activateLevel(3);
@@ -472,7 +479,7 @@ describe("Freedom-Plus ordinary settlement router", function () {
     it(`completes ${label} reserve, recycle re-entry, and FPTr exactly once`, async function () {
       const system = await deployGraph();
       await fundAndApprove(system, a, cumulativeCosts[level] * UNIT);
-      await system.registration.connect(a).register(id1.address);
+      await register(system, a, id1.address);
       await activateThrough(system, a, level);
 
       const participants = [];
@@ -485,7 +492,7 @@ describe("Freedom-Plus ordinary settlement router", function () {
 
       if (level > 1) {
         for (const wallet of participants) {
-          await system.registration.connect(wallet).register(a.address);
+          await register(system, wallet, a.address);
           await activateThrough(system, wallet, level - 1);
         }
       }
@@ -495,7 +502,7 @@ describe("Freedom-Plus ordinary settlement router", function () {
       for (let index = 0; index < participants.length; index++) {
         const wallet = participants[index];
         const tx = level === 1
-          ? await system.registration.connect(wallet).register(a.address)
+          ? await register(system, wallet, a.address)
           : await system.registration.connect(wallet).activateLevel(level);
         if (index === participants.length - 1) finalReceipt = await tx.wait();
 
