@@ -142,3 +142,36 @@
 @media(max-width:760px){.fp-registration{grid-template-columns:1fr}.fp-action-summary{grid-template-columns:1fr 1fr}.fp-action-checks{grid-template-columns:1fr}}
 @media(max-width:620px){.fp-activation-center{gap:14px}.fp-activation-hero{padding:16px}.fp-activation-hero__copy h2{font-size:2rem}.fp-level-grid--managed{grid-template-columns:1fr}.fp-managed-level{min-height:0}.fp-action-overlay{padding:0;align-items:end}.fp-action-modal{width:100%;max-height:94svh;border-radius:8px 8px 0 0}.fp-action-modal>header,.fp-action-summary,.fp-action-checks,.fp-action-modal>footer{padding-left:14px;padding-right:14px}.fp-action-sponsor,.fp-action-modal>.ffn-inline-alert,.fp-security-acknowledgment{margin-left:14px;margin-right:14px}.fp-action-summary{grid-template-columns:1fr 1fr}.fp-action-modal>footer button{flex:1}}
 @media(prefers-reduced-motion:reduce){.fp-managed-level{transition:none}.fp-level-view{scroll-behavior:auto}}
+
+/* Freedom-Plus activation content inside the established Activation Center shell. */
+.freedom-plus-activation-shell { width: 100%; }
+.freedom-plus-activation-page .activation-referral-card { display: grid; gap: 0.35rem; }
+.freedom-plus-activation-page .activation-referral-card > span,
+.freedom-plus-activation-page .registration-referrer-card span { color: var(--text-muted, #9aa7bd); font-size: 0.78rem; text-transform: uppercase; }
+.freedom-plus-activation-page .activation-referral-card > strong,
+.freedom-plus-activation-page .registration-referrer-card strong { color: var(--text-primary, #fff); overflow-wrap: anywhere; }
+.freedom-plus-activation-page .activation-referral-card > small,
+.freedom-plus-activation-page .registration-referrer-card small { color: var(--text-muted, #9aa7bd); }
+.freedom-plus-activation-page .activation-inline-notice { align-items: center; display: flex; gap: 0.8rem; margin-bottom: 1rem; padding: 0.9rem 1rem; border: 1px solid rgba(245, 158, 11, 0.35); background: rgba(245, 158, 11, 0.08); }
+.freedom-plus-activation-page .activation-inline-notice div { display: grid; gap: 0.2rem; }
+.freedom-plus-activation-page .registration-card,
+.freedom-plus-activation-page .activation-help-card { padding: 1.35rem; }
+.freedom-plus-activation-page .registration-referrer-card { align-items: center; display: flex; gap: 0.9rem; margin: 1rem 0; padding: 1rem; border: 1px solid rgba(148, 163, 184, 0.2); }
+.freedom-plus-activation-page .registration-referrer-card div { display: grid; gap: 0.2rem; min-width: 0; }
+.freedom-plus-activation-page .activation-help-card dl { display: grid; gap: 0.7rem; margin-top: 1rem; }
+.freedom-plus-activation-page .activation-help-card dl div { display: flex; justify-content: space-between; gap: 1rem; }
+.freedom-plus-activation-page .activation-help-card dd { margin: 0; text-align: right; overflow-wrap: anywhere; }
+.freedom-plus-activation-page .level-orbit-preview__core { fill: #102d68; stroke: rgba(104, 187, 255, 0.9); stroke-width: 2; }
+.freedom-plus-activation-page .level-orbit-preview__core-label { fill: #fff; font-size: 10px; font-weight: 800; }
+.freedom-plus-activation-page .level-orbit-preview__meta { display: flex; justify-content: space-between; padding: 0 0.8rem 0.7rem; color: var(--text-muted, #9aa7bd); font-size: 0.75rem; }
+.freedom-plus-activation-page .level-orbit-preview__meta strong { color: var(--text-primary, #fff); }
+.freedom-plus-activation-page .compact-action-btn svg { width: 1rem; height: 1rem; }
+[data-theme='light'] .freedom-plus-activation-page .activation-referral-card > strong,
+[data-theme='light'] .freedom-plus-activation-page .registration-referrer-card strong,
+[data-theme='light'] .freedom-plus-activation-page .level-orbit-preview__meta strong { color: #13213b; }
+[data-theme='light'] .freedom-plus-activation-page .registration-referrer-card { border-color: rgba(30, 64, 175, 0.16); background: rgba(255, 255, 255, 0.72); }
+@media (max-width: 720px) {
+  .freedom-plus-activation-page .activation-main-grid { grid-template-columns: 1fr; }
+  .freedom-plus-activation-page .activation-help-card dl div { align-items: flex-start; flex-direction: column; gap: 0.2rem; }
+  .freedom-plus-activation-page .activation-help-card dd { text-align: left; }
+}

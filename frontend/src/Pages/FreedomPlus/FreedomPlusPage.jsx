@@ -1,4 +1,4 @@
-﻿import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ethers } from 'ethers'
 import { Activity, AlertTriangle, ArrowRight, ArrowUpRight, Check, CheckCircle2, Coins, History, Info, LayoutDashboard, Lock, LockKeyhole, Network, RefreshCw, ShieldCheck, Trophy, User, UserPlus, Wallet, X } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
@@ -11,6 +11,7 @@ import { InlineAlert } from '../../components/ui'
 import { ProgressionLineChart } from '../../components/charts/InstitutionalCharts'
 import { lockBodyScroll } from '../../utils/bodyScrollLock'
 import FreedomPlusOrbit from './FreedomPlusOrbit'
+import FreedomPlusActivationCenter from './FreedomPlusActivationCenter'
 import FreedomPlusOverview from './FreedomPlusOverview'
 import {
   FREEDOM_PLUS_ADDRESSES,
@@ -428,21 +429,21 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
   }
 
   if (!FREEDOM_PLUS_ENABLED) {
-    return <main className="freedom-plus-page"><section className="fp-empty"><ShieldCheck /><h1>Freedom-Plus is not enabled</h1><p>This environment has not been connected to a verified Freedom-Plus deployment.</p></section></main>
+    return <main className={tab === 'levels' ? 'freedom-plus-activation-shell' : 'freedom-plus-page'}><section className="fp-empty"><ShieldCheck /><h1>Freedom-Plus is not enabled</h1><p>This environment has not been connected to a verified Freedom-Plus deployment.</p></section></main>
   }
 
   return (
-    <main className="freedom-plus-page">
-      {!isProgramOverview && <header className="fp-header">
+    <main className={tab === 'levels' ? 'freedom-plus-activation-shell' : 'freedom-plus-page'}>
+      {!isProgramOverview && tab !== 'levels' && <header className="fp-header">
         <div><span className="fp-kicker">Advanced participation</span><h1>Freedom-Plus</h1><p>Seven manually activated levels, deterministic orbit placement and long-term Freedom NFT progression.</p></div>
         <button className="fp-icon-button" type="button" onClick={load} disabled={loading} title="Refresh chain and indexed data"><RefreshCw className={loading ? 'spin' : ''} /></button>
       </header>}
 
-      {!isProgramOverview && !isConnected && (
+      {!isProgramOverview && tab !== 'levels' && !isConnected && (
         <section className="fp-connect"><Wallet /><div><h2>Connect your wallet</h2><p>Connect on the configured Polygon network to view or manage Freedom-Plus.</p></div><button type="button" onClick={connect}>Connect</button></section>
       )}
 
-      {!isProgramOverview && isConnected && (
+      {!isProgramOverview && tab !== 'levels' && isConnected && (
         <section className="fp-metrics">
             <article><span>FFN ID</span><strong>{data?.chain?.registered ? (referralId || 'Resolving...') : 'Not registered'}</strong><small>{short(account)}</small></article>
             <article><span>Active levels</span><strong>{activeLevels.size} / 7</strong><small>Manual progression</small></article>
@@ -463,13 +464,13 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
         </section>
       )}
 
-      {!isProgramOverview && <nav className="fp-tabs" aria-label={isNftView ? 'Freedom NFT views' : 'Freedom-Plus views'}>
+      {!isProgramOverview && tab !== 'levels' && <nav className="fp-tabs" aria-label={isNftView ? 'Freedom NFT views' : 'Freedom-Plus views'}>
             {visibleTabs.map(([value, icon, label]) => (
               <button type="button" className={tab === value ? 'active' : ''} onClick={() => openView(value)} key={value}>{icon}{label}</button>
             ))}
       </nav>}
 
-      {isConnected && data?.chain?.registered && <TransactionStatus txState={txState} onReset={() => setTxState({ status: 'idle', stage: 'idle', hash: '', note: '', error: null })} explorerBaseUrl={`${NETWORK_CONFIG.blockExplorerUrls[0]}/tx`} />}
+      {isConnected && (data?.chain?.registered || tab === 'levels') && <TransactionStatus txState={txState} onReset={() => setTxState({ status: 'idle', stage: 'idle', hash: '', note: '', error: null })} explorerBaseUrl={`${NETWORK_CONFIG.blockExplorerUrls[0]}/tx`} />}
 
           {tab === 'overview' && <FreedomPlusOverview registered={Boolean(data?.chain?.registered)} activeLevelCount={activeLevels.size} membershipTier={membership.tier} openView={openView} />}
 
@@ -525,48 +526,20 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
             </section>
           )}
 
-          {tab === 'levels' && isConnected && data && (
-            <section className="fp-panel fp-activation-center">
-              <div className="fp-activation-hero">
-                <div className="fp-activation-hero__copy">
-                  <span className="fp-kicker">Manual progression center</span>
-                  <h2>{data?.chain?.registered ? 'Manage your Freedom-Plus levels' : 'Begin Freedom-Plus'}</h2>
-                  <p>{data?.chain?.registered ? 'Activate each level in order, review its orbit rules before signing, and inspect the live cycle after confirmation.' : 'Your existing FFN identity and permanent sponsor are preserved. Registration and the Level 1 P39 activation complete together.'}</p>
-                  <div className="fp-activation-chips">
-                    <span className={networkReady ? 'is-ready' : 'is-warning'}>{networkReady ? <CheckCircle2 /> : <AlertTriangle />}{networkReady ? NETWORK_CONFIG.chainName : 'Wrong network'}</span>
-                    <span className={data?.chain?.registered ? 'is-ready' : ''}>{data?.chain?.registered ? <CheckCircle2 /> : <UserPlus />}{data?.chain?.registered ? 'Registered' : 'Registration required'}</span>
-                    <span><Coins />{activeLevels.size} of 7 active</span>
-                  </div>
-                </div>
-                <div className="fp-activation-progress">
-                  <div><span>Level progression</span><strong>{activeLevels.size}/7</strong></div>
-                  <ProgressionLineChart data={progressionData} maxValue={7} ariaLabel="Freedom-Plus level progression" />
-                  <small>{nextLevel ? `Level ${nextLevel} is the next available activation.` : 'All seven Freedom-Plus levels are active.'}</small>
-                </div>
-              </div>
-
-              {!data?.chain?.registered && <><div className="fp-registration"><div><UserPlus /><h2>Register and activate Level 1</h2><p>One confirmed transaction registers this wallet and activates the 50 USDT P39 level.</p></div><div className="fp-sponsor-lock"><span>Permanent sponsor</span><strong>{sponsorCode || short(sponsor)}</strong><small title={sponsor}>{ethers.isAddress(sponsor) ? short(sponsor) : 'Awaiting chain verification'}</small></div><button type="button" disabled={busy === 'register' || !ethers.isAddress(sponsor) || !networkReady} onClick={openRegistrationReview}>{busy === 'register' ? 'Processing...' : 'Review registration'}<ArrowRight /></button></div><InlineAlert tone="info" title="Sponsor relationship is locked"><p>Freedom-Plus uses the sponsor already recorded for this wallet in F-Freedom. It cannot be edited or replaced during registration.</p></InlineAlert><TransactionStatus txState={txState} onReset={() => setTxState({ status: 'idle', stage: 'idle', hash: '', note: '', error: null })} explorerBaseUrl={`${NETWORK_CONFIG.blockExplorerUrls[0]}/tx`} /></>}
-
-              <div className="fp-level-grid fp-level-grid--managed">
-                {FREEDOM_PLUS_LEVELS.map((item) => {
-                  const active = activeLevels.has(item.level)
-                  const previousActive = item.level === 1 || activeLevels.has(item.level - 1)
-                  const locked = !active && (!data?.chain?.registered || !previousActive)
-                  const orbitSummary = activationSummary?.orbitSummaries?.find((entry) => Number(entry.level) === item.level)
-                  return <article className={`fp-level fp-managed-level ${active ? 'active' : ''} ${locked ? 'locked' : ''} ${item.level === nextLevel ? 'next' : ''}`} key={item.level}>
-                    <div className="fp-level-title"><span>Level {item.level}</span><strong>{item.orbit}</strong></div>
-                    <div className="fp-managed-level__price"><h3>{item.price.toLocaleString()} USDT</h3><small>{item.price.toLocaleString()} FPT on first activation</small></div>
-                    <dl><div><dt>Positions</dt><dd>{item.positions}</dd></div><div><dt>Rings</dt><dd>{item.rings}</dd></div><div><dt>Payout roles</dt><dd>{item.payouts}</dd></div><div><dt>Current cycle</dt><dd>{active ? (orbitSummary?.currentCycle || 1) : '-'}</dd></div></dl>
-                    {active && <div className="fp-managed-level__occupancy"><span><i style={{ width: `${Math.min(100, ((orbitSummary?.filledPositions || 0) / item.positions) * 100)}%` }} /></span><small>{orbitSummary?.filledPositions || 0} of {item.positions} current-cycle positions recorded</small></div>}
-                    {active ? <div className="fp-managed-level__actions"><span className="fp-active"><Check />Active</span><button type="button" className="fp-level-view" onClick={() => { setSelectedLevel(item.level); setSelectedPosition(null); document.querySelector('.fp-level-orbits')?.scrollIntoView({ behavior: 'smooth' }) }}>View orbit<ArrowRight /></button></div> : <button type="button" disabled={locked || Boolean(busy) || !networkReady} onClick={() => openActivationReview(item)}>{busy === `level-${item.level}` ? 'Processing...' : locked ? <><Lock />{data?.chain?.registered ? `Activate Level ${item.level - 1} first` : 'Registration required'}</> : `Review Level ${item.level}`}</button>}
-                  </article>
-                })}
-              </div>
-            </section>
+          {tab === 'levels' && (
+            <FreedomPlusActivationCenter
+              account={account} isConnected={isConnected} connect={connect} data={data} loading={loading}
+              networkReady={networkReady} networkName={NETWORK_CONFIG.chainName} levels={FREEDOM_PLUS_LEVELS}
+              activeLevels={activeLevels} progressionData={progressionData} activationSummary={activationSummary}
+              nextLevel={nextLevel} sponsor={sponsor} sponsorCode={sponsorCode} referralId={referralId} busy={busy}
+              onRegister={openRegistrationReview} onActivate={openActivationReview}
+              onViewOrbit={(level) => { setSelectedLevel(level); setSelectedPosition(null) }}
+              selectedLevel={selectedLevel} setSelectedLevel={setSelectedLevel} cycle={cycle} setCycle={setCycle}
+              loadOrbit={loadOrbit} visualOrbit={visualOrbit} selectedConfig={selectedLevelConfig}
+              selectedPosition={selectedPosition} setSelectedPosition={setSelectedPosition}
+              formatToken={formatToken} short={short}
+            />
           )}
-
-          {tab === 'levels' && data?.chain?.registered && <section className="fp-panel fp-level-orbits"><div className="fp-section-heading"><div><span className="fp-kicker">Live level structure</span><h2>Orbit position and cycle</h2><p>Select an active level to inspect its current indexed orbit.</p></div></div><div className="fp-toolbar"><label>Level<select value={selectedLevel} onChange={(event) => { setSelectedLevel(Number(event.target.value)); setSelectedPosition(null) }}>{FREEDOM_PLUS_LEVELS.map((item) => <option key={item.level} value={item.level} disabled={!activeLevels.has(item.level)}>Level {item.level} / {item.orbit}{activeLevels.has(item.level) ? '' : ' (inactive)'}</option>)}</select></label><label>Cycle<input type="number" min="1" value={cycle} placeholder="Current" onChange={(event) => { setCycle(event.target.value); setSelectedPosition(null) }} /></label><button type="button" onClick={loadOrbit}><RefreshCw />Refresh orbit</button></div><div className="fp-orbit-summary"><article><span>Orbit engine</span><strong>{selectedLevelConfig?.orbit}</strong><small>Level {selectedLevel}</small></article><article><span>Recorded positions</span><strong>{visualOrbit.length} / {selectedLevelConfig?.positions}</strong><small>{cycle ? `Cycle ${cycle}` : orbitCycles.length ? `Current cycle ${orbitCycles[0]}` : 'Current cycle'}</small></article><article><span>Ring structure</span><strong>{selectedLevelConfig?.rings}</strong><small>Deterministic topology</small></article><article><span>Payout roles</span><strong>{selectedLevelConfig?.payouts}</strong><small>Independently recorded</small></article></div><div className="fp-orbit-layout"><FreedomPlusOrbit orbitType={selectedLevelConfig?.orbit} positions={visualOrbit} owner={account} onSelect={setSelectedPosition} /><aside className="fp-position-inspector">{selectedPosition ? <><span>Position {selectedPosition.position}</span><h3>{selectedPosition.financial ? 'Payment-linked placement' : 'Structural placement'}</h3><dl><div><dt>Participant</dt><dd title={selectedPosition.participant}>{short(selectedPosition.participant)}</dd></div><div><dt>Matrix parent</dt><dd title={selectedPosition.structuralParent}>{short(selectedPosition.structuralParent)}</dd></div><div><dt>Ring</dt><dd>{selectedPosition.ring || selectedPosition.line}</dd></div><div><dt>Cycle</dt><dd>{selectedPosition.cycle}</dd></div><div><dt>Amount</dt><dd>{formatToken(selectedPosition.amount)} USDT</dd></div></dl></> : <><Network /><h3>Select a filled position</h3><p>Inspect its participant, structural parent, ring, cycle and recorded amount.</p></>}</aside></div></section>}
-
           {tab === 'orbits' && <section className="fp-panel"><div className="fp-toolbar"><label>Level<select value={selectedLevel} onChange={(event) => { setSelectedLevel(Number(event.target.value)); setSelectedPosition(null) }}>{FREEDOM_PLUS_LEVELS.map((item) => <option key={item.level} value={item.level}>Level {item.level} / {item.orbit}</option>)}</select></label><label>Cycle<input type="number" min="1" value={cycle} placeholder="Current" onChange={(event) => { setCycle(event.target.value); setSelectedPosition(null) }} /></label><button type="button" onClick={loadOrbit}><RefreshCw />Refresh</button></div><div className="fp-orbit-summary"><article><span>Orbit engine</span><strong>{selectedLevelConfig?.orbit}</strong><small>Level {selectedLevel}</small></article><article><span>Recorded positions</span><strong>{visualOrbit.length} / {selectedLevelConfig?.positions}</strong><small>{cycle ? `Cycle ${cycle}` : orbitCycles.length ? `Current cycle ${orbitCycles[0]}` : 'Current cycle'}</small></article><article><span>Ring structure</span><strong>{selectedLevelConfig?.rings}</strong><small>Deterministic parent topology</small></article><article><span>Payout roles</span><strong>{selectedLevelConfig?.payouts}</strong><small>Roles remain independently recorded</small></article></div><div className="fp-orbit-layout"><FreedomPlusOrbit orbitType={selectedLevelConfig?.orbit} positions={visualOrbit} owner={account} onSelect={setSelectedPosition} /><aside className="fp-position-inspector">{selectedPosition ? <><span>Position {selectedPosition.position}</span><h3>{selectedPosition.financial ? 'Payment-linked placement' : 'Structural placement'}</h3><dl><div><dt>Participant</dt><dd title={selectedPosition.participant}>{short(selectedPosition.participant)}</dd></div><div><dt>Matrix parent</dt><dd title={selectedPosition.structuralParent}>{short(selectedPosition.structuralParent)}</dd></div><div><dt>Ring</dt><dd>{selectedPosition.ring || selectedPosition.line}</dd></div><div><dt>Cycle</dt><dd>{selectedPosition.cycle}</dd></div><div><dt>Amount</dt><dd>{formatToken(selectedPosition.amount)} USDT</dd></div></dl></> : <><Network /><h3>Select a filled position</h3><p>Inspect its participant, exact structural parent, ring, cycle and recorded amount.</p></>}</aside></div><div className="fp-section-title"><History /><div><h2>Position ledger</h2><p>The diagram and table show the selected cycle only.</p></div></div><div className="fp-table-wrap"><table><thead><tr><th>Cycle</th><th>Position</th><th>Ring</th><th>Participant</th><th>Matrix parent</th><th>Entry</th><th>Amount</th></tr></thead><tbody>{visualOrbit.length ? visualOrbit.map((item) => <tr key={`${item.cycle}-${item.position}-${item.activationId || item._id}`}><td>{item.cycle}</td><td>{item.position}</td><td>{item.ring || item.line}</td><td title={item.participant}>{short(item.participant)}</td><td title={item.structuralParent}>{short(item.structuralParent)}</td><td>{item.financial ? 'Payment-linked placement' : 'Structural placement'}</td><td>{formatToken(item.amount)} USDT</td></tr>) : <tr><td colSpan="7" className="fp-no-data">No indexed positions for this level and cycle.</td></tr>}</tbody></table></div></section>}
 
           {tab === 'membership' && <section className="fp-panel fp-membership"><div className="fp-membership-status"><ShieldCheck /><div><span>Current membership</span><h2>{NFT_TIERS.find((item) => item.tier === membership.tier)?.name || 'No active NFT'}</h2><p>{membership.tier ? `${formatToken(membership.lockedFGT)} FGT + ${formatToken(membership.lockedFPT)} FPT locked` : 'Choose a tier and commit an exact qualifying token total.'}</p></div><strong className={membership.rewardEligible ? 'eligible' : ''}>{membership.rewardEligible ? 'Reward eligible' : 'Not eligible'}</strong></div><div className="fp-tier-grid">{NFT_TIERS.map((item) => <button type="button" className={Number(nftForm.tier) === item.tier ? 'selected' : ''} key={item.tier} onClick={() => setNftForm({ tier: item.tier, fgt: '0', fpt: String(item.threshold) })}><span>{item.name}</span><strong>{item.threshold.toLocaleString()} tokens</strong><small>{item.poolShare}% tier allocation</small></button>)}</div><div className="fp-token-form"><label>FGT commitment<input type="number" min="0" value={nftForm.fgt} onChange={(event) => setNftForm((current) => ({ ...current, fgt: event.target.value }))} /></label><label>FPT commitment<input type="number" min="0" value={nftForm.fpt} onChange={(event) => setNftForm((current) => ({ ...current, fpt: event.target.value }))} /></label><button type="button" onClick={submitMembership} disabled={Boolean(busy)}>{busy === 'membership' ? 'Processing...' : membership.tier ? 'Update membership' : 'Mint membership'}</button></div><p className="fp-note">FGT and FPT used for membership are locked, not burned. Removing enough qualifying tokens freezes future reward eligibility immediately; prior finalized monthly entitlements remain claimable.</p></section>}
@@ -576,8 +549,8 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
           {tab === 'activity' && <section className="fp-panel"><div className="fp-health"><article><span>Backend indexing</span><strong>{status?.enabled ? 'Enabled' : 'Not enabled'}</strong><small>{status?.events || 0} decoded events</small></article><article><span>Reconciliation</span><strong>{reconciliation?.passed ? 'Passed' : 'Pending'}</strong><small>{reconciliation?.confirmedHead ? `Through block ${reconciliation.confirmedHead}` : 'Awaiting deployment data'}</small></article><article><span>Indexed participants</span><strong>{status?.participants || 0}</strong><small>Chain count {reconciliation?.totals?.chainParticipants ?? '-'}</small></article><article><span>Wallet receipts</span><strong>{formatToken(paymentTotal)} USDT</strong><small>{data?.payments?.length || 0} component receipts shown</small></article></div><div className="fp-section-title"><History /><div><h2>Payment receipts</h2><p>Each payout component remains separate, including its level, role, candidate, fallback state and transaction.</p></div></div><div className="fp-table-wrap"><table><thead><tr><th>Block</th><th>Level</th><th>Role</th><th>Rate</th><th>Amount</th><th>Route</th><th>Transaction</th></tr></thead><tbody>{data?.payments?.length ? data.payments.map((item) => <tr key={item._id}><td>{item.blockNumber}</td><td>{item.level}</td><td>{item.role}</td><td>{Number(item.bps || 0) / 100}%</td><td>{formatToken(item.amount)} USDT</td><td>{item.id1Fallback ? 'ID1 fallback' : `From ${short(item.originalCandidate)}`}</td><td title={item.txHash}>{short(item.txHash)}</td></tr>) : <tr><td colSpan="7" className="fp-no-data">No indexed payments for this wallet.</td></tr>}</tbody></table></div></section>}
 
       {pendingAction && (
-        <div className="fp-action-overlay" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget && !busy) setPendingAction(null) }}>
-          <section className="fp-action-modal" role="dialog" aria-modal="true" aria-labelledby="fp-action-title">
+        <div className="activation-overlay fp-action-overlay" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget && !busy) setPendingAction(null) }}>
+          <section className="activation-modal fp-action-modal" role="dialog" aria-modal="true" aria-labelledby="fp-action-title">
             <header>
               <div><span className="fp-kicker">Review before signing</span><h2 id="fp-action-title">{pendingAction.type === 'register' ? 'Register and activate Level 1' : `Activate Level ${pendingAction.level}`}</h2></div>
               <button type="button" className="fp-action-modal__close" onClick={() => setPendingAction(null)} aria-label="Close activation review"><X /></button>
