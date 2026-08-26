@@ -90,6 +90,7 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
   const [activationSummary, setActivationSummary] = useState(null)
   const [networkReady, setNetworkReady] = useState(true)
   const [pendingAction, setPendingAction] = useState(null)
+  const [actionPreflight, setActionPreflight] = useState({ loading: false, allowance: 0n, sponsorReady: null })
   const [securityAccepted, setSecurityAccepted] = useState(false)
 
   const activeLevels = useMemo(() => new Set((data?.levels || []).filter((item) => item.active).map((item) => Number(item.level))), [data])
@@ -351,14 +352,28 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
     }, `Level ${level} activation confirmed.`)
   }
 
-  const openRegistrationReview = () => {
+  const prepareActionReview = async (action) => {
     setSecurityAccepted(false)
-    setPendingAction({ type: 'register', level: 1, price: 50, orbit: 'P39' })
+    setPendingAction(action)
+    setActionPreflight({ loading: true, allowance: 0n, sponsorReady: null })
+    try {
+      const contracts = getFreedomPlusReadContracts()
+      const allowance = await contracts.usdt.allowance(account, FREEDOM_PLUS_ADDRESSES.levelManager)
+      const sponsorReady = action.type === 'register' && ethers.isAddress(sponsor)
+        ? await contracts.registration.isRegistered(sponsor)
+        : null
+      setActionPreflight({ loading: false, allowance, sponsorReady })
+    } catch {
+      setActionPreflight({ loading: false, allowance: 0n, sponsorReady: null })
+    }
+  }
+
+  const openRegistrationReview = () => {
+    prepareActionReview({ type: 'register', level: 1, price: 50, orbit: 'P39' })
   }
 
   const openActivationReview = (item) => {
-    setSecurityAccepted(false)
-    setPendingAction({ type: 'activate', ...item })
+    prepareActionReview({ type: 'activate', ...item })
   }
 
   const confirmPendingAction = () => {
@@ -564,9 +579,10 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
               {[
                 { label: 'Wallet connected', passed: isConnected, hint: short(account) },
                 { label: `Correct network`, passed: networkReady, hint: NETWORK_CONFIG.chainName },
-                { label: pendingAction.type === 'register' ? 'Permanent sponsor verified' : 'Freedom-Plus registration complete', passed: pendingAction.type === 'register' ? ethers.isAddress(sponsor) : Boolean(data?.chain?.registered), hint: pendingAction.type === 'register' ? 'Inherited from the existing FFN identity' : referralId || short(account) },
+                { label: pendingAction.type === 'register' ? 'Permanent sponsor verified' : 'Freedom-Plus registration complete', passed: pendingAction.type === 'register' ? ethers.isAddress(sponsor) && actionPreflight.sponsorReady === true : Boolean(data?.chain?.registered), hint: pendingAction.type === 'register' ? actionPreflight.loading ? 'Checking the inherited sponsor on-chain' : actionPreflight.sponsorReady ? 'Inherited sponsor is registered in Freedom-Plus' : 'The inherited sponsor must join Freedom-Plus first' : referralId || short(account) },
                 { label: pendingAction.level === 1 ? 'Level 1 entry is available' : `Level ${pendingAction.level - 1} is active`, passed: pendingAction.level === 1 || activeLevels.has(pendingAction.level - 1), hint: 'Levels activate sequentially' },
                 { label: `${pendingAction.price.toLocaleString()} USDT available`, passed: Number(String(data?.chain?.usdt || '0').replaceAll(',', '')) >= pendingAction.price, hint: `Wallet balance: ${data?.chain?.usdt || '0'} USDT` },
+                { label: actionPreflight.loading ? 'Checking USDT approval' : actionPreflight.allowance >= tokenUnits(pendingAction.price) ? 'USDT approval ready' : 'USDT approval required', passed: !actionPreflight.loading, hint: actionPreflight.loading ? 'Reading current allowance from Amoy' : actionPreflight.allowance >= tokenUnits(pendingAction.price) ? 'One wallet confirmation is expected' : 'Approval first, then the program transaction' },
               ].map((item) => <article className={item.passed ? 'passed' : 'failed'} key={item.label}>{item.passed ? <CheckCircle2 /> : <AlertTriangle />}<div><strong>{item.label}</strong><span>{item.hint}</span></div></article>)}
             </div>
 
@@ -581,7 +597,7 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
 
             <footer>
               <button type="button" className="fp-action-secondary" onClick={() => setPendingAction(null)}>Cancel</button>
-              <button type="button" className="fp-action-primary" disabled={!securityAccepted || !networkReady || Number(String(data?.chain?.usdt || '0').replaceAll(',', '')) < pendingAction.price} onClick={confirmPendingAction}>Continue to wallet<ArrowRight /></button>
+              <button type="button" className="fp-action-primary" disabled={!securityAccepted || !networkReady || actionPreflight.loading || (pendingAction.type === 'register' && actionPreflight.sponsorReady !== true) || Number(String(data?.chain?.usdt || '0').replaceAll(',', '')) < pendingAction.price} onClick={confirmPendingAction}>Continue to wallet<ArrowRight /></button>
             </footer>
           </section>
         </div>
