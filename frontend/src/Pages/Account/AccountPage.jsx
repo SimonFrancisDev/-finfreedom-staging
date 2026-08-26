@@ -18,7 +18,7 @@ import {
   FaWhatsapp, FaWallet, FaShieldAlt, FaExternalLinkAlt, FaCopy 
 } from 'react-icons/fa'
 
-const AccountPage = () => {
+const AccountPage = ({ program = 'f-freedom' }) => {
   const navigate = useNavigate()
   const { t } = useTranslation()
   const accountT = useCallback((key, fallback, options) => t(`accountPage.${key}`, fallback, options), [t])
@@ -283,6 +283,14 @@ const AccountPage = () => {
     : directReferrals.slice(0, 6)
 
   const orbitLevels = orbitNetwork?.levels || {}
+
+  if (program === 'freedom-plus') {
+    return (
+      <main className="account-page">
+        <FreedomPlusSharedSummary wallet={resolvedAddress} variant="account" fullPage />
+      </main>
+    )
+  }
 
   if (contractsLoading || (!summary && isConnected)) {
     return (

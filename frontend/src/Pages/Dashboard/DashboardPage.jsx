@@ -411,7 +411,7 @@ const DashboardLineChart = ({ series = [] }) => {
   )
 }
 
-const DashboardPage = () => {
+const DashboardPage = ({ program = 'f-freedom' }) => {
   const { t } = useTranslation()
   const dashboardT = useCallback((key, fallback, options) => t(`dashboardPage.${key}`, fallback, options), [t])
   const { isConnected, account } = useWallet()
@@ -831,6 +831,14 @@ const DashboardPage = () => {
     const diffDays = Math.floor(diffMs / 86400000)
     return dashboardT('time.daysAgo', '{{count}}d ago', { count: diffDays })
   }, [lastUpdated, dashboardT])
+
+  if (program === 'freedom-plus') {
+    return (
+      <main className="dashboard-page">
+        <FreedomPlusSharedSummary wallet={account} variant="dashboard" fullPage />
+      </main>
+    )
+  }
 
   if (!isConnected) {
     return (

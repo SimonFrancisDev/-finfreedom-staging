@@ -13,7 +13,7 @@ import { FREEDOM_PLUS_ENABLED, freedomPlusApi } from '../../Services/freedomPlus
 const ACTIVITY_PAGE_SIZE = 8
 const RECEIPTS_PAGE_SIZE = 6
 
-const ActivityPage = () => {
+const ActivityPage = ({ program = 'f-freedom' }) => {
   const { t } = useTranslation()
   const activityT = useCallback((key, fallback, options) => t(`activityPage.${key}`, fallback, options), [t])
   const { isConnected, account, connect } = useWallet()
@@ -25,7 +25,7 @@ const ActivityPage = () => {
   const [levelActivations, setLevelActivations] = useState([])
   const [registrationInfo, setRegistrationInfo] = useState(null)
   const [filter, setFilter] = useState('all')
-  const [programFilter, setProgramFilter] = useState('all')
+  const [programFilter, setProgramFilter] = useState(program === 'freedom-plus' ? 'freedom-plus' : 'all')
   const [timeRange, setTimeRange] = useState('all')
   const [loading, setLoading] = useState(true)
   const [stats, setStats] = useState({

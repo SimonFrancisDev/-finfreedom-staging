@@ -1,6 +1,6 @@
 import { Layers3 } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import FreedomPlusPage from '../../Pages/FreedomPlus/FreedomPlusPage'
+import { cloneElement } from 'react'
 import './ProgramViewSwitcher.css'
 
 const PROGRAMS = [
@@ -8,7 +8,7 @@ const PROGRAMS = [
   { value: 'freedom-plus', label: 'Freedom-Plus' },
 ]
 
-export default function ProgramViewSwitcher({ fFreedom, freedomPlusTab }) {
+export default function ProgramViewSwitcher({ fFreedom }) {
   const location = useLocation()
   const navigate = useNavigate()
   const params = new URLSearchParams(location.search)
@@ -35,7 +35,7 @@ export default function ProgramViewSwitcher({ fFreedom, freedomPlusTab }) {
         </div>
       </section>
       <div className="program-view__content" key={activeProgram}>
-        {activeProgram === 'freedom-plus' ? <FreedomPlusPage initialTab={freedomPlusTab} /> : fFreedom}
+        {cloneElement(fFreedom, { program: activeProgram })}
       </div>
     </div>
   )
