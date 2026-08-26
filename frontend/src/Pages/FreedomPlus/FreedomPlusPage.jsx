@@ -13,6 +13,7 @@ import { lockBodyScroll } from '../../utils/bodyScrollLock'
 import FreedomPlusOrbit from './FreedomPlusOrbit'
 import FreedomPlusActivationCenter from './FreedomPlusActivationCenter'
 import FreedomPlusOverview from './FreedomPlusOverview'
+import FreedomPlusTokens from './FreedomPlusTokens'
 import FreedomNftOverview from './FreedomNftOverview'
 import {
   FREEDOM_PLUS_ADDRESSES,
@@ -104,10 +105,6 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
     () => (data?.payments || []).reduce((total, item) => total + BigInt(item.amount || 0), 0n),
     [data]
   )
-  const ledgerTotal = useMemo(
-    () => (data?.ledger || []).reduce((total, item) => total + BigInt(item.amount || 0), 0n),
-    [data]
-  )
   const isProgramOverview = tab === 'overview'
   const isNftView = NFT_TABS.some(([value]) => value === tab)
   const visibleTabs = isNftView ? NFT_TABS : PROGRAM_TABS
@@ -131,7 +128,7 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
     setLoading(true)
     try {
       const contracts = getFreedomPlusReadContracts({ includeNft: isNftView })
-      const [apiData, apiActivationSummary, apiStatus, apiReconciliation, periods, identity, registered, participantNumber, chainSponsor, usdt, fgt, fpt, fptr, membershipRaw, levelFlags] = await Promise.all([
+      const [apiData, apiActivationSummary, apiStatus, apiReconciliation, periods, identity, registered, participantNumber, chainSponsor, usdt, fgt, fptTotal, fptAvailable, fptLocked, fptrTotal, fptrAvailable, fptrLocked, membershipRaw, levelFlags] = await Promise.all([
         freedomPlusApi.participant(account).catch(() => null),
         freedomPlusApi.activationSummary(account).catch(() => null),
         freedomPlusApi.status().catch(() => null),
@@ -143,8 +140,12 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
         contracts.registration.sponsorOf(account),
         contracts.usdt.balanceOf(account),
         contracts.fgt.availableBalanceOf(account),
+        contracts.fpt.balanceOf(account),
         contracts.fpt.availableBalanceOf(account),
+        contracts.fpt.lockedBalanceOf(account),
         contracts.fptr.balanceOf(account),
+        contracts.fptr.availableBalanceOf(account),
+        contracts.fptr.lockedBalanceOf(account),
         isNftView ? contracts.nftMembership.membershipOf(account) : Promise.resolve(null),
         Promise.all(FREEDOM_PLUS_LEVELS.map(({ level }) => contracts.registration.isLevelActive(account, level))),
       ])
@@ -159,8 +160,12 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
           sponsor: chainSponsor,
           usdt: formatToken(usdt),
           fgt: formatToken(fgt),
-          fpt: formatToken(fpt),
-          fptr: formatToken(fptr),
+          fpt: formatToken(fptAvailable),
+          fptTotal: formatToken(fptTotal),
+          fptLocked: formatToken(fptLocked),
+          fptr: formatToken(fptrAvailable),
+          fptrTotal: formatToken(fptrTotal),
+          fptrLocked: formatToken(fptrLocked),
           membership: normalizeMembership(membershipRaw),
         },
       })
@@ -483,13 +488,7 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
             </section>
           )}
 
-          {tab === 'tokens' && (
-            <section className="fp-panel">
-              <div className="fp-section-heading"><div><span className="fp-kicker">Utility balances</span><h2>FPT and FPTr</h2></div></div>
-              <div className="fp-token-balances"><article><ShieldCheck /><div><span>FGT available</span><strong>{data?.chain?.fgt || '0'}</strong><small>Qualifies for Freedom NFT</small></div></article><article><Coins /><div><span>FPT available</span><strong>{data?.chain?.fpt || '0'}</strong><small>Activation token and NFT qualification</small></div></article><article><RefreshCw /><div><span>FPTr available</span><strong>{data?.chain?.fptr || '0'}</strong><small>Completed cycle re-entry</small></div></article><article><Activity /><div><span>Indexed ledger</span><strong>{formatToken(ledgerTotal)}</strong><small>{data?.ledger?.length || 0} records</small></div></article></div>
-              <div className="fp-table-wrap"><table><thead><tr><th>Block</th><th>Level</th><th>Category</th><th>Event</th><th>Amount</th><th>Transaction</th></tr></thead><tbody>{data?.ledger?.length ? data.ledger.map((item) => <tr key={item._id}><td>{item.blockNumber}</td><td>{item.level || '-'}</td><td>{String(item.category || '').replaceAll('_', ' ')}</td><td>{item.eventName}</td><td>{formatToken(item.amount)}</td><td title={item.txHash}>{short(item.txHash)}</td></tr>) : <tr><td colSpan="6" className="fp-no-data">No indexed Freedom-Plus ledger entries.</td></tr>}</tbody></table></div>
-            </section>
-          )}
+          {tab === 'tokens' && <FreedomPlusTokens account={account} data={data} loading={loading} onRefresh={load} />}
 
           {tab === 'nftOverview' && <FreedomNftOverview membership={membership} formatToken={formatToken} openView={openView} />}
 
