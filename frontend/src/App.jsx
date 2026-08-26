@@ -21,6 +21,7 @@ import PreferencesPage from './Pages/Preferences/PreferencesPage'
 import SecurityPage from './Pages/Security/SecurityPage'
 import ActivityPage from './Pages/Activity/ActivityPage'
 import FreedomPlusPage from './Pages/FreedomPlus/FreedomPlusPage'
+import ProgramViewSwitcher from './components/program/ProgramViewSwitcher'
 import { AdminPanel } from './Pages/AdminPanel'
 import NotificationModal from './components/Modals/NotificationModal/NotificationModal'
 import { useWallet } from './hooks/useWallet'
@@ -151,12 +152,12 @@ const pageToPathMap = {
   dashboard: '/dashboard',
   fFreedomProgram: '/f-freedom-program',
   freedomPlus: '/freedom-plus',
-  freedomPlusDashboard: '/dashboard',
+  freedomPlusDashboard: '/dashboard?program=freedom-plus',
   freedomPlusActivation: '/freedom-plus/activation',
   freedomPlusOrbits: '/freedom-plus/activation',
   freedomPlusTokens: '/freedom-plus/tokens',
-  freedomPlusActivity: '/activity',
-  freedomPlusAccount: '/account',
+  freedomPlusActivity: '/activity?program=freedom-plus',
+  freedomPlusAccount: '/account?program=freedom-plus',
   freedomNft: '/freedom-nft',
   freedomNftMembership: '/freedom-nft/membership',
   freedomNftRewards: '/freedom-nft/rewards',
@@ -1345,12 +1346,12 @@ function App() {
               {FREEDOM_PLUS_ENABLED && (
                 <>
                   <Route path="/freedom-plus" element={<FreedomPlusPage initialTab="overview" />} />
-                  <Route path="/freedom-plus/dashboard" element={<Navigate to="/dashboard" replace />} />
+                  <Route path="/freedom-plus/dashboard" element={<Navigate to="/dashboard?program=freedom-plus" replace />} />
                   <Route path="/freedom-plus/activation" element={<FreedomPlusPage initialTab="levels" />} />
                   <Route path="/freedom-plus/orbits" element={<Navigate to="/freedom-plus/activation" replace />} />
                   <Route path="/freedom-plus/tokens" element={<FreedomPlusPage initialTab="tokens" />} />
-                  <Route path="/freedom-plus/activity" element={<Navigate to="/activity" replace />} />
-                  <Route path="/freedom-plus/account" element={<Navigate to="/account" replace />} />
+                  <Route path="/freedom-plus/activity" element={<Navigate to="/activity?program=freedom-plus" replace />} />
+                  <Route path="/freedom-plus/account" element={<Navigate to="/account?program=freedom-plus" replace />} />
                   <Route path="/freedom-nft" element={<FreedomPlusPage initialTab="nftOverview" />} />
                   <Route path="/freedom-nft/membership" element={<FreedomPlusPage initialTab="membership" />} />
                   <Route path="/freedom-nft/rewards" element={<FreedomPlusPage initialTab="rewards" />} />
@@ -1364,7 +1365,7 @@ function App() {
 
               <Route
                 path="/dashboard"
-                element={renderFlowOnlyPage('dashboard', <DashboardPage />)}
+                element={renderFlowOnlyPage('dashboard', <ProgramViewSwitcher fFreedom={<DashboardPage />} freedomPlusTab="dashboard" />)}
               />
 
               <Route
@@ -1380,7 +1381,7 @@ function App() {
 
               <Route
                 path="/account"
-                element={renderFlowOnlyPage('account', <AccountPage />)}
+                element={renderFlowOnlyPage('account', <ProgramViewSwitcher fFreedom={<AccountPage />} freedomPlusTab="account" />)}
               />
 
               <Route
@@ -1402,7 +1403,7 @@ function App() {
 
               <Route
                 path="/activity"
-                element={renderFlowOnlyPage('activity', <ActivityPage />)}
+                element={renderFlowOnlyPage('activity', <ProgramViewSwitcher fFreedom={<ActivityPage />} freedomPlusTab="activity" />)}
               />
 
               <Route

@@ -466,6 +466,9 @@ Freedom-Plus will use the existing production frontend framework, wallet connect
 Required user surfaces:
 
 - Freedom-Plus dashboard.
+- Shared Dashboard, Account, and Activity routes expose an explicit F-Freedom / Freedom-Plus program selector.
+- The selected shared-page program is preserved in the URL so refreshes and direct program links retain context.
+- Shared pages replace the complete dataset when switching programs; F-Freedom and Freedom-Plus metrics, balances, placements, and activity records are never merged.
 - Sponsor-aware registration.
 - Existing FFN referral-ID lookup; no second Freedom-Plus referral identity.
 - Seven-level activation center.
