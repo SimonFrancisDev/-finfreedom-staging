@@ -1,0 +1,42 @@
+{
+  "result": "PASS",
+  "network": "amoy",
+  "chainId": "80002",
+  "proxy": "0x56Dc8f775e4Bf7e31777080eB8AFb9cAA42c300A",
+  "previousImplementation": "0x2cE09709f40F0faa5FA4Fc41F59CE1FB30D94517",
+  "implementation": "0xF833B2020210A112a1d70Ad8cD48B548d9a1a00c",
+  "fFreedomRegistration": "0x462DDc6C3Ba984b8BFd343948eADf321f8607792",
+  "multisig": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+  "proposalIds": [
+    4,
+    5,
+    6
+  ],
+  "transactions": [
+    {
+      "proposalId": 4,
+      "hash": "0x7d8f93723cbbbcb4a43a3ae3fa24e05c60dce7bec40985c3de30dc789dd227f5",
+      "blockNumber": 45956965,
+      "status": 1
+    },
+    {
+      "proposalId": 5,
+      "hash": "0x570e42d2c33fef46c607a13f1e869e92beb1fe43e735046b7105939943d22e48",
+      "blockNumber": 45956968,
+      "status": 1
+    },
+    {
+      "proposalId": 6,
+      "hash": "0x19783746f6536d232d496bddc0c89fecc74897f0a5a441dd1d1ff5e424c12d3c",
+      "blockNumber": 45956971,
+      "status": 1
+    }
+  ],
+  "postUpgrade": {
+    "registeredCount": "45",
+    "id1Wallet": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+    "genesisInitialized": true,
+    "genesisPositionsVerified": 28,
+    "pendingGovernanceActions": 0
+  }
+}

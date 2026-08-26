@@ -43,7 +43,7 @@
     },
     "FreedomPlusRegistration": {
       "proxy": "0x56Dc8f775e4Bf7e31777080eB8AFb9cAA42c300A",
-      "implementation": "0x2cE09709f40F0faa5FA4Fc41F59CE1FB30D94517",
+      "implementation": "0xF833B2020210A112a1d70Ad8cD48B548d9a1a00c",
       "deploymentBlock": 45576569,
       "deploymentTx": "0x8f9b583827c04dd17478de78fa627acc0452044e313683512aa36cbffb61f595"
     },
