@@ -455,7 +455,7 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
 
   return (
     <main className={tab === 'levels' ? 'freedom-plus-activation-shell' : 'freedom-plus-page'}>
-      {!isProgramOverview && tab !== 'levels' && tab !== 'nftOverview' && <header className="fp-header">
+      {!isProgramOverview && tab !== 'levels' && tab !== 'nftOverview' && tab !== 'tokens' && <header className="fp-header">
         <div><span className="fp-kicker">{isNftView ? 'Membership and long-term value' : 'Advanced participation'}</span><h1>{isNftView ? 'Freedom NFT' : 'Freedom-Plus'}</h1><p>{isNftView ? 'Token-backed membership, immediate qualification status and transparent monthly rewards.' : 'Seven manually activated levels, deterministic orbit placement and long-term Freedom NFT progression.'}</p></div>
         <button className="fp-icon-button" type="button" onClick={load} disabled={loading} title="Refresh chain and indexed data"><RefreshCw className={loading ? 'spin' : ''} /></button>
       </header>}
@@ -464,7 +464,7 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
         <section className="fp-connect"><Wallet /><div><h2>Connect your wallet</h2><p>Connect on the configured Polygon network to view or manage Freedom-Plus.</p></div><button type="button" onClick={connect}>Connect</button></section>
       )}
 
-      {!isProgramOverview && tab !== 'levels' && tab !== 'nftOverview' && isConnected && (
+      {!isProgramOverview && tab !== 'levels' && tab !== 'nftOverview' && tab !== 'tokens' && isConnected && (
         <section className="fp-metrics">
             <article><span>FFN ID</span><strong>{data?.chain?.registered ? (referralId || 'Resolving...') : 'Not registered'}</strong><small>{short(account)}</small></article>
             <article><span>Active levels</span><strong>{activeLevels.size} / 7</strong><small>Manual progression</small></article>
