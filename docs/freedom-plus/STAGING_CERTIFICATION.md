@@ -112,3 +112,28 @@ Certification status: production build passed. Live desktop/mobile and light/dar
 ### Deployed ring-visibility root cause
 
 The first visible-ring pass used `--ffn-primary` and `--ffn-accent`, but those aliases are not defined by `frontend/src/styles/foundation.css`. Browsers therefore discarded the complete ring border declarations even though the ring elements and CSS bundle were deployed. The corrected focused-orbit rings use explicit theme-tested RGBA colors with light-theme overrides. Production must either port these explicit ring colors or define and certify the missing semantic aliases before using them.
+
+## 2026-08-27 Activation Lifecycle Parity Candidate
+
+This candidate closes the remaining Freedom-Plus activation-state gap against F-Freedom:
+
+1. Normal account reads remain index-first. When the indexed participant or level projection is absent, registration and all seven level states are recovered from chain and merged without discarding indexed details.
+2. Registration and activation use explicit preflight, wallet-signing, pending, indexing, complete, and error stages.
+3. USDT approval is labeled Step 1 of 2 and is never reported as registration or activation. The program call is requested only after a successful approval receipt.
+4. Writes estimate gas, add the same 25 percent safety buffer used by F-Freedom, and use shared fee options.
+5. A mined receipt is not treated as success until the expected registration or level state is confirmed on-chain. The UI then polls the indexed projection for a bounded period and clearly reports any remaining synchronization.
+6. Contract custom errors and RPC failures are normalized into actionable user messages while preserving transaction hashes.
+7. Higher levels are unlocked from merged chain/index state, preventing index lag from leaving the next valid level locked.
+8. Focused orbit views provide 75-170 percent zoom, reset, and bounded pan above 100 percent while retaining node selection and position details.
+
+Production-port files:
+
+- frontend/src/Pages/FreedomPlus/FreedomPlusPage.jsx
+- frontend/src/Pages/FreedomPlus/FreedomPlusFocusedOrbit.jsx
+- frontend/src/Pages/FreedomPlus/FreedomPlusPage.css
+- frontend/src/Services/freedomPlus.js
+- frontend/src/components/feedback/TransactionStatus.jsx
+- frontend/src/utils/errorMap.js
+- frontend/src/utils/txOptions.js (shared dependency; do not fork it)
+
+Verification evidence for the candidate: focused ESLint passed and the production Vite build passed (3330 modules). Live staging certification still requires one fresh registration plus Levels 2 and 3, checking wallet prompts, decoded failures, immediate unlock, index convergence, orbit zoom/pan, position selection, both themes, and desktop/mobile layouts.

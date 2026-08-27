@@ -39,6 +39,17 @@ export const NFT_TIERS = Object.freeze([
 ])
 
 const REGISTRATION_ABI = [
+  'error AlreadyRegistered(address participant)',
+  'error SponsorNotRegistered(address sponsor)',
+  'error SelfSponsorship()',
+  'error NotRegistered(address participant)',
+  'error InvalidLevel(uint8 level)',
+  'error LevelAlreadyActive(address participant,uint8 level)',
+  'error PreviousLevelInactive(address participant,uint8 requiredLevel)',
+  'error LevelOneRequiresRegistration()',
+  'error FFreedomGatewayNotConfigured()',
+  'error FFreedomLevelOneInactive(address participant)',
+  'error PermanentSponsorMismatch(address expectedSponsor,address suppliedSponsor)',
   'function id1Wallet() view returns (address)',
   'function register(address sponsor)',
   'function activateLevel(uint8 level)',

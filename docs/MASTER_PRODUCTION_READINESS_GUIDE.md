@@ -351,3 +351,7 @@ Current candidate scope:
 - Production port must include the component and stylesheet together and must use production addresses/start blocks from a release-specific manifest.
 
 This guide is a migration checklist, not proof that every gate has passed. Production remains blocked until the release evidence package contains contract test results, storage-layout validation, staging transaction evidence, chain/database reconciliation, complete frontend browser evidence, production inventory, fork rehearsal, decoded multisig proposals, and post-deployment checks.
+
+## 21. Freedom-Plus Activation Parity Delta - 2026-08-27
+
+The exact implementation and live-test checklist are recorded in docs/freedom-plus/STAGING_CERTIFICATION.md under "Activation Lifecycle Parity Candidate". Production rollout must port that complete file set together. Preserve index-first reads, conditional chain recovery, two-step approval/action messaging, buffered gas, receipt and state verification, bounded index convergence, custom-error decoding, immediate sequential-level unlocking, and orbit zoom/pan. Do not copy staging RPC credentials, contract addresses, or start blocks into production.

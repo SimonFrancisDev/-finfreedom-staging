@@ -10,6 +10,8 @@ import { TransactionStatus } from '../../components/feedback'
 import { InlineAlert } from '../../components/ui'
 import { ProgressionLineChart } from '../../components/charts/InstitutionalCharts'
 import { lockBodyScroll } from '../../utils/bodyScrollLock'
+import { normalizeError } from '../../utils/errorMap'
+import { buildTxOptions } from '../../utils/txOptions'
 import FreedomPlusOrbit from './FreedomPlusOrbit'
 import FreedomPlusActivationCenter from './FreedomPlusActivationCenter'
 import FreedomPlusFocusedOrbit from './FreedomPlusFocusedOrbit'
@@ -30,6 +32,10 @@ import {
 import './FreedomPlusPage.css'
 
 const ZERO = ethers.ZeroAddress
+const GAS_BUFFER_BPS = 12500n
+const withGasBuffer = (estimate) => (BigInt(estimate) * GAS_BUFFER_BPS) / 10000n
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+const INDEX_RETRY_DELAYS = [800, 1400, 2200, 3200, 4500]
 const VIEW_ROUTES = {
   overview: '/freedom-plus',
   dashboard: '/freedom-plus/dashboard',
@@ -128,7 +134,8 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
     navigate(VIEW_ROUTES[view])
   }
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (options = {}) => {
+    const forceChain = options?.forceChain === true
     if (!FREEDOM_PLUS_ENABLED || !account) return
     setLoading(true)
     try {
@@ -171,12 +178,22 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
         }
       }
       const indexedLevels = new Map((apiData?.levels || []).map((item) => [Number(item.level), item]))
-      const levels = FREEDOM_PLUS_LEVELS.map((config) => ({ ...indexedLevels.get(config.level), ...config, active: Boolean(indexedLevels.get(config.level)?.active) }))
+      let chainRegistration = Boolean(apiData?.participant?.registered)
+      const chainLevels = new Map()
+      if (forceChain || !apiData?.participant || (apiData?.levels || []).length === 0) {
+        const registeredOnChain = await contracts.registration.isRegistered(account).catch(() => null)
+        if (registeredOnChain != null) chainRegistration = Boolean(registeredOnChain)
+        if (chainRegistration) {
+          const results = await Promise.all(FREEDOM_PLUS_LEVELS.map((item) => contracts.registration.isLevelActive(account, item.level).catch(() => null)))
+          results.forEach((active, index) => { if (active != null) chainLevels.set(FREEDOM_PLUS_LEVELS[index].level, Boolean(active)) })
+        }
+      }
+      const levels = FREEDOM_PLUS_LEVELS.map((config) => ({ ...indexedLevels.get(config.level), ...config, active: Boolean(indexedLevels.get(config.level)?.active || chainLevels.get(config.level)) }))
       setData({
         ...(apiData || {}),
         levels,
         chain: {
-          registered: Boolean(apiData?.participant?.registered),
+          registered: chainRegistration,
           participantNumber: String(apiData?.participant?.participantNumber || 0),
           sponsor: apiData?.participant?.sponsor || ZERO,
           usdt: formatToken(usdt),
@@ -213,7 +230,7 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
         }
       }))
       setRewardPeriods(enrichedPeriods)
-      if (apiData?.participant?.registered && apiData.participant.sponsor && apiData.participant.sponsor !== ZERO) {
+      if (chainRegistration && apiData?.participant?.sponsor && apiData.participant.sponsor !== ZERO) {
         setSponsor(apiData.participant.sponsor)
       } else if (ethers.isAddress(gatewayData.sponsor || '') && gatewayData.sponsor !== ZERO && gatewayData.sponsor.toLowerCase() !== account.toLowerCase()) {
         setSponsor(gatewayData.sponsor)
@@ -280,106 +297,122 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
     if ((tab === 'orbits' || tab === 'levels') && account && data?.chain?.registered) loadOrbit()
   }, [account, data?.chain?.registered, loadOrbit, tab])
 
-  const transact = async (key, operation, success) => {
-    setBusy(key)
-    setTxState({ status: 'running', stage: 'signing', hash: '', note: 'Review and confirm this Freedom-Plus action in your wallet.', error: null })
-    try {
-      const tx = await operation()
-      setTxState({ status: 'running', stage: 'pending', hash: tx.hash, note: 'Transaction submitted. Waiting for on-chain confirmation.', error: null })
-      toast.info('Transaction submitted. Waiting for confirmation.')
-      await tx.wait()
-      setTxState({ status: 'complete', stage: 'complete', hash: tx.hash, note: success, error: null })
-      toast.success(success)
-      await load()
-      if (tab === 'orbits' || tab === 'levels') await loadOrbit()
-    } catch (error) {
-      const message = error?.shortMessage || error?.reason || error?.message || 'Transaction failed.'
-      const rejected = error?.code === 4001 || error?.code === 'ACTION_REJECTED'
-      setTxState({ status: 'error', stage: 'error', hash: error?.transactionHash || '', note: '', error: { title: rejected ? 'Transaction rejected' : 'Transaction did not complete', message: rejected ? 'The wallet request was rejected. No on-chain state was changed.' : message, action: 'Reset this notice after reviewing the requirement, then retry.' } })
-      toast.error(message)
-    } finally {
-      setBusy('')
+  const reconcileAfterWrite = async ({ level, registration = false, hash }) => {
+    setTxState({ status: 'running', stage: 'indexing', hash, note: 'Confirmed on-chain. Synchronizing your Freedom-Plus account state.', error: null })
+    const read = getFreedomPlusReadContracts()
+    const chainConfirmed = registration ? await read.registration.isRegistered(account) : await read.registration.isLevelActive(account, level)
+    if (!chainConfirmed) throw new Error('The mined transaction did not produce the expected Freedom-Plus state.')
+    await load({ forceChain: true })
+    for (const wait of INDEX_RETRY_DELAYS) {
+      const snapshot = await freedomPlusApi.participant(account).catch(() => null)
+      const indexed = registration ? Boolean(snapshot?.participant?.registered) : Boolean((snapshot?.levels || []).find((item) => Number(item.level) === level)?.active)
+      if (indexed) { await load(); return true }
+      await delay(wait)
     }
+    return false
   }
 
-  const approveAndRun = async (price, action) => {
-    const contracts = getFreedomPlusWriteContracts()
+  const txErrorState = (error, fallback, hash = "") => {
+    const normalized = normalizeError(error, fallback)
+    return { status: "error", stage: "error", hash: hash || error?.transactionHash || error?.receipt?.hash || error?.replacement?.hash || "", note: "", error: normalized }
+  }
+
+  const sendBuffered = async (method, args = []) => {
+    const signer = web3Service.getSigner()
+    const estimate = await method.estimateGas(...args)
+    return method(...args, await buildTxOptions({ signer, gasLimit: withGasBuffer(estimate) }))
+  }
+
+  const ensureApproval = async (contracts, price) => {
     const amount = tokenUnits(price)
     const allowance = await contracts.usdt.allowance(account, FREEDOM_PLUS_ADDRESSES.levelManager)
-    if (allowance < amount) {
-      setTxState({ status: 'running', stage: 'signing', hash: '', note: `Approve ${price} USDT for the Freedom-Plus Level Manager.`, error: null })
-      const approval = await contracts.usdt.approve(FREEDOM_PLUS_ADDRESSES.levelManager, amount)
-      setTxState({ status: 'running', stage: 'pending', hash: approval.hash, note: 'USDT approval submitted. The program action follows after confirmation.', error: null })
-      toast.info('USDT approval submitted.')
-      await approval.wait()
-      setTxState({ status: 'running', stage: 'signing', hash: '', note: 'Approval confirmed. Confirm the program action in your wallet.', error: null })
-    }
-    return action(contracts)
+    if (allowance >= amount) return
+    setTxState({ status: 'running', stage: 'signing', hash: '', note: 'Step 1 of 2: approve exactly ' + price.toLocaleString() + ' USDT. Activation has not started yet.', error: null })
+    const approval = await sendBuffered(contracts.usdt.approve, [FREEDOM_PLUS_ADDRESSES.levelManager, amount])
+    setTxState({ status: 'running', stage: 'pending', hash: approval.hash, note: 'USDT approval submitted. Waiting for confirmation before requesting the program transaction.', error: null })
+    toast.info('USDT approval submitted. This is not the program activation.')
+    const receipt = await approval.wait()
+    if (!receipt || receipt.status !== 1) throw new Error('USDT approval was not confirmed successfully.')
+    setTxState({ status: 'running', stage: 'signing', hash: '', note: 'Step 2 of 2: approval confirmed. Confirm the Freedom-Plus transaction in your wallet.', error: null })
   }
 
   const register = async () => {
     setBusy('register')
-    setTxState({ status: 'running', stage: 'preflight', hash: '', note: 'Verifying your permanent FFN sponsor, balances and Freedom-Plus eligibility.', error: null })
+    setTxState({ status: 'running', stage: 'preflight', hash: '', note: 'Checking sponsor, F-Freedom gateway, balance, allowance and network.', error: null })
+    let hash = ""
     try {
       const sponsorWallet = sponsor.trim()
-      if (!ethers.isAddress(sponsorWallet) || sponsorWallet === ZERO || sponsorWallet.toLowerCase() === account?.toLowerCase()) {
-        throw new Error('Your permanent F-Freedom sponsor could not be verified. Freedom-Plus registration has been stopped without changing your wallet.')
-      }
-      const readContracts = getFreedomPlusReadContracts()
+      if (!ethers.isAddress(sponsorWallet) || sponsorWallet === ZERO || sponsorWallet.toLowerCase() === account?.toLowerCase()) throw new Error('PermanentSponsorMismatch')
+      const read = getFreedomPlusReadContracts()
       const price = tokenUnits(50)
-      const balance = await readContracts.usdt.balanceOf(account)
-      if (balance < price) throw new Error(`Insufficient USDT balance. Registration and Level 1 require 50 USDT; this wallet has ${formatToken(balance)} USDT.`)
-
+      const balance = await read.usdt.balanceOf(account)
+      if (balance < price) throw new Error('Insufficient USDT balance. Registration requires 50 USDT; this wallet has ' + formatToken(balance) + ' USDT.')
+      if (await read.registration.isRegistered(account)) { await load({ forceChain: true }); throw new Error('AlreadyRegistered') }
       const contracts = getFreedomPlusWriteContracts()
-      const allowance = await contracts.usdt.allowance(account, FREEDOM_PLUS_ADDRESSES.levelManager)
-      if (allowance < price) {
-        setTxState({ status: 'running', stage: 'signing', hash: '', note: 'Approve exactly 50 USDT for the Freedom-Plus Level Manager.', error: null })
-        const approval = await contracts.usdt.approve(FREEDOM_PLUS_ADDRESSES.levelManager, price)
-        setTxState({ status: 'running', stage: 'pending', hash: approval.hash, note: 'USDT approval submitted. Waiting for confirmation.', error: null })
-        await approval.wait()
-      }
-
-      setTxState({ status: 'running', stage: 'signing', hash: '', note: 'Confirm registration and the atomic Level 1 activation in your wallet.', error: null })
-      await contracts.registration.register.estimateGas(sponsorWallet)
-      const tx = await contracts.registration.register(sponsorWallet)
-      setTxState({ status: 'running', stage: 'pending', hash: tx.hash, note: 'Registration and Level 1 activation submitted. Waiting for confirmation.', error: null })
-      toast.info('Transaction submitted. Waiting for confirmation.')
-      await tx.wait()
-      setTxState({ status: 'complete', stage: 'complete', hash: tx.hash, note: 'Registration, Level 1 activation and 50 FPT issuance are confirmed.', error: null })
-      toast.success('Registration and Level 1 activation confirmed.')
-      await load()
+      await ensureApproval(contracts, 50)
+      setTxState({ status: 'running', stage: 'signing', hash: '', note: 'Step 2 of 2: confirm registration and atomic Level 1 activation.', error: null })
+      const tx = await sendBuffered(contracts.registration.register, [sponsorWallet])
+      hash = tx.hash
+      setTxState({ status: 'running', stage: 'pending', hash, note: 'Registration and Level 1 activation submitted. Waiting for confirmation.', error: null })
+      const receipt = await tx.wait()
+      if (!receipt || receipt.status !== 1) throw new Error('Registration transaction reverted.')
+      const indexed = await reconcileAfterWrite({ level: 1, registration: true, hash })
+      const note = indexed ? 'Registration, Level 1 activation and FPT issuance are confirmed and indexed.' : 'Registration and Level 1 are confirmed on-chain. Indexed details are still synchronizing.'
+      setTxState({ status: 'complete', stage: 'complete', hash, note, error: null })
+      toast.success(note)
     } catch (error) {
-      const message = error?.shortMessage || error?.reason || error?.message || 'Registration failed.'
-      const rejected = error?.code === 4001 || error?.code === 'ACTION_REJECTED'
-      setTxState({
-        status: 'error',
-        stage: 'error',
-        hash: error?.transactionHash || '',
-        note: '',
-        error: {
-          title: rejected ? 'Transaction rejected' : 'Registration did not complete',
-          message: rejected ? 'The wallet request was rejected. No registration or activation occurred.' : message,
-          action: 'Review the requirement shown above, then reset and retry. No partial Freedom-Plus registration is retained after a failed activation.',
-        },
-      })
-      toast.error(message)
-    } finally {
-      setBusy('')
-    }
+      setTxState(txErrorState(error, 'Freedom-Plus registration did not complete.', hash))
+      toast.error(normalizeError(error, 'Freedom-Plus registration did not complete.').message)
+    } finally { setBusy("") }
   }
 
-  const activate = (level, price) => {
-    transact(`level-${level}`, async () => {
-      const readContracts = getFreedomPlusReadContracts()
-      const balance = await readContracts.usdt.balanceOf(account)
-      if (balance < tokenUnits(price)) throw new Error(`Insufficient USDT balance. Level ${level} requires ${price.toLocaleString()} USDT; this wallet has ${formatToken(balance)} USDT.`)
-      return approveAndRun(price, async (contracts) => {
-        await contracts.registration.activateLevel.estimateGas(level)
-        return contracts.registration.activateLevel(level)
-      })
-    }, `Level ${level} activation confirmed.`)
+  const activate = async (level, price) => {
+    const key = 'level-' + level
+    setBusy(key)
+    setTxState({ status: 'running', stage: 'preflight', hash: '', note: 'Checking Level ' + level + ' eligibility, balance and previous-level state.', error: null })
+    let hash = ""
+    try {
+      const read = getFreedomPlusReadContracts()
+      if (!(await read.registration.isRegistered(account))) throw new Error('NotRegistered')
+      if (level > 1 && !(await read.registration.isLevelActive(account, level - 1))) throw new Error('PreviousLevelInactive')
+      if (await read.registration.isLevelActive(account, level)) { await load({ forceChain: true }); throw new Error('LevelAlreadyActive') }
+      const balance = await read.usdt.balanceOf(account)
+      if (balance < tokenUnits(price)) throw new Error('Insufficient USDT balance. Level ' + level + ' requires ' + price.toLocaleString() + ' USDT; this wallet has ' + formatToken(balance) + ' USDT.')
+      const contracts = getFreedomPlusWriteContracts()
+      await ensureApproval(contracts, price)
+      const tx = await sendBuffered(contracts.registration.activateLevel, [level])
+      hash = tx.hash
+      setTxState({ status: 'running', stage: 'pending', hash, note: 'Level ' + level + ' activation submitted. Waiting for confirmation.', error: null })
+      const receipt = await tx.wait()
+      if (!receipt || receipt.status !== 1) throw new Error('Level ' + level + ' activation reverted.')
+      const indexed = await reconcileAfterWrite({ level, hash })
+      const note = indexed ? 'Level ' + level + ' activation is confirmed and indexed.' : 'Level ' + level + ' is confirmed on-chain. Indexed details are still synchronizing.'
+      setTxState({ status: 'complete', stage: 'complete', hash, note, error: null })
+      toast.success(note)
+    } catch (error) {
+      setTxState(txErrorState(error, 'Level ' + level + ' activation did not complete.', hash))
+      toast.error(normalizeError(error, 'Level ' + level + ' activation did not complete.').message)
+    } finally { setBusy("") }
   }
-
+  const transact = async (key, operation, success) => {
+    setBusy(key)
+    setTxState({ status: 'running', stage: 'signing', hash: '', note: 'Review and confirm this action in your wallet.', error: null })
+    let hash = ""
+    try {
+      const tx = await operation()
+      hash = tx.hash
+      setTxState({ status: 'running', stage: 'pending', hash, note: 'Transaction submitted. Waiting for confirmation.', error: null })
+      const receipt = await tx.wait()
+      if (!receipt || receipt.status !== 1) throw new Error('Transaction reverted.')
+      setTxState({ status: 'complete', stage: 'complete', hash, note: success, error: null })
+      toast.success(success)
+      await load({ forceChain: true })
+      if (tab === 'orbits' || tab === 'levels') await loadOrbit()
+    } catch (error) {
+      setTxState(txErrorState(error, 'Transaction did not complete.', hash))
+      toast.error(normalizeError(error, 'Transaction did not complete.').message)
+    } finally { setBusy("") }
+  }
   const prepareActionReview = useCallback(async (action) => {
     setSecurityAccepted(false)
     setPendingAction(action)
