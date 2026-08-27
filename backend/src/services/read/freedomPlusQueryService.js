@@ -7,6 +7,7 @@ import FreedomPlusPosition from '../../models/FreedomPlusPosition.js';
 import FreedomPlusPayment from '../../models/FreedomPlusPayment.js';
 import FreedomPlusSyncState from '../../models/FreedomPlusSyncState.js';
 import FreedomPlusLedgerEntry from '../../models/FreedomPlusLedgerEntry.js';
+import IndexedRegistrationEvent from '../../models/IndexedRegistrationEvent.js';
 import { getProvider } from '../../blockchain/provider.js';
 import { getFreedomPlusContracts } from '../../blockchain/freedomPlusContracts.js';
 import {
@@ -79,7 +80,7 @@ export async function freedomPlusReconciliation() {
 
 export async function freedomPlusParticipant(address) {
   const normalized = wallet(address);
-  const [participant, levels, positions, payments, ledger] = await Promise.all([
+  const [participant, levels, positions, payments, ledger, fFreedomRegistration, fFreedomLevelOne] = await Promise.all([
     FreedomPlusParticipant.findOne({ chainId: env.CHAIN_ID, wallet: normalized }).lean(),
     FreedomPlusLevelState.find({ chainId: env.CHAIN_ID, wallet: normalized }).sort({ level: 1 }).lean(),
     FreedomPlusPosition.find({ chainId: env.CHAIN_ID, participant: normalized })
@@ -88,8 +89,25 @@ export async function freedomPlusParticipant(address) {
       .sort({ blockNumber: -1 }).limit(200).lean(),
     FreedomPlusLedgerEntry.find({ chainId: env.CHAIN_ID, wallet: normalized })
       .sort({ blockNumber: -1, logIndex: -1 }).limit(200).lean(),
+    IndexedRegistrationEvent.findOne({ chainId: env.CHAIN_ID, user: normalized, eventName: 'Registered' })
+      .sort({ blockNumber: 1, logIndex: 1 }).lean(),
+    IndexedRegistrationEvent.findOne({
+      chainId: env.CHAIN_ID,
+      user: normalized,
+      eventName: { $in: ['Registered', 'LevelActivated', 'FounderRepActivated'] },
+      $or: [{ level: 1 }, { eventName: 'Registered' }],
+    }).sort({ blockNumber: 1, logIndex: 1 }).lean(),
   ]);
-  return { wallet: normalized, participant, levels, positions, payments, ledger };
+  return {
+    wallet: normalized,
+    gateway: {
+      registered: Boolean(fFreedomRegistration),
+      levelOneActive: Boolean(fFreedomLevelOne),
+      sponsor: fFreedomRegistration?.referrer || '',
+      source: 'indexed',
+    },
+    participant, levels, positions, payments, ledger,
+  };
 }
 
 export async function freedomPlusActivationSummary(address) {

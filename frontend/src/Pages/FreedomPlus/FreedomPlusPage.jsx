@@ -92,6 +92,8 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
   const [pendingAction, setPendingAction] = useState(null)
   const [actionPreflight, setActionPreflight] = useState({ loading: false, allowance: 0n, sponsorReady: null })
   const [securityAccepted, setSecurityAccepted] = useState(false)
+  const [gateway, setGateway] = useState({ registered: false, levelOneActive: false })
+  const [onboardingPromptedAccount, setOnboardingPromptedAccount] = useState('')
 
   const activeLevels = useMemo(() => new Set((data?.levels || []).filter((item) => item.active).map((item) => Number(item.level))), [data])
   const membership = data?.chain?.membership || normalizeMembership(null)
@@ -129,16 +131,13 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
     setLoading(true)
     try {
       const contracts = getFreedomPlusReadContracts({ includeNft: isNftView })
-      const [apiData, apiActivationSummary, apiStatus, apiReconciliation, periods, identity, registered, participantNumber, chainSponsor, usdt, fgt, fptTotal, fptAvailable, fptLocked, fptrTotal, fptrAvailable, fptrLocked, membershipRaw, levelFlags] = await Promise.all([
+      const [apiData, apiActivationSummary, apiStatus, apiReconciliation, periods, identity, usdt, fgt, fptTotal, fptAvailable, fptLocked, fptrTotal, fptrAvailable, fptrLocked, membershipRaw] = await Promise.all([
         freedomPlusApi.participant(account).catch(() => null),
         freedomPlusApi.activationSummary(account).catch(() => null),
         freedomPlusApi.status().catch(() => null),
         freedomPlusApi.reconciliation().catch(() => null),
         isNftView ? freedomPlusApi.rewardPeriods().catch(() => []) : Promise.resolve([]),
         freedomPlusApi.referralForWallet(account).catch(() => null),
-        contracts.registration.isRegistered(account),
-        contracts.registration.participantNumber(account),
-        contracts.registration.sponsorOf(account),
         contracts.usdt.balanceOf(account),
         contracts.fgt.availableBalanceOf(account),
         contracts.fpt.balanceOf(account),
@@ -148,17 +147,16 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
         contracts.fptr.availableBalanceOf(account),
         contracts.fptr.lockedBalanceOf(account),
         isNftView ? contracts.nftMembership.membershipOf(account) : Promise.resolve(null),
-        Promise.all(FREEDOM_PLUS_LEVELS.map(({ level }) => contracts.registration.isLevelActive(account, level))),
       ])
       const indexedLevels = new Map((apiData?.levels || []).map((item) => [Number(item.level), item]))
-      const levels = FREEDOM_PLUS_LEVELS.map((config, index) => ({ ...indexedLevels.get(config.level), ...config, active: Boolean(levelFlags[index]) }))
+      const levels = FREEDOM_PLUS_LEVELS.map((config) => ({ ...indexedLevels.get(config.level), ...config, active: Boolean(indexedLevels.get(config.level)?.active) }))
       setData({
         ...(apiData || {}),
         levels,
         chain: {
-          registered: Boolean(registered),
-          participantNumber: String(participantNumber),
-          sponsor: chainSponsor,
+          registered: Boolean(apiData?.participant?.registered),
+          participantNumber: String(apiData?.participant?.participantNumber || 0),
+          sponsor: apiData?.participant?.sponsor || ZERO,
           usdt: formatToken(usdt),
           fgt: formatToken(fgt),
           fpt: formatToken(fptAvailable),
@@ -173,6 +171,7 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
       setStatus(apiStatus)
       setActivationSummary(apiActivationSummary)
       setReconciliation(apiReconciliation)
+      setGateway({ registered: Boolean(apiData?.gateway?.registered), levelOneActive: Boolean(apiData?.gateway?.levelOneActive) })
       setReferralId(identity?.referralId || identity?.shortCode || '')
       setSponsorCode(identity?.referredByCode || '')
       const enrichedPeriods = await Promise.all((periods || []).map(async (period) => {
@@ -192,8 +191,10 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
         }
       }))
       setRewardPeriods(enrichedPeriods)
-      if (registered && chainSponsor && chainSponsor !== ZERO) {
-        setSponsor(chainSponsor)
+      if (apiData?.participant?.registered && apiData.participant.sponsor && apiData.participant.sponsor !== ZERO) {
+        setSponsor(apiData.participant.sponsor)
+      } else if (apiData?.gateway?.sponsor && apiData?.gateway?.sponsor !== ZERO) {
+        setSponsor(apiData?.gateway?.sponsor)
       } else if (identity?.referredByWallet && identity.referredByWallet !== ZERO) {
         setSponsor(identity.referredByWallet)
       }
@@ -352,7 +353,7 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
     }, `Level ${level} activation confirmed.`)
   }
 
-  const prepareActionReview = async (action) => {
+  const prepareActionReview = useCallback(async (action) => {
     setSecurityAccepted(false)
     setPendingAction(action)
     setActionPreflight({ loading: true, allowance: 0n, sponsorReady: null })
@@ -366,16 +367,27 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
     } catch {
       setActionPreflight({ loading: false, allowance: 0n, sponsorReady: null })
     }
-  }
+  }, [account, sponsor])
 
-  const openRegistrationReview = () => {
+  const openRegistrationReview = useCallback(() => {
     prepareActionReview({ type: 'register', level: 1, price: 50, orbit: 'P39' })
-  }
+  }, [prepareActionReview])
 
   const openActivationReview = (item) => {
     prepareActionReview({ type: 'activate', ...item })
   }
 
+  useEffect(() => {
+    const normalizedAccount = String(account || '').toLowerCase()
+    if (
+      tab !== 'levels' || !isConnected || loading || !data || data.chain?.registered ||
+      !gateway.registered || !gateway.levelOneActive || !sponsor ||
+      onboardingPromptedAccount === normalizedAccount
+    ) return
+
+    setOnboardingPromptedAccount(normalizedAccount)
+    openRegistrationReview()
+  }, [account, data, gateway, isConnected, loading, onboardingPromptedAccount, openRegistrationReview, sponsor, tab])
   const confirmPendingAction = () => {
     if (!pendingAction || !securityAccepted) return
     const action = pendingAction
@@ -542,6 +554,7 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
               networkReady={networkReady} networkName={NETWORK_CONFIG.chainName} levels={FREEDOM_PLUS_LEVELS}
               activeLevels={activeLevels} progressionData={progressionData} activationSummary={activationSummary}
               nextLevel={nextLevel} sponsor={sponsor} sponsorCode={sponsorCode} referralId={referralId} busy={busy}
+              gateway={gateway}
               onRegister={openRegistrationReview} onActivate={openActivationReview}
               onViewOrbit={(level) => { setSelectedLevel(level); setSelectedPosition(null) }}
               selectedLevel={selectedLevel} setSelectedLevel={setSelectedLevel} cycle={cycle} setCycle={setCycle}
@@ -579,6 +592,7 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
               {[
                 { label: 'Wallet connected', passed: isConnected, hint: short(account) },
                 { label: `Correct network`, passed: networkReady, hint: NETWORK_CONFIG.chainName },
+                { label: 'F-Freedom Level 1 gateway', passed: pendingAction.type !== 'register' || (gateway.registered && gateway.levelOneActive), hint: pendingAction.type !== 'register' ? 'Gateway completed' : gateway.levelOneActive ? 'Registration and Level 1 confirmed on F-Freedom' : 'Activate F-Freedom Level 1 before joining Freedom-Plus' },
                 { label: pendingAction.type === 'register' ? 'Permanent sponsor verified' : 'Freedom-Plus registration complete', passed: pendingAction.type === 'register' ? ethers.isAddress(sponsor) && actionPreflight.sponsorReady === true : Boolean(data?.chain?.registered), hint: pendingAction.type === 'register' ? actionPreflight.loading ? 'Checking the inherited sponsor on-chain' : actionPreflight.sponsorReady ? 'Inherited sponsor is registered in Freedom-Plus' : 'The inherited sponsor must join Freedom-Plus first' : referralId || short(account) },
                 { label: pendingAction.level === 1 ? 'Level 1 entry is available' : `Level ${pendingAction.level - 1} is active`, passed: pendingAction.level === 1 || activeLevels.has(pendingAction.level - 1), hint: 'Levels activate sequentially' },
                 { label: `${pendingAction.price.toLocaleString()} USDT available`, passed: Number(String(data?.chain?.usdt || '0').replaceAll(',', '')) >= pendingAction.price, hint: `Wallet balance: ${data?.chain?.usdt || '0'} USDT` },
@@ -597,7 +611,7 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
 
             <footer>
               <button type="button" className="fp-action-secondary" onClick={() => setPendingAction(null)}>Cancel</button>
-              <button type="button" className="fp-action-primary" disabled={!securityAccepted || !networkReady || actionPreflight.loading || (pendingAction.type === 'register' && actionPreflight.sponsorReady !== true) || Number(String(data?.chain?.usdt || '0').replaceAll(',', '')) < pendingAction.price} onClick={confirmPendingAction}>Continue to wallet<ArrowRight /></button>
+              <button type="button" className="fp-action-primary" disabled={!securityAccepted || !networkReady || actionPreflight.loading || (pendingAction.type === 'register' && (!gateway.registered || !gateway.levelOneActive || actionPreflight.sponsorReady !== true)) || Number(String(data?.chain?.usdt || '0').replaceAll(',', '')) < pendingAction.price} onClick={confirmPendingAction}>Continue to wallet<ArrowRight /></button>
             </footer>
           </section>
         </div>
