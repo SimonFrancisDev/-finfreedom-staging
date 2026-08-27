@@ -1,5 +1,6 @@
 import { getAddress, ZeroAddress } from 'ethers';
 import env from '../../config/env.js';
+import { freedomPlusOrbitTypeForLevel } from '../../config/freedomPlusProgram.js';
 import FreedomPlusEvent from '../../models/FreedomPlusEvent.js';
 import FreedomPlusParticipant from '../../models/FreedomPlusParticipant.js';
 import FreedomPlusLevelState from '../../models/FreedomPlusLevelState.js';
@@ -25,6 +26,7 @@ function pageOptions(query) {
   const page = Math.max(1, Number(query.page || 1));
   return { limit, skip: (page - 1) * limit, page };
 }
+
 
 export async function freedomPlusStatus() {
   if (!env.FREEDOM_PLUS_ENABLED) return { enabled: false, sync: [], participants: 0 };
@@ -164,7 +166,7 @@ export async function freedomPlusActivationSummary(address) {
       const current = currentByLevel.get(level);
       return {
         level,
-        orbitType: current?.orbitType || '',
+        orbitType: current?.orbitType || freedomPlusOrbitTypeForLevel(level),
         currentCycle: current ? Number(current._id.cycle) : 0,
         filledPositions: Number(current?.filledPositions || 0),
         latestBlock: Number(current?.latestBlock || 0),

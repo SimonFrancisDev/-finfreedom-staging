@@ -178,7 +178,8 @@ Frontend completion is a blocking prerequisite for interactive staging certifica
 5. Transaction modals show review, wallet confirmation, pending, success, and decoded failure states.
 6. Level cards reflect chain truth and do not use misleading balance colors.
 7. Orbit views show exact line, position, parent, occupant, cycle, source/payment-record distinction, and payment reason.
-8. Account and activity totals use the same backend accounting definitions.
+8. Account and activity totals use the same backend accounting definitions. Shared Dashboard, Account, and Activity program switches must preserve the same information architecture, visual hierarchy, theme tokens, and interaction states while changing only the program-scoped data.
+   - Freedom-Plus activation placement and owned-orbit occupancy are separate read models: activation placement describes where the participant entered an upline matrix; owned-orbit filled positions count only records whose orbit owner is that participant.
 9. NFT pages support qualification, lock, mint, freeze, restore, upgrade, downgrade, and reward history.
 10. Light theme, dark theme, desktop, tablet, and mobile are visually verified.
 11. Every button, deep link, refresh, wallet change, rejected transaction, and stale-session path is exercised.

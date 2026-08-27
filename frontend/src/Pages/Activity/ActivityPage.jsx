@@ -23,9 +23,12 @@ const ActivityPage = ({ program = 'f-freedom' }) => {
   const [activities, setActivities] = useState([])
   const [receipts, setReceipts] = useState([])
   const [levelActivations, setLevelActivations] = useState([])
-  const [registrationInfo, setRegistrationInfo] = useState(null)
   const [filter, setFilter] = useState('all')
   const [programFilter, setProgramFilter] = useState(program === 'freedom-plus' ? 'freedom-plus' : 'all')
+
+  useEffect(() => {
+    setProgramFilter(program === 'freedom-plus' ? 'freedom-plus' : program === 'f-freedom' ? 'f-freedom' : 'all')
+  }, [program])
   const [timeRange, setTimeRange] = useState('all')
   const [loading, setLoading] = useState(true)
   const [stats, setStats] = useState({
@@ -128,26 +131,6 @@ const ActivityPage = ({ program = 'f-freedom' }) => {
     }
   }
 
-  const fetchRegistrationInfo = useCallback(async () => {
-    if (!contracts || !account) return
-
-    try {
-      const registered = await contracts.registration.isRegistered(account)
-      if (registered) {
-        const referrer = await contracts.registration.getReferrer(account)
-        setRegistrationInfo({
-          registered: true,
-          referrer: referrer !== ethers.ZeroAddress ? referrer : null,
-          timestamp: null,
-        })
-      } else {
-        setRegistrationInfo({ registered: false, referrer: null, timestamp: null })
-      }
-    } catch (err) {
-      console.error('Error fetching registration info:', err)
-      toast.warning(activityT('errors.registrationInfoFailed', 'Registration activity could not be refreshed.'), { dedupeKey: 'activity-registration-info-failed' })
-    }
-  }, [contracts, account, activityT, toast])
 
   const fetchReceiptsAndActivities = useCallback(async () => {
     if (!account) return
@@ -239,7 +222,7 @@ const ActivityPage = ({ program = 'f-freedom' }) => {
         const profileReadHeaders = await getProfileReadAuthIfLocked(account, account)
         const levelsResponse = await fetchOrbitLevelsApi(account, { headers: profileReadHeaders });
         orbitLevelsData = levelsResponse?.levels || levelsResponse || [];
-      } catch (e) {
+      } catch {
         console.warn("Could not fetch orbit levels data");
       }
 
@@ -376,7 +359,6 @@ const ActivityPage = ({ program = 'f-freedom' }) => {
       const loadData = async () => {
         setLoading(true)
         await Promise.all([
-          fetchRegistrationInfo(),
           fetchReceiptsAndActivities(),
           fetchLevelActivations(),
           fetchFreedomPlusActivities(),
@@ -386,7 +368,7 @@ const ActivityPage = ({ program = 'f-freedom' }) => {
       }
       loadData()
     }
-  }, [contracts, account, fetchRegistrationInfo, fetchReceiptsAndActivities, fetchLevelActivations, fetchFreedomPlusActivities])
+  }, [contracts, account, fetchReceiptsAndActivities, fetchLevelActivations, fetchFreedomPlusActivities])
 
   useEffect(() => {
     if (!contracts || !account) return

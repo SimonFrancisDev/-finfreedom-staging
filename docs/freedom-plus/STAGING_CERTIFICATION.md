@@ -161,3 +161,30 @@ Deployment evidence:
 - Upgrade execution: 0xef2e45eeccaaf27eda0900a6de107eb340c855854991d29c04ac6c400b647b75
 
 Post-upgrade verification read the ERC-1967 implementation slot as 0xad82E89856BA8A301DeB78b81F3eBbEc87f77566. The exact formerly failing register(ID1) eth_call from the tester wallet returned 0x successfully. A real wallet transaction remains the final user-facing confirmation.
+
+## 2026-08-27 Real Wallet Levels 1-3 Structural Certification
+
+Tester wallet: `0x296238e950ef0066D2119230Bf0eb3aDEBc94882`
+
+| Action | Transaction | Block | Price / FPT | Canonical placement | Settlement |
+|---|---|---:|---:|---|---|
+| Register + Level 1 | `0xfafa93188ab2a6b2849c409bd291fb467a906cc394062690deb1c4771239b694` | 46031026 | 50 USDT / 50 FPT | P39, ID1 orbit cycle 0 position 8, ring 2, parent `0xDd78425335C0c698615845d94f9FeE7492266396` | 45 USDT participant components + 5 USDT system charge |
+| Level 2 | `0x76f973761c3ef77437c6e0fb6dfad76ba32d9a0c1ddb978ba898614cdf3d92ee` | 46032050 | 150 USDT / 150 FPT | P14, ID1 orbit cycle 0 position 8, ring 3, parent `0xeE192BE4884B064281Fa426F3d855fb339445B83` | 135 USDT participant components + 15 USDT system charge |
+| Level 3 | `0x4f5c3d9928e5afdaf52f72d1207eca0d4fd858a8dfc140a1d77c2e3d5a1d721a` | 46032201 | 450 USDT / 450 FPT | P12, ID1 orbit cycle 0 position 8, ring 2, parent `0xDd78425335C0c698615845d94f9FeE7492266396` | 405 USDT participant components + 45 USDT system charge |
+
+Certification findings:
+1. All three receipts succeeded and the participant was assigned Freedom-Plus participant number 47.
+2. The permanent F-Freedom sponsor remained ID1 on registration and on all paid activation events.
+3. Levels activated sequentially as 1, 2, and 3 with unique activation IDs.
+4. Prices follow the approved 50 x 3^(level-1) schedule and first activations minted equal FPT amounts.
+5. Orbit engines, cycles, positions, rings, and structural parents match `FreedomPlusConfig` and the occupied parent slots.
+6. Every settlement conserved the full price: 90 percent participant components plus the required 10 percent system charge.
+7. Routed-payment position records remained separate from each canonical placement and retained their own placement IDs and kinds.
+8. The worker indexed participant, level, position, token-ledger, settlement, and latest-wallet-event projections without sync errors.
+
+Read-model rule confirmed by this audit: a participant's placement inside an upline orbit is not a filled position in the participant's own orbit. Activation summaries must always return the canonical orbit type for each level, while `filledPositions` counts only positions whose `orbitOwner` is the requested wallet.
+
+Frontend production-port additions from this pass:
+- Full-page Freedom-Plus Dashboard and Account views must activate the shared page treatment, seven-level progression, gateway identity, permanent sponsor, indexed placement, token, receipt, and latest-block facts.
+- Activity program changes must immediately update the selected program filter while preserving the established timeline and receipt structure.
+- Freedom NFT mobile hero content must use semantic theme surfaces, text, muted text, and borders rather than a fixed dark background.
