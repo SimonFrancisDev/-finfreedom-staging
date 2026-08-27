@@ -169,7 +169,24 @@ export async function freedomPlusOrbit(address, level, query = {}) {
   }
   const filter = { chainId: env.CHAIN_ID, orbitOwner: normalized, level: numericLevel };
   if (query.cycle !== undefined) filter.cycle = Number(query.cycle);
-  return FreedomPlusPosition.find(filter).sort({ cycle: 1, position: 1 }).lean();
+  const positions = await FreedomPlusPosition.find(filter).sort({ cycle: 1, position: 1 }).lean();
+  const activationIds = [...new Set(positions.map((item) => item.activationId).filter(Boolean))];
+  const payments = activationIds.length
+    ? await FreedomPlusPayment.find({ chainId: env.CHAIN_ID, activationId: { $in: activationIds } })
+      .sort({ activationId: 1, role: 1 }).lean()
+    : [];
+  const paymentsByActivation = new Map();
+  for (const payment of payments) {
+    const key = String(payment.activationId || '').toLowerCase();
+    const current = paymentsByActivation.get(key) || [];
+    current.push(payment);
+    paymentsByActivation.set(key, current);
+  }
+  return positions.map((position) => ({
+    ...position,
+    payments: paymentsByActivation.get(String(position.activationId || '').toLowerCase()) || [],
+    dataSource: 'indexed',
+  }));
 }
 
 export async function freedomPlusPayments(address, query = {}) {

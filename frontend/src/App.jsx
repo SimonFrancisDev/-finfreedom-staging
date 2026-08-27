@@ -154,7 +154,7 @@ const pageToPathMap = {
   freedomPlus: '/freedom-plus',
   freedomPlusDashboard: '/dashboard?program=freedom-plus',
   freedomPlusActivation: '/freedom-plus/activation',
-  freedomPlusOrbits: '/freedom-plus/activation',
+  freedomPlusOrbits: '/freedom-plus/orbits',
   freedomPlusTokens: '/freedom-plus/tokens',
   freedomPlusActivity: '/activity?program=freedom-plus',
   freedomPlusAccount: '/account?program=freedom-plus',
@@ -1348,7 +1348,7 @@ function App() {
                   <Route path="/freedom-plus" element={<FreedomPlusPage initialTab="overview" />} />
                   <Route path="/freedom-plus/dashboard" element={<Navigate to="/dashboard?program=freedom-plus" replace />} />
                   <Route path="/freedom-plus/activation" element={<FreedomPlusPage initialTab="levels" />} />
-                  <Route path="/freedom-plus/orbits" element={<Navigate to="/freedom-plus/activation" replace />} />
+                  <Route path="/freedom-plus/orbits" element={<FreedomPlusPage initialTab="orbits" />} />
                   <Route path="/freedom-plus/tokens" element={<FreedomPlusPage initialTab="tokens" />} />
                   <Route path="/freedom-plus/activity" element={<Navigate to="/activity?program=freedom-plus" replace />} />
                   <Route path="/freedom-plus/account" element={<Navigate to="/account?program=freedom-plus" replace />} />

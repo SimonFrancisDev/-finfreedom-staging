@@ -22,7 +22,7 @@ function short(value = '') {
   return value ? `${value.slice(0, 5)}...${value.slice(-3)}` : ''
 }
 
-export default function FreedomPlusOrbit({ orbitType, positions = [], owner, onSelect }) {
+export default function FreedomPlusOrbit({ orbitType, positions = [], owner, onSelect, selectedPosition = null }) {
   const structure = STRUCTURES[orbitType] || STRUCTURES.P39
   const records = new Map(positions.map((item) => [Number(item.position), item]))
   const coordinates = new Map([[0, { x: 50, y: 50 }]])
@@ -33,27 +33,21 @@ export default function FreedomPlusOrbit({ orbitType, positions = [], owner, onS
 
   return (
     <div className={`fp-orbit-stage fp-orbit-stage--${orbitType.toLowerCase()}`} aria-label={`${orbitType} orbit diagram`}>
-      <svg className="fp-orbit-connections" viewBox="0 0 100 100" aria-hidden="true">
-        {structure.rings.flat().map((position) => {
-          const from = coordinates.get(structure.parent(position))
-          const to = coordinates.get(position)
-          return <line key={position} x1={from.x} y1={from.y} x2={to.x} y2={to.y} className={records.has(position) ? 'filled' : ''} />
-        })}
-      </svg>
       {structure.rings.map((_, index) => <span key={index} className={`fp-orbit-ring fp-orbit-ring--${index + 1}`} />)}
       <div className="fp-orbit-owner" title={owner || 'Orbit owner'}><User /><strong>Owner</strong><small>{short(owner)}</small></div>
       {structure.rings.flatMap((ringPositions, ringIndex) => ringPositions.map((position) => {
         const record = records.get(position)
         const coordinate = coordinates.get(position)
         const isFinancial = Boolean(record?.financial)
+        const isOwner = record?.participant?.toLowerCase?.() === owner?.toLowerCase?.()
+        const selectable = record || { position, ring: ringIndex + 1, cycle: null, empty: true }
         return (
           <button
             type="button"
             key={position}
-            className={`fp-orbit-node ${record ? 'is-filled' : 'is-empty'} ${isFinancial ? 'is-payment' : ''}`}
+            className={`fp-orbit-node ${record ? 'is-filled' : 'is-empty'} ${isFinancial ? 'is-payment' : ''} ${isOwner ? 'is-owner' : ''} ${Number(selectedPosition?.position) === position ? 'is-selected' : ''}`}
             style={{ left: `${coordinate.x}%`, top: `${coordinate.y}%` }}
-            onClick={() => record && onSelect?.(record)}
-            disabled={!record}
+            onClick={() => onSelect?.(selectable)}
             title={record ? `Position ${position}, Ring ${ringIndex + 1}, ${record.participant}` : `Position ${position}, Ring ${ringIndex + 1}, empty`}
           >
             {record ? (isFinancial ? <LockKeyhole /> : <Check />) : <span>{position}</span>}
@@ -62,7 +56,7 @@ export default function FreedomPlusOrbit({ orbitType, positions = [], owner, onS
           </button>
         )
       }))}
-      <div className="fp-orbit-legend"><span><i className="structural" />Structural</span><span><i className="payment" />Payment record</span><span><i className="empty" />Available</span></div>
+      <div className="fp-orbit-legend"><span><i className="owner" />Your position</span><span><i className="structural" />Participant</span><span><i className="payment" />Payment-linked</span><span><i className="empty" />Available</span></div>
     </div>
   )
 }

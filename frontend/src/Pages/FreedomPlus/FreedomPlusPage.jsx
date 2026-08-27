@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ethers } from 'ethers'
 import { Activity, AlertTriangle, ArrowRight, ArrowUpRight, Check, CheckCircle2, Coins, History, Info, LayoutDashboard, Lock, LockKeyhole, Network, RefreshCw, ShieldCheck, Trophy, User, UserPlus, Wallet, X } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useWallet } from '../../hooks/useWallet'
 import { CHAIN_ID, NETWORK_CONFIG } from '../../constants/addresses'
 import { web3Service } from '../../Services/web3'
@@ -12,6 +12,7 @@ import { ProgressionLineChart } from '../../components/charts/InstitutionalChart
 import { lockBodyScroll } from '../../utils/bodyScrollLock'
 import FreedomPlusOrbit from './FreedomPlusOrbit'
 import FreedomPlusActivationCenter from './FreedomPlusActivationCenter'
+import FreedomPlusFocusedOrbit from './FreedomPlusFocusedOrbit'
 import FreedomPlusOverview from './FreedomPlusOverview'
 import FreedomPlusTokens from './FreedomPlusTokens'
 import FreedomNftOverview from './FreedomNftOverview'
@@ -68,6 +69,7 @@ function normalizeMembership(raw) {
 
 export default function FreedomPlusPage({ initialTab = 'overview' }) {
   const navigate = useNavigate()
+  const location = useLocation()
   const { account, isConnected, connect } = useWallet()
   const toast = useToast()
   const [tab, setTab] = useState(initialTab)
@@ -207,6 +209,14 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
 
   useEffect(() => { load() }, [load])
   useEffect(() => { setTab(initialTab) }, [initialTab])
+  useEffect(() => {
+    const routedLevel = Number(location.state?.level || 0)
+    if (initialTab === 'orbits' && routedLevel >= 1 && routedLevel <= 7) {
+      setSelectedLevel(routedLevel)
+      setCycle('')
+      setSelectedPosition(null)
+    }
+  }, [initialTab, location.state])
   useEffect(() => {
     if (!isConnected) return
     const provider = web3Service.getEip1193Provider() || window.ethereum
@@ -466,17 +476,17 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
   }
 
   return (
-    <main className={tab === 'levels' ? 'freedom-plus-activation-shell' : 'freedom-plus-page'}>
-      {!isProgramOverview && tab !== 'levels' && tab !== 'nftOverview' && tab !== 'tokens' && <header className="fp-header">
+    <main className={tab === 'levels' ? 'freedom-plus-activation-shell' : tab === 'orbits' ? 'freedom-plus-page freedom-plus-orbit-shell' : 'freedom-plus-page'}>
+      {!isProgramOverview && tab !== 'levels' && tab !== 'nftOverview' && tab !== 'tokens' && tab !== 'orbits' && <header className="fp-header">
         <div><span className="fp-kicker">{isNftView ? 'Membership and long-term value' : 'Advanced participation'}</span><h1>{isNftView ? 'Freedom NFT' : 'Freedom-Plus'}</h1><p>{isNftView ? 'Token-backed membership, immediate qualification status and transparent monthly rewards.' : 'Seven manually activated levels, deterministic orbit placement and long-term Freedom NFT progression.'}</p></div>
         <button className="fp-icon-button" type="button" onClick={load} disabled={loading} title="Refresh chain and indexed data"><RefreshCw className={loading ? 'spin' : ''} /></button>
       </header>}
 
-      {!isProgramOverview && tab !== 'levels' && tab !== 'nftOverview' && !isConnected && (
+      {!isProgramOverview && tab !== 'levels' && tab !== 'nftOverview' && tab !== 'orbits' && !isConnected && (
         <section className="fp-connect"><Wallet /><div><h2>Connect your wallet</h2><p>Connect on the configured Polygon network to view or manage Freedom-Plus.</p></div><button type="button" onClick={connect}>Connect</button></section>
       )}
 
-      {!isProgramOverview && tab !== 'levels' && tab !== 'nftOverview' && tab !== 'tokens' && isConnected && (
+      {!isProgramOverview && tab !== 'levels' && tab !== 'nftOverview' && tab !== 'tokens' && tab !== 'orbits' && isConnected && (
         <section className="fp-metrics">
             <article><span>FFN ID</span><strong>{data?.chain?.registered ? (referralId || 'Resolving...') : 'Not registered'}</strong><small>{short(account)}</small></article>
             <article><span>Active levels</span><strong>{activeLevels.size} / 7</strong><small>Manual progression</small></article>
@@ -497,7 +507,7 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
         </section>
       )}
 
-      {!isProgramOverview && tab !== 'levels' && tab !== 'nftOverview' && <nav className="fp-tabs" aria-label={isNftView ? 'Freedom NFT views' : 'Freedom-Plus views'}>
+      {!isProgramOverview && tab !== 'levels' && tab !== 'nftOverview' && tab !== 'orbits' && <nav className="fp-tabs" aria-label={isNftView ? 'Freedom NFT views' : 'Freedom-Plus views'}>
             {visibleTabs.map(([value, icon, label]) => (
               <button type="button" className={tab === value ? 'active' : ''} onClick={() => openView(value)} key={value}>{icon}{label}</button>
             ))}
@@ -556,11 +566,30 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
               nextLevel={nextLevel} sponsor={sponsor} sponsorCode={sponsorCode} referralId={referralId} busy={busy}
               gateway={gateway}
               onRegister={openRegistrationReview} onActivate={openActivationReview}
-              onViewOrbit={(level) => { setSelectedLevel(level); setSelectedPosition(null) }}
+              onViewOrbit={(level) => { setSelectedLevel(level); setSelectedPosition(null); navigate('/freedom-plus/orbits', { state: { level } }) }}
               selectedLevel={selectedLevel} setSelectedLevel={setSelectedLevel} cycle={cycle} setCycle={setCycle}
               loadOrbit={loadOrbit} visualOrbit={visualOrbit} selectedConfig={selectedLevelConfig}
               selectedPosition={selectedPosition} setSelectedPosition={setSelectedPosition}
               formatToken={formatToken} short={short}
+            />
+          )}
+          {tab === 'orbits' && (
+            <FreedomPlusFocusedOrbit
+              account={account}
+              levels={FREEDOM_PLUS_LEVELS}
+              activeLevels={activeLevels}
+              selectedLevel={selectedLevel}
+              setSelectedLevel={setSelectedLevel}
+              config={selectedLevelConfig}
+              cycle={cycle}
+              setCycle={setCycle}
+              cycles={orbitCycles}
+              positions={visualOrbit}
+              selectedPosition={selectedPosition}
+              setSelectedPosition={setSelectedPosition}
+              loading={loading}
+              onRefresh={loadOrbit}
+              onBack={() => navigate('/freedom-plus/activation')}
             />
           )}
           {tab === 'orbits' && <section className="fp-panel"><div className="fp-toolbar"><label>Level<select value={selectedLevel} onChange={(event) => { setSelectedLevel(Number(event.target.value)); setSelectedPosition(null) }}>{FREEDOM_PLUS_LEVELS.map((item) => <option key={item.level} value={item.level}>Level {item.level} / {item.orbit}</option>)}</select></label><label>Cycle<input type="number" min="1" value={cycle} placeholder="Current" onChange={(event) => { setCycle(event.target.value); setSelectedPosition(null) }} /></label><button type="button" onClick={loadOrbit}><RefreshCw />Refresh</button></div><div className="fp-orbit-summary"><article><span>Orbit engine</span><strong>{selectedLevelConfig?.orbit}</strong><small>Level {selectedLevel}</small></article><article><span>Recorded positions</span><strong>{visualOrbit.length} / {selectedLevelConfig?.positions}</strong><small>{cycle ? `Cycle ${cycle}` : orbitCycles.length ? `Current cycle ${orbitCycles[0]}` : 'Current cycle'}</small></article><article><span>Ring structure</span><strong>{selectedLevelConfig?.rings}</strong><small>Deterministic parent topology</small></article><article><span>Payout roles</span><strong>{selectedLevelConfig?.payouts}</strong><small>Roles remain independently recorded</small></article></div><div className="fp-orbit-layout"><FreedomPlusOrbit orbitType={selectedLevelConfig?.orbit} positions={visualOrbit} owner={account} onSelect={setSelectedPosition} /><aside className="fp-position-inspector">{selectedPosition ? <><span>Position {selectedPosition.position}</span><h3>{selectedPosition.financial ? 'Payment-linked placement' : 'Structural placement'}</h3><dl><div><dt>Participant</dt><dd title={selectedPosition.participant}>{short(selectedPosition.participant)}</dd></div><div><dt>Matrix parent</dt><dd title={selectedPosition.structuralParent}>{short(selectedPosition.structuralParent)}</dd></div><div><dt>Ring</dt><dd>{selectedPosition.ring || selectedPosition.line}</dd></div><div><dt>Cycle</dt><dd>{selectedPosition.cycle}</dd></div><div><dt>Amount</dt><dd>{formatToken(selectedPosition.amount)} USDT</dd></div></dl></> : <><Network /><h3>Select a filled position</h3><p>Inspect its participant, exact structural parent, ring, cycle and recorded amount.</p></>}</aside></div><div className="fp-section-title"><History /><div><h2>Position ledger</h2><p>The diagram and table show the selected cycle only.</p></div></div><div className="fp-table-wrap"><table><thead><tr><th>Cycle</th><th>Position</th><th>Ring</th><th>Participant</th><th>Matrix parent</th><th>Entry</th><th>Amount</th></tr></thead><tbody>{visualOrbit.length ? visualOrbit.map((item) => <tr key={`${item.cycle}-${item.position}-${item.activationId || item._id}`}><td>{item.cycle}</td><td>{item.position}</td><td>{item.ring || item.line}</td><td title={item.participant}>{short(item.participant)}</td><td title={item.structuralParent}>{short(item.structuralParent)}</td><td>{item.financial ? 'Payment-linked placement' : 'Structural placement'}</td><td>{formatToken(item.amount)} USDT</td></tr>) : <tr><td colSpan="7" className="fp-no-data">No indexed positions for this level and cycle.</td></tr>}</tbody></table></div></section>}
