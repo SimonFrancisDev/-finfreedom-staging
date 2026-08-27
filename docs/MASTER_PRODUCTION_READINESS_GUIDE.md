@@ -337,3 +337,17 @@ Every production release folder must contain:
 ## 19. Definition Of Done
 
 The system is ready for production only when every gate is supported by evidence from the same release candidate, all three products agree across contract/backend/frontend, production legacy state has a rehearsed transition, no critical or high issue remains, and the post-deployment verification procedure is ready before multisig execution begins.
+
+
+## 20. Current Staging Delta - 2026-08-27
+
+The canonical rollout framework above remains authoritative. The latest Freedom-Plus focused-orbit delta is tracked in `docs/freedom-plus/STAGING_CERTIFICATION.md`.
+
+Current candidate scope:
+- Gateway and permanent-sponsor corrections: implemented and user-confirmed on staging.
+- Freedom-Plus orbit navigation and position modal: implemented and user-confirmed on staging.
+- Indexed relationship classification and structural connectors: implemented.
+- Equal ring distribution, corrected P39/P14 circular ordering, edge-trimmed connectors, and visible ring hierarchy: implemented; final staging visual certification pending.
+- Production port must include the component and stylesheet together and must use production addresses/start blocks from a release-specific manifest.
+
+This guide is a migration checklist, not proof that every gate has passed. Production remains blocked until the release evidence package contains contract test results, storage-layout validation, staging transaction evidence, chain/database reconciliation, complete frontend browser evidence, production inventory, fork rehearsal, decoded multisig proposals, and post-deployment checks.

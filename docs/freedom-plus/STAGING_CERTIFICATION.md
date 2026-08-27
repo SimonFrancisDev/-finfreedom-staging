@@ -83,3 +83,27 @@ Production-port requirements:
 6. Port API, frontend ABI/address configuration, frontend logic, styles, and deployment environment together; do not copy staging addresses or secrets to production.
 
 Verification evidence: backend syntax passed; focused frontend ESLint passed; production Vite build passed. Staging user confirmed View Orbit, permanent sponsor resolution, and the registration preflight are working after redeployment.
+
+
+## 2026-08-27 Orbit Visual Parity Follow-Up
+
+Implementation commits:
+- `17cdad3` - introduced Freedom-Plus structural relationship lines and node-state styling.
+- `7f926b6` - retained equal distribution on every ring, corrected P39/P14 circular child ordering, and trimmed connectors at node boundaries.
+- Current follow-up - restores F-Freedom-equivalent visible ring hierarchy: solid Ring 1, dashed Ring 2, dotted Ring 3, explicit stacking, and theme-aware contrast.
+
+Production-port files for the focused orbit:
+- `frontend/src/Pages/FreedomPlus/FreedomPlusOrbit.jsx`
+- `frontend/src/Pages/FreedomPlus/FreedomPlusPage.css`
+
+Required production behavior:
+1. Keep every position evenly distributed on its own ring.
+2. Preserve the canonical contract parent for every connector.
+3. Order equally spaced child positions around the ring so parent relationships do not create avoidable crossings.
+4. Trim connectors at owner and node boundaries.
+5. Render ordinary structural links as restrained solid gray and the next-to-fill link as animated dashed gold.
+6. Render filled positions green, vacant positions red outlined, and next-to-fill gold.
+7. Keep all orbit rings clearly visible in light and dark themes.
+8. Port the implementation and CSS together; neither file is sufficient alone.
+
+Certification status: production build passed. Live desktop/mobile and light/dark staging confirmation is still required after frontend redeployment. This section must not be marked certified until screenshots and interaction checks confirm visible rings, correct topology, and working position modals.
