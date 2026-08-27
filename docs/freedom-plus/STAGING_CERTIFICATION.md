@@ -107,3 +107,8 @@ Required production behavior:
 8. Port the implementation and CSS together; neither file is sufficient alone.
 
 Certification status: production build passed. Live desktop/mobile and light/dark staging confirmation is still required after frontend redeployment. This section must not be marked certified until screenshots and interaction checks confirm visible rings, correct topology, and working position modals.
+
+
+### Deployed ring-visibility root cause
+
+The first visible-ring pass used `--ffn-primary` and `--ffn-accent`, but those aliases are not defined by `frontend/src/styles/foundation.css`. Browsers therefore discarded the complete ring border declarations even though the ring elements and CSS bundle were deployed. The corrected focused-orbit rings use explicit theme-tested RGBA colors with light-theme overrides. Production must either port these explicit ring colors or define and certify the missing semantic aliases before using them.
