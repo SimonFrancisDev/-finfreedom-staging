@@ -32,11 +32,9 @@ export default function FreedomPlusOrbit({ orbitType, positions = [], owner, onS
     ringPositions.forEach((position, index) => coordinates.set(position, point(index, ringPositions.length, ringIndex + 1)))
   })
   const connections = structure.rings.flat().flatMap((position) => {
-    const record = records.get(position)
-    if (!record && position !== nextPosition) return []
     const from = coordinates.get(structure.parent(position))
     const to = coordinates.get(position)
-    const relationship = record?.participant?.toLowerCase?.() === owner?.toLowerCase?.() ? 'owner' : record?.relationship || 'next'
+    const relationship = position === nextPosition ? 'next' : 'structural'
     return [{ position, from, to, relationship }]
   })
 
@@ -67,7 +65,7 @@ export default function FreedomPlusOrbit({ orbitType, positions = [], owner, onS
           </button>
         )
       }))}
-      <div className="fp-orbit-legend"><span><i className="owner" />Your position</span><span><i className="next" />Next to fill</span><span><i className="direct" />Direct downline</span><span><i className="indirect" />Indirect downline</span><span><i className="empty" />Available</span></div>
+      <div className="fp-orbit-legend"><span><i className="filled" />Filled</span><span><i className="next" />Next to fill</span><span><i className="unfilled" />Unfilled</span><span><i className="structural-line" />Structural path</span></div>
     </div>
   )
 }
