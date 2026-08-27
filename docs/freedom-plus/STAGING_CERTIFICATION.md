@@ -66,3 +66,20 @@ Do not enable public testing if any service reports an address from the supersed
 | Users inherited from system ID1 are shown as having an unregistered sponsor | Frontend preflight treated every sponsor as an ordinary participant | Compare the sponsor with `FreedomPlusRegistration.id1Wallet()` before requiring ordinary registration | Implemented; staging validation pending |
 
 Production port inventory for this gate: `frontend/src/Pages/FreedomPlus/FreedomPlusActivationCenter.jsx`, `frontend/src/Pages/FreedomPlus/FreedomPlusPage.jsx`, `smart-contract/contracts/freedom-plus/FreedomPlusRegistration.sol`, its regression tests, and the FreedomPlusRegistration proxy-upgrade procedure. No database schema, indexer model, API environment, or worker environment change is required.
+
+
+## 2026-08-27 Gateway and Orbit Closure
+
+Validated staging commits:
+- f7bfe72 - index-first Freedom-Plus gateway fallback and indexed orbit relationship classification.
+- 46e8ae0 - zero-address hardening, ID1-root sponsor fallback, and structural relationship connectors.
+
+Production-port requirements:
+1. Preserve the gateway lookup order: indexed F-Freedom registration, bounded chain getReferrer, then LevelManager.id1Wallet only for zero-referrer ID1-rooted users.
+2. Reject zero-address and self-sponsor values. Never require the inherited F-Freedom sponsor to join Freedom-Plus.
+3. Keep normal reads index-first. Chain reads are conditional recovery reads only when indexed gateway data is incomplete.
+4. Return occupantReferrer and relationship (owner, direct, or indirect) from the Freedom-Plus orbit API.
+5. Render owner, direct, indirect, next-to-fill, and available node states. Draw structural connectors only for occupied positions and the next-to-fill path.
+6. Port API, frontend ABI/address configuration, frontend logic, styles, and deployment environment together; do not copy staging addresses or secrets to production.
+
+Verification evidence: backend syntax passed; focused frontend ESLint passed; production Vite build passed. Staging user confirmed View Orbit, permanent sponsor resolution, and the registration preflight are working after redeployment.

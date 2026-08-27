@@ -60,7 +60,7 @@ The sponsor is recorded once during registration and remains permanent. It is us
 
 The existing F-Freedom referral ID is the participant's only public FFN identity. Freedom-Plus resolves that ID through the existing registration source of truth and binds the same wallet to its Freedom-Plus state. Internal contract participant numbers may exist for storage and indexing, but they are never presented as a second referral ID.
 
-A Freedom-Plus sponsor may be supplied as an existing FFN referral ID or its resolved wallet. The resolved sponsor wallet must already be registered in Freedom-Plus. The configured protocol ID1 wallet (`FIN-FREEDOM`) is the system sponsor and is valid by construction even when an ordinary participant lookup or projection is unavailable. Resolution must reject an unknown ID, an ID whose wallet does not match chain truth, and any attempt to bind one FFN identity to a different wallet.
+Freedom-Plus inherits the participant's permanent sponsor from F-Freedom; the user does not choose or replace it during Freedom-Plus registration. The inherited sponsor does not need to have joined Freedom-Plus. Structural placement preserves that exact sponsor, while settlement eligibility independently traverses the sponsor chain and may terminate at protocol ID1. Resolution order is: indexed F-Freedom registration, bounded RegistrationFixed.getReferrer fallback, then LevelManager.id1Wallet when the chain referrer is the zero address for an ID1-rooted registration. Zero-address and self-sponsor results are invalid. The configured protocol ID1 wallet (FIN-FREEDOM) is valid by construction even when an ordinary participant projection is unavailable.
 
 ### 4.3 Structural matrix parent
 

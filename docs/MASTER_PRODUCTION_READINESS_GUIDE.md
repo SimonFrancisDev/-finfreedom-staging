@@ -94,6 +94,8 @@ Every row must be marked `APPROVED`, linked to evidence, and translated into tes
 
 - A participant must already be registered in F-Freedom with Level 1 active.
 - The Freedom-Plus sponsor must equal the permanent F-Freedom sponsor.
+- Freedom-Plus registration must not require that inherited sponsor to be registered in Freedom-Plus; sponsor structure and payout eligibility are separate concerns.
+- Gateway recovery must remain index-first, with bounded getReferrer and ID1-root fallback reads only when indexed identity data is incomplete.
 - Registration includes Freedom-Plus Level 1 activation.
 - Levels 1 through 7 are sequential and manually activated; there is no auto-upgrade.
 - Orbit engines are P39, P14, P12, P6, P4, P4, and P3 for Levels 1 through 7.
