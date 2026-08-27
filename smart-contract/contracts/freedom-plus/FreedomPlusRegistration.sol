@@ -119,8 +119,8 @@ contract FreedomPlusRegistration is
             revert FFreedomLevelOneInactive(participant);
         }
         address permanentSponsor = fFreedom.getReferrer(participant);
+        if (permanentSponsor == address(0)) permanentSponsor = id1Wallet;
         if (sponsor != permanentSponsor) revert PermanentSponsorMismatch(permanentSponsor, sponsor);
-        if (sponsor == address(0)) revert SponsorNotRegistered(sponsor);
 
         uint256 number = registeredCount + 1;
         isRegistered[participant] = true;

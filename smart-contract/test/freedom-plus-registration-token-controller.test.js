@@ -77,6 +77,16 @@ describe("Freedom-Plus registration and token controller", function () {
     expect(await manager.lastLevel()).to.equal(1);
   });
 
+  it("uses configured ID1 when an eligible F-Freedom participant has no stored referrer", async function () {
+    const registration = await deployRegistration();
+    await gateway.setParticipant(participant.address, ethers.ZeroAddress, true, true);
+
+    await registration.connect(participant).register(id1.address);
+
+    expect(await registration.sponsorOf(participant.address)).to.equal(id1.address);
+    expect(await registration.isLevelActive(participant.address, 1)).to.equal(true);
+    expect(await manager.lastSponsor()).to.equal(id1.address);
+  });
   it("rolls registration back completely when Level 1 settlement fails", async function () {
     const registration = await deployRegistration();
     await manager.setShouldRevert(true);

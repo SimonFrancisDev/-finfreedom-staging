@@ -20,7 +20,7 @@ All remaining proxy addresses are recorded in the manifest and the environment d
 
 ## Evidence
 
-- Full repository contract suite: `153 passing`
+- Full repository contract suite: `155 passing`
 - Focused Freedom-Plus regression suite: `43 passing`
 - Backend Merkle proof suite: `2 passing`
 - Frontend production build: passed
@@ -137,3 +137,27 @@ Production-port files:
 - frontend/src/utils/txOptions.js (shared dependency; do not fork it)
 
 Verification evidence for the candidate: focused ESLint passed and the production Vite build passed (3330 modules). Live staging certification still requires one fresh registration plus Levels 2 and 3, checking wallet prompts, decoded failures, immediate unlock, index convergence, orbit zoom/pan, position selection, both themes, and desktop/mobile layouts.
+## 2026-08-27 ID1-Root Registration Contract Closure
+
+A staging registration from 0x296238e950ef0066D2119230Bf0eb3aDEBc94882 reverted with selector 0xfdcdaae8. A direct eth_call decoded it as PermanentSponsorMismatch(address,address) with expected sponsor zero and supplied sponsor configured ID1. The wallet was F-Freedom registered with Level 1 active, and its indexed gateway correctly classified it as ID1-rooted.
+
+Correction:
+- FreedomPlusRegistration now preserves every nonzero permanent F-Freedom referrer unchanged.
+- Only an eligible participant whose gateway referrer is zero inherits the contract's configured id1Wallet.
+- A focused regression test reproduces this exact case.
+- UUPS storage validation passed against the live proxy.
+- Focused registration/token tests: 10 passing.
+- Complete smart-contract suite: 155 passing.
+
+Deployment evidence:
+- Proxy: 0x56Dc8f775e4Bf7e31777080eB8AFb9cAA42c300A
+- New implementation: 0xad82E89856BA8A301DeB78b81F3eBbEc87f77566
+- Implementation deployment: 0x05fa9e9d862d8e32476467bfc0e75154317229c16fd53c7ad04d0808c80b42b5
+- Guardian proposal submit: 0xf23550776084d70002a97969ea818c2d8930e7ecfb6b7775d5178c28b9dc1adb
+- Guardian proposal confirmations: 0x8e9ef97f410eafb1170a95f803f503660563cbedd9413bedd5b8feb76c55320a and 0x296afe83a5a1d2cfc652efa1c83971d6bf79261999cd2b70029dd864f051c301
+- Guardian proposal execution: 0xd7a144f52fd622ad62e3e7bd6cf60482b25d961b207e581b794625a4dd755130
+- Upgrade proposal submit: 0x6fe7de6fb212e9b4d25a532a2b23668d21e383ba3b8dd621e7280e7331f72d65
+- Upgrade confirmations: 0xc5113fc3d34753bb792ad9abd7cdb64b46e22caa2568f5a570feb04e967bffea and 0x10f07fc0ff9e098bf4ce9be662a5cc767ef24cbe42f39ef08b8f7ce8d49c1f67
+- Upgrade execution: 0xef2e45eeccaaf27eda0900a6de107eb340c855854991d29c04ac6c400b647b75
+
+Post-upgrade verification read the ERC-1967 implementation slot as 0xad82E89856BA8A301DeB78b81F3eBbEc87f77566. The exact formerly failing register(ID1) eth_call from the tester wallet returned 0x successfully. A real wallet transaction remains the final user-facing confirmation.
