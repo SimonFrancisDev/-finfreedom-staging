@@ -25,6 +25,7 @@ function short(value = '') {
 export default function FreedomPlusOrbit({ orbitType, positions = [], owner, onSelect, selectedPosition = null }) {
   const structure = STRUCTURES[orbitType] || STRUCTURES.P39
   const records = new Map(positions.map((item) => [Number(item.position), item]))
+  const nextPosition = structure.rings.flat().sort((a, b) => a - b).find((position) => !records.has(position))
   const coordinates = new Map([[0, { x: 50, y: 50 }]])
 
   structure.rings.forEach((ringPositions, ringIndex) => {
@@ -40,12 +41,13 @@ export default function FreedomPlusOrbit({ orbitType, positions = [], owner, onS
         const coordinate = coordinates.get(position)
         const isFinancial = Boolean(record?.financial)
         const isOwner = record?.participant?.toLowerCase?.() === owner?.toLowerCase?.()
-        const selectable = record || { position, ring: ringIndex + 1, cycle: null, empty: true }
+        const relationship = isOwner ? 'owner' : record?.relationship || (record ? 'indirect' : position === nextPosition ? 'next' : 'available')
+        const selectable = record || { position, ring: ringIndex + 1, cycle: null, empty: true, relationship }
         return (
           <button
             type="button"
             key={position}
-            className={`fp-orbit-node ${record ? 'is-filled' : 'is-empty'} ${isFinancial ? 'is-payment' : ''} ${isOwner ? 'is-owner' : ''} ${Number(selectedPosition?.position) === position ? 'is-selected' : ''}`}
+            className={`fp-orbit-node ${record ? 'is-filled' : 'is-empty'} is-${relationship} ${isFinancial ? 'is-payment' : ''} ${Number(selectedPosition?.position) === position ? 'is-selected' : ''}`}
             style={{ left: `${coordinate.x}%`, top: `${coordinate.y}%` }}
             onClick={() => onSelect?.(selectable)}
             title={record ? `Position ${position}, Ring ${ringIndex + 1}, ${record.participant}` : `Position ${position}, Ring ${ringIndex + 1}, empty`}
@@ -56,7 +58,7 @@ export default function FreedomPlusOrbit({ orbitType, positions = [], owner, onS
           </button>
         )
       }))}
-      <div className="fp-orbit-legend"><span><i className="owner" />Your position</span><span><i className="structural" />Participant</span><span><i className="payment" />Payment-linked</span><span><i className="empty" />Available</span></div>
+      <div className="fp-orbit-legend"><span><i className="owner" />Your position</span><span><i className="next" />Next to fill</span><span><i className="direct" />Direct downline</span><span><i className="indirect" />Indirect downline</span><span><i className="empty" />Available</span></div>
     </div>
   )
 }

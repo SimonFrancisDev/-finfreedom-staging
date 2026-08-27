@@ -150,6 +150,25 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
         contracts.fptr.lockedBalanceOf(account),
         isNftView ? contracts.nftMembership.membershipOf(account) : Promise.resolve(null),
       ])
+      let gatewayData = apiData?.gateway || {}
+      if (!gatewayData.registered || !gatewayData.levelOneActive || !ethers.isAddress(gatewayData.sponsor || '')) {
+        try {
+          const registration = web3Service.getReadContracts().registration
+          const [registered, levelOneActive, sponsor] = await Promise.all([
+            registration.isRegistered(account),
+            registration.isLevelActivated(account, 1),
+            registration.getReferrer(account),
+          ])
+          gatewayData = {
+            ...gatewayData,
+            registered: Boolean(gatewayData.registered || registered),
+            levelOneActive: Boolean(gatewayData.levelOneActive || levelOneActive),
+            sponsor: ethers.isAddress(gatewayData.sponsor || '') && gatewayData.sponsor !== ZERO ? gatewayData.sponsor : sponsor,
+          }
+        } catch {
+          // Keep the indexed API snapshot when the browser RPC fallback is unavailable.
+        }
+      }
       const indexedLevels = new Map((apiData?.levels || []).map((item) => [Number(item.level), item]))
       const levels = FREEDOM_PLUS_LEVELS.map((config) => ({ ...indexedLevels.get(config.level), ...config, active: Boolean(indexedLevels.get(config.level)?.active) }))
       setData({
@@ -173,7 +192,7 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
       setStatus(apiStatus)
       setActivationSummary(apiActivationSummary)
       setReconciliation(apiReconciliation)
-      setGateway({ registered: Boolean(apiData?.gateway?.registered), levelOneActive: Boolean(apiData?.gateway?.levelOneActive) })
+      setGateway({ registered: Boolean(gatewayData.registered), levelOneActive: Boolean(gatewayData.levelOneActive) })
       setReferralId(identity?.referralId || identity?.shortCode || '')
       setSponsorCode(identity?.referredByCode || '')
       const enrichedPeriods = await Promise.all((periods || []).map(async (period) => {
@@ -195,8 +214,8 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
       setRewardPeriods(enrichedPeriods)
       if (apiData?.participant?.registered && apiData.participant.sponsor && apiData.participant.sponsor !== ZERO) {
         setSponsor(apiData.participant.sponsor)
-      } else if (apiData?.gateway?.sponsor && apiData?.gateway?.sponsor !== ZERO) {
-        setSponsor(apiData?.gateway?.sponsor)
+      } else if (gatewayData.sponsor && gatewayData.sponsor !== ZERO) {
+        setSponsor(gatewayData.sponsor)
       } else if (identity?.referredByWallet && identity.referredByWallet !== ZERO) {
         setSponsor(identity.referredByWallet)
       }

@@ -1,4 +1,4 @@
-import { getAddress } from 'ethers';
+import { getAddress, ZeroAddress } from 'ethers';
 import env from '../../config/env.js';
 import FreedomPlusEvent from '../../models/FreedomPlusEvent.js';
 import FreedomPlusParticipant from '../../models/FreedomPlusParticipant.js';
@@ -9,6 +9,7 @@ import FreedomPlusSyncState from '../../models/FreedomPlusSyncState.js';
 import FreedomPlusLedgerEntry from '../../models/FreedomPlusLedgerEntry.js';
 import IndexedRegistrationEvent from '../../models/IndexedRegistrationEvent.js';
 import { getProvider } from '../../blockchain/provider.js';
+import { getContracts } from '../../blockchain/contracts.js';
 import { getFreedomPlusContracts } from '../../blockchain/freedomPlusContracts.js';
 import {
   freedomPlusRewardProof,
@@ -98,13 +99,29 @@ export async function freedomPlusParticipant(address) {
       $or: [{ level: 1 }, { eventName: 'Registered' }],
     }).sort({ blockNumber: 1, logIndex: 1 }).lean(),
   ]);
+  let gatewayRegistered = Boolean(fFreedomRegistration);
+  let gatewayLevelOneActive = Boolean(fFreedomLevelOne);
+  let gatewaySponsor = fFreedomRegistration?.referrer || '';
+  let gatewaySource = 'indexed';
+  if (!gatewayRegistered || !gatewayLevelOneActive || !gatewaySponsor) {
+    try {
+      const registration = getContracts().registration;
+      const [registered, levelOneActive, sponsor] = await Promise.all([
+        registration.isRegistered(normalized), registration.isLevelActivated(normalized, 1), registration.getReferrer(normalized),
+      ]);
+      gatewayRegistered ||= Boolean(registered);
+      gatewayLevelOneActive ||= Boolean(levelOneActive);
+      if (!gatewaySponsor && sponsor && sponsor !== ZeroAddress) gatewaySponsor = String(sponsor).toLowerCase();
+      gatewaySource = 'indexed+chain-fallback';
+    } catch { gatewaySource = 'indexed-fallback-unavailable'; }
+  }
   return {
     wallet: normalized,
     gateway: {
-      registered: Boolean(fFreedomRegistration),
-      levelOneActive: Boolean(fFreedomLevelOne),
-      sponsor: fFreedomRegistration?.referrer || '',
-      source: 'indexed',
+      registered: gatewayRegistered,
+      levelOneActive: gatewayLevelOneActive,
+      sponsor: gatewaySponsor,
+      source: gatewaySource,
     },
     participant, levels, positions, payments, ledger,
   };
@@ -171,6 +188,8 @@ export async function freedomPlusOrbit(address, level, query = {}) {
   if (query.cycle !== undefined) filter.cycle = Number(query.cycle);
   const positions = await FreedomPlusPosition.find(filter).sort({ cycle: 1, position: 1 }).lean();
   const activationIds = [...new Set(positions.map((item) => item.activationId).filter(Boolean))];
+  const participants = [...new Set(positions.map((item) => item.participant).filter(Boolean))];
+  const registrations = participants.length ? await IndexedRegistrationEvent.find({ chainId: env.CHAIN_ID, user: { $in: participants }, eventName: 'Registered' }).sort({ blockNumber: 1, logIndex: 1 }).lean() : [];
   const payments = activationIds.length
     ? await FreedomPlusPayment.find({ chainId: env.CHAIN_ID, activationId: { $in: activationIds } })
       .sort({ activationId: 1, role: 1 }).lean()
@@ -182,8 +201,15 @@ export async function freedomPlusOrbit(address, level, query = {}) {
     current.push(payment);
     paymentsByActivation.set(key, current);
   }
+  const referrerByParticipant = new Map();
+  for (const registration of registrations) {
+    const participant = String(registration.user || '').toLowerCase();
+    if (participant && !referrerByParticipant.has(participant)) referrerByParticipant.set(participant, String(registration.referrer || '').toLowerCase());
+  }
   return positions.map((position) => ({
     ...position,
+    occupantReferrer: referrerByParticipant.get(String(position.participant || '').toLowerCase()) || '',
+    relationship: String(position.participant || '').toLowerCase() === normalized ? 'owner' : referrerByParticipant.get(String(position.participant || '').toLowerCase()) === normalized ? 'direct' : 'indirect',
     payments: paymentsByActivation.get(String(position.activationId || '').toLowerCase()) || [],
     dataSource: 'indexed',
   }));
