@@ -677,9 +677,11 @@ Freedom-Plus is not ready for production until:
 
 ### Gate 0: activation and identity blockers
 
-- [ ] Active Freedom-Plus level cards navigate to `/freedom-plus/orbits` with the selected level.
+- [ ] Active Freedom-Plus level cards navigate to `/freedom-plus/orbits` with the selected level using one explicit navigation action.
+- [ ] A participant can join Freedom-Plus with their exact permanent F-Freedom sponsor even when that sponsor has not joined Freedom-Plus.
+- [ ] Orbit structure preserves that permanent sponsor; payout eligibility and ID1 fallback remain independent of sponsor registration.
 - [ ] Direct orbit URLs render a visible loading, empty, success, or error state and never fail silently.
 - [ ] An inherited `FIN-FREEDOM` sponsor is recognized using `FreedomPlusRegistration.id1Wallet()`.
-- [ ] Normal inherited sponsors must still be registered in Freedom-Plus.
+- [ ] Normal inherited sponsors are preserved from F-Freedom without requiring prior Freedom-Plus registration.
 - [ ] Frontend build, focused lint, backend checks, desktop/mobile navigation, and both themes pass.
 - [ ] Staging evidence and the exact production-port file list are recorded in `STAGING_CERTIFICATION.md`.

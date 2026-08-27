@@ -120,7 +120,7 @@ contract FreedomPlusRegistration is
         }
         address permanentSponsor = fFreedom.getReferrer(participant);
         if (sponsor != permanentSponsor) revert PermanentSponsorMismatch(permanentSponsor, sponsor);
-        if (sponsor == address(0) || !isRegistered[sponsor]) revert SponsorNotRegistered(sponsor);
+        if (sponsor == address(0)) revert SponsorNotRegistered(sponsor);
 
         uint256 number = registeredCount + 1;
         isRegistered[participant] = true;

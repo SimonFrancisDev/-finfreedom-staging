@@ -70,8 +70,7 @@ function normalizeMembership(raw) {
 async function verifyFreedomPlusSponsor(registration, sponsorWallet) {
   const id1Wallet = await registration.id1Wallet()
   const isSystemSponsor = id1Wallet?.toLowerCase() === sponsorWallet?.toLowerCase()
-  if (isSystemSponsor) return { ready: true, isSystemSponsor: true }
-  return { ready: Boolean(await registration.isRegistered(sponsorWallet)), isSystemSponsor: false }
+  return { ready: true, isSystemSponsor }
 }
 
 export default function FreedomPlusPage({ initialTab = 'overview' }) {
@@ -313,10 +312,6 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
         throw new Error('Your permanent F-Freedom sponsor could not be verified. Freedom-Plus registration has been stopped without changing your wallet.')
       }
       const readContracts = getFreedomPlusReadContracts()
-      const sponsorVerification = await verifyFreedomPlusSponsor(readContracts.registration, sponsorWallet)
-      if (!sponsorVerification.ready) {
-        throw new Error('Your permanent sponsor has not registered in Freedom-Plus yet. The sponsor must join first; the system will not substitute another sponsor.')
-      }
       const price = tokenUnits(50)
       const balance = await readContracts.usdt.balanceOf(account)
       if (balance < price) throw new Error(`Insufficient USDT balance. Registration and Level 1 require 50 USDT; this wallet has ${formatToken(balance)} USDT.`)
@@ -574,7 +569,13 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
               nextLevel={nextLevel} sponsor={sponsor} sponsorCode={sponsorCode} referralId={referralId} busy={busy}
               gateway={gateway}
               onRegister={openRegistrationReview} onActivate={openActivationReview}
-              onViewOrbit={(level) => { setSelectedLevel(level); setSelectedPosition(null) }}
+              onViewOrbit={(level) => {
+                setSelectedLevel(level)
+                setCycle('')
+                setSelectedPosition(null)
+                setTab('orbits')
+                navigate('/freedom-plus/orbits', { state: { level } })
+              }}
               selectedLevel={selectedLevel} setSelectedLevel={setSelectedLevel} cycle={cycle} setCycle={setCycle}
               loadOrbit={loadOrbit} visualOrbit={visualOrbit} selectedConfig={selectedLevelConfig}
               selectedPosition={selectedPosition} setSelectedPosition={setSelectedPosition}
@@ -630,7 +631,7 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
                 { label: 'Wallet connected', passed: isConnected, hint: short(account) },
                 { label: `Correct network`, passed: networkReady, hint: NETWORK_CONFIG.chainName },
                 { label: 'F-Freedom Level 1 gateway', passed: pendingAction.type !== 'register' || (gateway.registered && gateway.levelOneActive), hint: pendingAction.type !== 'register' ? 'Gateway completed' : gateway.levelOneActive ? 'Registration and Level 1 confirmed on F-Freedom' : 'Activate F-Freedom Level 1 before joining Freedom-Plus' },
-                { label: pendingAction.type === 'register' ? 'Permanent sponsor verified' : 'Freedom-Plus registration complete', passed: pendingAction.type === 'register' ? ethers.isAddress(sponsor) && actionPreflight.sponsorReady === true : Boolean(data?.chain?.registered), hint: pendingAction.type === 'register' ? actionPreflight.loading ? 'Checking the inherited sponsor on-chain' : actionPreflight.isSystemSponsor ? 'FIN-FREEDOM system ID confirmed' : actionPreflight.sponsorReady ? 'Inherited sponsor is registered in Freedom-Plus' : 'The inherited sponsor must join Freedom-Plus first' : referralId || short(account) },
+                { label: pendingAction.type === 'register' ? 'Permanent sponsor verified' : 'Freedom-Plus registration complete', passed: pendingAction.type === 'register' ? ethers.isAddress(sponsor) && actionPreflight.sponsorReady === true : Boolean(data?.chain?.registered), hint: pendingAction.type === 'register' ? actionPreflight.loading ? 'Checking the inherited sponsor on-chain' : actionPreflight.isSystemSponsor ? 'FIN-FREEDOM system ID confirmed' : actionPreflight.sponsorReady ? 'Permanent F-Freedom sponsor preserved' : 'Confirming the permanent F-Freedom sponsor' : referralId || short(account) },
                 { label: pendingAction.level === 1 ? 'Level 1 entry is available' : `Level ${pendingAction.level - 1} is active`, passed: pendingAction.level === 1 || activeLevels.has(pendingAction.level - 1), hint: 'Levels activate sequentially' },
                 { label: `${pendingAction.price.toLocaleString()} USDT available`, passed: Number(String(data?.chain?.usdt || '0').replaceAll(',', '')) >= pendingAction.price, hint: `Wallet balance: ${data?.chain?.usdt || '0'} USDT` },
                 { label: actionPreflight.loading ? 'Checking USDT approval' : actionPreflight.allowance >= tokenUnits(pendingAction.price) ? 'USDT approval ready' : 'USDT approval required', passed: !actionPreflight.loading, hint: actionPreflight.loading ? 'Reading current allowance from Amoy' : actionPreflight.allowance >= tokenUnits(pendingAction.price) ? 'One wallet confirmation is expected' : 'Approval first, then the program transaction' },

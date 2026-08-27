@@ -92,21 +92,18 @@ describe("Freedom-Plus registration and token controller", function () {
     expect(await registration.isLevelActive(participant.address, 1)).to.equal(false);
   });
 
-  it("enforces permanent valid sponsorship and one registration per wallet", async function () {
+  it("preserves the permanent sponsor even when that sponsor has not joined Freedom-Plus", async function () {
     const registration = await deployRegistration();
 
     await expect(
       registration.connect(participant).register(participant.address)
     ).to.be.revertedWithCustomError(registration, "SelfSponsorship");
     await gateway.setParticipant(participant.address, outsider.address, true, true);
+    await registration.connect(participant).register(outsider.address);
+    expect(await registration.sponsorOf(participant.address)).to.equal(outsider.address);
+    expect(await manager.lastSponsor()).to.equal(outsider.address);
     await expect(
       registration.connect(participant).register(outsider.address)
-    ).to.be.revertedWithCustomError(registration, "SponsorNotRegistered");
-
-    await gateway.setParticipant(participant.address, id1.address, true, true);
-    await registration.connect(participant).register(id1.address);
-    await expect(
-      registration.connect(participant).register(id1.address)
     ).to.be.revertedWithCustomError(registration, "AlreadyRegistered");
   });
 
