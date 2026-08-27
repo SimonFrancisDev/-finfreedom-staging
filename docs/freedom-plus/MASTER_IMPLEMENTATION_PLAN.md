@@ -60,7 +60,7 @@ The sponsor is recorded once during registration and remains permanent. It is us
 
 The existing F-Freedom referral ID is the participant's only public FFN identity. Freedom-Plus resolves that ID through the existing registration source of truth and binds the same wallet to its Freedom-Plus state. Internal contract participant numbers may exist for storage and indexing, but they are never presented as a second referral ID.
 
-A Freedom-Plus sponsor may be supplied as an existing FFN referral ID or its resolved wallet. The resolved sponsor wallet must already be registered in Freedom-Plus. Resolution must reject an unknown ID, an ID whose wallet does not match chain truth, and any attempt to bind one FFN identity to a different wallet.
+A Freedom-Plus sponsor may be supplied as an existing FFN referral ID or its resolved wallet. The resolved sponsor wallet must already be registered in Freedom-Plus. The configured protocol ID1 wallet (`FIN-FREEDOM`) is the system sponsor and is valid by construction even when an ordinary participant lookup or projection is unavailable. Resolution must reject an unknown ID, an ID whose wallet does not match chain truth, and any attempt to bind one FFN identity to a different wallet.
 
 ### 4.3 Structural matrix parent
 
@@ -672,3 +672,14 @@ Freedom-Plus is not ready for production until:
 - Runtime bytecode matches the certified build.
 - Deployment and rollback runbooks are approved.
 - Production remains untouched until explicit multisig authorization.
+
+## 21. Staging Gate Ledger
+
+### Gate 0: activation and identity blockers
+
+- [ ] Active Freedom-Plus level cards navigate to `/freedom-plus/orbits` with the selected level.
+- [ ] Direct orbit URLs render a visible loading, empty, success, or error state and never fail silently.
+- [ ] An inherited `FIN-FREEDOM` sponsor is recognized using `FreedomPlusRegistration.id1Wallet()`.
+- [ ] Normal inherited sponsors must still be registered in Freedom-Plus.
+- [ ] Frontend build, focused lint, backend checks, desktop/mobile navigation, and both themes pass.
+- [ ] Staging evidence and the exact production-port file list are recorded in `STAGING_CERTIFICATION.md`.

@@ -39,6 +39,7 @@ export const NFT_TIERS = Object.freeze([
 ])
 
 const REGISTRATION_ABI = [
+  'function id1Wallet() view returns (address)',
   'function register(address sponsor)',
   'function activateLevel(uint8 level)',
   'function isRegistered(address participant) view returns (bool)',

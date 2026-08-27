@@ -54,3 +54,14 @@ The obsolete Freedom-Plus projection was removed without touching F-Freedom coll
 7. Verify desktop and mobile navigation, shared FFN identity, registration plus Level 1, manual Levels 2-7, all six orbit views, payment receipts, NFT controls and monthly rewards.
 
 Do not enable public testing if any service reports an address from the superseded deployment or if reconciliation is not passing.
+
+## Active staging gate ledger
+
+### Gate 0 defects discovered after orbit-interface rollout
+
+| Defect | Root cause | Required correction | Status |
+|---|---|---|---|
+| Activation card `View Orbit` gives no visible response | Navigation depended only on a click callback instead of a route-bearing control | Active cards use a React Router link to `/freedom-plus/orbits` and preserve the selected level in route state | Implemented; staging validation pending |
+| Users inherited from system ID1 are shown as having an unregistered sponsor | Frontend preflight treated every sponsor as an ordinary participant | Compare the sponsor with `FreedomPlusRegistration.id1Wallet()` before requiring ordinary registration | Implemented; staging validation pending |
+
+Production port inventory for this gate: `frontend/src/Pages/FreedomPlus/FreedomPlusActivationCenter.jsx`, `frontend/src/Pages/FreedomPlus/FreedomPlusPage.jsx`, and `frontend/src/Services/freedomPlus.js`. No contract, database, indexer, API environment, or worker environment change is required.
