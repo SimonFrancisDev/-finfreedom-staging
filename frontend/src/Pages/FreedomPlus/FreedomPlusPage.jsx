@@ -151,19 +151,20 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
         isNftView ? contracts.nftMembership.membershipOf(account) : Promise.resolve(null),
       ])
       let gatewayData = apiData?.gateway || {}
-      if (!gatewayData.registered || !gatewayData.levelOneActive || !ethers.isAddress(gatewayData.sponsor || '')) {
+      if (!gatewayData.registered || !gatewayData.levelOneActive || (!ethers.isAddress(gatewayData.sponsor || '') || gatewayData.sponsor === ZERO || gatewayData.sponsor?.toLowerCase() === account.toLowerCase())) {
         try {
           const registration = web3Service.getReadContracts().registration
-          const [registered, levelOneActive, sponsor] = await Promise.all([
+          const [registered, levelOneActive, sponsor, id1Wallet] = await Promise.all([
             registration.isRegistered(account),
             registration.isLevelActivated(account, 1),
             registration.getReferrer(account),
+            web3Service.getReadContracts().levelManager.id1Wallet(),
           ])
           gatewayData = {
             ...gatewayData,
             registered: Boolean(gatewayData.registered || registered),
             levelOneActive: Boolean(gatewayData.levelOneActive || levelOneActive),
-            sponsor: ethers.isAddress(gatewayData.sponsor || '') && gatewayData.sponsor !== ZERO ? gatewayData.sponsor : sponsor,
+            sponsor: ethers.isAddress(gatewayData.sponsor || '') && gatewayData.sponsor !== ZERO && gatewayData.sponsor.toLowerCase() !== account.toLowerCase() ? gatewayData.sponsor : sponsor !== ZERO && sponsor.toLowerCase() !== account.toLowerCase() ? sponsor : id1Wallet,
           }
         } catch {
           // Keep the indexed API snapshot when the browser RPC fallback is unavailable.
@@ -214,7 +215,7 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
       setRewardPeriods(enrichedPeriods)
       if (apiData?.participant?.registered && apiData.participant.sponsor && apiData.participant.sponsor !== ZERO) {
         setSponsor(apiData.participant.sponsor)
-      } else if (gatewayData.sponsor && gatewayData.sponsor !== ZERO) {
+      } else if (ethers.isAddress(gatewayData.sponsor || '') && gatewayData.sponsor !== ZERO && gatewayData.sponsor.toLowerCase() !== account.toLowerCase()) {
         setSponsor(gatewayData.sponsor)
       } else if (identity?.referredByWallet && identity.referredByWallet !== ZERO) {
         setSponsor(identity.referredByWallet)

@@ -31,9 +31,18 @@ export default function FreedomPlusOrbit({ orbitType, positions = [], owner, onS
   structure.rings.forEach((ringPositions, ringIndex) => {
     ringPositions.forEach((position, index) => coordinates.set(position, point(index, ringPositions.length, ringIndex + 1)))
   })
+  const connections = structure.rings.flat().flatMap((position) => {
+    const record = records.get(position)
+    if (!record && position !== nextPosition) return []
+    const from = coordinates.get(structure.parent(position))
+    const to = coordinates.get(position)
+    const relationship = record?.participant?.toLowerCase?.() === owner?.toLowerCase?.() ? 'owner' : record?.relationship || 'next'
+    return [{ position, from, to, relationship }]
+  })
 
   return (
     <div className={`fp-orbit-stage fp-orbit-stage--${orbitType.toLowerCase()}`} aria-label={`${orbitType} orbit diagram`}>
+      <svg className="fp-orbit-connectors" viewBox="0 0 100 100" aria-hidden="true">{connections.map((connection) => <line key={connection.position} className={`is-${connection.relationship}`} x1={connection.from.x} y1={connection.from.y} x2={connection.to.x} y2={connection.to.y} />)}</svg>
       {structure.rings.map((_, index) => <span key={index} className={`fp-orbit-ring fp-orbit-ring--${index + 1}`} />)}
       <div className="fp-orbit-owner" title={owner || 'Orbit owner'}><User /><strong>Owner</strong><small>{short(owner)}</small></div>
       {structure.rings.flatMap((ringPositions, ringIndex) => ringPositions.map((position) => {

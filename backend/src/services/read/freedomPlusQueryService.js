@@ -103,15 +103,16 @@ export async function freedomPlusParticipant(address) {
   let gatewayLevelOneActive = Boolean(fFreedomLevelOne);
   let gatewaySponsor = fFreedomRegistration?.referrer || '';
   let gatewaySource = 'indexed';
-  if (!gatewayRegistered || !gatewayLevelOneActive || !gatewaySponsor) {
+  if (!gatewayRegistered || !gatewayLevelOneActive || !gatewaySponsor || gatewaySponsor.toLowerCase() === ZeroAddress) {
     try {
       const registration = getContracts().registration;
-      const [registered, levelOneActive, sponsor] = await Promise.all([
-        registration.isRegistered(normalized), registration.isLevelActivated(normalized, 1), registration.getReferrer(normalized),
+      const [registered, levelOneActive, sponsor, id1Wallet] = await Promise.all([
+        registration.isRegistered(normalized), registration.isLevelActivated(normalized, 1), registration.getReferrer(normalized), getContracts().levelManager.id1Wallet(),
       ]);
       gatewayRegistered ||= Boolean(registered);
       gatewayLevelOneActive ||= Boolean(levelOneActive);
-      if (!gatewaySponsor && sponsor && sponsor !== ZeroAddress) gatewaySponsor = String(sponsor).toLowerCase();
+      const inheritedSponsor = sponsor && sponsor !== ZeroAddress ? sponsor : id1Wallet;
+      if (inheritedSponsor && inheritedSponsor !== ZeroAddress && String(inheritedSponsor).toLowerCase() !== normalized) gatewaySponsor = String(inheritedSponsor).toLowerCase();
       gatewaySource = 'indexed+chain-fallback';
     } catch { gatewaySource = 'indexed-fallback-unavailable'; }
   }
