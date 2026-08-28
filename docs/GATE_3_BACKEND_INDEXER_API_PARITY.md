@@ -43,6 +43,8 @@ Tester `0x296238e950ef0066D2119230Bf0eb3aDEBc94882` was indexed as participant 4
 - Startup requires `NFT_POOL_VAULT_ADDRESS` and `OPERATIONS_VAULT_ADDRESS` when Freedom-Plus is enabled and verifies both router getters.
 - Level projection backfills matching system-charge ledger rows by activation ID.
 - Every complete sync performs an idempotent historical wallet reconciliation for old blank system-charge rows.
+- Confirmed scans use the shared RPC limiter, concurrency queue, retry/cooldown policy, and provider rotation.
+- HTTP JSON-RPC requests have a bounded RPC_REQUEST_TIMEOUT_MS (default 30 seconds), preventing a hung request from permanently holding the indexer pass lock.
 
 ## On-Chain Verification
 

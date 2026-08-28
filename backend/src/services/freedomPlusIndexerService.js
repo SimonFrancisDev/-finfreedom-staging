@@ -1,6 +1,6 @@
 import { WebSocketProvider } from 'ethers';
 import env from '../config/env.js';
-import { getProvider } from '../blockchain/provider.js';
+import { getProvider, safeRpcCall } from '../blockchain/provider.js';
 import { getFreedomPlusContractEntries } from '../blockchain/freedomPlusContracts.js';
 import FreedomPlusEvent from '../models/FreedomPlusEvent.js';
 import FreedomPlusSyncState from '../models/FreedomPlusSyncState.js';
@@ -46,7 +46,7 @@ async function syncTarget(provider, chainId, contractKey, contract, confirmedBlo
     { upsert: true, returnDocument: 'after' }
   );
   if (state.lastProcessedBlock > 0 && state.lastProcessedBlockHash) {
-    const checkpointBlock = await provider.getBlock(state.lastProcessedBlock);
+    const checkpointBlock = await safeRpcCall((rpc) => rpc.getBlock(state.lastProcessedBlock));
     if (!checkpointBlock || checkpointBlock.hash.toLowerCase() !== state.lastProcessedBlockHash) {
       throw new Error(
         `Freedom-Plus reorg detected for ${contractKey} at block ${state.lastProcessedBlock}; operator replay required`
@@ -61,7 +61,7 @@ async function syncTarget(provider, chainId, contractKey, contract, confirmedBlo
   try {
     while (cursor <= confirmedBlock) {
       const toBlock = Math.min(cursor + env.SYNC_BLOCK_CHUNK_SIZE - 1, confirmedBlock);
-      const logs = await provider.getLogs({ address: contract.target, fromBlock: cursor, toBlock });
+      const logs = await safeRpcCall((rpc) => rpc.getLogs({ address: contract.target, fromBlock: cursor, toBlock }));
       const blockCache = new Map();
       for (const log of logs) {
         let parsed;
@@ -69,7 +69,7 @@ async function syncTarget(provider, chainId, contractKey, contract, confirmedBlo
         if (!parsed) continue;
         let block = blockCache.get(log.blockNumber);
         if (!block) {
-          block = await provider.getBlock(log.blockNumber);
+          block = await safeRpcCall((rpc) => rpc.getBlock(log.blockNumber));
           if (!block) throw new Error(`Missing confirmed block ${log.blockNumber}`);
           blockCache.set(log.blockNumber, block);
         }
@@ -113,7 +113,7 @@ async function syncTarget(provider, chainId, contractKey, contract, confirmedBlo
           processed += 1;
         }
       }
-      const terminalBlock = await provider.getBlock(toBlock);
+      const terminalBlock = await safeRpcCall((rpc) => rpc.getBlock(toBlock));
       await FreedomPlusSyncState.updateOne(
         { chainId, contractKey },
         {
@@ -149,7 +149,7 @@ export async function syncFreedomPlusOnce() {
   if (chainId !== Number(env.CHAIN_ID)) {
     throw new Error(`Freedom-Plus chain mismatch: expected ${env.CHAIN_ID}, received ${chainId}`);
   }
-  const head = await provider.getBlockNumber();
+  const head = await safeRpcCall((rpc) => rpc.getBlockNumber());
   const confirmedBlock = Math.max(0, head - env.SYNC_CONFIRMATIONS);
   const targets = [];
   for (const [contractKey, contract] of getFreedomPlusContractEntries(provider)) {
@@ -240,7 +240,7 @@ async function buildDocument(provider, chainId, contractKey, contract, log) {
   let parsed;
   try { parsed = contract.interface.parseLog(log); } catch { return null; }
   if (!parsed) return null;
-  const block = await provider.getBlock(log.blockNumber);
+  const block = await safeRpcCall((rpc) => rpc.getBlock(log.blockNumber));
   if (!block) throw new Error(`Missing live block ${log.blockNumber}`);
   const args = parsedArgs(parsed);
   return {

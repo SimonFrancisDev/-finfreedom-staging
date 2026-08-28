@@ -1,4 +1,4 @@
-import { JsonRpcProvider, WebSocketProvider } from 'ethers';
+import { FetchRequest, JsonRpcProvider, WebSocketProvider } from 'ethers';
 import env from '../config/env.js';
 
 let httpProviderEntries = [];
@@ -225,11 +225,13 @@ function isTransientRpcError(error) {
 }
 
 function buildHttpEntry(url, index) {
+  const request = new FetchRequest(url);
+  request.timeout = env.RPC_REQUEST_TIMEOUT_MS;
   return {
     id: `rpc-${index + 1}`,
     url,
     provider: new JsonRpcProvider(
-      url,
+      request,
       {
         chainId: env.CHAIN_ID,
         name: `chain-${env.CHAIN_ID}`,

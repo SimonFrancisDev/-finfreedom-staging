@@ -138,6 +138,7 @@ const env = {
 
   RPC_MAX_CONCURRENCY: clamp(optionalInteger('RPC_MAX_CONCURRENCY', 4), 1, 20, 4),
   RPC_MAX_RPS: clamp(optionalInteger('RPC_MAX_RPS', 50), 1, 500, 50),
+  RPC_REQUEST_TIMEOUT_MS: clamp(optionalInteger('RPC_REQUEST_TIMEOUT_MS', 30000), 5000, 120000, 30000),
   RPC_RETRY_ATTEMPTS: clamp(optionalInteger('RPC_RETRY_ATTEMPTS', 5), 0, 10, 5),
   RPC_RETRY_BASE_DELAY_MS: clamp(
     optionalInteger('RPC_RETRY_BASE_DELAY_MS', 1200),
