@@ -14,6 +14,8 @@ No staging database, index checkpoint, contract state, or mock-USDT state may be
 
 ## WalletConnect QR login
 
+Status: staging live-certified on 2026-08-28.
+
 The existing wallet foundation already supported injected wallets and a WalletConnect Ethereum provider, but WalletConnect was selected only when `window.ethereum` was absent. Laptop users with MetaMask installed therefore could not choose QR login.
 
 The Gate 6 implementation:
@@ -38,6 +40,16 @@ Deployment requires `VITE_WALLETCONNECT_PROJECT_ID`. Because every `VITE_` varia
 5. Account changes and disconnects update the application state.
 6. Existing injected-wallet connection remains unchanged.
 7. Desktop/mobile and light/dark wallet panels remain usable.
+
+### Staging certification evidence
+
+- The disconnected wallet panel displayed separate Browser Wallet and Scan with WalletConnect actions.
+- The Reown project ID was configured as the public frontend variable VITE_WALLETCONNECT_PROJECT_ID.
+- The WalletConnect QR modal rendered a valid pairing code.
+- Pairing through a mobile wallet's in-app WalletConnect scanner succeeded.
+- A mobile provider returning a non-string chain ID initially exposed an account-normalization error; commit d5ac6b4 normalized string, numeric, and provider-object chain ID responses.
+- The user confirmed successful WalletConnect login after frontend redeployment.
+- No API, worker, indexer, contract, database, or RPC-polling change was required for this feature.
 
 ## Remaining feature contracts
 
