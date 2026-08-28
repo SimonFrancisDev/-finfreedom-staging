@@ -9,6 +9,16 @@ import {
 } from '../Services/walletOnboard'
 
 const WalletContext = createContext(null)
+const normalizeChainId = (chainId) => {
+  if (chainId === null || chainId === undefined) return ''
+
+  if (typeof chainId === 'object') {
+    const value = chainId.chainId ?? chainId.id ?? chainId.value
+    return value === undefined ? '' : String(value).toLowerCase()
+  }
+
+  return String(chainId).toLowerCase()
+}
 
 const useWalletState = () => {
   const [account, setAccount] = useState(null)
@@ -131,7 +141,7 @@ const useWalletState = () => {
 
       const chainId = await wallet.provider.request({ method: 'eth_chainId' })
 
-      if (chainId?.toLowerCase() !== AMOY_CHAIN_ID.toLowerCase()) {
+      if (normalizeChainId(chainId) !== normalizeChainId(AMOY_CHAIN_ID)) {
         setActiveProvider(wallet.provider)
         const switched = await switchToConfiguredNetwork(wallet.provider)
         if (!switched) {

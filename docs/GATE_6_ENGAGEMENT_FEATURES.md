@@ -22,6 +22,7 @@ The Gate 6 implementation:
 - presents separate Browser Wallet and Scan with WalletConnect actions;
 - keeps the established connected-wallet panel intact;
 - sends network-switch requests through the provider selected by the user;
+- normalizes string, numeric, and provider-object chain IDs returned by mobile WalletConnect wallets before comparing Polygon Amoy;
 - listens for WalletConnect account and disconnect events;
 - keeps WalletConnect disabled with a clear tooltip when the deployment project ID is absent;
 - adds no browser RPC polling and changes no backend/indexer behavior.
