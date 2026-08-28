@@ -197,3 +197,6 @@ This UI closure does not replace the smart-contract evidence already recorded in
 ### Final NFT visual acceptance
 
 NFT visual acceptance requires edge-to-edge hero media on Overview, Rewards, and Membership, plus exact Foundation, Intermediate, and Advance labels in both light and dark tier artwork. The authoritative implementation notes and production-port requirements are in docs/GATE_4_FREEDOM_NFT_PREMIUM_PAGES.md.
+### NFT frame refinement acceptance
+
+Production parity includes the unchanged Overview hero, compact Membership/Rewards hero frames, retained labeled tier assets, controlled tier-art scaling, and theme-token divider lines. Exact selectors and dimensions are recorded in docs/GATE_4_FREEDOM_NFT_PREMIUM_PAGES.md.

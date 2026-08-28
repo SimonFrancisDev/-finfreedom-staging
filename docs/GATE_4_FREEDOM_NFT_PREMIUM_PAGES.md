@@ -88,3 +88,10 @@ The image-led success modal may open only after tx.wait() returns a successful r
 - Tier card artwork remains containment-based so each complete NFT card and its inscription stay visible.
 - Foundation, Intermediate, and Advance light/dark assets include their exact uppercase membership labels as part of the artwork.
 - Production must port these CSS breakout rules and the six labeled assets together.
+## Final Frame Refinement (2026-08-28)
+
+- Overview hero dimensions remain unchanged.
+- Membership and Rewards use the existing hero assets in a reduced 420px desktop and 500px mobile frame to limit cover cropping.
+- Existing tier artwork is retained and receives a controlled 1.12 visual scale inside its fixed image frame to reduce intrinsic top/bottom whitespace.
+- Hero and tier media frames include a theme-aware bottom divider using the shared border token, preventing a floating visual appearance.
+- Production port requirement: preserve these selectors after the earlier full-width hero rules so this refinement wins in the cascade.

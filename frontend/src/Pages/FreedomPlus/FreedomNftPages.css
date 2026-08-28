@@ -46,3 +46,9 @@
 .fn-tier-art img,.fn-overview-tiers .fn-tier-art img,.fn-tier-selector .fn-tier-art img,.fn-allocation .fn-tier-art img{object-fit:contain;object-position:center}
 @media(min-width:1497px){.fn-page>.fn-page-hero,.fn-page>.fn-overview-hero{width:100vw;margin-left:calc((1440px - 100vw)/2);margin-right:calc((1440px - 100vw)/2)}}
 @media(max-width:620px){.fn-page>.fn-page-hero,.fn-page>.fn-overview-hero{width:calc(100% + 28px);margin-left:-14px;margin-right:-14px}.fn-page>.fn-page-hero .fn-theme-media img,.fn-page>.fn-overview-hero .fn-theme-media img{object-position:center}}
+/* Final NFT frame refinement: compact subpage heroes and visually anchored media. */
+.fn-page>.fn-page-hero{min-height:420px;border-bottom:1px solid var(--ffn-border)}
+.fn-page>.fn-page-hero .fn-page-hero__copy{min-height:420px}
+.fn-overview-tiers .fn-tier-art,.fn-tier-selector .fn-tier-art,.fn-allocation .fn-tier-art{border-bottom:1px solid var(--ffn-border)}
+.fn-overview-tiers .fn-tier-art img,.fn-tier-selector .fn-tier-art img{transform:scale(1.12)}
+@media(max-width:680px){.fn-page>.fn-page-hero{min-height:500px}.fn-page>.fn-page-hero .fn-page-hero__copy{min-height:500px}}
