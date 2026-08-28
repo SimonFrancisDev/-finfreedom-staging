@@ -118,7 +118,7 @@ This final rule supersedes the source-ratio hero height while preserving the scr
 - Membership and Rewards use the established landing NFT card artwork; no replacement artwork is generated.
 - Desktop mapping: /images/landing/cards/nft-card-dark.png and /images/landing/cards/nft-card-light.png.
 - Mobile mapping: /images/landing/cards/nft-card-mobile-dark.png and /images/landing/cards/nft-card-mobile-light.png.
-- The hero frame preserves image proportions with containment and retains the approved responsive height balance.
+- The hero frame preserves image proportions with edge-to-edge cover and retains the approved responsive height balance.
 - The four temporary hero-subpage-* ring assets were removed and must not be ported to production.
 - Overview hero and tier-card artwork remain unchanged.
 

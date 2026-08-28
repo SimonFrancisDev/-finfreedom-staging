@@ -69,7 +69,7 @@
 .fn-page>.fn-overview-hero .fn-page-hero__copy{min-height:600px}
 .fn-page>.fn-page-hero{aspect-ratio:2.08/1}
 .fn-page>.fn-page-hero .fn-page-hero__copy{height:100%;min-height:0}
-.fn-page>.fn-page-hero .fn-theme-media img{width:100%;height:100%;object-fit:contain;object-position:center}
+.fn-page>.fn-page-hero .fn-theme-media img{width:100%;height:100%;object-fit:cover;object-position:center}
 @media(max-width:680px){
   .fn-page>.fn-overview-hero{min-height:680px}
   .fn-page>.fn-overview-hero .fn-page-hero__copy{min-height:680px}
