@@ -79,7 +79,7 @@ The existing notification feed, bell dropdown, notification center, preferences,
 
 - Message creation and image upload remain behind the existing `ADMIN_API_KEY` middleware and configured admin header.
 - The admin frontend retains the key only through the existing runtime/session mechanism.
-- Raw image uploads preserve both the admin authentication header and the image content type.
+- Raw image uploads preserve the admin authentication header, image content type, and sanitized filename metadata. The API CORS contract explicitly permits the X-File-Name upload header.
 - Broadcast requires an explicit browser confirmation before submission.
 - Uploaded files are data only; SVG, HTML, scripts, arbitrary URLs, and arbitrary MIME types are rejected.
 
