@@ -11,7 +11,10 @@ import FreedomPlusLedgerEntry from '../../models/FreedomPlusLedgerEntry.js';
 import IndexedRegistrationEvent from '../../models/IndexedRegistrationEvent.js';
 import { getProvider } from '../../blockchain/provider.js';
 import { getContracts } from '../../blockchain/contracts.js';
-import { getFreedomPlusContracts } from '../../blockchain/freedomPlusContracts.js';
+import {
+  getFreedomPlusContractEntries,
+  getFreedomPlusContracts,
+} from '../../blockchain/freedomPlusContracts.js';
 import {
   freedomPlusRewardProof,
   listFreedomPlusRewardPeriods,
@@ -55,7 +58,7 @@ export async function freedomPlusReconciliation() {
   ]);
   const confirmedHead = Math.max(0, head - env.SYNC_CONFIRMATIONS);
   const latestEventBlock = Number(latestEvent?.blockNumber || env.FREEDOM_PLUS_START_BLOCK || 0);
-  const expectedCheckpointCount = Object.keys(contracts).length;
+  const expectedCheckpointCount = getFreedomPlusContractEntries(provider).length;
   const minimumCheckpointBlock = sync.length
     ? Math.min(...sync.map((state) => Number(state.lastProcessedBlock || 0)))
     : 0;
