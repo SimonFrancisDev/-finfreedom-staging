@@ -1,4 +1,4 @@
-﻿# Freedom NFT Premium Pages
+# Freedom NFT Premium Pages
 
 ## Scope
 
@@ -23,20 +23,16 @@ Membership must not duplicate the Rewards period list. Reward history and claims
 
 ## Asset Manifest
 
-All generated assets live under frontend/public/images/freedom-nft/.
+Freedom NFT reuses the official theme-aware assets already maintained by the landing program:
 
-| Asset | Use |
+| Asset family | Use |
 | --- | --- |
-| overview-hero-desktop.png | Overview desktop hero; full scene retained |
-| overview-hero-mobile.png | Dedicated portrait Overview hero |
-| tier-foundational.png | Foundational tier cards and allocation |
-| tier-intermediate.png | Intermediate tier cards and allocation |
-| tier-advanced.png | Advanced tier cards and allocation |
-| membership-hero.png | Membership hero |
-| rewards-hero.png | Rewards hero |
-| success-achievement.png | Confirmed NFT action modal |
+| landing/hero-03-dark.png and hero-03-light.png | Overview desktop hero |
+| landing/cards/nft-card-mobile-dark.png and nft-card-mobile-light.png | Overview mobile hero |
+| landing/cards/nft-card-dark.png and nft-card-light.png | Membership and Rewards desktop media |
+| landing/cards/nft-card-mobile-dark.png and nft-card-mobile-light.png | Membership and Rewards mobile media |
 
-The images were generated with the built-in image generation tool in premium fintech product-render mode. The shared language is graphite and platinum material, emerald/cyan system light, restrained gold achievement accents, no embedded text or logos, and safe copy space in hero compositions.
+Tier presentation follows the official landing program structure: Foundation uses a blue gem, Intermediate uses a green star, and Advance uses a purple crown. No separate generated tier bitmap is required.
 
 ## Confirmed Action Behavior
 
