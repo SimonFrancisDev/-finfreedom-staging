@@ -70,33 +70,16 @@ const SERVICES = [
     descriptionKey: 'navbar.menus.services.freedomNftProgram.description',
     links: [
       {
-        label: 'NFT Overview',
+        label: 'Overview',
         labelKey: 'navbar.menus.services.freedomNftProgram.links.overview',
         target: 'freedomNft',
       },
       {
-        label: 'NFT Foundation',
-        labelKey: 'navbar.menus.services.freedomNftProgram.links.foundation',
+        label: 'Membership',
         target: 'freedomNftMembership',
       },
       {
-        label: 'NFT Intermediate',
-        labelKey: 'navbar.menus.services.freedomNftProgram.links.intermediate',
-        target: 'freedomNftMembership',
-      },
-      {
-        label: 'NFT Advanced',
-        labelKey: 'navbar.menus.services.freedomNftProgram.links.advanced',
-        target: 'freedomNftMembership',
-      },
-      {
-        label: 'Utility Role',
-        labelKey: 'navbar.menus.services.freedomNftProgram.links.utilityRole',
-        target: 'freedomNft',
-      },
-      {
-        label: 'NFT Program Dashboard',
-        labelKey: 'navbar.menus.services.freedomNftProgram.links.dashboard',
+        label: 'Rewards',
         target: 'freedomNftRewards',
       },
     ],

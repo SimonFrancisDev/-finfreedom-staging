@@ -18,6 +18,7 @@ import FreedomPlusFocusedOrbit from './FreedomPlusFocusedOrbit'
 import FreedomPlusOverview from './FreedomPlusOverview'
 import FreedomPlusTokens from './FreedomPlusTokens'
 import FreedomNftOverview from './FreedomNftOverview'
+import { FreedomNftMembership, FreedomNftRewards, FreedomNftSuccessModal } from './FreedomNftPages'
 import {
   FREEDOM_PLUS_ADDRESSES,
   FREEDOM_PLUS_ENABLED,
@@ -30,6 +31,7 @@ import {
   tokenUnits,
 } from '../../Services/freedomPlus'
 import './FreedomPlusPage.css'
+import './FreedomNftPages.css'
 
 const ZERO = ethers.ZeroAddress
 const GAS_BUFFER_BPS = 12500n
@@ -102,6 +104,7 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
   const [securityAccepted, setSecurityAccepted] = useState(false)
   const [gateway, setGateway] = useState({ registered: false, levelOneActive: false })
   const [onboardingPromptedAccount, setOnboardingPromptedAccount] = useState('')
+  const [nftSuccess, setNftSuccess] = useState(null)
 
   const activeLevels = useMemo(() => new Set((data?.levels || []).filter((item) => item.active).map((item) => Number(item.level))), [data])
   const membership = data?.chain?.membership || normalizeMembership(null)
@@ -406,6 +409,9 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
       if (!receipt || receipt.status !== 1) throw new Error('Transaction reverted.')
       setTxState({ status: 'complete', stage: 'complete', hash, note: success, error: null })
       toast.success(success)
+      if (key === 'membership' || key === 'unlock' || key === 'restore' || key.startsWith('claim-')) {
+        setNftSuccess({ title: key.startsWith('claim-') ? 'Reward claimed' : key === 'membership' ? 'Membership confirmed' : 'Qualification updated', message: success, hash })
+      }
       await load({ forceChain: true })
       if (tab === 'orbits' || tab === 'levels') await loadOrbit()
     } catch (error) {
@@ -576,34 +582,7 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
 
           {tab === 'nftOverview' && <FreedomNftOverview membership={membership} formatToken={formatToken} openView={openView} />}
 
-          {tab === 'rewards' && (
-            <section className="fp-panel fn-rewards-page">
-              <div className="fn-rewards-intro"><div><span className="fp-kicker">Monthly distribution</span><h2>Freedom NFT rewards</h2><p>Each published period uses one cutoff snapshot. Eligible members participate only through their highest active tier.</p></div><Trophy /></div>
-              <div className="fn-reward-allocation"><article><span>Foundational</span><strong>50%</strong><small>Tier 1 allocation</small></article><article><span>Intermediate</span><strong>30%</strong><small>Tier 2 allocation</small></article><article><span>Advanced</span><strong>20%</strong><small>Tier 3 allocation</small></article></div>
-              <div className="fp-reward-list fp-reward-list--standalone">{rewardPeriods.length ? rewardPeriods.map((period) => <article key={period.periodId}><div><strong>{period.periodId}</strong><span>{period.proof?.eligible ? `${formatToken(period.reward)} USDT` : period.proof?.snapshotAvailable === false ? 'Proof archive unavailable' : 'Not eligible at cutoff'}</span></div><small>{period.status === 'published' ? 'Published on-chain' : 'Awaiting founder publication'}</small>{period.proof?.eligible && period.status === 'published' && <button type="button" disabled={period.claimed || Boolean(busy)} onClick={() => claimReward(period)}>{period.claimed ? <><Check />Claimed</> : <><ArrowUpRight />Claim reward</>}</button>}</article>) : <p className="fp-note">No monthly reward period is available.</p>}</div>
-            </section>
-          )}
-
-          {tab === 'membership' && membership.tier > 0 && (
-            <section className="fp-panel fp-membership-tools">
-              <div className="fp-tool-row">
-                <div><h2>Qualification balance</h2><p>Unlocking tokens recalculates eligibility immediately. Restore requires the exact missing qualifying amount.</p></div>
-                <label>FGT amount<input type="number" min="0" value={unlockForm.fgt} onChange={(event) => setUnlockForm((current) => ({ ...current, fgt: event.target.value }))} /></label>
-                <label>FPT amount<input type="number" min="0" value={unlockForm.fpt} onChange={(event) => setUnlockForm((current) => ({ ...current, fpt: event.target.value }))} /></label>
-                <button type="button" disabled={Boolean(busy)} onClick={membership.rewardEligible ? unlockQualification : restoreEligibility}>{busy === 'unlock' || busy === 'restore' ? 'Processing...' : membership.rewardEligible ? 'Unlock tokens' : 'Restore eligibility'}</button>
-              </div>
-              <div className="fp-reward-list">
-                <h2>Monthly rewards</h2>
-                {rewardPeriods.length ? rewardPeriods.map((period) => (
-                  <article key={period.periodId}>
-                    <div><strong>{period.periodId}</strong><span>{period.proof?.eligible ? `${formatToken(period.reward)} USDT` : 'Not eligible at cutoff'}</span></div>
-                    <small>{period.status === 'published' ? 'Published on-chain' : 'Awaiting founder publication'}</small>
-                    {period.proof?.eligible && period.status === 'published' && <button type="button" disabled={period.claimed || Boolean(busy)} onClick={() => claimReward(period)}>{period.claimed ? <><Check />Claimed</> : <><ArrowUpRight />Claim</>}</button>}
-                  </article>
-                )) : <p className="fp-note">No monthly reward period has been prepared yet.</p>}
-              </div>
-            </section>
-          )}
+          {tab === 'rewards' && <FreedomNftRewards membership={membership} rewardPeriods={rewardPeriods} formatToken={formatToken} busy={busy} claimReward={claimReward} />}
 
           {tab === 'levels' && (
             <FreedomPlusActivationCenter
@@ -647,11 +626,13 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
           )}
           {tab === 'orbits' && <section className="fp-panel"><div className="fp-toolbar"><label>Level<select value={selectedLevel} onChange={(event) => { setSelectedLevel(Number(event.target.value)); setSelectedPosition(null) }}>{FREEDOM_PLUS_LEVELS.map((item) => <option key={item.level} value={item.level}>Level {item.level} / {item.orbit}</option>)}</select></label><label>Cycle<input type="number" min="1" value={cycle} placeholder="Current" onChange={(event) => { setCycle(event.target.value); setSelectedPosition(null) }} /></label><button type="button" onClick={loadOrbit}><RefreshCw />Refresh</button></div><div className="fp-orbit-summary"><article><span>Orbit engine</span><strong>{selectedLevelConfig?.orbit}</strong><small>Level {selectedLevel}</small></article><article><span>Recorded positions</span><strong>{visualOrbit.length} / {selectedLevelConfig?.positions}</strong><small>{cycle ? `Cycle ${cycle}` : orbitCycles.length ? `Current cycle ${orbitCycles[0]}` : 'Current cycle'}</small></article><article><span>Ring structure</span><strong>{selectedLevelConfig?.rings}</strong><small>Deterministic parent topology</small></article><article><span>Payout roles</span><strong>{selectedLevelConfig?.payouts}</strong><small>Roles remain independently recorded</small></article></div><div className="fp-orbit-layout"><FreedomPlusOrbit orbitType={selectedLevelConfig?.orbit} positions={visualOrbit} owner={account} onSelect={setSelectedPosition} /><aside className="fp-position-inspector">{selectedPosition ? <><span>Position {selectedPosition.position}</span><h3>{selectedPosition.financial ? 'Payment-linked placement' : 'Structural placement'}</h3><dl><div><dt>Participant</dt><dd title={selectedPosition.participant}>{short(selectedPosition.participant)}</dd></div><div><dt>Matrix parent</dt><dd title={selectedPosition.structuralParent}>{short(selectedPosition.structuralParent)}</dd></div><div><dt>Ring</dt><dd>{selectedPosition.ring || selectedPosition.line}</dd></div><div><dt>Cycle</dt><dd>{selectedPosition.cycle}</dd></div><div><dt>Amount</dt><dd>{formatToken(selectedPosition.amount)} USDT</dd></div></dl></> : <><Network /><h3>Select a filled position</h3><p>Inspect its participant, exact structural parent, ring, cycle and recorded amount.</p></>}</aside></div><div className="fp-section-title"><History /><div><h2>Position ledger</h2><p>The diagram and table show the selected cycle only.</p></div></div><div className="fp-table-wrap"><table><thead><tr><th>Cycle</th><th>Position</th><th>Ring</th><th>Participant</th><th>Matrix parent</th><th>Entry</th><th>Amount</th></tr></thead><tbody>{visualOrbit.length ? visualOrbit.map((item) => <tr key={`${item.cycle}-${item.position}-${item.activationId || item._id}`}><td>{item.cycle}</td><td>{item.position}</td><td>{item.ring || item.line}</td><td title={item.participant}>{short(item.participant)}</td><td title={item.structuralParent}>{short(item.structuralParent)}</td><td>{item.financial ? 'Payment-linked placement' : 'Structural placement'}</td><td>{formatToken(item.amount)} USDT</td></tr>) : <tr><td colSpan="7" className="fp-no-data">No indexed positions for this level and cycle.</td></tr>}</tbody></table></div></section>}
 
-          {tab === 'membership' && <section className="fp-panel fp-membership fn-membership-page"><div className="fp-membership-status"><ShieldCheck /><div><span>Current membership</span><h2>{NFT_TIERS.find((item) => item.tier === membership.tier)?.name || 'No active NFT'}</h2><p>{membership.tier ? `${formatToken(membership.lockedFGT)} FGT + ${formatToken(membership.lockedFPT)} FPT locked` : 'Choose a tier and commit an exact qualifying token total.'}</p></div><strong className={membership.rewardEligible ? 'eligible' : ''}>{membership.rewardEligible ? 'Reward eligible' : 'Not eligible'}</strong></div><div className="fp-tier-grid">{NFT_TIERS.map((item) => <button type="button" className={Number(nftForm.tier) === item.tier ? 'selected' : ''} key={item.tier} onClick={() => setNftForm({ tier: item.tier, fgt: '0', fpt: String(item.threshold) })}><span>{item.name}</span><strong>{item.threshold.toLocaleString()} tokens</strong><small>{item.poolShare}% tier allocation</small></button>)}</div><div className="fp-token-form"><label>FGT commitment<input type="number" min="0" value={nftForm.fgt} onChange={(event) => setNftForm((current) => ({ ...current, fgt: event.target.value }))} /></label><label>FPT commitment<input type="number" min="0" value={nftForm.fpt} onChange={(event) => setNftForm((current) => ({ ...current, fpt: event.target.value }))} /></label><button type="button" onClick={submitMembership} disabled={Boolean(busy)}>{busy === 'membership' ? 'Processing...' : membership.tier ? 'Update membership' : 'Mint membership'}</button></div><p className="fp-note">FGT and FPT used for membership are locked, not burned. Removing enough qualifying tokens freezes future reward eligibility immediately; prior finalized monthly entitlements remain claimable.</p></section>}
+          {tab === 'membership' && <FreedomNftMembership membership={membership} formatToken={formatToken} nftForm={nftForm} setNftForm={setNftForm} unlockForm={unlockForm} setUnlockForm={setUnlockForm} busy={busy} submitMembership={submitMembership} unlockQualification={unlockQualification} restoreEligibility={restoreEligibility} />}
 
           {tab === 'account' && <section className="fp-panel"><div className="fp-section-heading"><div><span className="fp-kicker">Shared FFN identity</span><h2>Freedom-Plus account</h2></div></div><div className="fp-account-grid"><article><span>Wallet</span><strong title={account}>{account || 'Not connected'}</strong><small>Shared across F-Freedom and Freedom-Plus</small></article><article><span>FFN ID</span><strong>{referralId || 'Not available'}</strong><small>No second Freedom-Plus referral ID</small></article><article><span>Permanent sponsor</span><strong>{sponsorCode || short(data?.chain?.sponsor || sponsor)}</strong><small title={data?.chain?.sponsor || sponsor}>{short(data?.chain?.sponsor || sponsor)}</small></article><article><span>Freedom-Plus number</span><strong>{data?.chain?.registered ? `#${data.chain.participantNumber}` : 'Not registered'}</strong><small>Internal record, not a referral identity</small></article></div><div className="fp-account-grid"><article><span>USDT available</span><strong>{data?.chain?.usdt || '0'}</strong><small>Wallet balance</small></article><article><span>FPT available</span><strong>{data?.chain?.fpt || '0'}</strong><small>First-activation utility token</small></article><article><span>FPTr available</span><strong>{data?.chain?.fptr || '0'}</strong><small>Recycle utility token</small></article><article><span>NFT status</span><strong>{NFT_TIERS.find((item) => item.tier === membership.tier)?.name || 'Not minted'}</strong><small>{membership.rewardEligible ? 'Reward eligible' : 'Not reward eligible'}</small></article></div></section>}
 
           {tab === 'activity' && <section className="fp-panel"><div className="fp-health"><article><span>Backend indexing</span><strong>{status?.enabled ? 'Enabled' : 'Not enabled'}</strong><small>{status?.events || 0} decoded events</small></article><article><span>Reconciliation</span><strong>{reconciliation?.passed ? 'Passed' : 'Pending'}</strong><small>{reconciliation?.confirmedHead ? `Through block ${reconciliation.confirmedHead}` : 'Awaiting deployment data'}</small></article><article><span>Indexed participants</span><strong>{status?.participants || 0}</strong><small>Chain count {reconciliation?.totals?.chainParticipants ?? '-'}</small></article><article><span>Wallet receipts</span><strong>{formatToken(paymentTotal)} USDT</strong><small>{data?.payments?.length || 0} component receipts shown</small></article></div><div className="fp-section-title"><History /><div><h2>Payment receipts</h2><p>Each payout component remains separate, including its level, role, candidate, fallback state and transaction.</p></div></div><div className="fp-table-wrap"><table><thead><tr><th>Block</th><th>Level</th><th>Role</th><th>Rate</th><th>Amount</th><th>Route</th><th>Transaction</th></tr></thead><tbody>{data?.payments?.length ? data.payments.map((item) => <tr key={item._id}><td>{item.blockNumber}</td><td>{item.level}</td><td>{item.role}</td><td>{Number(item.bps || 0) / 100}%</td><td>{formatToken(item.amount)} USDT</td><td>{item.id1Fallback ? 'ID1 fallback' : `From ${short(item.originalCandidate)}`}</td><td title={item.txHash}>{short(item.txHash)}</td></tr>) : <tr><td colSpan="7" className="fp-no-data">No indexed payments for this wallet.</td></tr>}</tbody></table></div></section>}
+
+      <FreedomNftSuccessModal success={nftSuccess} onClose={() => setNftSuccess(null)} />
 
       {pendingAction && (
         <div className="activation-overlay fp-action-overlay" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget && !busy) setPendingAction(null) }}>
