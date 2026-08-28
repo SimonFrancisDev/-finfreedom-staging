@@ -64,12 +64,14 @@ export async function freedomPlusReconciliation() {
     : 0;
   const checkpointLagBlocks = Math.max(0, confirmedHead - minimumCheckpointBlock);
   const checkpointFloor = Math.max(0, confirmedHead - env.FREEDOM_PLUS_MAX_CHECKPOINT_LAG_BLOCKS);
+  const realtimeMode = env.FREEDOM_PLUS_REALTIME_ENABLED;
+  const requiredCheckpointBlock = realtimeMode ? latestEventBlock : checkpointFloor;
   const checks = {
     participants: Number(chainParticipants) === databaseParticipants,
     positions: rawPositions === positions,
     payments: rawPayments === payments,
     checkpoints: sync.length === expectedCheckpointCount && sync.every(
-      (state) => state.status !== 'error' && Number(state.lastProcessedBlock || 0) >= checkpointFloor
+      (state) => state.status !== 'error' && Number(state.lastProcessedBlock || 0) >= requiredCheckpointBlock
     ),
   };
   return {
@@ -78,6 +80,8 @@ export async function freedomPlusReconciliation() {
     head,
     confirmedHead,
     latestEventBlock,
+    checkpointMode: realtimeMode ? 'event-driven' : 'polling',
+    requiredCheckpointBlock,
     checkpointFloor,
     checkpointLagBlocks,
     maxCheckpointLagBlocks: env.FREEDOM_PLUS_MAX_CHECKPOINT_LAG_BLOCKS,

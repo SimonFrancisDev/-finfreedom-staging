@@ -11,7 +11,7 @@ Make Freedom-Plus reads deterministic, confirmation-safe, recoverable, and align
 - Raw events: `FreedomPlusEvent`
 - Checkpoints: `FreedomPlusSyncState`
 - Projections: participants, level states, orbit positions, payments, and ledger entries
-- Worker modes: confirmed polling and WebSocket-triggered confirmed recovery
+- Worker modes: explicit confirmed polling or event-driven WebSocket indexing with startup, confirmation, and reconnect recovery
 - APIs: status, reconciliation, participants, activations, orbits, payments, events, gateway checks, and shared-page summaries
 
 ## Baseline Evidence
@@ -31,15 +31,15 @@ Tester `0x296238e950ef0066D2119230Bf0eb3aDEBc94882` was indexed as participant 4
 
 1. Reconciliation compared checkpoints with the latest stored event instead of the confirmed chain head.
 2. WebSocket logs were projected before confirmation, allowing reorg-corrupted projections.
-3. Realtime mode had no periodic confirmed catch-up during quiet periods or missed subscriptions.
+3. Realtime mode incorrectly used a periodic HTTP recovery scan, defeating the WebSocket RPC-conservation design.
 4. Startup did not verify the router's system-charge recipients against the shared vault configuration.
 5. `SystemChargeSettled` can precede `LevelActivated` in a transaction, leaving ledger rows without participant wallets.
 
 ## Implementation
 
-- Reconciliation now requires every expected target checkpoint to remain within the explicit `FREEDOM_PLUS_MAX_CHECKPOINT_LAG_BLOCKS` freshness budget (default 120 blocks) of the confirmed head.
-- WebSocket subscriptions only trigger confirmed catch-up; unconfirmed logs are never projected.
-- Realtime mode also runs periodic recovery using `SYNC_POLL_INTERVAL_MS`.
+- Polling reconciliation requires every expected checkpoint to remain within the explicit `FREEDOM_PLUS_MAX_CHECKPOINT_LAG_BLOCKS` budget. Realtime reconciliation instead requires every healthy checkpoint to cover the latest indexed event, because quiet chains must not trigger HTTP scans merely to advance empty checkpoints.
+- WebSocket subscriptions trigger confirmation-delayed catch-up; unconfirmed logs are never projected.
+- Realtime mode performs one startup catch-up, confirmation-delayed event recovery, and reconnect catch-up. It does not create a periodic HTTP scan. `SYNC_POLL_INTERVAL_MS` applies only to explicit polling mode.
 - Startup requires `NFT_POOL_VAULT_ADDRESS` and `OPERATIONS_VAULT_ADDRESS` when Freedom-Plus is enabled and verifies both router getters.
 - Level projection backfills matching system-charge ledger rows by activation ID.
 - Every complete sync performs an idempotent historical wallet reconciliation for old blank system-charge rows.
@@ -63,6 +63,13 @@ The newer Freedom NFT reward-distribution vault remains separate from the shared
 - Read-only contract startup verification passed against the staging RPC.
 - The public fallback RPC was unsuitable for this verifier because its free tier rejects batches larger than three requests; this does not indicate an application defect.
 
+## Pre-Fix Staging Evidence (2026-08-28)
+
+- API process: indexing disabled.
+- Worker process: indexing enabled; 48 F-Freedom listeners and 16 Freedom-Plus listeners connected.
+- Reconciliation matched 47/47 participants, 271/271 positions, and 242/242 payments.
+- All 16 checkpoints advanced from block 46,062,689 to 46,063,246.
+- The repeated advancement proved recovery correctness but also exposed the unwanted interval scan removed by this revision.
 ## Staging Redeploy Acceptance
 
 Redeploy both API and worker from the same commit, then verify:
@@ -70,8 +77,8 @@ Redeploy both API and worker from the same commit, then verify:
 1. API startup prints Freedom-Plus `systemVaults` with the two shared addresses.
 2. API health shows indexing disabled.
 3. Worker health shows indexing enabled and realtime connected.
-4. `/api/freedom-plus/reconciliation` passes only when all expected checkpoints are healthy and within the returned maximum lag budget.
-5. Checkpoint lag remains within the configured confirmation and polling interval.
+4. `/api/freedom-plus/reconciliation` reports `checkpointMode: event-driven` and passes when all expected checkpoints are healthy and cover the latest indexed event.
+5. A new confirmed Freedom-Plus event advances checkpoints after the confirmation delay; a quiet chain causes no recurring HTTP scans.
 6. The known tester still shows levels 1, 2, and 3 and all supplied transactions.
 7. Participant ledger responses include system-charge rows attributed to the participant wallet.
 8. Restarting the worker does not duplicate raw events, projections, or ledger entries.
@@ -81,6 +88,6 @@ Redeploy both API and worker from the same commit, then verify:
 - Use the canonical contract and shared-vault addresses above.
 - Run exactly one active Freedom-Plus indexing worker unless lease ownership is explicitly configured and verified.
 - Keep indexing disabled in API/web processes.
-- Set a healthy HTTP and WebSocket RPC pair and retain periodic recovery.
+- Set a healthy WebSocket RPC for live indexing and an HTTP RPC only for startup, event-confirmation, reconnect recovery, reconciliation, and exceptional replay.
 - Capture pre-migration counts, deploy, allow confirmed catch-up, run reconciliation, compare counts, and archive the result.
 - Do not certify frontend data accuracy until this gate's staging acceptance checks pass.

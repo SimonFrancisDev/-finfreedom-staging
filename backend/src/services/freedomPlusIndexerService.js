@@ -403,10 +403,7 @@ async function startFreedomPlusRealtimeIndexer() {
   if (realtimeStarted) return { enabled: true, mode: 'realtime', alreadyStarted: true };
   realtimeStarted = true;
   realtimeStopping = false;
-  if (!timer) {
-    timer = setInterval(scheduledPass, env.SYNC_POLL_INTERVAL_MS);
-    timer.unref?.();
-  }
+
   try {
     await connectFreedomPlusRealtime();
   } catch (error) {
@@ -416,6 +413,6 @@ async function startFreedomPlusRealtimeIndexer() {
   return {
     enabled: true,
     mode: 'realtime',
-    recoveryIntervalMs: env.SYNC_POLL_INTERVAL_MS,
+    recovery: 'startup-event-confirmation-reconnect',
   };
 }
