@@ -31,3 +31,12 @@
 .fn-success-modal__visual{display:grid;place-items:center;width:148px;height:148px;margin:0 auto 18px;border-radius:50%;color:var(--ffn-primary);background:color-mix(in srgb,var(--ffn-primary) 12%,var(--ffn-surface));border:1px solid color-mix(in srgb,var(--ffn-primary) 42%,var(--ffn-border))}
 .fn-success-modal__visual svg{width:78px;height:78px}
 @media(max-width:680px){.fn-theme-media img{object-position:center top}[data-theme='light'] .fn-page-hero__shade{background:linear-gradient(0deg,rgba(248,251,255,.98) 0%,rgba(248,251,255,.68) 52%,rgba(248,251,255,.08) 100%)}.fn-overview-tier__mark{min-height:160px}}
+
+/* Gate 4 media closure: preserve complete artwork and consistent tier imagery. */
+.fn-theme-media img,.fn-overview-hero .fn-theme-media img{object-fit:contain;object-position:center}
+.fn-page-hero,.fn-overview-hero{background:var(--ffn-surface-muted)}
+.fn-tier-art{position:relative;inset:auto;width:100%;aspect-ratio:1/1;overflow:hidden;background:var(--ffn-surface-muted)}
+.fn-tier-art picture,.fn-tier-art img{position:absolute;inset:0;width:100%;height:100%}
+.fn-overview-tiers .fn-tier-art img,.fn-tier-selector .fn-tier-art img{object-fit:contain}
+.fn-allocation .fn-tier-art{flex:none;width:92px;aspect-ratio:1;border-radius:6px}
+@media(max-width:680px){.fn-theme-media img,.fn-overview-hero .fn-theme-media img{object-position:center}.fn-page-hero,.fn-overview-hero{min-height:620px}}

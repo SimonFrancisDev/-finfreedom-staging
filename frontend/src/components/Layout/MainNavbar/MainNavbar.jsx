@@ -80,12 +80,14 @@ const SERVICES = [
         target: 'freedomNft',
       },
       {
-        label: 'Membership',
-        target: 'freedomNftMembership',
+        label: 'Rewards',
+        labelKey: 'navbar.menus.services.freedomNftProgram.links.rewards',
+        target: 'freedomNftRewards',
       },
       {
-        label: 'Rewards',
-        target: 'freedomNftRewards',
+        label: 'Membership',
+        labelKey: 'navbar.menus.services.freedomNftProgram.links.membership',
+        target: 'freedomNftMembership',
       },
     ],
   },
@@ -432,7 +434,7 @@ const MainNavbar = ({
 
           <nav className="main-navbar__center">
             {navItems
-              .filter((item) => item.href === 'home' || item.href === 'freedomPlus' || item.href === 'about')
+              .filter((item) => item.href === 'home' || item.href === 'about')
               .map((item) => {
                 const isAbout = item.href === 'about'
 

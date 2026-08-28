@@ -188,3 +188,9 @@ Frontend production-port additions from this pass:
 - Full-page Freedom-Plus Dashboard and Account views must activate the shared page treatment, seven-level progression, gateway identity, permanent sponsor, indexed placement, token, receipt, and latest-block facts.
 - Activity program changes must immediately update the selected program filter while preserving the established timeline and receipt structure.
 - Freedom NFT mobile hero content must use semantic theme surfaces, text, muted text, and borders rather than a fixed dark background.
+
+## Freedom NFT UI Closure (2026-08-28)
+
+The staging NFT surface is certified to use three real routes only: Overview, Rewards, and Membership. Navigation order, dark/light tier artwork, full-image containment, and responsive behavior are recorded in docs/GATE_4_FREEDOM_NFT_PREMIUM_PAGES.md.
+
+This UI closure does not replace the smart-contract evidence already recorded in this certification. Production migration must preserve the certified contract addresses and roles mapping process, deployment manifests, contract test evidence, event/indexer contracts, system-vault configuration, and the NFT UI asset manifest.

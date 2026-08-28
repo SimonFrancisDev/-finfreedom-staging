@@ -71,3 +71,13 @@ The image-led success modal may open only after tx.wait() returns a successful r
 - Confirmed NFT actions receive an image-led success modal.
 - Contract and indexed-data behavior remains in the parent controller.
 - Staging production build passes.
+
+## Navigation and Media Closure (2026-08-28)
+
+- Removed the duplicate top-level Freedom Plus navbar item on desktop and mobile. Freedom-Plus remains available through Services.
+- Standardized Services > Freedom NFT Program order to Overview, Rewards, Membership.
+- All NFT hero and card artwork uses full-image containment. Cropping is prohibited on desktop and mobile.
+- Added theme-specific Foundation, Intermediate, and Advance tier artwork and reused it across Overview, Membership, and Rewards.
+- Asset pairs are tier-foundation-dark/light.png, tier-intermediate-dark/light.png, and tier-advance-dark/light.png under frontend/public/images/freedom-nft.
+- Tier art contains no embedded copy. Accessible tier names remain live interface text.
+- Production port requirement: copy all six assets and preserve the theme switch, object-fit containment, submenu order, and single Services-based Freedom-Plus entry.
