@@ -10,11 +10,12 @@ import { getApiUrl } from '../Services/apiConfig';
 import { NETWORK_CONFIG } from '../constants/addresses';
 import { useToast } from '../components/feedback';
 import { normalizeError } from '../utils/errorMap';
+import AdminNotificationComposer from '../components/admin/AdminNotificationComposer';
 import './AdminPanel.css';
 import {
   Key, Crown, BarChart3, Clock, AlertTriangle, Plus, Edit, Trash2,
   Eye, EyeOff, RefreshCw, Globe, Users, Calendar, Link2, FileText,
-  Megaphone, ExternalLink, X, Check, Wallet,
+  Megaphone, ExternalLink, X, Check, Wallet, BellRing,
   ShieldCheck, LayoutDashboard, Settings, Activity } from
 'lucide-react';
 
@@ -196,12 +197,12 @@ const adminApi = async (endpoint, options = {}) => {
   }
 
   const response = await fetch(getApiUrl(endpoint), {
+    ...options,
     headers: {
       'Content-Type': 'application/json',
       [ADMIN_API_HEADER]: adminKey,
       ...(options.headers || {})
-    },
-    ...options
+    }
   });
   const payload = await response.json().catch(() => null);
   if (!response.ok) {
@@ -1939,6 +1940,10 @@ export const AdminPanel = () => {
           <Globe size={20} />
           <span>{adminT("ui.line1483.community", "Community")}</span>
         </button>
+        <button className={activeTab === 'notifications' ? 'active' : ''} onClick={() => setActiveTab('notifications')} title="User Notifications">
+          <BellRing size={20} />
+          <span>User Notifications</span>
+        </button>
         <button className={activeTab === 'multisig' ? 'active' : ''} onClick={() => setActiveTab('multisig')} title={adminT("ui.line1485.multisigSettings", "Multisig Settings")}>
           <Settings size={20} />
           <span>{adminT("ui.line1487.multisig", "Multisig")}</span>
@@ -2752,6 +2757,13 @@ export const AdminPanel = () => {
                 </div>
               </div>
             </div>
+          </section>
+        }
+
+        {/* VIEW: USER NOTIFICATIONS */}
+        {activeTab === 'notifications' &&
+          <section className="fade-in">
+            <AdminNotificationComposer adminApi={adminApi} toast={toast} />
           </section>
         }
 

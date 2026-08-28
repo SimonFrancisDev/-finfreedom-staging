@@ -51,6 +51,60 @@ Deployment requires `VITE_WALLETCONNECT_PROJECT_ID`. Because every `VITE_` varia
 - The user confirmed successful WalletConnect login after frontend redeployment.
 - No API, worker, indexer, contract, database, or RPC-polling change was required for this feature.
 
+## Administrator-to-user notifications
+
+Status: implemented locally; staging live certification pending.
+
+The existing notification feed, bell dropdown, notification center, preferences, read state, and dismiss behavior remain the user-facing foundation. Gate 6 adds an administrator composer without introducing blockchain reads or RPC polling.
+
+### Delivery contract
+
+- An authorized administrator can send to one valid wallet address or broadcast to all indexed registered wallets.
+- Broadcast recipients are the deduplicated union of indexed F-Freedom registration events and registered Freedom-Plus participants for the configured chain.
+- Recipient discovery uses MongoDB only. It makes no HTTP RPC, WebSocket RPC, contract, or explorer request.
+- Each message supports a title, primary message, optional details, severity, destination route, and optional image.
+- Literal administrator text is stored separately from translation keys so existing event notifications retain localization while administrator messages render exactly as authored.
+- Delivery returns requested, delivered, and failed counts. A broadcast is capped at 10,000 unique indexed recipients per request.
+
+### Image contract
+
+- The admin API accepts JPEG, PNG, and WebP images up to 5 MB.
+- The backend verifies both the declared MIME type and the file signature.
+- Images are stored in the existing MongoDB database using the `notificationMedia` GridFS bucket. No third-party media account or new environment variable is required.
+- A notification can reference only an uploaded image that still exists in GridFS.
+- User clients load images from the immutable public media endpoint and render them in both the bell-details modal and the full notification center.
+- Media responses set an explicit content type, immutable caching, `nosniff`, and a restrictive sandbox content-security policy.
+
+### Security and administration
+
+- Message creation and image upload remain behind the existing `ADMIN_API_KEY` middleware and configured admin header.
+- The admin frontend retains the key only through the existing runtime/session mechanism.
+- Raw image uploads preserve both the admin authentication header and the image content type.
+- Broadcast requires an explicit browser confirmation before submission.
+- Uploaded files are data only; SVG, HTML, scripts, arbitrary URLs, and arbitrary MIME types are rejected.
+
+### API surface
+
+- `POST /api/admin/notifications/media` uploads one protected image.
+- `POST /api/admin/notifications/messages` sends one direct or broadcast campaign.
+- `GET /api/notifications/media/:id` streams a stored notification image.
+- Existing notification feed/read/dismiss/preference endpoints are unchanged.
+
+### Deployment and certification
+
+This feature requires redeploying the staging API and frontend. The worker does not require redeployment for functionality because recipient selection and delivery are database-backed and no indexer code changed.
+
+Live certification sequence:
+
+1. Send a direct text-only notice to a registered staging wallet.
+2. Confirm the exact title/message/details in the bell dropdown and notification center.
+3. Confirm read, open-route, dismiss, and persistence after refresh.
+4. Send a direct JPEG/PNG/WebP notice and confirm the complete image renders in both views on desktop/mobile and light/dark themes.
+5. Attempt an invalid file type and an oversized image; confirm rejection.
+6. Only after direct delivery passes, send one controlled broadcast and reconcile requested/delivered/failed counts with indexed recipients.
+7. Confirm API/worker logs show no new RPC polling or contract reads from notification delivery.
+
+Production port requires the backend notification model, admin and public routes/controllers, notification delivery/media services, admin composer, both user notification views, styles, and this environment/deployment contract. MongoDB must support GridFS; no migration or contract deployment is required.
 ## Remaining feature contracts
 
 Notification authoring, official video configuration, and task workflows will be expanded in this document as each feature enters implementation. Each feature requires its own backend/frontend tests, live staging evidence, production-port file list, and environment contract.
