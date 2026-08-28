@@ -203,3 +203,6 @@ Production parity includes the unchanged Overview hero, compact Membership/Rewar
 ### Screenshot-verified NFT geometry
 
 The final production rule supersedes fixed NFT subpage hero heights: Membership and Rewards use their source image ratios with containment, while Overview and Membership tier cards use a 1.45:1 frame that removes only the surrounding square canvas. See docs/GATE_4_FREEDOM_NFT_PREMIUM_PAGES.md.
+### Balanced NFT subpage hero acceptance
+
+The final accepted Membership and Rewards hero height is responsive within 520-720px on desktop and 600-720px on mobile. The image remains complete and edge-to-edge; Overview and tier-card geometry are unchanged. See docs/GATE_4_FREEDOM_NFT_PREMIUM_PAGES.md.

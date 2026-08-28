@@ -105,3 +105,11 @@ This section supersedes the earlier fixed-height frame refinement.
 - Overview and Membership tier-art frames use a 1.45:1 ratio matching the visible membership-card body.
 - Tier art uses cover only inside that 1.45:1 frame. This removes the square source canvas above and below while preserving the complete physical card from left to right.
 - Existing generated and labeled assets remain unchanged.
+## Balanced Subpage Hero Closure (2026-08-28)
+
+This final rule supersedes the source-ratio hero height while preserving the screenshot-verified tier-card geometry.
+
+- Membership and Rewards use a responsive 520-720px desktop hero frame and a 600-720px mobile frame.
+- Existing hero artwork fills the complete edge-to-edge frame with no crop or zoom.
+- Overview hero and all tier-card geometry remain unchanged.
+- Production must preserve this block after the source-ratio rules so the balanced dimensions win in the cascade.
