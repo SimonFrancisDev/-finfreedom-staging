@@ -1,5 +1,6 @@
 import {
   freedomPlusEvents,
+  freedomPlusDashboard,
   freedomPlusOrbit,
   freedomPlusParticipant,
   freedomPlusActivationSummary,
@@ -18,6 +19,7 @@ function handler(fn) {
 }
 
 export const getFreedomPlusStatus = handler(() => freedomPlusStatus());
+export const getFreedomPlusDashboard = handler((req) => freedomPlusDashboard(req.params.address));
 export const getFreedomPlusReconciliation = handler(() => freedomPlusReconciliation());
 export const getFreedomPlusParticipant = handler((req) => freedomPlusParticipant(req.params.address));
 export const getFreedomPlusActivationSummary = handler((req) => freedomPlusActivationSummary(req.params.address));

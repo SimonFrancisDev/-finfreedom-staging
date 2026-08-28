@@ -142,6 +142,7 @@ async function fetchJson(path, options = {}) {
 
 export const freedomPlusApi = {
   status: () => fetchJson('/api/freedom-plus/status'),
+  dashboard: (wallet, options) => fetchJson(`/api/freedom-plus/dashboard/${wallet}`, options),
   reconciliation: () => fetchJson('/api/freedom-plus/reconciliation'),
   participant: (wallet, options) => fetchJson(`/api/freedom-plus/participant/${wallet}`, options),
   activationSummary: (wallet, options) => fetchJson(`/api/freedom-plus/activation-summary/${wallet}`, options),

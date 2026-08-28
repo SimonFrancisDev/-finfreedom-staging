@@ -106,3 +106,31 @@ The Activity browser performs no contract reads and starts no JSON-RPC polling. 
 6. Verify retry, empty, loading, pagination, JSON export, and CSV export states.
 7. Confirm browser network traffic remains API-driven with no periodic JSON-RPC calls.
 8. Verify desktop/mobile and light/dark rendering before production certification.
+
+## Dashboard page parity
+
+`DashboardPage` is one complete renderer for F-Freedom and Freedom-Plus. The previous Freedom-Plus early return and embedded reduced summary were removed.
+
+The retained surface includes access states, program-intelligence hero, network overview, seven-day growth chart, global metric cards, indexed recent activity, health/sync indicators, refresh behavior, treasury/system-vault cards, and smart-contract directory. The selected program changes labels, links, addresses, values, and read model without changing structure, theme tokens, or responsive behavior.
+
+Freedom-Plus uses `GET /api/freedom-plus/dashboard/:address`, a database-only aggregate composed from participant, payment, ledger, event, and sync projections. It returns:
+
+- selected-profile registration, sponsor, active levels, payments, ledger, gateway, and network data;
+- registered-participant and payment-component counts;
+- wallet-credited, system-charge, NFT inflow, and NFT distribution raw totals;
+- seven-day indexed registration growth;
+- recent indexed events;
+- indexer checkpoint state.
+
+The endpoint performs no provider or contract calls. The connected wallet supplies privacy authorization while `SpaceContext.subjectAddress` remains the profile being viewed. Program/profile changes reload the selected API model; manual refresh preserves the current context.
+
+### Dashboard production checklist
+
+1. Deploy the Dashboard API route, controller, query service, frontend API method, and Dashboard renderer together.
+2. Verify F-Freedom behavior is unchanged.
+3. Verify Freedom-Plus registered, unregistered, partial-level, and all-level profiles.
+4. Verify selected-profile privacy and return-to-self behavior.
+5. Verify participant totals, payment totals, system charges, NFT values, growth, recent events, and sync state against MongoDB projections.
+6. Verify the Freedom-Plus contract directory uses only configured Freedom-Plus addresses.
+7. Confirm the browser makes API requests only and no periodic JSON-RPC calls.
+8. Verify retry/access states, manual refresh, light/dark themes, and desktop/mobile layouts.

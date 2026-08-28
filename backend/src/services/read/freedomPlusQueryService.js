@@ -313,3 +313,64 @@ export async function freedomPlusEvents(address, query = {}) {
 }
 
 export { freedomPlusRewardProof, listFreedomPlusRewardPeriods };
+
+export async function freedomPlusDashboard(address) {
+  if (!env.FREEDOM_PLUS_ENABLED) return { enabled: false };
+  const normalized = wallet(address);
+  const since = new Date();
+  since.setUTCDate(since.getUTCDate() - 6);
+  since.setUTCHours(0, 0, 0, 0);
+
+  const [profile, participants, payments, systemLedger, registrations, recentEvents, sync] = await Promise.all([
+    freedomPlusParticipant(normalized),
+    FreedomPlusParticipant.countDocuments({ chainId: env.CHAIN_ID, registered: true }),
+    FreedomPlusPayment.find({ chainId: env.CHAIN_ID }).select('amount').lean(),
+    FreedomPlusLedgerEntry.find({
+      chainId: env.CHAIN_ID,
+      category: { $in: ['system_charge', 'nft_membership', 'nft_claim'] },
+    }).select('category amount eventName').lean(),
+    FreedomPlusParticipant.find({
+      chainId: env.CHAIN_ID,
+      registered: true,
+      registeredAt: { $gte: since },
+    }).select('registeredAt').lean(),
+    FreedomPlusEvent.find({ chainId: env.CHAIN_ID })
+      .sort({ blockNumber: -1, logIndex: -1 })
+      .limit(20)
+      .select('eventName txHash blockNumber timestamp contractKey args')
+      .lean(),
+    FreedomPlusSyncState.find({ chainId: env.CHAIN_ID }).sort({ contractKey: 1 }).lean(),
+  ]);
+
+  const sumRaw = (items) => items.reduce((sum, item) => sum + BigInt(item.amount || 0), 0n).toString();
+  const paymentTotal = sumRaw(payments);
+  const systemCharges = systemLedger.filter((item) => item.category === 'system_charge');
+  const nftInflow = systemLedger.filter((item) => item.category === 'nft_membership');
+  const nftClaims = systemLedger.filter((item) => item.category === 'nft_claim');
+  const growthByDate = new Map();
+  for (let offset = 0; offset < 7; offset += 1) {
+    const date = new Date(since);
+    date.setUTCDate(since.getUTCDate() + offset);
+    growthByDate.set(date.toISOString().slice(0, 10), 0);
+  }
+  for (const item of registrations) {
+    const key = item.registeredAt?.toISOString?.().slice(0, 10);
+    if (key && growthByDate.has(key)) growthByDate.set(key, growthByDate.get(key) + 1);
+  }
+
+  return {
+    enabled: true,
+    profile,
+    totals: {
+      participants,
+      paymentComponents: payments.length,
+      walletCreditedRaw: paymentTotal,
+      systemChargesRaw: sumRaw(systemCharges),
+      nftInflowRaw: sumRaw(nftInflow),
+      nftDistributedRaw: sumRaw(nftClaims),
+    },
+    growth: [...growthByDate].map(([date, count]) => ({ date, registrations: count })),
+    recentEvents,
+    sync,
+  };
+}

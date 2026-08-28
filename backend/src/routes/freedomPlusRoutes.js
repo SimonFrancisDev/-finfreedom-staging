@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   getFreedomPlusEvents,
+  getFreedomPlusDashboard,
   getFreedomPlusOrbit,
   getFreedomPlusParticipant,
   getFreedomPlusActivationSummary,
@@ -13,6 +14,7 @@ import {
 
 const router = Router();
 router.get('/status', getFreedomPlusStatus);
+router.get('/dashboard/:address', getFreedomPlusDashboard);
 router.get('/reconciliation', getFreedomPlusReconciliation);
 router.get('/participant/:address', getFreedomPlusParticipant);
 router.get('/activation-summary/:address', getFreedomPlusActivationSummary);
