@@ -1,7 +1,17 @@
 # Gate 5 - Shared Program and Profile Parity
 
 Date: 2026-08-28
-Status: staging implementation complete; live visual certification pending
+Status: staging certified on 2026-08-28
+
+## Staging certification evidence
+
+- The user confirmed that Account, Activity, and Dashboard correctly switch between F-Freedom and Freedom-Plus on the deployed staging frontend.
+- Each shared page retains its complete established structure while displaying the selected program's data and labels.
+- The Dashboard refresh loop found during live certification was corrected in commit `7d5fe3a`; the user confirmed the deployed Dashboard is stable afterward.
+- Focused Dashboard ESLint and the frontend production build passed after the correction.
+- API and worker startup logs confirmed the intended process split: the API runs with indexers disabled, while the worker connects the WebSocket realtime indexer. No polling indexer was started.
+
+This certification closes shared-page program/profile parity. It does not replace the separate live certification required for registration, sequential level activation, transaction feedback, index convergence, or orbit interactions.
 
 ## Shared route inventory
 
