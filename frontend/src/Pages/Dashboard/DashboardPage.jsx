@@ -1,5 +1,5 @@
 import './DashboardPage.css'
-import { useEffect, useState, useCallback, useMemo } from 'react'
+import { useEffect, useState, useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useWallet } from '../../hooks/useWallet'
 import { getApiUrl } from '../../Services/apiConfig'
@@ -400,6 +400,8 @@ const DashboardPage = ({ program = 'f-freedom' }) => {
   const { isConnected, account } = useWallet()
   const { subjectAddress } = useSpace()
   const toast = useToast()
+  const toastRef = useRef(toast)
+  toastRef.current = toast
   const isFreedomPlus = program === 'freedom-plus'
   const targetWallet = subjectAddress || account || ''
   const programName = isFreedomPlus ? 'Freedom-Plus' : 'F-Freedom'
@@ -552,12 +554,12 @@ const DashboardPage = ({ program = 'f-freedom' }) => {
       console.error('Failed to verify dashboard access:', err)
       const message = err?.message || dashboardT('errors.accessFailed', 'Dashboard access could not be verified.')
       setAccessError(message)
-      toast.warning(message, { dedupeKey: 'dashboard-access-check-failed' })
+      toastRef.current.warning(message, { dedupeKey: 'dashboard-access-check-failed' })
       setMemberSummary((prev) => ({ ...prev, isRegistered: false }))
     } finally {
       setIsCheckingRegistration(false)
     }
-  }, [targetWallet, account, dashboardT, toast])
+  }, [targetWallet, account, dashboardT])
 
   const fetchCommunityStats = useCallback(async () => {
     const payload = await fetchJson('/api/community/stats')
@@ -807,7 +809,7 @@ const DashboardPage = ({ program = 'f-freedom' }) => {
     try {
       if (isFreedomPlus) {
         await fetchFreedomPlusDashboard()
-        if (!silent) toast.success('Freedom-Plus dashboard refreshed.', { dedupeKey: 'dashboard-refresh-success' })
+        if (!silent) toastRef.current.success('Freedom-Plus dashboard refreshed.', { dedupeKey: 'dashboard-refresh-success' })
         setLastUpdated(new Date())
         return
       }
@@ -826,9 +828,9 @@ const DashboardPage = ({ program = 'f-freedom' }) => {
         console.error('One or more dashboard requests failed:', results)
         const message = dashboardT('errors.refreshFailed', 'Some dashboard data could not be refreshed.')
         setError(message)
-        if (!silent) toast.warning(message, { dedupeKey: 'dashboard-refresh-partial-failed' })
+        if (!silent) toastRef.current.warning(message, { dedupeKey: 'dashboard-refresh-partial-failed' })
       } else if (!silent) {
-        toast.success(dashboardT('status.refreshed', 'Dashboard refreshed.'), { dedupeKey: 'dashboard-refresh-success' })
+        toastRef.current.success(dashboardT('status.refreshed', 'Dashboard refreshed.'), { dedupeKey: 'dashboard-refresh-success' })
       }
 
       setLastUpdated(new Date())
@@ -836,7 +838,7 @@ const DashboardPage = ({ program = 'f-freedom' }) => {
       console.error('Dashboard refresh failed:', err)
       const message = err?.message || dashboardT('errors.refreshFailed', 'Some dashboard data could not be refreshed.')
       setError(message)
-      if (!silent) toast.danger(message, { dedupeKey: 'dashboard-refresh-failed' })
+      if (!silent) toastRef.current.danger(message, { dedupeKey: 'dashboard-refresh-failed' })
     } finally {
       setLoading(false)
       setIsCheckingRegistration(false)
@@ -855,7 +857,6 @@ const DashboardPage = ({ program = 'f-freedom' }) => {
     fetchMemberSummary,
     fetchSystemHealth,
     dashboardT,
-    toast,
   ])
 
   const generateActivityFeed = useCallback(() => {
