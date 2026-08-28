@@ -76,3 +76,33 @@ The Freedom-Plus network projection is database-only. It performs no provider ca
 ## NFT cross-reference
 
 Freedom NFT visual requirements remain authoritative in `docs/GATE_4_FREEDOM_NFT_PREMIUM_PAGES.md`. Gate 5 does not redefine NFT assets or hero geometry.
+
+## Activity page parity
+
+`ActivityPage` is one complete renderer for both programs. The external shared program selector is authoritative; the page does not maintain a second program filter or combine records from both programs.
+
+The retained surface includes the identity hero, update/error state, summary chips, type/time filters, timeline, receipts table, payout and activation summary, level-status grid, pagination, explorer links, and JSON/CSV exports. Switching programs changes only the labels, values, level count, and exported dataset.
+
+Freedom-Plus mapping:
+
+- Timeline payouts come from indexed recipient payment rows.
+- Receipt rows use the same indexed payments and preserve transaction, level, position, cycle, and timestamp context.
+- Token and cycle records come from the indexed non-NFT ledger. FPT/FPTr quantities are never mislabeled as USDT.
+- Activation events and the seven-level grid come from indexed Freedom-Plus level projections.
+- Summary counts and received-USDT totals are computed from the selected Freedom-Plus dataset.
+- `SpaceContext.subjectAddress` is authoritative for public-profile reads; the connected wallet remains the authentication/signing identity.
+- Program/profile changes reset pagination and refresh through the API every 60 seconds.
+- JSON/CSV exports contain only the currently selected program and include that program in the filename.
+
+The Activity browser performs no contract reads and starts no JSON-RPC polling. F-Freedom activity uses the existing backend receipts, summary, and orbit-level read APIs; Freedom-Plus uses the indexed participant API. The F-Freedom backend orbit-level service retains its documented indexed/contract fallback semantics, so this statement is specifically about browser traffic rather than a claim that every backend recovery path is RPC-free.
+
+### Activity live-certification checklist
+
+1. Verify F-Freedom and Freedom-Plus preserve identical layout, filters, receipts, timeline, summary, and theme behavior.
+2. Verify switching programs never mixes records and changes the grid from ten to seven levels.
+3. Verify self, public visitor, locked visitor, and return-to-self states.
+4. Verify payments, activations, ledger records, timestamps, explorer links, and totals against indexed records.
+5. Verify token quantities do not render as USDT.
+6. Verify retry, empty, loading, pagination, JSON export, and CSV export states.
+7. Confirm browser network traffic remains API-driven with no periodic JSON-RPC calls.
+8. Verify desktop/mobile and light/dark rendering before production certification.
