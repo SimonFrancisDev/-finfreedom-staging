@@ -206,6 +206,6 @@ The final production rule supersedes fixed NFT subpage hero heights: Membership 
 ### Balanced NFT subpage hero acceptance
 
 The final accepted Membership and Rewards hero height is responsive within 520-720px on desktop and 600-720px on mobile. The image remains complete and edge-to-edge; Overview and tier-card geometry are unchanged. See docs/GATE_4_FREEDOM_NFT_PREMIUM_PAGES.md.
-### Native-ratio NFT subpage hero assets
+### Restored NFT subpage hero assets
 
-Membership and Rewards use four dedicated responsive hero assets at native desktop and mobile ratios. This replaces stretched legacy artwork while preserving edge-to-edge rendering, complete visuals, theme parity, and live text overlays. The asset manifest and production mapping are recorded in docs/GATE_4_FREEDOM_NFT_PREMIUM_PAGES.md.
+Membership and Rewards use the established landing NFT card dark/light and mobile assets. The temporary ring artwork was removed. Production must preserve this mapping together with proportional containment and the accepted hero-height rules. See docs/GATE_4_FREEDOM_NFT_PREMIUM_PAGES.md.

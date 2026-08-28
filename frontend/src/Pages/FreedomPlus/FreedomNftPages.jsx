@@ -2,7 +2,7 @@ import { ArrowUpRight, Check, CircleCheckBig, LockKeyhole, ShieldCheck, Trophy, 
 import { NFT_TIERS } from '../../Services/freedomPlus'
 
 export const NFT_HERO_MEDIA={dark:'/images/landing/hero-03-dark.png',light:'/images/landing/hero-03-light.png',mobileDark:'/images/landing/cards/nft-card-mobile-dark.png',mobileLight:'/images/landing/cards/nft-card-mobile-light.png'}
-export const NFT_CARD_MEDIA={dark:'/images/freedom-nft/hero-subpage-dark.png',light:'/images/freedom-nft/hero-subpage-light.png',mobileDark:'/images/freedom-nft/hero-subpage-mobile-dark.png',mobileLight:'/images/freedom-nft/hero-subpage-mobile-light.png'}
+export const NFT_CARD_MEDIA={dark:'/images/landing/cards/nft-card-dark.png',light:'/images/landing/cards/nft-card-light.png',mobileDark:'/images/landing/cards/nft-card-mobile-dark.png',mobileLight:'/images/landing/cards/nft-card-mobile-light.png'}
 export const TIER_META={1:{tone:'foundation'},2:{tone:'intermediate'},3:{tone:'advance'}}
 export const TIER_MEDIA={
   1:{dark:'/images/freedom-nft/tier-foundation-dark.png',light:'/images/freedom-nft/tier-foundation-light.png'},

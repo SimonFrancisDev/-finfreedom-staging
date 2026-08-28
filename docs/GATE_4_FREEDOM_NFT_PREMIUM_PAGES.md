@@ -113,21 +113,14 @@ This final rule supersedes the source-ratio hero height while preserving the scr
 - Existing hero artwork fills the complete edge-to-edge frame with no crop or zoom.
 - Overview hero and all tier-card geometry remain unchanged.
 - Production must preserve this block after the source-ratio rules so the balanced dimensions win in the cascade.
-## Native-Ratio Subpage Hero Artwork (2026-08-28)
+## Existing Subpage Hero Artwork Restored (2026-08-28)
 
-This final visual implementation supersedes all prior stretching and fixed-height Membership/Rewards hero rules.
-
-- Added dedicated dark/light desktop assets at approximately 2.215:1:
-  - hero-subpage-dark.png
-  - hero-subpage-light.png
-- Added dedicated dark/light mobile assets at 0.8:1:
-  - hero-subpage-mobile-dark.png
-  - hero-subpage-mobile-light.png
-- Desktop artwork reserves the left side for live copy and places the complete NFT visual on the right.
-- Mobile artwork places the visual above a copy-safe lower region.
-- Membership and Rewards render these assets at their native ratios with containment. No distortion, crop, or zoom is permitted.
+- Membership and Rewards use the established landing NFT card artwork; no replacement artwork is generated.
+- Desktop mapping: /images/landing/cards/nft-card-dark.png and /images/landing/cards/nft-card-light.png.
+- Mobile mapping: /images/landing/cards/nft-card-mobile-dark.png and /images/landing/cards/nft-card-mobile-light.png.
+- The hero frame preserves image proportions with containment and retains the approved responsive height balance.
+- The four temporary hero-subpage-* ring assets were removed and must not be ported to production.
 - Overview hero and tier-card artwork remain unchanged.
-- Production must port all four assets, the NFT_CARD_MEDIA mapping, and the final native-ratio CSS block together.
 
 ### Final Hero Height Balance (2026-08-28)
 
