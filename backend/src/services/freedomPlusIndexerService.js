@@ -4,7 +4,10 @@ import { getProvider } from '../blockchain/provider.js';
 import { getFreedomPlusContractEntries } from '../blockchain/freedomPlusContracts.js';
 import FreedomPlusEvent from '../models/FreedomPlusEvent.js';
 import FreedomPlusSyncState from '../models/FreedomPlusSyncState.js';
-import { projectFreedomPlusEvent } from './freedomPlusProjectionService.js';
+import {
+  projectFreedomPlusEvent,
+  reconcileFreedomPlusLedgerWallets,
+} from './freedomPlusProjectionService.js';
 
 function normalize(value) {
   if (typeof value === 'bigint') return value.toString();
@@ -152,7 +155,8 @@ export async function syncFreedomPlusOnce() {
   for (const [contractKey, contract] of getFreedomPlusContractEntries(provider)) {
     targets.push(await syncTarget(provider, chainId, contractKey, contract, confirmedBlock));
   }
-  return { enabled: true, head, confirmedBlock, targets };
+  const reconciledLedgerWallets = await reconcileFreedomPlusLedgerWallets(chainId);
+  return { enabled: true, head, confirmedBlock, targets, reconciledLedgerWallets };
 }
 
 let timer = null;
@@ -358,7 +362,15 @@ async function connectFreedomPlusRealtime() {
 
   const entries = getFreedomPlusContractEntries(provider);
   for (const [contractKey, contract] of entries) {
-    const listener = (log) => queueLive(() => ingestLiveLog(provider, chainId, contractKey, contract, log));
+    const listener = (log) => {
+      if (log.removed) {
+        console.warn('[FREEDOM_PLUS_REALTIME_REMOVED_LOG]', {
+          contractKey,
+          blockNumber: Number(log.blockNumber || 0),
+        });
+      }
+      scheduleConfirmedRecovery();
+    };
     realtimeContracts.push([contractKey, contract, listener]);
     await provider.on({ address: contract.target }, listener);
   }
@@ -374,7 +386,7 @@ async function connectFreedomPlusRealtime() {
   socket?.[method]?.('close', socketHandlers.close);
   socket?.[method]?.('error', socketHandlers.error);
 
-  // Subscriptions are attached first, so logs emitted during this bounded catch-up are deduplicated.
+  // Subscriptions only trigger confirmed catch-up; projections never consume unconfirmed logs.
   const recovery = await queueLive(() => syncFreedomPlusOnce());
   reconnectAttempt = 0;
   console.log('[FREEDOM_PLUS_REALTIME_CONNECTED]', {
@@ -395,5 +407,13 @@ async function startFreedomPlusRealtimeIndexer() {
     await cleanupRealtime();
     scheduleRealtimeReconnect(error);
   }
-  return { enabled: true, mode: 'realtime' };
+  if (!timer) {
+    timer = setInterval(() => queueLive(scheduledPass), env.SYNC_POLL_INTERVAL_MS);
+    timer.unref?.();
+  }
+  return {
+    enabled: true,
+    mode: 'realtime',
+    recoveryIntervalMs: env.SYNC_POLL_INTERVAL_MS,
+  };
 }

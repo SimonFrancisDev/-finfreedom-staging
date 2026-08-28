@@ -60,7 +60,7 @@ export async function freedomPlusReconciliation() {
     positions: rawPositions === positions,
     payments: rawPayments === payments,
     checkpoints: sync.length > 0 && sync.every(
-      (state) => state.status !== 'error' && state.lastProcessedBlock >= latestEventBlock
+      (state) => state.status !== 'error' && state.lastProcessedBlock >= confirmedHead
     ),
   };
   return {

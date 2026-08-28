@@ -64,6 +64,15 @@ export async function projectFreedomPlusEvent(event) {
       },
       { upsert: true }
     );
+    await FreedomPlusLedgerEntry.updateMany(
+      {
+        chainId,
+        activationId: String(args.activationId || '').toLowerCase(),
+        category: 'system_charge',
+        wallet: '',
+      },
+      { $set: { wallet: String(args.participant || '').toLowerCase() } }
+    );
     return;
   }
 
@@ -235,4 +244,40 @@ function ledgerFields(contractKey, eventName, args) {
     return { category: 'cycle_close', wallet: args.orbitOwner, level: Number(args.level), amount: '0' };
   }
   return null;
+}
+export async function reconcileFreedomPlusLedgerWallets(chainId) {
+  const pending = await FreedomPlusLedgerEntry.find({
+    chainId,
+    category: 'system_charge',
+    wallet: '',
+    activationId: { $ne: '' },
+  }).select('_id activationId').lean();
+  if (!pending.length) return 0;
+
+  const activationIds = [...new Set(pending.map((entry) => entry.activationId).filter(Boolean))];
+  const levels = await FreedomPlusLevelState.find({
+    chainId,
+    activationId: { $in: activationIds },
+  }).select('activationId wallet').lean();
+  const walletByActivation = new Map(
+    levels.map((level) => [String(level.activationId || '').toLowerCase(), String(level.wallet || '').toLowerCase()])
+  );
+  const updates = pending
+    .map((entry) => ({
+      entry,
+      wallet: walletByActivation.get(String(entry.activationId || '').toLowerCase()) || '',
+    }))
+    .filter(({ wallet }) => wallet);
+
+  if (!updates.length) return 0;
+  await FreedomPlusLedgerEntry.bulkWrite(
+    updates.map(({ entry, wallet }) => ({
+      updateOne: {
+        filter: { _id: entry._id, wallet: '' },
+        update: { $set: { wallet } },
+      },
+    })),
+    { ordered: false }
+  );
+  return updates.length;
 }

@@ -1,7 +1,7 @@
 import { Contract } from 'ethers';
 import env from '../config/env.js';
 import { getProvider } from './provider.js';
-import addresses from './freedomPlusAddresses.js';
+import addresses, { freedomPlusSystemVaults } from './freedomPlusAddresses.js';
 
 import registrationAbi from './abis/freedom-plus/FreedomPlusRegistration.abi.json' with { type: 'json' };
 import levelManagerAbi from './abis/freedom-plus/FreedomPlusLevelManager.abi.json' with { type: 'json' };
@@ -87,6 +87,8 @@ export async function verifyFreedomPlusContracts() {
     membershipFpt,
     rewardVault,
     vaultDistributor,
+    routerNftPoolVault,
+    routerOperationsVault,
   ] = await Promise.all([
     contracts.registration.levelManager(),
     contracts.levelManager.registration(),
@@ -96,6 +98,8 @@ export async function verifyFreedomPlusContracts() {
     contracts.nftMembership.fpt(),
     contracts.nftRewardDistributor.vault(),
     contracts.nftPoolVault.distributor(),
+    contracts.settlementRouter.nftPoolVault(),
+    contracts.settlementRouter.operationsVault(),
   ]);
   assertAddress('registration.levelManager', registrationManager, addresses.levelManager);
   assertAddress('levelManager.registration', managerRegistration, addresses.registration);
@@ -105,6 +109,8 @@ export async function verifyFreedomPlusContracts() {
   assertAddress('nftMembership.fpt', membershipFpt, addresses.fpt);
   assertAddress('nftRewardDistributor.vault', rewardVault, addresses.nftPoolVault);
   assertAddress('nftPoolVault.distributor', vaultDistributor, addresses.nftRewardDistributor);
+  assertAddress('settlementRouter.nftPoolVault', routerNftPoolVault, freedomPlusSystemVaults.nftPoolVault);
+  assertAddress('settlementRouter.operationsVault', routerOperationsVault, freedomPlusSystemVaults.operationsVault);
 
   const orbitKeys = ['p39Orbit', 'p14Orbit', 'p12Orbit', 'p6Orbit', 'p4Orbit', 'p3Orbit'];
   for (let type = 0; type < orbitKeys.length; type += 1) {
@@ -119,5 +125,10 @@ export async function verifyFreedomPlusContracts() {
     owners[key] = await contract.owner();
     if (env.MULTISIG_ADDRESS) assertAddress(`${key}.owner`, owners[key], env.MULTISIG_ADDRESS);
   }
-  return { enabled: true, addresses, owners };
+  return {
+    enabled: true,
+    addresses,
+    systemVaults: freedomPlusSystemVaults,
+    owners,
+  };
 }

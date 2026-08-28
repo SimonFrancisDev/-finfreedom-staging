@@ -62,6 +62,12 @@ contract FreedomPlusSettlementRouter is
     event OrbitConfigured(uint8 indexed orbitType, address indexed orbit);
     event ConfigurationLocked();
     event GuardianUpdated(address indexed previousGuardian, address indexed newGuardian);
+    event SystemVaultsUpdated(
+        address indexed previousNftPoolVault,
+        address indexed newNftPoolVault,
+        address previousOperationsVault,
+        address newOperationsVault
+    );
     event ComponentSettled(
         bytes32 indexed activationId,
         uint8 indexed role,
@@ -199,6 +205,21 @@ contract FreedomPlusSettlementRouter is
         }
         configurationLocked = true;
         emit ConfigurationLocked();
+    }
+
+    function setSystemVaults(address nftPoolVault_, address operationsVault_) external onlyOwner {
+        _requireContract(nftPoolVault_);
+        _requireContract(operationsVault_);
+        address previousNftPoolVault = nftPoolVault;
+        address previousOperationsVault = operationsVault;
+        nftPoolVault = nftPoolVault_;
+        operationsVault = operationsVault_;
+        emit SystemVaultsUpdated(
+            previousNftPoolVault,
+            nftPoolVault_,
+            previousOperationsVault,
+            operationsVault_
+        );
     }
 
     function settlePaidActivation(

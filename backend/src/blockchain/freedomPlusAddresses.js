@@ -34,4 +34,18 @@ for (const [key, envName] of Object.entries(fields)) {
   }
 }
 
+function requiredSystemAddress(envName) {
+  if (!env.FREEDOM_PLUS_ENABLED) return null;
+  try {
+    return getAddress(env[envName]);
+  } catch {
+    throw new Error(`Invalid required address for ${envName}`);
+  }
+}
+
+export const freedomPlusSystemVaults = Object.freeze({
+  nftPoolVault: requiredSystemAddress('NFT_POOL_VAULT_ADDRESS'),
+  operationsVault: requiredSystemAddress('OPERATIONS_VAULT_ADDRESS'),
+});
+
 export default Object.freeze(values);

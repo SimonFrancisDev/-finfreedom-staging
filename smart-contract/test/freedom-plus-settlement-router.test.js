@@ -120,6 +120,38 @@ describe("Freedom-Plus ordinary settlement router", function () {
     }
   }
 
+  it("updates both system vaults atomically without changing router storage shape", async function () {
+    const system = await deployGraph();
+    const Vault = await ethers.getContractFactory("MockFreedomPlusVault");
+    const nextNftVault = await Vault.deploy();
+    const nextOperationsVault = await Vault.deploy();
+
+    await expect(
+      system.router.connect(outsider).setSystemVaults(
+        await nextNftVault.getAddress(),
+        await nextOperationsVault.getAddress()
+      )
+    ).to.be.revertedWithCustomError(system.router, "OwnableUnauthorizedAccount");
+
+    await expect(
+      system.router.setSystemVaults(
+        await nextNftVault.getAddress(),
+        await nextOperationsVault.getAddress()
+      )
+    ).to.emit(system.router, "SystemVaultsUpdated").withArgs(
+      await system.nftVault.getAddress(),
+      await nextNftVault.getAddress(),
+      await system.operationsVault.getAddress(),
+      await nextOperationsVault.getAddress()
+    );
+
+    expect(await system.router.nftPoolVault()).to.equal(await nextNftVault.getAddress());
+    expect(await system.router.operationsVault()).to.equal(await nextOperationsVault.getAddress());
+    await expect(
+      system.router.setSystemVaults(ethers.ZeroAddress, await nextOperationsVault.getAddress())
+    ).to.be.revertedWithCustomError(system.router, "InvalidContract");
+  });
+
   it("settles the exact three-generation P39 component path and anchored placement", async function () {
     const system = await deployGraph();
     for (const signer of [a, b, c]) await fundAndApprove(system, signer, 50n * UNIT);

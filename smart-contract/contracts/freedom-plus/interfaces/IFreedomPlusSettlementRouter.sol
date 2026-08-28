@@ -2,6 +2,8 @@
 pragma solidity ^0.8.24;
 
 interface IFreedomPlusSettlementRouter {
+    function setSystemVaults(address nftPoolVault, address operationsVault) external;
+
     function settlePaidActivation(
         address participant,
         address sponsor,
