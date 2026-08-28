@@ -517,6 +517,8 @@ function App() {
     walletLabel,
     hasMobileWalletSupport,
     connect,
+    connectBrowserWallet,
+    connectWalletConnect,
     disconnect,
     switchToAmoy,
   } = useWallet()
@@ -1327,7 +1329,9 @@ function App() {
                 onToggleAccount={handleToggleAccount}
                 onCloseAccount={handleCloseAccount}
                 account={account}
-                onConnectWallet={connect}
+                onConnectWallet={connectBrowserWallet}
+                onConnectWalletConnect={connectWalletConnect}
+                hasWalletConnectSupport={hasMobileWalletSupport}
                 onDisconnectWallet={disconnect}
                 isAdmin={isMultisigOwner}
                 onOpenAdminPanel={() => handleNavigate('admin')}

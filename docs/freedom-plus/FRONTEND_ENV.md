@@ -22,3 +22,7 @@ VITE_FREEDOM_PLUS_NFT_REWARD_DISTRIBUTOR_ADDRESS=0xFBc27A8813A8BAC4481F3ebB219c5
 The existing `VITE_USDT_ADDRESS`, RPC, chain and API variables are reused. Do not enable the feature until the backend reconciliation endpoint passes for the same addresses and deployment block.
 
 These values belong to `deployment-1787395200929.json`. Deploy the API and worker first, confirm reconciliation, then deploy the frontend with this exact set.
+
+## WalletConnect QR login
+
+`VITE_WALLETCONNECT_PROJECT_ID` enables the WalletConnect QR option. Configure it in Render as a public frontend variable with `visibility: config`. Do not use `visibility: secret` for any `VITE_` variable because Vite embeds prefixed values into the browser bundle.

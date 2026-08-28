@@ -248,6 +248,8 @@ const MainNavbar = ({
   account = null,
 
   onConnectWallet,
+  onConnectWalletConnect,
+  hasWalletConnectSupport = false,
   onDisconnectWallet,
   onOpenAdminPanel,
   isAdmin,
@@ -617,10 +619,6 @@ const MainNavbar = ({
                 ref={walletButtonRef}
                 className="main-navbar__wallet"
                 onClick={() => {
-                  if (walletStatus === 'Disconnected') {
-                    onConnectWallet?.()
-                    return
-                  }
                   onToggleWallet?.()
                 }}
               >
@@ -634,6 +632,8 @@ const MainNavbar = ({
                 wallet={wallet}
                 onClose={onCloseWallet}
                 onConnect={onConnectWallet}
+                onConnectWalletConnect={onConnectWalletConnect}
+                hasWalletConnectSupport={hasWalletConnectSupport}
                 onDisconnect={onDisconnectWallet}
               />
             </div>
