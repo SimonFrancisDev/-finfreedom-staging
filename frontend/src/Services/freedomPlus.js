@@ -130,8 +130,11 @@ export function getFreedomPlusWriteContracts({ includeNft = false } = {}) {
   return contracts
 }
 
-async function fetchJson(path) {
-  const response = await fetch(getApiUrl(path), { headers: { Accept: 'application/json' } })
+async function fetchJson(path, options = {}) {
+  const response = await fetch(getApiUrl(path), {
+    ...options,
+    headers: { Accept: 'application/json', ...(options.headers || {}) },
+  })
   const payload = await response.json().catch(() => null)
   if (!response.ok) throw new Error(payload?.message || `Freedom-Plus API request failed (${response.status}).`)
   return payload?.data ?? payload
@@ -140,8 +143,8 @@ async function fetchJson(path) {
 export const freedomPlusApi = {
   status: () => fetchJson('/api/freedom-plus/status'),
   reconciliation: () => fetchJson('/api/freedom-plus/reconciliation'),
-  participant: (wallet) => fetchJson(`/api/freedom-plus/participant/${wallet}`),
-  activationSummary: (wallet) => fetchJson(`/api/freedom-plus/activation-summary/${wallet}`),
+  participant: (wallet, options) => fetchJson(`/api/freedom-plus/participant/${wallet}`, options),
+  activationSummary: (wallet, options) => fetchJson(`/api/freedom-plus/activation-summary/${wallet}`, options),
   orbit: (wallet, level, cycle) => fetchJson(`/api/freedom-plus/orbit/${wallet}/level/${level}${cycle === '' ? '' : `?cycle=${cycle}`}`),
   payments: (wallet, level = '') => fetchJson(`/api/freedom-plus/payments/${wallet}${level ? `?level=${level}` : ''}`),
   rewardPeriods: () => fetchJson('/api/freedom-plus/rewards/periods'),

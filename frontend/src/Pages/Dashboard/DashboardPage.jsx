@@ -5,6 +5,7 @@ import { useWallet } from '../../hooks/useWallet'
 import { getApiUrl } from '../../Services/apiConfig'
 import { getProfileReadAuthIfLocked } from '../../Services/profilePrivacyApi'
 import { useToast } from '../../components/feedback'
+import { useSpace } from '../../context/SpaceContext'
 import { MetricSparkline } from '../../components/charts/InstitutionalCharts'
 import FreedomPlusSharedSummary from '../../components/freedomPlus/FreedomPlusSharedSummary'
 import { CONTRACT_ADDRESSES, NETWORK_CONFIG } from '../../constants/addresses'
@@ -415,6 +416,7 @@ const DashboardPage = ({ program = 'f-freedom' }) => {
   const { t } = useTranslation()
   const dashboardT = useCallback((key, fallback, options) => t(`dashboardPage.${key}`, fallback, options), [t])
   const { isConnected, account } = useWallet()
+  const { subjectAddress } = useSpace()
   const toast = useToast()
 
   const [loading, setLoading] = useState(true)
@@ -835,7 +837,7 @@ const DashboardPage = ({ program = 'f-freedom' }) => {
   if (program === 'freedom-plus') {
     return (
       <main className="dashboard-page">
-        <FreedomPlusSharedSummary wallet={account} variant="dashboard" fullPage />
+        <FreedomPlusSharedSummary wallet={subjectAddress || account} variant="dashboard" fullPage />
       </main>
     )
   }

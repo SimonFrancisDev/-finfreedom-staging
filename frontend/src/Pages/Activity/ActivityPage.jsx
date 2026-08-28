@@ -9,6 +9,7 @@ import { getProfileReadAuthIfLocked } from '../../Services/profilePrivacyApi'
 import { useToast } from '../../components/feedback'
 import { NETWORK_CONFIG } from '../../constants/addresses'
 import { FREEDOM_PLUS_ENABLED, freedomPlusApi } from '../../Services/freedomPlus'
+import { useSpace } from '../../context/SpaceContext'
 
 const ACTIVITY_PAGE_SIZE = 8
 const RECEIPTS_PAGE_SIZE = 6
@@ -17,6 +18,7 @@ const ActivityPage = ({ program = 'f-freedom' }) => {
   const { t } = useTranslation()
   const activityT = useCallback((key, fallback, options) => t(`activityPage.${key}`, fallback, options), [t])
   const { isConnected, account, connect } = useWallet()
+  const { subjectAddress } = useSpace()
   const { contracts, isLoading: contractsLoading, error: contractsError, loadContracts } = useContracts()
   const toast = useToast()
 
@@ -279,9 +281,11 @@ const ActivityPage = ({ program = 'f-freedom' }) => {
   }, [contracts, account, activityT, normalizeTimestamp, toast]);
 
   const fetchFreedomPlusActivities = useCallback(async () => {
-    if (!FREEDOM_PLUS_ENABLED || !account) return
+    const targetWallet = subjectAddress || account
+    if (!FREEDOM_PLUS_ENABLED || !targetWallet) return
     try {
-      const result = await freedomPlusApi.participant(account)
+      const headers = await getProfileReadAuthIfLocked(targetWallet, account)
+      const result = await freedomPlusApi.participant(targetWallet, { headers })
       const paymentActivities = (result?.payments || []).map((payment, index) => ({
         id: `freedom-plus-payment-${payment._id || `${payment.txHash}-${index}`}`,
         type: 'payout',
@@ -324,7 +328,7 @@ const ActivityPage = ({ program = 'f-freedom' }) => {
       console.error('Error fetching Freedom-Plus activity:', error)
       toast.warning('Freedom-Plus activity could not be refreshed.', { dedupeKey: 'activity-freedom-plus-failed' })
     }
-  }, [account, normalizeTimestamp, normalizeUsdtAmount, toast])
+  }, [subjectAddress, account, normalizeTimestamp, normalizeUsdtAmount, toast])
 
   const getFilteredActivities = useCallback(() => {
     let filtered = [...activities]

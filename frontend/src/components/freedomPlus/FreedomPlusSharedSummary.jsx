@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowRight, Coins, RefreshCw, ShieldCheck } from 'lucide-react'
 import { FREEDOM_PLUS_ENABLED, freedomPlusApi, formatToken } from '../../Services/freedomPlus'
+import { getProfileReadAuthIfLocked } from '../../Services/profilePrivacyApi'
+import { useWallet } from '../../hooks/useWallet'
 import './FreedomPlusSharedSummary.css'
 
 function total(items, field = 'amount') {
@@ -8,6 +10,7 @@ function total(items, field = 'amount') {
 }
 
 export default function FreedomPlusSharedSummary({ wallet, variant = 'dashboard', fullPage = false }) {
+  const { account } = useWallet()
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -17,13 +20,14 @@ export default function FreedomPlusSharedSummary({ wallet, variant = 'dashboard'
     setLoading(true)
     setError('')
     try {
-      setData(await freedomPlusApi.participant(wallet))
+      const headers = await getProfileReadAuthIfLocked(wallet, account)
+      setData(await freedomPlusApi.participant(wallet, { headers }))
     } catch (loadError) {
       setError(loadError?.message || 'Freedom-Plus data is temporarily unavailable.')
     } finally {
       setLoading(false)
     }
-  }, [wallet])
+  }, [wallet, account])
 
   useEffect(() => { load() }, [load])
 

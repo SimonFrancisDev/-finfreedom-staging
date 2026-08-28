@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Layers3 } from 'lucide-react'
+import { Gem, Layers3, Sparkles } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import './ProgramViewSwitcher.css'
 
@@ -63,7 +63,7 @@ export default function ProgramViewSwitcher({ render }) {
   return (
     <div className="program-view">
       <section className="program-view__switcher" aria-label="Program view">
-        <span className="program-view__label"><Layers3 /> Program view</span>
+        <span className="program-view__label"><Layers3 /> Program view <Sparkles className="program-view__spark" /></span>
         <div className="program-view__options" role="tablist" aria-label="Choose program">
           {PROGRAMS.map((program) => (
             <button
@@ -74,7 +74,8 @@ export default function ProgramViewSwitcher({ render }) {
               onClick={() => selectProgram(program.value)}
               key={program.value}
             >
-              {program.label}
+              <span className="program-view__option-mark">{program.value === 'freedom-plus' ? <Gem /> : <Layers3 />}</span>
+              <span>{program.label}</span>
             </button>
           ))}
         </div>

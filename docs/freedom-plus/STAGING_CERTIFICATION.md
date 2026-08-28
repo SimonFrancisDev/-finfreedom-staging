@@ -209,3 +209,7 @@ The final accepted Membership and Rewards hero height is responsive within 520-7
 ### Restored NFT subpage hero assets
 
 Membership and Rewards use the established landing NFT card dark/light and mobile assets. The temporary ring artwork was removed. Production must preserve this mapping together with proportional edge-to-edge cover and the accepted hero-height rules. See docs/GATE_4_FREEDOM_NFT_PREMIUM_PAGES.md.
+
+### Gate 5 shared program/profile parity
+
+Dashboard, Account, and Activity share one persistent premium program selector. Freedom-Plus indexed reads now follow the selected SpaceContext.subjectAddress and carry profile-privacy authorization headers. Membership and Rewards retain the original NFT artwork with a full-frame backdrop and safely reduced foreground visual. Production requirements and test cases are recorded in docs/GATE_5_SHARED_PROGRAM_PROFILE_PARITY.md.
