@@ -81,3 +81,10 @@ The image-led success modal may open only after tx.wait() returns a successful r
 - Asset pairs are tier-foundation-dark/light.png, tier-intermediate-dark/light.png, and tier-advance-dark/light.png under frontend/public/images/freedom-nft.
 - Tier art contains no embedded copy. Accessible tier names remain live interface text.
 - Production port requirement: copy all six assets and preserve the theme switch, object-fit containment, submenu order, and single Services-based Freedom-Plus entry.
+## Final Hero and Tier Artwork Closure (2026-08-28)
+
+- Overview, Rewards, and Membership heroes break out of the padded content column and render edge-to-edge across the available page width.
+- Hero media uses cover-based fill to eliminate the centered/unused right-side area on desktop and mobile.
+- Tier card artwork remains containment-based so each complete NFT card and its inscription stay visible.
+- Foundation, Intermediate, and Advance light/dark assets include their exact uppercase membership labels as part of the artwork.
+- Production must port these CSS breakout rules and the six labeled assets together.

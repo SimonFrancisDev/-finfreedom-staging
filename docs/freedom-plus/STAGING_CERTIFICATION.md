@@ -194,3 +194,6 @@ Frontend production-port additions from this pass:
 The staging NFT surface is certified to use three real routes only: Overview, Rewards, and Membership. Navigation order, dark/light tier artwork, full-image containment, and responsive behavior are recorded in docs/GATE_4_FREEDOM_NFT_PREMIUM_PAGES.md.
 
 This UI closure does not replace the smart-contract evidence already recorded in this certification. Production migration must preserve the certified contract addresses and roles mapping process, deployment manifests, contract test evidence, event/indexer contracts, system-vault configuration, and the NFT UI asset manifest.
+### Final NFT visual acceptance
+
+NFT visual acceptance requires edge-to-edge hero media on Overview, Rewards, and Membership, plus exact Foundation, Intermediate, and Advance labels in both light and dark tier artwork. The authoritative implementation notes and production-port requirements are in docs/GATE_4_FREEDOM_NFT_PREMIUM_PAGES.md.
