@@ -95,3 +95,13 @@ The image-led success modal may open only after tx.wait() returns a successful r
 - Existing tier artwork is retained and receives a controlled 1.12 visual scale inside its fixed image frame to reduce intrinsic top/bottom whitespace.
 - Hero and tier media frames include a theme-aware bottom divider using the shared border token, preventing a floating visual appearance.
 - Production port requirement: preserve these selectors after the earlier full-width hero rules so this refinement wins in the cascade.
+## Screenshot-Verified Media Geometry (2026-08-28)
+
+This section supersedes the earlier fixed-height frame refinement.
+
+- Membership and Rewards desktop heroes use the source asset ratio 1448:1086 (4:3), remain edge-to-edge, and use containment so the complete image is visible without zoom or crop.
+- Membership and Rewards mobile heroes use the dedicated source ratio 864:1821.
+- Overview hero remains unchanged.
+- Overview and Membership tier-art frames use a 1.45:1 ratio matching the visible membership-card body.
+- Tier art uses cover only inside that 1.45:1 frame. This removes the square source canvas above and below while preserving the complete physical card from left to right.
+- Existing generated and labeled assets remain unchanged.

@@ -200,3 +200,6 @@ NFT visual acceptance requires edge-to-edge hero media on Overview, Rewards, and
 ### NFT frame refinement acceptance
 
 Production parity includes the unchanged Overview hero, compact Membership/Rewards hero frames, retained labeled tier assets, controlled tier-art scaling, and theme-token divider lines. Exact selectors and dimensions are recorded in docs/GATE_4_FREEDOM_NFT_PREMIUM_PAGES.md.
+### Screenshot-verified NFT geometry
+
+The final production rule supersedes fixed NFT subpage hero heights: Membership and Rewards use their source image ratios with containment, while Overview and Membership tier cards use a 1.45:1 frame that removes only the surrounding square canvas. See docs/GATE_4_FREEDOM_NFT_PREMIUM_PAGES.md.

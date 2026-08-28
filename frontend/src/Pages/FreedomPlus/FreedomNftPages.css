@@ -52,3 +52,10 @@
 .fn-overview-tiers .fn-tier-art,.fn-tier-selector .fn-tier-art,.fn-allocation .fn-tier-art{border-bottom:1px solid var(--ffn-border)}
 .fn-overview-tiers .fn-tier-art img,.fn-tier-selector .fn-tier-art img{transform:scale(1.12)}
 @media(max-width:680px){.fn-page>.fn-page-hero{min-height:500px}.fn-page>.fn-page-hero .fn-page-hero__copy{min-height:500px}}
+/* Screenshot-verified NFT media geometry. */
+.fn-page>.fn-page-hero{height:auto;min-height:0;aspect-ratio:4/3}
+.fn-page>.fn-page-hero .fn-page-hero__copy{height:100%;min-height:0}
+.fn-page>.fn-page-hero .fn-theme-media img{object-fit:contain;object-position:center}
+.fn-overview-tiers .fn-tier-art,.fn-tier-selector .fn-tier-art{aspect-ratio:1.45/1}
+.fn-overview-tiers .fn-tier-art img,.fn-tier-selector .fn-tier-art img{object-fit:cover;object-position:center;transform:none}
+@media(max-width:680px){.fn-page>.fn-page-hero{height:auto;min-height:0;aspect-ratio:864/1821}.fn-page>.fn-page-hero .fn-page-hero__copy{height:100%;min-height:0}}
