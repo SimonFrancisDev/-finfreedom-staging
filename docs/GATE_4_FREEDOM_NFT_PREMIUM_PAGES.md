@@ -128,3 +128,10 @@ This final visual implementation supersedes all prior stretching and fixed-heigh
 - Membership and Rewards render these assets at their native ratios with containment. No distortion, crop, or zoom is permitted.
 - Overview hero and tier-card artwork remain unchanged.
 - Production must port all four assets, the NFT_CARD_MEDIA mapping, and the final native-ratio CSS block together.
+
+### Final Hero Height Balance (2026-08-28)
+
+- The Overview hero receives a more noticeable height increase for stronger visual presence.
+- Membership and Rewards heroes receive a smaller proportional height increase.
+- The redesigned light/dark desktop and mobile artwork remains contained at its natural proportions; no image stretching is introduced.
+- The adjustment is limited to hero geometry. Accepted tier cards and the remaining NFT page sections are unchanged.
