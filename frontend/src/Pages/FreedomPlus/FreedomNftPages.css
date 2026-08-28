@@ -75,13 +75,3 @@
   .fn-page>.fn-overview-hero .fn-page-hero__copy{min-height:680px}
   .fn-page>.fn-page-hero{aspect-ratio:.76/1}
 }
-
-/* Membership/Rewards only: full-frame backdrop with a safely framed main visual. */
-.fn-page>.fn-page-hero{background-image:url('/images/landing/cards/nft-card-dark.png');background-size:cover;background-position:center;background-repeat:no-repeat}
-[data-theme='light'] .fn-page>.fn-page-hero{background-image:url('/images/landing/cards/nft-card-light.png')}
-.fn-page>.fn-page-hero .fn-theme-media img{object-fit:contain;object-position:center;transform:scale(.88);transform-origin:center}
-@media(max-width:640px){
-  .fn-page>.fn-page-hero{background-image:url('/images/landing/cards/nft-card-mobile-dark.png')}
-  [data-theme='light'] .fn-page>.fn-page-hero{background-image:url('/images/landing/cards/nft-card-mobile-light.png')}
-  .fn-page>.fn-page-hero .fn-theme-media img{transform:scale(.92);transform-origin:center top}
-}
