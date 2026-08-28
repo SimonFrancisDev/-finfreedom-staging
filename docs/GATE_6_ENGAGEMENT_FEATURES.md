@@ -92,7 +92,7 @@ The existing notification feed, bell dropdown, notification center, preferences,
 
 ### Deployment and certification
 
-This feature requires redeploying the staging API and frontend. The worker does not require redeployment for functionality because recipient selection and delivery are database-backed and no indexer code changed.
+This feature requires redeploying the staging API and frontend. The API service must set `NOTIFICATIONS_ENABLED=true`; disabled notification storage is reported as HTTP 503 and never as a successful campaign. The worker does not require redeployment for functionality because recipient selection and delivery are database-backed and no indexer code changed.
 
 Live certification sequence:
 

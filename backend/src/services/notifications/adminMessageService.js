@@ -43,6 +43,12 @@ async function registeredWallets() {
 }
 
 export async function sendAdminMessage(input = {}) {
+  if (!env.NOTIFICATIONS_ENABLED) {
+    const error = new Error('Notifications are disabled. Set NOTIFICATIONS_ENABLED=true on the API service.');
+    error.status = 503;
+    throw error;
+  }
+
   const deliveryMode = input.deliveryMode === 'broadcast' ? 'broadcast' : 'wallet';
   const title = requiredText(input.title, 'Title', 120);
   const message = requiredText(input.message, 'Message', 2000);
@@ -99,7 +105,10 @@ export async function sendAdminMessage(input = {}) {
         notificationType: 'admin_notice',
         dedupeKey: `${campaignId}:${walletAddress}`,
       });
-      if (notification) delivered += 1;
+      if (!notification) {
+        throw new Error('Notification was not persisted');
+      }
+      delivered += 1;
     } catch (error) {
       failures.push({ walletAddress, message: error?.message || 'Delivery failed' });
     }
