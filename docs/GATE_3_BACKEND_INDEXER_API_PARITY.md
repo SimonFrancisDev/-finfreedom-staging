@@ -1,6 +1,6 @@
 # Gate 3: Backend, Indexer, and API Parity
 
-Status: implementation complete; staging redeploy certification pending.
+Status: certified on staging on 2026-08-28.
 
 ## Objective
 
@@ -82,6 +82,20 @@ Redeploy both API and worker from the same commit, then verify:
 6. The known tester still shows levels 1, 2, and 3 and all supplied transactions.
 7. Participant ledger responses include system-charge rows attributed to the participant wallet.
 8. Restarting the worker does not duplicate raw events, projections, or ledger entries.
+
+## Staging Runtime Certification (2026-08-28)
+
+Certified deployment commit: a6f005f6cb8edd398b798df1bfada130596f6c8a.
+
+- API indexing was disabled; worker indexing was enabled.
+- F-Freedom connected 48 WebSocket listeners and Freedom-Plus connected 16.
+- Freedom-Plus startup recovery completed at confirmed block 46,085,722 with no recovered events.
+- Runtime activation transaction 0xcc833a834aeed7f73118f33321705b8f727b926f04a89f1493aa9cd1721111c5 succeeded at block 46,085,985.
+- Event-triggered confirmation indexed 11 relevant raw events and advanced all 16 checkpoints to block 46,085,996.
+- Reconciliation passed in event-driven mode with 47/47 participants, 272/272 positions, and 244/244 payments.
+- Wallet 0x296238e950ef0066D2119230Bf0eb3aDEBc94882 projected active level 4, its P6 position, and 1,350 FPT.
+- The 135 USDT system charge was attributed to the participant and split as 108 USDT to the shared NFT Pool Vault and 27 USDT to the shared Operations Vault.
+- Realtime mode has no interval-based HTTP scan; HTTP recovery remains limited to startup, event confirmation, reconnect, reconciliation, and exceptional replay.
 
 ## Production Rollout Requirements
 
