@@ -9,6 +9,7 @@ import FreedomPlusPayment from '../../models/FreedomPlusPayment.js';
 import FreedomPlusSyncState from '../../models/FreedomPlusSyncState.js';
 import FreedomPlusLedgerEntry from '../../models/FreedomPlusLedgerEntry.js';
 import IndexedRegistrationEvent from '../../models/IndexedRegistrationEvent.js';
+import ReferralCode from '../../models/ReferralCode.js';
 import { getProvider } from '../../blockchain/provider.js';
 import { getContracts } from '../../blockchain/contracts.js';
 import {
@@ -99,9 +100,59 @@ export async function freedomPlusReconciliation() {
   };
 }
 
+async function freedomPlusNetwork(normalized) {
+  const participants = await FreedomPlusParticipant.find({
+    chainId: env.CHAIN_ID,
+    registered: true,
+  }).select('wallet sponsor participantNumber registeredAtBlock registeredAt').lean();
+
+  const childrenBySponsor = new Map();
+  for (const item of participants) {
+    const sponsor = String(item.sponsor || '').toLowerCase();
+    if (!sponsor) continue;
+    const children = childrenBySponsor.get(sponsor) || [];
+    children.push(item);
+    childrenBySponsor.set(sponsor, children);
+  }
+
+  const directParticipants = childrenBySponsor.get(normalized) || [];
+  const referralCodes = directParticipants.length
+    ? await ReferralCode.find({
+        walletAddress: { $in: directParticipants.map((item) => item.wallet) },
+        isActive: true,
+      }).select('walletAddress shortCode').lean()
+    : [];
+  const referralByWallet = new Map(
+    referralCodes.map((item) => [String(item.walletAddress || '').toLowerCase(), item.shortCode])
+  );
+
+  const visited = new Set([normalized]);
+  const queue = [...directParticipants];
+  let totalTeam = 0;
+  while (queue.length) {
+    const member = queue.shift();
+    const memberWallet = String(member?.wallet || '').toLowerCase();
+    if (!memberWallet || visited.has(memberWallet)) continue;
+    visited.add(memberWallet);
+    totalTeam += 1;
+    queue.push(...(childrenBySponsor.get(memberWallet) || []));
+  }
+
+  return {
+    direct: directParticipants.length,
+    totalTeam,
+    directParticipants: directParticipants.map((item) => ({
+      wallet: item.wallet,
+      participantNumber: Number(item.participantNumber || 0),
+      referralId: referralByWallet.get(String(item.wallet || '').toLowerCase()) || '',
+      registeredAtBlock: Number(item.registeredAtBlock || 0),
+      registeredAt: item.registeredAt || null,
+    })),
+  };
+}
 export async function freedomPlusParticipant(address) {
   const normalized = wallet(address);
-  const [participant, levels, positions, payments, ledger, fFreedomRegistration, fFreedomLevelOne] = await Promise.all([
+  const [participant, levels, positions, payments, ledger, network, fFreedomRegistration, fFreedomLevelOne] = await Promise.all([
     FreedomPlusParticipant.findOne({ chainId: env.CHAIN_ID, wallet: normalized }).lean(),
     FreedomPlusLevelState.find({ chainId: env.CHAIN_ID, wallet: normalized }).sort({ level: 1 }).lean(),
     FreedomPlusPosition.find({ chainId: env.CHAIN_ID, participant: normalized })
@@ -110,6 +161,7 @@ export async function freedomPlusParticipant(address) {
       .sort({ blockNumber: -1 }).limit(200).lean(),
     FreedomPlusLedgerEntry.find({ chainId: env.CHAIN_ID, wallet: normalized })
       .sort({ blockNumber: -1, logIndex: -1 }).limit(200).lean(),
+    freedomPlusNetwork(normalized),
     IndexedRegistrationEvent.findOne({ chainId: env.CHAIN_ID, user: normalized, eventName: 'Registered' })
       .sort({ blockNumber: 1, logIndex: 1 }).lean(),
     IndexedRegistrationEvent.findOne({
@@ -144,7 +196,7 @@ export async function freedomPlusParticipant(address) {
       sponsor: gatewaySponsor,
       source: gatewaySource,
     },
-    participant, levels, positions, payments, ledger,
+    participant, levels, positions, payments, ledger, network,
   };
 }
 
