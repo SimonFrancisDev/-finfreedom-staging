@@ -1,25 +1,63 @@
+import { useEffect, useState } from 'react'
 import { Layers3 } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { cloneElement } from 'react'
 import './ProgramViewSwitcher.css'
 
+const PROGRAM_STORAGE_KEY = 'ffn_active_program'
+const DEFAULT_PROGRAM = 'f-freedom'
 const PROGRAMS = [
-  { value: 'f-freedom', label: 'F-Freedom' },
+  { value: DEFAULT_PROGRAM, label: 'F-Freedom' },
   { value: 'freedom-plus', label: 'Freedom-Plus' },
 ]
 
-export default function ProgramViewSwitcher({ fFreedom }) {
+const normalizeProgram = (value) => (
+  value === 'freedom-plus' ? 'freedom-plus' : DEFAULT_PROGRAM
+)
+
+const readStoredProgram = () => {
+  if (typeof window === 'undefined') return DEFAULT_PROGRAM
+
+  try {
+    return normalizeProgram(window.localStorage.getItem(PROGRAM_STORAGE_KEY))
+  } catch {
+    return DEFAULT_PROGRAM
+  }
+}
+
+const persistProgram = (program) => {
+  try {
+    window.localStorage.setItem(PROGRAM_STORAGE_KEY, program)
+  } catch {
+    // The URL remains authoritative when storage is unavailable.
+  }
+}
+
+export default function ProgramViewSwitcher({ render }) {
   const location = useLocation()
   const navigate = useNavigate()
   const params = new URLSearchParams(location.search)
-  const activeProgram = params.get('program') === 'freedom-plus' ? 'freedom-plus' : 'f-freedom'
+  const queryProgram = params.get('program')
+  const hasExplicitProgram = queryProgram === DEFAULT_PROGRAM || queryProgram === 'freedom-plus'
+  const [storedProgram, setStoredProgram] = useState(readStoredProgram)
+  const activeProgram = hasExplicitProgram ? queryProgram : storedProgram
+
+  useEffect(() => {
+    if (!hasExplicitProgram) return
+    const normalized = normalizeProgram(queryProgram)
+    persistProgram(normalized)
+    setStoredProgram(normalized)
+  }, [hasExplicitProgram, queryProgram])
 
   const selectProgram = (program) => {
+    const normalized = normalizeProgram(program)
     const nextParams = new URLSearchParams(location.search)
-    if (program === 'freedom-plus') nextParams.set('program', 'freedom-plus')
-    else nextParams.delete('program')
-    const search = nextParams.toString()
-    navigate(`${location.pathname}${search ? `?${search}` : ''}`, { replace: true, state: location.state })
+    nextParams.set('program', normalized)
+    persistProgram(normalized)
+    setStoredProgram(normalized)
+    navigate(`${location.pathname}?${nextParams.toString()}`, {
+      replace: true,
+      state: location.state,
+    })
   }
 
   return (
@@ -28,14 +66,21 @@ export default function ProgramViewSwitcher({ fFreedom }) {
         <span className="program-view__label"><Layers3 /> Program view</span>
         <div className="program-view__options" role="tablist" aria-label="Choose program">
           {PROGRAMS.map((program) => (
-            <button type="button" role="tab" aria-selected={activeProgram === program.value} className={activeProgram === program.value ? 'active' : ''} onClick={() => selectProgram(program.value)} key={program.value}>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={activeProgram === program.value}
+              className={activeProgram === program.value ? 'active' : ''}
+              onClick={() => selectProgram(program.value)}
+              key={program.value}
+            >
               {program.label}
             </button>
           ))}
         </div>
       </section>
       <div className="program-view__content" key={activeProgram}>
-        {cloneElement(fFreedom, { program: activeProgram })}
+        {render(activeProgram)}
       </div>
     </div>
   )

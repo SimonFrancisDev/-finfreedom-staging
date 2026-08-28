@@ -18,6 +18,38 @@ import {
   FaWhatsapp, FaWallet, FaShieldAlt, FaExternalLinkAlt, FaCopy 
 } from 'react-icons/fa'
 
+const AccountProfileSwitcher = ({
+  accountT,
+  isOwnSpace,
+  switchToSelf,
+  profileInput,
+  setProfileInput,
+  handleViewProfile,
+  profileError,
+}) => (
+  <div className="account-surface profile-switcher-box">
+    <div className="switcher-header">
+      <h3>{accountT('switcher.title', 'Explore Network Accounts')}</h3>
+      {!isOwnSpace && (
+        <button type="button" className="return-btn" onClick={switchToSelf}>
+          {accountT('actions.returnToMyAccount', 'Return to My Account')}
+        </button>
+      )}
+    </div>
+    <div className="switcher-input-group">
+      <input
+        value={profileInput}
+        onChange={(event) => setProfileInput(event.target.value)}
+        placeholder={accountT('switcher.placeholder', 'Wallet address or Referral ID')}
+      />
+      <button type="button" onClick={handleViewProfile}>
+        {accountT('actions.viewAccount', 'View Account')}
+      </button>
+    </div>
+    {profileError && <p className="error-text">{profileError}</p>}
+  </div>
+)
+
 const AccountPage = ({ program = 'f-freedom' }) => {
   const navigate = useNavigate()
   const { t } = useTranslation()
@@ -287,6 +319,15 @@ const AccountPage = ({ program = 'f-freedom' }) => {
   if (program === 'freedom-plus') {
     return (
       <main className="account-page">
+        <AccountProfileSwitcher
+          accountT={accountT}
+          isOwnSpace={isOwnSpace}
+          switchToSelf={switchToSelf}
+          profileInput={profileInput}
+          setProfileInput={setProfileInput}
+          handleViewProfile={handleViewProfile}
+          profileError={profileError}
+        />
         <FreedomPlusSharedSummary wallet={resolvedAddress} variant="account" fullPage />
       </main>
     )
@@ -362,28 +403,15 @@ const shouldShowUpgradeProgress =
           {accountT('actions.goToActivationCenter', 'Go to Activation Center')} <FaArrowRight />
         </button>
       </header>
-
-      {/* 2. PROFILE SWITCHER (CENTERED & CLEAN) */}
-      <div className="account-surface profile-switcher-box">
-        <div className="switcher-header">
-          {/* <h3>Explore Network Spaces</h3> */}
-          <h3>{accountT('switcher.title', 'Explore Network Accounts')}</h3>
-          {!isOwnSpace && (
-            // <button className="return-btn" onClick={switchToSelf}>Return to My Profile</button>
-            <button className="return-btn" onClick={switchToSelf}>{accountT('actions.returnToMyAccount', 'Return to My Account')}</button>
-          )}
-        </div>
-        <div className="switcher-input-group">
-          <input 
-            value={profileInput} 
-            onChange={(e) => setProfileInput(e.target.value)} 
-            // placeholder="Paste wallet address (0x...)"
-            placeholder={accountT('switcher.placeholder', 'Wallet address or Referral ID')}
-          />
-          <button onClick={handleViewProfile}>{accountT('actions.viewAccount', 'View Account')}</button>
-        </div>
-        {profileError && <p className="error-text">{profileError}</p>}
-      </div>
+      <AccountProfileSwitcher
+        accountT={accountT}
+        isOwnSpace={isOwnSpace}
+        switchToSelf={switchToSelf}
+        profileInput={profileInput}
+        setProfileInput={setProfileInput}
+        handleViewProfile={handleViewProfile}
+        profileError={profileError}
+      />
 
       {profileLocked ? (
         <section className="account-surface account-network">

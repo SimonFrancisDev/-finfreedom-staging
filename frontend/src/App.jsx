@@ -1365,7 +1365,7 @@ function App() {
 
               <Route
                 path="/dashboard"
-                element={renderFlowOnlyPage('dashboard', <ProgramViewSwitcher fFreedom={<DashboardPage />} />)}
+                element={renderFlowOnlyPage('dashboard', <ProgramViewSwitcher render={(program) => <DashboardPage program={program} />} />)}
               />
 
               <Route
@@ -1381,7 +1381,7 @@ function App() {
 
               <Route
                 path="/account"
-                element={renderFlowOnlyPage('account', <ProgramViewSwitcher fFreedom={<AccountPage />} />)}
+                element={renderFlowOnlyPage('account', <ProgramViewSwitcher render={(program) => <AccountPage program={program} />} />)}
               />
 
               <Route
@@ -1403,7 +1403,7 @@ function App() {
 
               <Route
                 path="/activity"
-                element={renderFlowOnlyPage('activity', <ProgramViewSwitcher fFreedom={<ActivityPage />} />)}
+                element={renderFlowOnlyPage('activity', <ProgramViewSwitcher render={(program) => <ActivityPage program={program} />} />)}
               />
 
               <Route
