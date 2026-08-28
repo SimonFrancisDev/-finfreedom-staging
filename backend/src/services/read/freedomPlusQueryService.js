@@ -55,12 +55,18 @@ export async function freedomPlusReconciliation() {
   ]);
   const confirmedHead = Math.max(0, head - env.SYNC_CONFIRMATIONS);
   const latestEventBlock = Number(latestEvent?.blockNumber || env.FREEDOM_PLUS_START_BLOCK || 0);
+  const expectedCheckpointCount = Object.keys(contracts).length;
+  const minimumCheckpointBlock = sync.length
+    ? Math.min(...sync.map((state) => Number(state.lastProcessedBlock || 0)))
+    : 0;
+  const checkpointLagBlocks = Math.max(0, confirmedHead - minimumCheckpointBlock);
+  const checkpointFloor = Math.max(0, confirmedHead - env.FREEDOM_PLUS_MAX_CHECKPOINT_LAG_BLOCKS);
   const checks = {
     participants: Number(chainParticipants) === databaseParticipants,
     positions: rawPositions === positions,
     payments: rawPayments === payments,
-    checkpoints: sync.length > 0 && sync.every(
-      (state) => state.status !== 'error' && state.lastProcessedBlock >= confirmedHead
+    checkpoints: sync.length === expectedCheckpointCount && sync.every(
+      (state) => state.status !== 'error' && Number(state.lastProcessedBlock || 0) >= checkpointFloor
     ),
   };
   return {
@@ -69,6 +75,11 @@ export async function freedomPlusReconciliation() {
     head,
     confirmedHead,
     latestEventBlock,
+    checkpointFloor,
+    checkpointLagBlocks,
+    maxCheckpointLagBlocks: env.FREEDOM_PLUS_MAX_CHECKPOINT_LAG_BLOCKS,
+    expectedCheckpointCount,
+    actualCheckpointCount: sync.length,
     checks,
     totals: {
       chainParticipants: Number(chainParticipants),

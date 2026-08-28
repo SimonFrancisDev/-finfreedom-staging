@@ -37,7 +37,7 @@ Tester `0x296238e950ef0066D2119230Bf0eb3aDEBc94882` was indexed as participant 4
 
 ## Implementation
 
-- Reconciliation now requires every target checkpoint to reach the confirmed head.
+- Reconciliation now requires every expected target checkpoint to remain within the explicit `FREEDOM_PLUS_MAX_CHECKPOINT_LAG_BLOCKS` freshness budget (default 120 blocks) of the confirmed head.
 - WebSocket subscriptions only trigger confirmed catch-up; unconfirmed logs are never projected.
 - Realtime mode also runs periodic recovery using `SYNC_POLL_INTERVAL_MS`.
 - Startup requires `NFT_POOL_VAULT_ADDRESS` and `OPERATIONS_VAULT_ADDRESS` when Freedom-Plus is enabled and verifies both router getters.
@@ -68,7 +68,7 @@ Redeploy both API and worker from the same commit, then verify:
 1. API startup prints Freedom-Plus `systemVaults` with the two shared addresses.
 2. API health shows indexing disabled.
 3. Worker health shows indexing enabled and realtime connected.
-4. `/api/freedom-plus/reconciliation` passes only when every checkpoint is at or above the returned confirmed head.
+4. `/api/freedom-plus/reconciliation` passes only when all expected checkpoints are healthy and within the returned maximum lag budget.
 5. Checkpoint lag remains within the configured confirmation and polling interval.
 6. The known tester still shows levels 1, 2, and 3 and all supplied transactions.
 7. Participant ledger responses include system-charge rows attributed to the participant wallet.

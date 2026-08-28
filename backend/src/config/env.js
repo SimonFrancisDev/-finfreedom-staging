@@ -109,6 +109,12 @@ const env = {
     300000,
     15000
   ),
+  FREEDOM_PLUS_MAX_CHECKPOINT_LAG_BLOCKS: clamp(
+    optionalInteger('FREEDOM_PLUS_MAX_CHECKPOINT_LAG_BLOCKS', 120),
+    1,
+    10000,
+    120
+  ),
 
   RUN_INDEXER: optionalBoolean('RUN_INDEXER', false),
   REALTIME_EVENT_INDEXER_ENABLED: optionalBoolean(
