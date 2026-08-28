@@ -173,7 +173,7 @@ let socketHandlers = null;
 let confirmationTimer = null;
 
 async function scheduledPass() {
-  if (running) return;
+  if (running) return null;
   running = true;
   try {
     const result = await syncFreedomPlusOnce();
@@ -184,10 +184,12 @@ async function scheduledPass() {
         events: result.targets.reduce((sum, target) => sum + target.processed, 0),
       });
     }
+    return result;
   } catch (error) {
     console.error('[FREEDOM_PLUS_INDEXER_FAILED]', {
       message: String(error?.message || error),
     });
+    return null;
   } finally {
     running = false;
   }
@@ -291,8 +293,8 @@ function scheduleConfirmedRecovery() {
   if (realtimeStopping || confirmationTimer) return;
   confirmationTimer = setTimeout(() => {
     confirmationTimer = null;
-    queueLive(async () => {
-      const result = await syncFreedomPlusOnce();
+    scheduledPass().then((result) => {
+      if (!result?.enabled) return;
       console.log('[FREEDOM_PLUS_REALTIME_CONFIRMED]', {
         confirmedBlock: result.confirmedBlock,
         recoveredEvents: result.targets.reduce((sum, target) => sum + target.processed, 0),
@@ -387,13 +389,13 @@ async function connectFreedomPlusRealtime() {
   socket?.[method]?.('error', socketHandlers.error);
 
   // Subscriptions only trigger confirmed catch-up; projections never consume unconfirmed logs.
-  const recovery = await queueLive(() => syncFreedomPlusOnce());
+  const recovery = await scheduledPass();
   reconnectAttempt = 0;
   console.log('[FREEDOM_PLUS_REALTIME_CONNECTED]', {
     wsIndex: wsIndex % env.WS_RPC_URLS.length,
     listeners: entries.length,
-    recoveredEvents: recovery.targets.reduce((sum, target) => sum + target.processed, 0),
-    confirmedBlock: recovery.confirmedBlock,
+    recoveredEvents: recovery?.targets?.reduce((sum, target) => sum + target.processed, 0) || 0,
+    confirmedBlock: recovery?.confirmedBlock || null,
   });
 }
 
@@ -401,15 +403,15 @@ async function startFreedomPlusRealtimeIndexer() {
   if (realtimeStarted) return { enabled: true, mode: 'realtime', alreadyStarted: true };
   realtimeStarted = true;
   realtimeStopping = false;
+  if (!timer) {
+    timer = setInterval(scheduledPass, env.SYNC_POLL_INTERVAL_MS);
+    timer.unref?.();
+  }
   try {
     await connectFreedomPlusRealtime();
   } catch (error) {
     await cleanupRealtime();
     scheduleRealtimeReconnect(error);
-  }
-  if (!timer) {
-    timer = setInterval(() => queueLive(scheduledPass), env.SYNC_POLL_INTERVAL_MS);
-    timer.unref?.();
   }
   return {
     enabled: true,
