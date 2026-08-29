@@ -23,6 +23,8 @@ FREEDOM_NFT_MEMBERSHIP_ADDRESS=0x55186FF9369a5D6245e41276d4C892ED06a6e43d
 FREEDOM_NFT_REWARD_DISTRIBUTOR_ADDRESS=0x437A7BB9f05A19F6b095CD0038ebC77cFbF983df
 FREEDOM_NFT_POOL_VAULT_ADDRESS=0x6e127653D5c2032442fa7832b70967fbc13690aE
 FREEDOM_PLUS_OPERATIONS_VAULT_ADDRESS=0x33D5B37Cc4Dfb1EC91dAC000ee0c412ed523b746
+NFT_POOL_VAULT_ADDRESS=0x6e127653D5c2032442fa7832b70967fbc13690aE
+OPERATIONS_VAULT_ADDRESS=0x33D5B37Cc4Dfb1EC91dAC000ee0c412ed523b746
 ```
 
 Use the proxy addresses and earliest deployment block from `deployments-freedom-plus-staging/deployment-*.json`. Configure the same values on the API and worker, but only the worker runs the Freedom-Plus indexer. Realtime mode performs one bounded checkpoint recovery at startup and after a WebSocket reconnect; it does not run the recurring Freedom-Plus poller.
