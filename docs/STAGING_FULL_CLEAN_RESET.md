@@ -91,3 +91,16 @@ Do not store confirmation variables permanently in Render. Execute from a contro
 ## Rollback Boundary
 
 Restore the database backup only together with its matching old API/worker/frontend address set. Blockchain deployments cannot be rolled back. Never combine an old projection database with new addresses, or a new empty database with old start blocks unless intentionally replaying that old deployment.
+## Deployment attempt log
+
+### 2026-08-29 insufficient-gas attempt
+
+The first fresh F-Freedom deployment attempt started from commit `b39eda0` with deployer `0x884e48f9897E8633238747b608DD49dE12bF94df` funded with approximately `0.1891 POL`. It stopped before Registration deployment because the remaining balance could not cover gas. The following incomplete contracts were created and are explicitly rejected from the reset package:
+
+- NFTPoolVault: `0x122Db158984D6d1B0Ddd7784fF40d08B7C3eC058`
+- OperationsVault: `0xD9314e2dCeFc40a1ff94BC10DdE641Ab70C19476`
+- FGTToken: `0x4C36EB1505D2fBB543Fc18BB85ADb376b08cb920`
+- FGTrToken: `0x45CD4e204B66505027115708F922B1bD3B074692`
+- AutoUpgradeEscrow: `0x9cf7C5544eAC3F27D40e342d103cD72bb57083De`
+
+No complete manifest was written, no API/worker/frontend address was changed, and the live staging services remain on the previous certified deployment. These addresses must never be mixed into a later manifest. The next attempt must start the entire suite again and the preflight now requires at least `5 POL` so both F-Freedom and Freedom-Plus/NFT can complete without another partial deployment.

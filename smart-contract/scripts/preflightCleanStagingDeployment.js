@@ -71,7 +71,10 @@ async function main() {
   if (decimals !== 6) throw new Error(`Retained mock USDT must use 6 decimals; received ${decimals}`);
 
   const balance = await ethers.provider.getBalance(deployer.address);
-  if (balance === 0n) throw new Error("Deployer has no POL for deployment gas");
+  const minimumDeploymentBalance = ethers.parseEther("5");
+  if (balance < minimumDeploymentBalance) {
+    throw new Error(`Deployer requires at least 5 POL before starting both fresh suites; available ${ethers.formatEther(balance)} POL`);
+  }
 
   const outputDir = String(process.env.DEPLOYMENT_OUTPUT_DIR || "").trim();
   if (outputDir !== "deployments-staging") {
