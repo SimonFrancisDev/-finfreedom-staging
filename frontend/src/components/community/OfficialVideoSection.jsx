@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Play, Youtube } from 'lucide-react'
+import { Play } from 'lucide-react'
 import { getApiUrl } from '../../Services/apiConfig'
 import './OfficialVideoSection.css'
 
@@ -24,7 +24,7 @@ export default function OfficialVideoSection() {
   return (
     <section className="official-video-section" aria-labelledby="official-video-title">
       <div className="official-video-section__copy">
-        <span><Youtube size={17} /> Official channel</span>
+        <span><Play size={17} /> Official channel</span>
         <h2 id="official-video-title">{video.title}</h2>
         {video.description ? <p>{video.description}</p> : null}
         <a href={video.youtubeUrl} target="_blank" rel="noreferrer">Watch on YouTube</a>
