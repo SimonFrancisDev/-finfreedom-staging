@@ -115,3 +115,53 @@ After funding and a successful preflight at `5.0481856722 POL`, a second complet
 - AutoUpgradeEscrow: `0x597Fd6f4b60E98131eEc40f19ae3869fdA5Fd222`
 
 The failed attempt reduced deployer gas funds to approximately `4.8728 POL`, below the enforced `5 POL` restart floor. Do not bypass the floor. Restore funding and confirm stable HTTPS transport before another complete restart.
+## Certified fresh deployment candidate
+
+Deployment date: 2026-08-29
+Source commit recorded by manifests: `8964ed41180bb20c51c5dc40d788c6dbcf13901a`
+Retained mock USDT: `0x7b7E39f3D177B3356368431C5C285bca58b43A60`
+
+### F-Freedom
+
+Manifest: `smart-contract/deployments-staging/deployment-1788027951360.json`
+Earliest deployment block: `46209364`
+Final deployment block: `46209511`
+
+- Registration: `0x83029F37Ac4BAA2CB29d4f0195149B6575bd403B`
+- LevelManager: `0xa7c22d68C7187d05769e1a2FE61874940e0efD2a`
+- SettlementRouter: `0x9e9cbbAD963FAC89489a1c39af658667DAbcA6ea`
+- Escrow: `0x3E5D970eA8B660f0501bE655AC5190EA57db4605`
+- P4/P12/P39: `0x7CcF2e0a2007E3586409EB64dEaF42139650acE0`, `0x2F4445740bA54515377659059Ba23406aB8d5AeE`, `0xCc798Be34E2A04f19F348E40588Ce5310380dd61`
+- FGT/FGTr: `0x53a11f9c333Cf8f94E3A9Bd642dcf5168E7280E0`, `0x70bF7a6669BDB53304B29C0A96DACEce02107eA5`
+- TokenController: `0xd08c1E893136f25B8a1d70E5CB2820935e1ca8C4`
+- NFTPoolVault/OperationsVault: `0xc904eF570314e7Ef1A63690F241914E012A1Ad11`, `0x196b2a9279A2415BA5273fDDC92E96b493B95E7B`
+
+The fresh-deployment validator passed contract code, owners, ID1, core links, vaults, and all orbit links. Fresh F-Freedom has zero ordinary registrations and only the configured ID1 participant baseline.
+
+### Freedom-Plus and Freedom NFT
+
+Manifest: `smart-contract/deployments-freedom-plus-staging/deployment-1788028241010.json`
+Earliest deployment block: `46209562`
+Final deployment block: `46209801`
+
+- Registration: `0xB23B64dB6c3Be53B532d611d0f66DC63e2A68655`
+- LevelManager: `0x9dF6E3b6F37e67e6A0215683303a5cfFe9b1f177`
+- SettlementRouter: `0x3adaF66Fbc5CC5349969172241Fa6Fe4156d2aCA`
+- P39/P14/P12/P6/P4/P3: `0x02AB9B7193F650c4D907dE3D7ff414b6c3b010B6`, `0xAC3E6EA4Afbf38b68d84d21E20502d411b78e29f`, `0xcbf655ecF02e8c33653703977ff475419c4F408A`, `0x05230009744Ac8503E677Fb5b597e90132d84036`, `0x0a415f92d1b39677Bddf8CF39201A0b92cEF5e0A`, `0x43E94991f420c59768656d83678A994dd939a9Ae`
+- FPT/FPTr: `0x46aBAa6a3888C95E73Be457cF69f6Ef834D8d08F`, `0xb7FA7909e62Db676BD83189d5b932683060444A5`
+- TokenController: `0x904adac4E8190eE8c1740750791aF494bA94797b`
+- NFT Membership/Reward Distributor: `0x55186FF9369a5D6245e41276d4C892ED06a6e43d`, `0x437A7BB9f05A19F6b095CD0038ebC77cFbF983df`
+- NFTPoolVault/OperationsVault: `0x6e127653D5c2032442fa7832b70967fbc13690aE`, `0x33D5B37Cc4Dfb1EC91dAC000ee0c412ed523b746`
+
+The Freedom-Plus validator passed all proxy implementations, multisig ownership, gateway links, locked configuration, token operators, vault/distributor links, orbit topology, and five genesis identities with all seven levels active.
+
+### Required governance action before cutover
+
+The new FGT is multisig-owned, so the deployer correctly could not authorize NFT Membership. Before environment cutover, multisig `0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A` must execute exactly:
+
+- Target: `0x53a11f9c333Cf8f94E3A9Bd642dcf5168E7280E0`
+- Function: `setAuthorizedOperator(address,bool)`
+- Arguments: `0x55186FF9369a5D6245e41276d4C892ED06a6e43d`, `true`
+- Purpose: allow Freedom NFT Membership to lock and unlock qualifying FGT.
+
+Cutover remains blocked until `authorizedOperators(0x55186FF9369a5D6245e41276d4C892ED06a6e43d)` returns `true` on the new FGT.
