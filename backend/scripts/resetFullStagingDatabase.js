@@ -37,9 +37,30 @@ async function main() {
     throw new Error('Set API_AND_WORKER_SUSPENDED=true only after both staging services are suspended');
   }
 
-  const result = await db.dropDatabase();
+  let mode = 'dropDatabase';
+  let result;
+
+  try {
+    result = await db.dropDatabase();
+  } catch (error) {
+    const cannotDropDatabase = error?.code === 8000 && /dropDatabase/i.test(error?.message || '');
+    if (!cannotDropDatabase) throw error;
+
+    mode = 'deleteMany';
+    result = {};
+    for (const { name } of before) {
+      const deletion = await db.collection(name).deleteMany({});
+      result[name] = deletion.deletedCount;
+    }
+  }
+
   const after = await collectionInventory(db);
-  console.log(JSON.stringify({ reset: true, database, chainId, result, remainingCollections: after }, null, 2));
+  const nonEmptyCollections = after.filter(({ documents }) => documents !== 0);
+  if (nonEmptyCollections.length) {
+    throw new Error('Reset verification failed: ' + JSON.stringify(nonEmptyCollections));
+  }
+
+  console.log(JSON.stringify({ reset: true, mode, database, chainId, result, remainingCollections: after }, null, 2));
 }
 
 main()

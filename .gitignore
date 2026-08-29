@@ -53,3 +53,6 @@ env-files/
 smart-contract/deployments-mainnet/
 smart-contract/deployments/
 smart-contract/.openzeppelin/polygon.json
+
+# Local staging database backups
+backend/backups/

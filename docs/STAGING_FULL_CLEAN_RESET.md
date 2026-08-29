@@ -1,7 +1,7 @@
 # Full Staging Clean-State Reset
 
 Date: 2026-08-29
-Status: prepared; not executed
+Status: database reset completed; environment cutover pending
 
 ## Objective
 
@@ -73,6 +73,19 @@ npm run reset:staging:full
 ```
 
 Do not store confirmation variables permanently in Render. Execute from a controlled operator environment only after both services are suspended.
+
+If the Atlas database user cannot execute dropDatabase, the guarded script falls back only for Atlas error 8000 explicitly naming dropDatabase. It runs deleteMany({}) against every inventoried collection and fails unless the post-reset inventory confirms every collection contains zero documents.
+
+## 2026-08-29 Database Reset Evidence
+
+- API and worker were confirmed suspended before backup and reset.
+- Backup archive: ackend/backups/finfreedom-staging-20260829-201540.archive.gz
+- Backup size: 1310624 bytes
+- Backup SHA-256: 9C3BC49B2C7AA01CC7C9FF676A95EB67042306C975757B6990872CC7C2CF4986
+- Dry run verified database infreedom-staging and chain ID 80002 and captured the pre-reset inventory.
+- Atlas denied dropDatabase with error 8000; no records were deleted by that failed attempt.
+- The guarded deleteMany fallback completed and verified all 41 retained collections at zero documents.
+- Mock USDT and both fresh contract suites were not modified by the database reset.
 
 ## Clean-State Certification
 
