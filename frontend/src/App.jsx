@@ -106,6 +106,7 @@ const LAUNCH_GATE_MODE = String(import.meta.env.VITE_LAUNCH_GATE_MODE || 'open')
 const EARLY_ACCESS_CODE = String(import.meta.env.VITE_EARLY_ACCESS_CODE || '').trim()
 const PUBLIC_LAUNCH_AT = String(import.meta.env.VITE_PUBLIC_LAUNCH_AT || '').trim()
 const FREEDOM_PLUS_ENABLED = String(import.meta.env.VITE_FREEDOM_PLUS_ENABLED || 'false').toLowerCase() === 'true'
+const STAGING_TEST_ADMIN_ENABLED = String(import.meta.env.VITE_STAGING_TEST_ADMIN_ENABLED || 'false').toLowerCase() === 'true'
 
 const scopedStorageKey = (baseKey, wallet) => {
   const suffix = wallet ? String(wallet).trim().toLowerCase() : 'guest'
@@ -1271,6 +1272,8 @@ function App() {
     [hasInternalRouteAccess]
   )
 
+  const hasAdminPanelAccess = isMultisigOwner || (STAGING_TEST_ADMIN_ENABLED && isConnected)
+
   const renderAdminPage = useCallback(() => {
     if (!adminCheckComplete) {
       return (
@@ -1281,12 +1284,12 @@ function App() {
       )
     }
 
-    if (!hasInternalRouteAccess || !isMultisigOwner) {
+    if (!hasInternalRouteAccess || !hasAdminPanelAccess) {
       return <Navigate to="/home" replace />
     }
 
-    return <AdminPanel />
-  }, [adminCheckComplete, hasInternalRouteAccess, isMultisigOwner])
+    return <AdminPanel canPerformOnchainAdmin={isMultisigOwner} />
+  }, [adminCheckComplete, hasAdminPanelAccess, hasInternalRouteAccess, isMultisigOwner])
 
   if (!launchGateOpen) {
     return <LaunchGate nowMs={launchNowMs} />
@@ -1341,7 +1344,7 @@ function App() {
                 onConnectWalletConnect={connectWalletConnect}
                 hasWalletConnectSupport={hasMobileWalletSupport}
                 onDisconnectWallet={disconnect}
-                isAdmin={isMultisigOwner}
+                isAdmin={hasAdminPanelAccess}
                 onOpenAdminPanel={() => handleNavigate('admin')}
               />
             }
@@ -1460,7 +1463,7 @@ function App() {
             onOpenAccount={handleOpenAccount}
             account={account}
             wallet={wallet}
-            isAdmin={isMultisigOwner}
+            isAdmin={hasAdminPanelAccess}
             onOpenAdminPanel={() => handleNavigate('admin')}
           />
 

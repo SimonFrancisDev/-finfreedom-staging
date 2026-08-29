@@ -7,6 +7,7 @@ import { web3Service } from '../Services/web3';
 import { ethers } from 'ethers';
 import { useTranslation } from 'react-i18next';
 import { getApiUrl } from '../Services/apiConfig';
+import { getProfileSessionAuth } from '../Services/profilePrivacyApi';
 import { NETWORK_CONFIG } from '../constants/addresses';
 import { useToast } from '../components/feedback';
 import { normalizeError } from '../utils/errorMap';
@@ -192,10 +193,14 @@ const formatMoney = (value) => {
 };
 
 // Admin API helper
-const adminApi = async (endpoint, options = {}) => {
-  const adminKey = getRuntimeAdminKey();
-  if (!adminKey) {
-    throw new Error('Admin API key is required for this action');
+const adminApiRequest = async (endpoint, options = {}, account = '') => {
+  const stagingTestAdminEnabled = String(import.meta.env.VITE_STAGING_TEST_ADMIN_ENABLED || 'false').toLowerCase() === 'true';
+  const walletAuth = stagingTestAdminEnabled && account
+    ? await getProfileSessionAuth(account)
+    : {};
+  const adminKey = stagingTestAdminEnabled ? '' : getRuntimeAdminKey();
+  if (!adminKey && !walletAuth.Authorization) {
+    throw new Error('Admin authorization is required for this action');
   }
 
   const { responseType, ...fetchOptions } = options;
@@ -203,7 +208,8 @@ const adminApi = async (endpoint, options = {}) => {
     ...fetchOptions,
     headers: {
       'Content-Type': 'application/json',
-      [ADMIN_API_HEADER]: adminKey,
+      ...(adminKey ? { [ADMIN_API_HEADER]: adminKey } : {}),
+      ...walletAuth,
       ...(fetchOptions.headers || {})
     }
   });
@@ -627,11 +633,13 @@ const TourManager = ({ isOwner, activeTab, setActiveTab }) => {
 // ============================================================
 // COMPONENT
 // ============================================================
-export const AdminPanel = () => {
+export const AdminPanel = ({ canPerformOnchainAdmin = false }) => {
   const { isConnected, account, connect } = useWallet();
   const { contracts, isLoading, error, loadContracts } = useContracts();
   const { t } = useTranslation();
   const toast = useToast();
+  const adminApi = useCallback((endpoint, options = {}) => adminApiRequest(endpoint, options, account), [account]);
+  const hasStagingTestAccess = String(import.meta.env.VITE_STAGING_TEST_ADMIN_ENABLED || 'false').toLowerCase() === 'true';
 
   // ========== VIEW NAVIGATION STATE ==========
   const adminT = useCallback((key, fallback, options) => t(`adminPanel.${key}`, fallback, options), [t]);const boolLabel = useCallback((value) => value ? adminT('common.yes', 'Yes') : adminT('common.no', 'No'), [adminT]);const [activeTab, setActiveTab] = useState('dashboard');
@@ -1897,7 +1905,7 @@ export const AdminPanel = () => {
 
   }
 
-  if (!isOwner) {
+  if (!isOwner && !hasStagingTestAccess) {
     return (
       <Container className="admin-shell-premium">
         <div className="glass-panel-premium" style={{ padding: '40px', textAlign: 'center' }}>
@@ -1911,15 +1919,25 @@ export const AdminPanel = () => {
   return (
     <Container fluid="xl" className="admin-shell-premium">
 
+      {!canPerformOnchainAdmin && (
+        <div className="admin-test-access-notice" role="status">
+          <ShieldCheck size={20} />
+          <div>
+            <strong>Staging test administrator</strong>
+            <span>Off-chain administration is enabled for testing. Contract proposals, approvals, and execution still require a multisig owner wallet.</span>
+          </div>
+        </div>
+      )}
+
       {/* Hero Header */}
       <div className="admin-hero-premium">
         <div>
           <h1 className="admin-title-premium">{adminT("ui.line1452.adminPanel", "Admin Panel")}</h1>
-          <div className="admin-subtitle">{adminT("ui.line1453.productionGovernanceCockpitForMultisigOwners", "Production governance cockpit for multisig owners")}</div>
+          <div className="admin-subtitle">{canPerformOnchainAdmin ? adminT("ui.line1453.productionGovernanceCockpitForMultisigOwners", "Production governance cockpit for multisig owners") : "Staging feature testing workspace"}</div>
         </div>
         <div className="flex-between-premium" style={{ gap: '12px' }}>
           <span className="admin-badge-premium"><Key size={14} /> {shortAddress(account)}</span>
-          <span className="admin-badge-premium"><Crown size={14} />{adminT("ui.line1457.multisigOwner", "Multisig Owner")}</span>
+          <span className="admin-badge-premium"><Crown size={14} />{canPerformOnchainAdmin ? adminT("ui.line1457.multisigOwner", "Multisig Owner") : "Test Administrator"}</span>
           <span className="admin-badge-premium"><BarChart3 size={14} /> {multisigStats.requiredConfirmations}/{ownerList.length || 5}{adminT("ui.line1458.threshold", "Threshold")}</span>
           <span className="admin-badge-premium"><Clock size={14} /> {formatCountdown(Number(multisigStats.timelockDelay || 0))}</span>
         </div>

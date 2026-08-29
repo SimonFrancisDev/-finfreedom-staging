@@ -1692,3 +1692,26 @@ body.modal-open .fab-premium {
 [data-theme="light"] .command-dock button:last-child {
   border-top: 1px solid rgba(0, 0, 0, 0.15);
 }
+
+.admin-test-access-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 0 0 18px;
+  padding: 14px 16px;
+  border: 1px solid rgba(245, 158, 11, 0.42);
+  border-radius: 8px;
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--text-primary, #f8fafc);
+}
+
+.admin-test-access-notice svg { flex: 0 0 auto; color: #f59e0b; }
+.admin-test-access-notice div { display: grid; gap: 3px; }
+.admin-test-access-notice span {
+  color: var(--text-secondary, #cbd5e1);
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+[data-theme='light'] .admin-test-access-notice { background: rgba(245, 158, 11, 0.12); color: #172033; }
+[data-theme='light'] .admin-test-access-notice span { color: #475569; }

@@ -286,3 +286,18 @@ Frontend:
 ## Reset boundary
 
 The later fresh-test reset must be a separate reviewed operation. It must preserve the mock USDT contract and approved deployment contracts, define database collections and index checkpoints explicitly, and produce before/after evidence. No reset command belongs in this feature implementation gate.
+
+## Temporary staging test-admin access
+
+Founders and testers may exercise all off-chain Admin Panel workflows using their connected wallet and a signed profile session. This mode is deliberately limited to staging and does not disclose the operator API key.
+
+Required deployment configuration:
+
+- API: `NODE_ENV=staging`
+- API: `STAGING_TEST_ADMIN_ENABLED=true`
+- Frontend: `VITE_STAGING_TEST_ADMIN_ENABLED=true` (public framework configuration)
+- Worker: no test-admin flag required
+
+The mode covers notifications with media, official video administration, community Tasks, and other API-backed administration. Smart-contract proposals, approvals, execution, guardian actions, ownership changes, and treasury operations remain protected by the deployed multisig and require a multisig owner wallet. The backend rejects wallet-based test-admin sessions unless both the staging environment and explicit feature flag are active. Production must keep both flags unset or false.
+
+Before production rollout, remove the frontend flag and verify the API reports `STAGING_TEST_ADMIN_ENABLED=false`; retain the normal operator API-key and multisig controls.
