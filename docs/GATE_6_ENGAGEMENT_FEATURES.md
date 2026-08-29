@@ -1,7 +1,7 @@
 # Gate 6 - Engagement Features
 
 Date: 2026-08-29
-Status: Tasks implementation complete; staging certification pending
+Status: complete; all four engagement features staging-certified
 
 ## Scope
 
@@ -178,11 +178,11 @@ No new environment variable, database migration, worker deployment, index checkp
 - The feature required no worker behavior, indexer, contract, RPC polling, environment variable, or database migration.
 ## Remaining feature contracts
 
-All four Gate 6 features are implemented. WalletConnect, administrator notifications, and the official video are staging-certified. Registered-user Tasks requires live staging certification before this gate can close.
+All four Gate 6 features are implemented and staging-certified. The next operation is the separately guarded full staging reset and fresh end-to-end test cycle.
 
 ## Registered-user live Tasks
 
-Status: implementation complete; staging certification pending.
+Status: staging live-certified on 2026-08-29.
 
 Tasks is a database-backed community workspace for registered F-Freedom and Freedom-Plus wallets. It does not read contracts, poll RPC endpoints, add indexer listeners, or require the worker. Registration eligibility is checked only against the existing indexed MongoDB registration records for the configured chain.
 
@@ -263,6 +263,14 @@ Frontend:
 - `frontend/src/App.jsx`
 - `frontend/src/Pages/AdminPanel.jsx`
 
+### Staging certification evidence
+
+- Commit `11a6cee` introduced the registered-user workspace, proof review, discussion, reactions, reward ledger, protected media, notifications, and authenticated live refresh.
+- The first deployment exposed a navbar renderer that filtered out the valid Tasks navigation item while notification deep links still worked.
+- Commit `b959190` added Tasks to the desktop navbar allowlist between Community and Support.
+- After frontend redeployment, the user confirmed that Tasks is visible and the deployed workflow is working.
+- Backend tests passed all nine suites, including existing realtime indexer, Freedom-Plus reward, official-video, and Tasks tests.
+- Tasks remains database-backed and introduces no contract call, RPC polling, or worker/indexer listener.
 ### Staging certification checklist
 
 1. Open Tasks with an unregistered signed wallet and confirm HTTP 403 without an RPC request.

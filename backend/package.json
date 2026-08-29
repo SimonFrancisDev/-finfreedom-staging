@@ -8,6 +8,7 @@
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "reset:staging:full": "node scripts/resetFullStagingDatabase.js",
     "seed:faqs": "node scripts/seedFaqs.js",
     "seed": "npm run seed:faqs"
   },
