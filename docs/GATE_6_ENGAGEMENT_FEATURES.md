@@ -63,6 +63,7 @@ The existing notification feed, bell dropdown, notification center, preferences,
 - Broadcast recipients are the deduplicated union of indexed F-Freedom registration events and registered Freedom-Plus participants for the configured chain.
 - Recipient discovery uses MongoDB only. It makes no HTTP RPC, WebSocket RPC, contract, or explorer request.
 - Each message supports a title, primary message, optional details, severity, destination route, and optional image.
+- New administrator messages default to the protected /notifications destination. Clicking them opens the full notification center; administrators can still select another supported destination when needed.
 - Literal administrator text is stored separately from translation keys so existing event notifications retain localization while administrator messages render exactly as authored.
 - Delivery returns requested, delivered, and failed counts. A broadcast is capped at 10,000 unique indexed recipients per request.
 
@@ -83,6 +84,12 @@ The existing notification feed, bell dropdown, notification center, preferences,
 - Broadcast requires an explicit browser confirmation before submission.
 - Uploaded files are data only; SVG, HTML, scripts, arbitrary URLs, and arbitrary MIME types are rejected.
 
+### Staging evidence
+
+- Direct delivery initially exposed a disabled `NOTIFICATIONS_ENABLED` deployment flag; the API now rejects this state explicitly instead of returning ambiguous zero-delivery accounting.
+- After setting `NOTIFICATIONS_ENABLED=true` and redeploying the API, a direct administrator message reported 1 of 1 delivered and 0 failed.
+- The user confirmed that the delivered notification rendered correctly.
+- Full-page destination certification remains pending the frontend deployment containing `/notifications`.
 ### API surface
 
 - `POST /api/admin/notifications/media` uploads one protected image.

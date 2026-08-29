@@ -47,6 +47,7 @@ const normalizeNotification = (notification) => {
     detail: notification.detail || '',
     detailKey: notification.detailKey || '',
     route: notification.route || '',
+    imageUrl: notification.imageUrl || '',
     eventKey: notification.eventKey || id,
     read: Boolean(notification.read),
     createdAt,

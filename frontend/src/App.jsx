@@ -20,6 +20,7 @@ import AccountPage from './Pages/Account/AccountPage'
 import PreferencesPage from './Pages/Preferences/PreferencesPage'
 import SecurityPage from './Pages/Security/SecurityPage'
 import ActivityPage from './Pages/Activity/ActivityPage'
+import NotificationsPage from './Pages/Notifications/NotificationsPage'
 import FreedomPlusPage from './Pages/FreedomPlus/FreedomPlusPage'
 import ProgramViewSwitcher from './components/program/ProgramViewSwitcher'
 import { AdminPanel } from './Pages/AdminPanel'
@@ -135,6 +136,7 @@ const routeMap = {
   '/preferences': 'preferences',
   '/security': 'security',
   '/activity': 'activity',
+  '/notifications': 'notifications',
   '/admin': 'admin',
 }
 
@@ -170,6 +172,7 @@ const pageToPathMap = {
   preferences: '/preferences',
   security: '/security',
   activity: '/activity',
+  notifications: '/notifications',
   admin: '/admin',
 }
 
@@ -658,11 +661,11 @@ function App() {
       return (response.items || []).map((item) => ({
         id: item._id || item.id,
         titleKey: item.titleKey,
-        title: item.notificationType?.replace(/_/g, ' ') || 'Notification',
+        title: item.title || item.notificationType?.replace(/_/g, ' ') || 'Notification',
         messageKey: item.messageKey,
-        message: item.notificationType?.replace(/_/g, ' ') || '',
+        message: item.message || item.notificationType?.replace(/_/g, ' ') || '',
         detailKey: item.detailKey,
-        detail: '',
+        detail: item.detail || '',
         time: item.createdAt ? new Date(item.createdAt).toLocaleString() : '',
         icon: Bell,
         iconColor:
@@ -677,6 +680,7 @@ function App() {
         noticeType: item.severity || 'info',
         read: item.status === 'read',
         route: item.route || 'activity',
+        imageUrl: item.imageUrl ? getApiUrl(item.imageUrl) : '',
         createdAt: item.createdAt,
         i18nParams: item.i18nParams || {},
         source: 'backend',
@@ -1411,6 +1415,16 @@ function App() {
               />
 
               <Route
+
+                path="/notifications"
+
+                element={renderFlowOnlyPage('notifications', <NotificationsPage />)}
+
+              />
+
+
+              <Route
+
                 path="/my-tokens"
                 element={renderFlowOnlyPage('myTokens', <MyTokens />)}
               />

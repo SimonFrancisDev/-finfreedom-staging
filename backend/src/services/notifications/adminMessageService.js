@@ -54,7 +54,7 @@ export async function sendAdminMessage(input = {}) {
   const message = requiredText(input.message, 'Message', 2000);
   const detail = String(input.detail || '').trim().slice(0, 2000);
   const severity = SEVERITIES.has(input.severity) ? input.severity : 'info';
-  const route = String(input.route || 'dashboard').trim().slice(0, 120);
+  const route = String(input.route || 'notifications').trim().slice(0, 120);
   const imageId = String(input.imageId || '').trim();
   if (imageId && !(await findNotificationImage(imageId))) {
     const error = new Error('Notification image was not found');

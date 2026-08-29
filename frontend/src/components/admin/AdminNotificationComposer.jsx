@@ -9,7 +9,7 @@ const EMPTY_FORM = {
   message: '',
   detail: '',
   severity: 'info',
-  route: 'dashboard',
+  route: 'notifications',
 }
 
 export default function AdminNotificationComposer({ adminApi, toast }) {
@@ -148,6 +148,7 @@ export default function AdminNotificationComposer({ adminApi, toast }) {
             <label>
               Destination
               <select value={form.route} onChange={(event) => update('route', event.target.value)}>
+                <option value="notifications">Notifications</option>
                 <option value="dashboard">Dashboard</option>
                 <option value="activity">Activity</option>
                 <option value="account">Account</option>
