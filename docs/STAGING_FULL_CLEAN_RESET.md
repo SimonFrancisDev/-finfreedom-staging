@@ -165,3 +165,24 @@ The new FGT is multisig-owned, so the deployer correctly could not authorize NFT
 - Purpose: allow Freedom NFT Membership to lock and unlock qualifying FGT.
 
 Cutover remains blocked until `authorizedOperators(0x55186FF9369a5D6245e41276d4C892ED06a6e43d)` returns `true` on the new FGT.
+### Founder-representative scope clarification
+
+The user confirmed on 2026-08-29 that founder representatives are a Freedom-Plus-only genesis feature. F-Freedom intentionally configures no founder representatives. The fresh F-Freedom deployment reporting `Founder representatives: 0` is therefore correct and requires no repair or redeployment. Freedom-Plus correctly initialized these four approved representatives under ID1 with all seven levels active:
+
+- `0x3f6Bb1E6Bfeb9C52f763a197d27B580d7DE7f100`
+- `0xDd78425335C0c698615845d94f9FeE7492266396`
+- `0xf72873d6233B5e3dfbA6D1D8058BF90E990902f0`
+- `0xeE192BE4884B064281Fa426F3d855fb339445B83`
+
+Do not add these wallets to F-Freedom during staging cutover or production integration unless this business rule is explicitly changed through a later approved gate.
+
+### NFT FGT authorization governance evidence
+
+Multisig transaction `14` targets the new FGT `0x53a11f9c333Cf8f94E3A9Bd642dcf5168E7280E0` and calls `setAuthorizedOperator(0x55186FF9369a5D6245e41276d4C892ED06a6e43d,true)`.
+
+- Proposal submission: `0xac52441300d40d5959229873045775ab418e509db20344db1c2fd149dea60411`
+- First confirmation by `0x296238e950ef0066D2119230Bf0eb3aDEBc94882`: `0x40f034ac66f85f3510e26a3aa0d78bb6983415b0b387461dfc5ddd55d5806198`
+- Required confirmations: `2`
+- Timelock: `120` seconds
+
+Cutover remains blocked until a different multisig owner provides confirmation two, transaction `14` executes, and the FGT authorization read returns `true`.
