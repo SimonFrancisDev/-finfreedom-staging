@@ -37,6 +37,10 @@ The database operation sends no transaction and cannot alter mock USDT or any co
 4. Record current API, worker, and frontend variables with secrets redacted.
 5. Record retained mock USDT address, code, decimals, chain, and funding-wallet balance.
 6. Run complete contract tests.
+   - Latest pre-deployment run: 156 passing in 9 minutes on 2026-08-29.
+   - Run `npx hardhat run scripts/preflightCleanStagingDeployment.js --network amoy` before deployment; it sends no transaction.
+   - The preflight must confirm Amoy chain `80002`, retained mock USDT code/symbol/6 decimals, eight unique founders, ratios totaling `10000`, distinct deployer/multisig/ID1, fresh treasury vault mode, staging manifest output, and nonzero deployer POL.
+   - Use a healthy authenticated HTTPS RPC endpoint. The WebSocket endpoint remains for worker indexing and is not a Hardhat deployment transport.
 7. Deploy fresh F-Freedom contracts and save a new manifest.
 8. Verify ownership, guardian, ID1, founders, vault recipients, USDT wiring, token operators, orbit links, and blocks.
 9. Deploy fresh Freedom-Plus/NFT contracts against the new F-Freedom gateway and save a new manifest.
