@@ -114,7 +114,7 @@ Live certification sequence:
 Production port requires the backend notification model, admin and public routes/controllers, notification delivery/media services, admin composer, both user notification views, styles, and this environment/deployment contract. MongoDB must support GridFS; no migration or contract deployment is required.
 ## Configurable official YouTube video
 
-Status: implemented; staging live certification pending.
+Status: staging live-certified on 2026-08-29.
 
 The Community domain owns one official featured video. Configuration is stored as a MongoDB singleton and managed from the existing protected Admin Panel Community view. The published video appears directly below the public Community hero.
 
@@ -169,6 +169,13 @@ No new environment variable, database migration, worker deployment, index checkp
 7. Attempt HTTP, malformed, and lookalike-domain URLs and confirm rejection.
 8. Unpublish and confirm the public section disappears after the short cache window or a cache-bypassing refresh.
 9. Confirm worker/indexer logs are unchanged and no RPC activity is introduced.
+### Staging certification evidence
+
+- The staging API and frontend were redeployed with the official-video model, protected editor, public endpoint, and Community section.
+- The first Vercel frontend build exposed an unsupported `Youtube` export in the installed Lucide version.
+- Commit `ecd951e` replaced that unsupported export with the verified `Play` icon and restored a successful frontend deployment.
+- The administrator configuration flow and published Community video presentation were verified successfully by the user.
+- The feature required no worker behavior, indexer, contract, RPC polling, environment variable, or database migration.
 ## Remaining feature contracts
 
 Task workflows will be expanded in this document when that feature enters implementation. Each feature requires its own backend/frontend tests, live staging evidence, production-port file list, and environment contract.
