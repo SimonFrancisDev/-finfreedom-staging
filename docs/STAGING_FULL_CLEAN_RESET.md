@@ -104,3 +104,14 @@ The first fresh F-Freedom deployment attempt started from commit `b39eda0` with 
 - AutoUpgradeEscrow: `0x9cf7C5544eAC3F27D40e342d103cD72bb57083De`
 
 No complete manifest was written, no API/worker/frontend address was changed, and the live staging services remain on the previous certified deployment. These addresses must never be mixed into a later manifest. The next attempt must start the entire suite again and the preflight now requires at least `5 POL` so both F-Freedom and Freedom-Plus/NFT can complete without another partial deployment.
+### 2026-08-29 RPC-timeout attempt
+
+After funding and a successful preflight at `5.0481856722 POL`, a second complete restart stopped during Registration deployment because the authenticated HTTPS provider returned `UND_ERR_CONNECT_TIMEOUT`. This was a provider transport failure, not a contract revert. No complete manifest was written and no live environment was changed. These incomplete addresses are rejected and must never be used or mixed into the final deployment:
+
+- NFTPoolVault: `0x1C95aF8becfC20871e3F5deC40f690838d305C10`
+- OperationsVault: `0xB8168c6Ba11E06d651EcDae8c22a4e334f5236F6`
+- FGTToken: `0x8ce83D9459071f3ee9F38db1D7e04d30c562Fa43`
+- FGTrToken: `0x11691a6d6DD3D48CFA685c1222cB80722be69792`
+- AutoUpgradeEscrow: `0x597Fd6f4b60E98131eEc40f19ae3869fdA5Fd222`
+
+The failed attempt reduced deployer gas funds to approximately `4.8728 POL`, below the enforced `5 POL` restart floor. Do not bypass the floor. Restore funding and confirm stable HTTPS transport before another complete restart.
