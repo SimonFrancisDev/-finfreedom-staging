@@ -300,4 +300,16 @@ Required deployment configuration:
 
 The mode covers notifications with media, official video administration, community Tasks, and other API-backed administration. Smart-contract proposals, approvals, execution, guardian actions, ownership changes, and treasury operations remain protected by the deployed multisig and require a multisig owner wallet. The backend rejects wallet-based test-admin sessions unless both the staging environment and explicit feature flag are active. Production must keep both flags unset or false.
 
-Before production rollout, remove the frontend flag and verify the API reports `STAGING_TEST_ADMIN_ENABLED=false`; retain the normal operator API-key and multisig controls.
+### Mandatory post-test rollback
+
+This access is temporary and must be removed immediately when founder testing closes. Restore the original strict multisig-owner behavior before preparing the production release:
+
+1. Set API `STAGING_TEST_ADMIN_ENABLED=false` or remove the variable.
+2. Set frontend `VITE_STAGING_TEST_ADMIN_ENABLED=false` or remove the variable.
+3. Redeploy the API and frontend; the worker does not require redeployment for this rollback.
+4. Verify a normal connected wallet cannot see or open the Admin Panel.
+5. Verify a multisig-owner wallet can still open the Admin Panel and perform its authorized operations.
+6. Confirm the backend still requires the configured operator API key for protected off-chain administration and the contracts still require multisig authorization.
+7. Record the rollback deployment commit and verification evidence in the production handoff package.
+
+Production must never enable either test-admin flag. The release gate fails if a non-multisig wallet can access the Admin Panel.
