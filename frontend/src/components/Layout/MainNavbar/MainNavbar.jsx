@@ -546,7 +546,7 @@ const MainNavbar = ({
             </div>
 
             {navItems
-              .filter((item) => item.href === 'community' || item.href === 'support')
+              .filter((item) => ['community', 'tasks', 'support'].includes(item.href))
               .map((item) => (
                 <button
                   key={item.href}
