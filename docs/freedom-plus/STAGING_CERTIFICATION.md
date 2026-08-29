@@ -1,3 +1,5 @@
+> **Superseded staging deployment:** This certification records the previous Freedom-Plus deployment and is retained as historical evidence. For the 2026-08-29 clean-state candidate, use `deployment-1788028241010.json`, `docs/STAGING_FULL_CLEAN_RESET.md`, and the current backend/frontend environment guides.
+
 # Freedom-Plus Staging Certification
 
 ## Certified deployment
