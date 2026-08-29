@@ -9,6 +9,7 @@ import { getProfileReadAuthIfLocked } from '../../Services/profilePrivacyApi'
 import { resolveIdentity } from '../../utils/identityResolver'
 import { Modal } from '../../components/overlay'
 import { useToast } from '../../components/feedback'
+import OfficialVideoSection from '../../components/community/OfficialVideoSection'
 import { GrowthBarChart } from '../../components/charts/InstitutionalCharts'
 import { ethers } from 'ethers'
 import {
@@ -1132,6 +1133,8 @@ const CommunityPage = ({ onNavigate }) => {
           </div>
         </div>
       </section>
+
+      <OfficialVideoSection />
 
       <button
         type="button"

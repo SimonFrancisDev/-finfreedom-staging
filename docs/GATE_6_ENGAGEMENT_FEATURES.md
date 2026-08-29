@@ -53,7 +53,7 @@ Deployment requires `VITE_WALLETCONNECT_PROJECT_ID`. Because every `VITE_` varia
 
 ## Administrator-to-user notifications
 
-Status: implemented locally; staging live certification pending.
+Status: staging live-certified on 2026-08-29.
 
 The existing notification feed, bell dropdown, notification center, preferences, read state, and dismiss behavior remain the user-facing foundation. Gate 6 adds an administrator composer without introducing blockchain reads or RPC polling.
 
@@ -89,7 +89,7 @@ The existing notification feed, bell dropdown, notification center, preferences,
 - Direct delivery initially exposed a disabled `NOTIFICATIONS_ENABLED` deployment flag; the API now rejects this state explicitly instead of returning ambiguous zero-delivery accounting.
 - After setting `NOTIFICATIONS_ENABLED=true` and redeploying the API, a direct administrator message reported 1 of 1 delivered and 0 failed.
 - The user confirmed that the delivered notification rendered correctly.
-- Full-page destination certification remains pending the frontend deployment containing `/notifications`.
+- The user confirmed the protected `/notifications` destination opens and renders the complete delivered message correctly.
 ### API surface
 
 - `POST /api/admin/notifications/media` uploads one protected image.
@@ -112,9 +112,66 @@ Live certification sequence:
 7. Confirm API/worker logs show no new RPC polling or contract reads from notification delivery.
 
 Production port requires the backend notification model, admin and public routes/controllers, notification delivery/media services, admin composer, both user notification views, styles, and this environment/deployment contract. MongoDB must support GridFS; no migration or contract deployment is required.
+## Configurable official YouTube video
+
+Status: implemented; staging live certification pending.
+
+The Community domain owns one official featured video. Configuration is stored as a MongoDB singleton and managed from the existing protected Admin Panel Community view. The published video appears directly below the public Community hero.
+
+### Content and presentation contract
+
+- The administrator supplies an official YouTube URL, title, optional description, and published state.
+- Supported links are HTTPS `youtube.com` watch, embed, Shorts, and live URLs plus HTTPS `youtu.be` share URLs.
+- The backend extracts and stores one validated 11-character YouTube video ID and a canonical watch URL.
+- The public page renders nothing when no published video exists.
+- A published video uses its YouTube thumbnail first; the privacy-enhanced `youtube-nocookie.com` iframe is created only after the user presses Play.
+- The section is responsive and uses shared theme tokens for light and dark themes.
+- The administrator can save an unpublished draft and preview its current title, description, and thumbnail.
+
+### Security and architecture
+
+- `GET /api/admin/community/official-video` and `PUT /api/admin/community/official-video` remain behind the existing `ADMIN_API_KEY` middleware.
+- `GET /api/community/official-video` exposes only the currently published record and permits short public caching.
+- HTTP URLs, non-YouTube hosts, lookalike domains, malformed video IDs, arbitrary iframe markup, and arbitrary embed URLs are rejected.
+- Title and description lengths are validated in both the interface and Mongoose schema.
+- The feature uses MongoDB and normal HTTPS page requests only. It adds no contract call, RPC read, WebSocket listener, polling indexer, worker task, or blockchain state.
+
+### Implementation and production port
+
+Backend files:
+
+- `backend/src/models/OfficialVideo.js`
+- `backend/src/services/community/officialVideoService.js`
+- `backend/src/controllers/officialVideoController.js`
+- `backend/src/routes/adminCommunityRoutes.js`
+- `backend/src/routes/communityRoutes.js`
+- `backend/test/officialVideoService.test.js`
+
+Frontend files:
+
+- `frontend/src/components/admin/AdminOfficialVideo.jsx`
+- `frontend/src/components/admin/AdminOfficialVideo.css`
+- `frontend/src/components/community/OfficialVideoSection.jsx`
+- `frontend/src/components/community/OfficialVideoSection.css`
+- `frontend/src/Pages/AdminPanel.jsx`
+- `frontend/src/Pages/Community/CommunityPage.jsx`
+
+No new environment variable, database migration, worker deployment, index checkpoint, contract deployment, or contract permission is required. Staging requires API and frontend redeployment.
+
+### Live certification
+
+1. Open Admin Panel > Community and save a valid official YouTube URL as unpublished.
+2. Confirm the draft preview resolves the correct thumbnail and no public section appears.
+3. Publish it and confirm the Community section appears directly below the hero.
+4. Press Play and confirm the selected video loads through `youtube-nocookie.com`.
+5. Confirm Watch on YouTube opens the canonical video URL.
+6. Verify desktop/mobile and light/dark presentation.
+7. Attempt HTTP, malformed, and lookalike-domain URLs and confirm rejection.
+8. Unpublish and confirm the public section disappears after the short cache window or a cache-bypassing refresh.
+9. Confirm worker/indexer logs are unchanged and no RPC activity is introduced.
 ## Remaining feature contracts
 
-Notification authoring, official video configuration, and task workflows will be expanded in this document as each feature enters implementation. Each feature requires its own backend/frontend tests, live staging evidence, production-port file list, and environment contract.
+Task workflows will be expanded in this document when that feature enters implementation. Each feature requires its own backend/frontend tests, live staging evidence, production-port file list, and environment contract.
 
 ## Reset boundary
 

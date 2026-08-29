@@ -11,6 +11,7 @@ import { NETWORK_CONFIG } from '../constants/addresses';
 import { useToast } from '../components/feedback';
 import { normalizeError } from '../utils/errorMap';
 import AdminNotificationComposer from '../components/admin/AdminNotificationComposer';
+import AdminOfficialVideo from '../components/admin/AdminOfficialVideo';
 import './AdminPanel.css';
 import {
   Key, Crown, BarChart3, Clock, AlertTriangle, Plus, Edit, Trash2,
@@ -2676,6 +2677,7 @@ export const AdminPanel = () => {
       {/* VIEW: COMMUNITY CONTENT */}
         {activeTab === 'community' &&
         <section className="fade-in">
+            <AdminOfficialVideo adminApi={adminApi} toast={toast} />
             <div className="admin-card-premium">
               <div className="admin-header-premium" style={{ padding: '10px' }}>
                 <div className="header-title" style={{ textAlign: 'center' }}>{adminT("ui.line2096.communityContentManagement", "Community Content Management")}</div>
