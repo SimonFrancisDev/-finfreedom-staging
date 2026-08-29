@@ -182,7 +182,9 @@ Multisig transaction `14` targets the new FGT `0x53a11f9c333Cf8f94E3A9Bd642dcf51
 
 - Proposal submission: `0xac52441300d40d5959229873045775ab418e509db20344db1c2fd149dea60411`
 - First confirmation by `0x296238e950ef0066D2119230Bf0eb3aDEBc94882`: `0x40f034ac66f85f3510e26a3aa0d78bb6983415b0b387461dfc5ddd55d5806198`
+- Second confirmation by `0x21f9eDB0CE6b79afA98dE14b03678CB29bc4859C`: `0x755a251d7fbf790ca733d09b897ba1c372b9b395cc0d555ef861b866f68edc38`
+- Execution: `0x691fb4bfad16b88841d0cfefc964f5d7968255dd6851cb2bb924767d8802e69d`
 - Required confirmations: `2`
 - Timelock: `120` seconds
 
-Cutover remains blocked until a different multisig owner provides confirmation two, transaction `14` executes, and the FGT authorization read returns `true`.
+Transaction `14` executed after the timelock with two distinct owner confirmations. The explicit post-execution authorization check returned `FREEDOM_PLUS_FGT_AUTHORIZATION=ALREADY_EXECUTED`, confirming that the new NFT Membership contract is authorized on the new FGT. This governance blocker is cleared.
