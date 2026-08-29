@@ -1,7 +1,7 @@
 # Gate 6 - Engagement Features
 
-Date: 2026-08-28
-Status: implementation in progress
+Date: 2026-08-29
+Status: Tasks implementation complete; staging certification pending
 
 ## Scope
 
@@ -178,8 +178,103 @@ No new environment variable, database migration, worker deployment, index checkp
 - The feature required no worker behavior, indexer, contract, RPC polling, environment variable, or database migration.
 ## Remaining feature contracts
 
-Task workflows will be expanded in this document when that feature enters implementation. Each feature requires its own backend/frontend tests, live staging evidence, production-port file list, and environment contract.
+All four Gate 6 features are implemented. WalletConnect, administrator notifications, and the official video are staging-certified. Registered-user Tasks requires live staging certification before this gate can close.
 
+## Registered-user live Tasks
+
+Status: implementation complete; staging certification pending.
+
+Tasks is a database-backed community workspace for registered F-Freedom and Freedom-Plus wallets. It does not read contracts, poll RPC endpoints, add indexer listeners, or require the worker. Registration eligibility is checked only against the existing indexed MongoDB registration records for the configured chain.
+
+### User contract
+
+- A connected wallet authorizes with the existing signed profile session before any task data is returned.
+- Only wallets found in indexed F-Freedom registrations or registered Freedom-Plus participants can use the workspace.
+- Published tasks appear in a live feed with active, upcoming, expired, participation, submission, and review states.
+- A wallet can join once and maintain one proof submission per task. Rejected proof can be revised; approved proof is immutable.
+- Proof accepts text, one HTTPS URL, and an optional protected JPEG, PNG, or WebP image up to 5 MB.
+- Users can applaud a task, comment, reply one level deep, and react to comments. Removed comments retain a moderation placeholder.
+- Rewards are ledger records linked to an approved submission. They are not represented as paid or issued until an administrator explicitly changes the status.
+- Replies, reactions, review decisions, and reward updates use the existing in-app notification system and deep-link to `/tasks`.
+
+### Administration contract
+
+The existing Admin Panel Tasks view supports draft creation, scheduling, image upload, publication, optional registered-user broadcast, edits, closure/archive, proof review, protected proof-image viewing, comment moderation, and reward status updates. Administrative routes remain protected by the existing `ADMIN_API_KEY` middleware.
+
+Task images reuse the `notificationMedia` GridFS bucket. Proof images use the separate protected `taskProofMedia` bucket and can be read only by the submitting signed wallet or an authorized administrator.
+
+### Data model
+
+- `engagementtasks`: task content, schedule, publication state, reward label, and image reference.
+- `taskparticipations`: one wallet/task participation state.
+- `tasksubmissions`: one wallet/task proof and review state.
+- `taskcomments`: root comments, one-level replies, and moderation state.
+- `taskreactions`: one wallet/target reaction.
+- `taskrewards`: appendable reward truth linked to task, wallet, and submission.
+- `taskProofMedia.files` and `taskProofMedia.chunks`: protected proof images.
+
+Unique indexes enforce one participation, submission, and reaction for their respective ownership keys. Wallet addresses are normalized to lowercase.
+
+### API surface
+
+User routes under `/api/tasks` require a signed wallet session:
+
+- `GET /`, `POST /:id/join`, and `POST /:id/submissions`
+- `GET /:id/comments`, `POST /:id/comments`, and `POST /:id/reactions`
+- `GET /rewards` and `GET /events`
+- `POST /media` and `GET /media/:id`
+
+Admin routes under `/api/admin/tasks` provide task, submission, moderation, reward, and protected-media operations.
+
+### Live update and RPC contract
+
+The API exposes an authenticated Server-Sent Events stream. Mutations publish an in-process invalidation event and clients refetch the database-backed task view. This is not a durable cross-instance event bus; staging and the current single API instance are supported. A horizontally scaled production API must use a shared pub/sub adapter before relying on instant cross-instance updates.
+
+No task endpoint calls a blockchain provider. No worker/indexer deployment is functionally required. API and frontend deployment are required.
+
+### Production port file list
+
+Backend:
+
+- `backend/src/models/EngagementTask.js`
+- `backend/src/models/TaskParticipation.js`
+- `backend/src/models/TaskSubmission.js`
+- `backend/src/models/TaskComment.js`
+- `backend/src/models/TaskReaction.js`
+- `backend/src/models/TaskReward.js`
+- `backend/src/middleware/requireWalletSession.js`
+- `backend/src/services/tasks/taskService.js`
+- `backend/src/services/tasks/taskMediaService.js`
+- `backend/src/services/tasks/taskLiveService.js`
+- `backend/src/controllers/taskController.js`
+- `backend/src/controllers/adminTaskController.js`
+- `backend/src/routes/taskRoutes.js`
+- `backend/src/routes/adminTaskRoutes.js`
+- `backend/src/app.js`
+- `backend/test/taskService.test.js`
+
+Frontend:
+
+- `frontend/src/Pages/Tasks/TasksPage.jsx`
+- `frontend/src/Pages/Tasks/TasksPage.css`
+- `frontend/src/Services/tasksApi.js`
+- `frontend/src/components/admin/AdminTasksManager.jsx`
+- `frontend/src/components/admin/AdminTasksManager.css`
+- `frontend/src/App.jsx`
+- `frontend/src/Pages/AdminPanel.jsx`
+
+### Staging certification checklist
+
+1. Open Tasks with an unregistered signed wallet and confirm HTTP 403 without an RPC request.
+2. Open with registered F-Freedom and Freedom-Plus wallets and confirm authorization.
+3. Create a draft with an image; confirm it is invisible publicly.
+4. Publish with a controlled notification and confirm feed and notification deep-link behavior.
+5. Join, applaud, comment, reply, and react from two wallets; confirm live refresh and one-level reply enforcement.
+6. Submit text, HTTPS URL, and image proof; confirm another user cannot read the protected image.
+7. Reject and resubmit proof, then approve it; confirm participation and reward ledger states.
+8. Mark the reward issued with the correct transaction hash or explicit off-chain note and verify the user notification.
+9. Moderate a comment and confirm the placeholder remains.
+10. Verify desktop/mobile and light/dark layouts and confirm API/worker logs show no task-generated RPC or indexer activity.
 ## Reset boundary
 
 The later fresh-test reset must be a separate reviewed operation. It must preserve the mock USDT contract and approved deployment contracts, define database collections and index checkpoints explicitly, and produce before/after evidence. No reset command belongs in this feature implementation gate.

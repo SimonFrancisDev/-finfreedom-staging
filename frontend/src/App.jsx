@@ -21,6 +21,7 @@ import PreferencesPage from './Pages/Preferences/PreferencesPage'
 import SecurityPage from './Pages/Security/SecurityPage'
 import ActivityPage from './Pages/Activity/ActivityPage'
 import NotificationsPage from './Pages/Notifications/NotificationsPage'
+import TasksPage from './Pages/Tasks/TasksPage'
 import FreedomPlusPage from './Pages/FreedomPlus/FreedomPlusPage'
 import ProgramViewSwitcher from './components/program/ProgramViewSwitcher'
 import { AdminPanel } from './Pages/AdminPanel'
@@ -67,6 +68,7 @@ const navItems = [
     : []),
   { label: 'About Us', href: 'about', active: false },
   { label: 'Community', href: 'community', active: false },
+  { label: 'Tasks', href: 'tasks', active: false },
   { label: 'Support', href: 'support', active: false },
 ]
 
@@ -137,6 +139,7 @@ const routeMap = {
   '/security': 'security',
   '/activity': 'activity',
   '/notifications': 'notifications',
+  '/tasks': 'tasks',
   '/admin': 'admin',
 }
 
@@ -173,6 +176,7 @@ const pageToPathMap = {
   security: '/security',
   activity: '/activity',
   notifications: '/notifications',
+  tasks: '/tasks',
   admin: '/admin',
 }
 
@@ -1368,6 +1372,7 @@ function App() {
 
               <Route path="/about" element={<AboutPage onNavigate={handleNavigate} />} />
               <Route path="/community" element={<CommunityPage />} />
+              <Route path="/tasks" element={<TasksPage />} />
               <Route path="/support" element={<SupportPage />} />
               <Route path="/ref/:refCode" element={<ActivationCenterPage />} />
 

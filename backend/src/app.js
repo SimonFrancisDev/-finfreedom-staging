@@ -19,6 +19,8 @@ import notificationRoutes from './routes/notificationRoutes.js';
 import adminNotificationRoutes from './routes/adminNotificationRoutes.js';
 import telegramRoutes from './routes/telegramRoutes.js';
 import profilePrivacyRoutes from './routes/profilePrivacyRoutes.js';
+import taskRoutes from './routes/taskRoutes.js';
+import adminTaskRoutes from './routes/adminTaskRoutes.js';
 
 const app = express();
 
@@ -109,6 +111,8 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/admin/notifications', adminNotificationRoutes);
 app.use('/api/telegram', telegramRoutes);
 app.use('/api/profile-privacy', profilePrivacyRoutes);
+app.use('/api/tasks', taskRoutes);
+app.use('/api/admin/tasks', adminTaskRoutes);
 
 app.use((req, res) => {
   res.status(404).json({

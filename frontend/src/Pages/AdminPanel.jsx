@@ -12,6 +12,7 @@ import { useToast } from '../components/feedback';
 import { normalizeError } from '../utils/errorMap';
 import AdminNotificationComposer from '../components/admin/AdminNotificationComposer';
 import AdminOfficialVideo from '../components/admin/AdminOfficialVideo';
+import AdminTasksManager from '../components/admin/AdminTasksManager';
 import './AdminPanel.css';
 import {
   Key, Crown, BarChart3, Clock, AlertTriangle, Plus, Edit, Trash2,
@@ -197,14 +198,19 @@ const adminApi = async (endpoint, options = {}) => {
     throw new Error('Admin API key is required for this action');
   }
 
+  const { responseType, ...fetchOptions } = options;
   const response = await fetch(getApiUrl(endpoint), {
-    ...options,
+    ...fetchOptions,
     headers: {
       'Content-Type': 'application/json',
       [ADMIN_API_HEADER]: adminKey,
-      ...(options.headers || {})
+      ...(fetchOptions.headers || {})
     }
   });
+  if (responseType === 'blob') {
+    if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+    return response.blob();
+  }
   const payload = await response.json().catch(() => null);
   if (!response.ok) {
     if (response.status === 401 || response.status === 403) {
@@ -1945,6 +1951,10 @@ export const AdminPanel = () => {
           <BellRing size={20} />
           <span>User Notifications</span>
         </button>
+        <button className={activeTab === 'tasks' ? 'active' : ''} onClick={() => setActiveTab('tasks')} title="Community Tasks">
+          <Activity size={20} />
+          <span>Tasks</span>
+        </button>
         <button className={activeTab === 'multisig' ? 'active' : ''} onClick={() => setActiveTab('multisig')} title={adminT("ui.line1485.multisigSettings", "Multisig Settings")}>
           <Settings size={20} />
           <span>{adminT("ui.line1487.multisig", "Multisig")}</span>
@@ -2769,6 +2779,12 @@ export const AdminPanel = () => {
           </section>
         }
 
+        {/* VIEW: COMMUNITY TASKS */}
+        {activeTab === 'tasks' &&
+          <section className="fade-in">
+            <AdminTasksManager adminApi={adminApi} toast={toast} />
+          </section>
+        }
         {/* VIEW: MULTISIG SETTINGS */}
         {activeTab === 'multisig' &&
         <section className="fade-in">
