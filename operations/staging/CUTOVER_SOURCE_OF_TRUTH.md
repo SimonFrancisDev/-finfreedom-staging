@@ -47,3 +47,7 @@ worker, purge only Freedom-Plus projections, and rebuild from fresh contracts.
 Do not purge F-Freedom or shared engagement data.
 
 Run `node scripts/validateStagingCutover.js` before each deployment.
+
+## Projection Purge Evidence (2026-08-30)
+
+With API and worker suspended, the eight dedicated Freedom-Plus projection collections were deleted and verified at zero. F-Freedom and shared engagement collections were not targeted. Restart worker first and rebuild from block 46209562 before restarting API.
