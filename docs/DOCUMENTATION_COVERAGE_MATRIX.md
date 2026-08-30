@@ -1,4 +1,4 @@
-﻿# Documentation Coverage Matrix
+# Documentation Coverage Matrix
 
 Last audited: 2026-08-30
 
@@ -27,3 +27,7 @@ Last audited: 2026-08-30
 
 Never copy staging addresses, blocks, credentials, or temporary access switches
 to production. Port behavior and process, then certify production manifests.
+
+## Gate 7 activation and shared-vault certification
+
+- Transaction, indexing, finance, governance, environment, and production evidence: `GATE_7_ACTIVATION_AUDIT_AND_SHARED_VAULT_MIGRATION.md`
