@@ -1,3 +1,21 @@
+# Current Clean-State Candidate (2026-08-29)
+
+The authoritative current manifests are
+`smart-contract/deployments-staging/deployment-1788027951360.json` and
+`smart-contract/deployments-freedom-plus-staging/deployment-1788028241010.json`.
+Public addresses, start blocks, runtime policy, and the known projection-data
+blocker are recorded in `operations/staging/CUTOVER_SOURCE_OF_TRUTH.md`.
+
+Contract deployment and startup verification passed. Final clean-state
+certification is **not yet granted** because MongoDB contains Freedom-Plus rows
+from the superseded deployment. The remaining sequence is: suspend API/worker,
+purge only Freedom-Plus projections, rebuild from block 46209562, reconcile,
+then execute and record the clean end-to-end test matrix.
+
+Everything below the archived certification heading is historical evidence and
+must not be used to configure the current deployment.
+
+# Archived Certification: Superseded Deployment
 > **Superseded staging deployment:** This certification records the previous Freedom-Plus deployment and is retained as historical evidence. For the 2026-08-29 clean-state candidate, use `deployment-1788028241010.json`, `docs/STAGING_FULL_CLEAN_RESET.md`, and the current backend/frontend environment guides.
 
 # Freedom-Plus Staging Certification
