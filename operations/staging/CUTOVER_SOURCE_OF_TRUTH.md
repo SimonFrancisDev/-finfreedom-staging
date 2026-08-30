@@ -51,3 +51,7 @@ Run `node scripts/validateStagingCutover.js` before each deployment.
 ## Projection Purge Evidence (2026-08-30)
 
 With API and worker suspended, the eight dedicated Freedom-Plus projection collections were deleted and verified at zero. F-Freedom and shared engagement collections were not targeted. Restart worker first and rebuild from block 46209562 before restarting API.
+
+### Rebuild Verification
+
+Worker recovery indexed 354 events with minimum block 46209562 and maximum block 46209801. All 16 sync states were restored. Database verification returned valid=true; no event from the superseded deployment remains.
