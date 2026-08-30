@@ -31,3 +31,7 @@ to production. Port behavior and process, then certify production manifests.
 ## Gate 7 activation and shared-vault certification
 
 - Transaction, indexing, finance, governance, environment, and production evidence: `GATE_7_ACTIVATION_AUDIT_AND_SHARED_VAULT_MIGRATION.md`
+
+## Founder testing package
+
+- Founder funding, delivered features, test scope, evidence requirements, and staging restrictions: FOUNDER_STAGING_TEST_INVITATION.md
