@@ -3,7 +3,6 @@ import { useLocation, useNavigate, Routes, Route, Navigate } from 'react-router-
 import { useTranslation } from 'react-i18next'
 import i18n from './i18n'
 import AppShell from './components/Layout/AppShell/AppShell'
-import TopNoticeBar from './components/Layout/TopNoticeBar/TopNoticeBar'
 import MainNavbar from './components/Layout/MainNavbar/MainNavbar'
 import Footer from './components/Footer/Footer'
 import MobileDrawer from './components/Layout/MobileDrawer/MobileDrawer'
@@ -99,7 +98,6 @@ const THEME_STORAGE_KEY = 'finfreedom_theme_v1'
 const APP_USER_ID_STORAGE_KEY = 'finfreedom_app_user_id_v1'
 const TELEGRAM_PROMPT_DISMISSED_KEY = 'finfreedom_telegram_prompt_dismissed_v1'
 const TELEGRAM_PROMPT_SESSION_KEY = 'finfreedom_telegram_prompt_seen_v1'
-const TESTNET_REMINDER_SEEN_KEY = 'finfreedom_testnet_reminder_seen_v1'
 const EARLY_ACCESS_STORAGE_KEY = 'finfreedom_early_access_v1'
 const WALLET_RETURN_ROUTE_KEY = 'finfreedom_wallet_return_route_v1'
 const LAUNCH_GATE_MODE = String(import.meta.env.VITE_LAUNCH_GATE_MODE || 'open').toLowerCase()
@@ -528,7 +526,6 @@ function App() {
     connectBrowserWallet,
     connectWalletConnect,
     disconnect,
-    switchToAmoy,
   } = useWallet()
 
   const { contracts, loadContracts } = useContracts()
@@ -1075,183 +1072,6 @@ function App() {
     userDownline,
   ])
 
-  const latestUnreadNotification = useMemo(() => {
-    return notifications.find((item) => !item.read) || null
-  }, [notifications])
-
-  const [showTestnetReminder, setShowTestnetReminder] = useState(false)
-
-  useEffect(() => {
-    if (!isConnected || !walletAccount || typeof window === 'undefined') {
-      setShowTestnetReminder(false)
-      return
-    }
-
-    try {
-      const todayKey = new Date().toISOString().slice(0, 10)
-      const storageKey = scopedStorageKey(TESTNET_REMINDER_SEEN_KEY, walletAccount)
-      const lastSeen = window.localStorage.getItem(storageKey)
-      const shouldShow = lastSeen !== todayKey
-
-      setShowTestnetReminder(shouldShow)
-
-      if (shouldShow) {
-        window.localStorage.setItem(storageKey, todayKey)
-      }
-    } catch {
-      setShowTestnetReminder(true)
-    }
-  }, [isConnected, walletAccount])
-
-  const notices = useMemo(() => {
-    const nextNotices = []
-
-    if (typeof window !== 'undefined' && !window.ethereum && !hasMobileWalletSupport) {
-      nextNotices.push({
-        id: 'wallet-missing',
-        type: 'danger',
-        label: t('topNotice.walletRequired.label', 'Wallet Required'),
-        message: t(
-          'topNotice.walletRequired.message',
-          'No browser wallet was detected. Enable WalletConnect support or install an EVM-compatible wallet to connect and use live platform data.'
-        ),
-        source: 'wallet',
-        sticky: true,
-        dismissible: false,
-        dedupeKey: 'wallet-missing',
-      })
-      return nextNotices
-    }
-
-    if (walletError) {
-      const lowerWalletError = walletError.toLowerCase()
-      const needsNetworkSwitch =
-        lowerWalletError.includes('switch') ||
-        lowerWalletError.includes('amoy') ||
-        lowerWalletError.includes('polygon')
-
-      nextNotices.push({
-        id: 'wallet-error',
-        type: needsNetworkSwitch ? 'warning' : 'danger',
-        label: needsNetworkSwitch
-          ? t('topNotice.walletError.networkRequired', 'Network Required')
-          : t('topNotice.walletError.walletError', 'Wallet Error'),
-        message: walletError,
-        source: 'wallet',
-        sticky: true,
-        dismissible: true,
-        actionLabel: needsNetworkSwitch
-          ? t('topNotice.walletError.switchNetwork', 'Switch Network')
-          : t('topNotice.walletError.retry', 'Retry'),
-        onAction: needsNetworkSwitch ? switchToAmoy : connect,
-        dedupeKey: `wallet-error:${walletError}`,
-      })
-    } else if (isWalletLoading) {
-      nextNotices.push({
-        id: 'wallet-connecting',
-        type: 'info',
-        label: t('topNotice.connecting.label', 'Connecting'),
-        message: t(
-          'topNotice.connecting.message',
-          'Connecting your wallet and preparing live platform access.'
-        ),
-        source: 'wallet',
-        sticky: true,
-        dismissible: false,
-        dedupeKey: 'wallet-connecting',
-      })
-    } else if (!isConnected) {
-      nextNotices.push({
-        id: 'wallet-disconnected',
-        type: 'info',
-        label: t('topNotice.connectWallet.label', 'Connect Wallet'),
-        message: t(
-          'topNotice.connectWallet.message',
-          'Connect your wallet to access live balances, orbit state, and account-linked data.'
-        ),
-        source: 'wallet',
-        sticky: true,
-        dismissible: true,
-        actionLabel: t('topNotice.connectWallet.action', 'Connect'),
-        onAction: connect,
-        dedupeKey: 'wallet-disconnected',
-      })
-    } else if (isConnected && walletAccount) {
-      nextNotices.push({
-        id: 'wallet-connected',
-        type: 'success',
-        label: t('topNotice.walletConnected.label', 'Wallet Connected'),
-        message: t(
-          'topNotice.walletConnected.message',
-          'Connected: {{address}}. Live platform data is ready.',
-          { address: shortenAddress(walletAccount) }
-        ),
-        source: 'wallet',
-        sticky: false,
-        dismissible: true,
-        autoHideMs: 5000,
-        dedupeKey: `wallet-connected:${walletAccount}`,
-      })
-
-      if (showTestnetReminder) {
-        nextNotices.push({
-          id: 'testnet-reminder',
-          type: 'warning',
-          label: t('topNotice.testnetNotice.label', 'Testnet Notice'),
-          message: t(
-            'topNotice.testnetNotice.message',
-            'You are connected to {{network}}. Verify transactions and values before confirming.',
-            { network: NETWORK_CONFIG.chainName }
-          ),
-          source: 'network',
-          sticky: false,
-          dismissible: true,
-          autoHideMs: 9000,
-          dedupeKey: `testnet-reminder:${walletAccount}`,
-        })
-      }
-    }
-
-    if (latestUnreadNotification) {
-      nextNotices.push({
-        id: `notification-${latestUnreadNotification.id}`,
-        type: latestUnreadNotification.noticeType || 'info',
-        label: latestUnreadNotification.titleKey
-          ? t(latestUnreadNotification.titleKey, latestUnreadNotification.title)
-          : latestUnreadNotification.title,
-        message: latestUnreadNotification.messageKey
-          ? t(latestUnreadNotification.messageKey, latestUnreadNotification.message)
-          : latestUnreadNotification.message,
-        source: 'notifications',
-        sticky: false,
-        dismissible: true,
-        autoHideMs: 7000,
-        actionLabel: latestUnreadNotification.route
-          ? t('topNotice.notification.open', 'Open')
-          : '',
-        onAction: latestUnreadNotification.route
-          ? () => handleNotificationClick(latestUnreadNotification)
-          : null,
-        dedupeKey: `notification:${latestUnreadNotification.id}`,
-      })
-    }
-
-    return nextNotices
-  }, [
-    connect,
-    handleNotificationClick,
-    hasMobileWalletSupport,
-    isConnected,
-    isWalletLoading,
-    launchNowMs,
-    latestUnreadNotification,
-    showTestnetReminder,
-    switchToAmoy,
-    t,
-    walletAccount,
-    walletError,
-  ])
-
   const hasInternalRouteAccess = isInternalNavigationState(location.state)
 
   const renderFlowOnlyPage = useCallback(
@@ -1310,7 +1130,6 @@ function App() {
           />
           <AppShell
             fullWidth={location.pathname === '/' || location.pathname === '/home'}
-            topbar={<TopNoticeBar notices={notices} />}
             navbar={
               <MainNavbar
                 brand="Fin Freedom"
