@@ -1301,7 +1301,11 @@ async function processLogsForContract({
     }
 
     if (['fgtToken', 'fgtrToken'].includes(contractKey)) {
-      if (['UtilityMinted', 'UtilityBurned', 'UtilityLocked'].includes(parsed.name)) {
+      if (
+        ['UtilityMinted', 'UtilityBurned', 'UtilityLocked', 'UtilityUnlocked'].includes(
+          parsed.name
+        )
+      ) {
         const symbol = contractKey === 'fgtToken' ? 'FGT' : 'FGTr';
         await saveTokenLog(chainId, symbol, log, parsed, block);
         continue;

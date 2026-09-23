@@ -180,9 +180,11 @@ function buildListenerSpecs() {
     ['fgtToken', 'UtilityMinted'],
     ['fgtToken', 'UtilityBurned'],
     ['fgtToken', 'UtilityLocked'],
+    ['fgtToken', 'UtilityUnlocked'],
     ['fgtrToken', 'UtilityMinted'],
     ['fgtrToken', 'UtilityBurned'],
     ['fgtrToken', 'UtilityLocked'],
+    ['fgtrToken', 'UtilityUnlocked'],
     ['freedomTokenController', 'TokenRewardEligibility'],
   ];
 }
@@ -288,7 +290,11 @@ async function processRealtimeEvent({ contract, eventName, label, log }) {
     }
 
     if (label === 'fgtToken' || label === 'fgtrToken') {
-      if (['UtilityMinted', 'UtilityBurned', 'UtilityLocked'].includes(parsed.name)) {
+      if (
+        ['UtilityMinted', 'UtilityBurned', 'UtilityLocked', 'UtilityUnlocked'].includes(
+          parsed.name
+        )
+      ) {
         const symbol = label === 'fgtToken' ? 'FGT' : 'FGTr';
         await saveTokenLog(chainId, symbol, log, parsed, block);
       }

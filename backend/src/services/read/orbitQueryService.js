@@ -2213,26 +2213,29 @@ export const fetchUserGlobalSummary = safeApiResponse(async function(address) {
     const amt = BigInt(event.amount || '0');
     const symbol = event.tokenSymbol;
 
-    if (!acc[symbol]) acc[symbol] = { minted: 0n, burned: 0n, locked: 0n };
+    if (!acc[symbol]) {
+      acc[symbol] = { minted: 0n, burned: 0n, locked: 0n, unlocked: 0n };
+    }
 
     if (event.eventName === 'UtilityMinted') acc[symbol].minted += amt;
     if (event.eventName === 'UtilityBurned') acc[symbol].burned += amt;
     if (event.eventName === 'UtilityLocked') acc[symbol].locked += amt;
+    if (event.eventName === 'UtilityUnlocked') acc[symbol].unlocked += amt;
 
     return acc;
   }, {});
 
   const tokens = {};
   for (const sym in tokenTotals) {
+    const total = tokenTotals[sym].minted - tokenTotals[sym].burned;
+    const netLocked = tokenTotals[sym].locked - tokenTotals[sym].unlocked;
+    const locked = netLocked > 0n ? netLocked : 0n;
+
     tokens[sym] = {
-      total: formatUsdt(tokenTotals[sym].minted),
+      total: formatUsdt(total),
       burned: formatUsdt(tokenTotals[sym].burned),
-      locked: formatUsdt(tokenTotals[sym].locked),
-      available: formatUsdt(
-        tokenTotals[sym].minted -
-          tokenTotals[sym].burned -
-          tokenTotals[sym].locked
-      ),
+      locked: formatUsdt(locked),
+      available: formatUsdt(total - locked),
     };
   }
 
@@ -2337,6 +2340,8 @@ export const fetchUserGlobalSummary = safeApiResponse(async function(address) {
             ? e.tokenSymbol === 'FGT'
               ? 'FGT_BURN'
               : 'FGTR_BURN'
+            : e.eventName === 'UtilityUnlocked'
+            ? 'FGT_UNLOCK'
             : 'FGT_LOCK',
       token: e.tokenSymbol,
       amount: e.amount,
