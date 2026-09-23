@@ -105,3 +105,13 @@ Certified deployment commit: a6f005f6cb8edd398b798df1bfada130596f6c8a.
 - Set a healthy WebSocket RPC for live indexing and an HTTP RPC only for startup, event-confirmation, reconnect recovery, reconciliation, and exceptional replay.
 - Capture pre-migration counts, deploy, allow confirmed catch-up, run reconciliation, compare counts, and archive the result.
 - Do not certify frontend data accuracy until this gate's staging acceptance checks pass.
+
+## QuickNode Free-Plan Runtime (2026-09-23)
+
+- The staging worker uses two WebSocket connections: one for F-Freedom and one for Freedom-Plus. This exactly consumes the free plan's two-connection allowance.
+- `REALTIME_SUBSCRIPTION_DELAY_MS=750` is required on the worker. The backend exposes this setting and applies it to both indexers so startup remains below the 15 requests-per-second limit.
+- The worker starts F-Freedom subscriptions first and Freedom-Plus subscriptions second. Do not start both subscription sets concurrently.
+- Keep `INDEXER_POLLING_ENABLED=false` and `FREEDOM_PLUS_POLLING_ENABLED=false`; the pacing fix does not introduce recurring polling.
+- Render rolling deployments can temporarily overlap old and new worker instances and exceed two WebSocket connections. Suspend the worker before deploying on this free plan, wait for the old instance to stop, deploy the target commit, then resume it.
+- Acceptance logs must show `REALTIME_EVENT_INDEXER_CONNECTED`, `REALTIME_EVENT_INDEXER_STARTED`, and `FREEDOM_PLUS_REALTIME_CONNECTED` without `-32007`, WebSocket plan-limit closures, uncaught `eth_subscribe`, or process restarts.
+- The API service must keep all indexers disabled and does not consume either live WebSocket connection.

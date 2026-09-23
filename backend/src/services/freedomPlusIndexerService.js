@@ -227,6 +227,10 @@ function getSocket(provider) {
   return provider?.websocket || provider?._websocket || null;
 }
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 function queueLive(task) {
   liveQueue = liveQueue.then(task, task).catch((error) => {
     console.error('[FREEDOM_PLUS_REALTIME_EVENT_FAILED]', {
@@ -363,7 +367,8 @@ async function connectFreedomPlusRealtime() {
   }
 
   const entries = getFreedomPlusContractEntries(provider);
-  for (const [contractKey, contract] of entries) {
+  for (let index = 0; index < entries.length; index += 1) {
+    const [contractKey, contract] = entries[index];
     const listener = (log) => {
       if (log.removed) {
         console.warn('[FREEDOM_PLUS_REALTIME_REMOVED_LOG]', {
@@ -375,6 +380,10 @@ async function connectFreedomPlusRealtime() {
     };
     realtimeContracts.push([contractKey, contract, listener]);
     await provider.on({ address: contract.target }, listener);
+
+    if (index < entries.length - 1) {
+      await sleep(env.REALTIME_SUBSCRIPTION_DELAY_MS);
+    }
   }
   const socket = getSocket(provider);
   const disconnect = (error) => {

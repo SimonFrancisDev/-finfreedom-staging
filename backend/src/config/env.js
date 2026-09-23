@@ -354,6 +354,12 @@ const env = {
     300000,
     4000
   ),
+  REALTIME_SUBSCRIPTION_DELAY_MS: clamp(
+    optionalInteger('REALTIME_SUBSCRIPTION_DELAY_MS', 750),
+    100,
+    10000,
+    750
+  ),
 };
 
 const rpcUrls = [

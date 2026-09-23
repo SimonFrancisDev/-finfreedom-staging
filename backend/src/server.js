@@ -80,7 +80,7 @@ async function startServer() {
     // }
 
     if (env.RUN_INDEXER && env.REALTIME_EVENT_INDEXER_ENABLED) {
-      startRealtimeEventIndexer().catch((error) => {
+      await startRealtimeEventIndexer().catch((error) => {
         console.error('Realtime event indexer startup error:', error);
       });
     } else {
@@ -96,7 +96,7 @@ async function startServer() {
     }
 
     if (env.RUN_INDEXER && env.FREEDOM_PLUS_ENABLED) {
-      startFreedomPlusIndexer().catch((error) => {
+      await startFreedomPlusIndexer().catch((error) => {
         console.error('Freedom-Plus indexer startup error:', error);
       });
     } else {
