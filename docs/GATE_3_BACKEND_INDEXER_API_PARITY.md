@@ -124,3 +124,12 @@ The Render worker was suspended and testers were paused. A temporary historical-
 - Live API reconciliation subsequently passed in `event-driven` mode with 8/8 participants, 47/47 positions, 23/23 payments, and all 16 checkpoints satisfying the latest indexed event requirement.
 - Staging chunk configuration was corrected so `SYNC_BLOCK_CHUNK_SIZE` accepts values below 1,000. The free QuickNode Discover endpoint requires a maximum five-block log range; the worker value must remain `5` or lower while that endpoint is used.
 - The reusable recovery script is `backend/scripts/recoverStagingIndexerGaps.js`. It requires an operator-supplied `RECOVERY_RPC_URL` and never contains an RPC credential.
+
+### Shared WebSocket stabilization (2026-09-24)
+
+- Root cause: the staging worker opened separate F-Freedom and Freedom-Plus WebSocket providers. The free QuickNode plan allows two total WebSocket connections, so a rejected provider could leave pending ethers subscriptions and terminate Node.
+- Runtime correction: the worker now owns one WebSocket provider in the F-Freedom realtime indexer and attaches both the F-Freedom event listeners and all 16 Freedom-Plus address listeners to it.
+- Freedom-Plus still performs confirmation-delayed HTTP recovery after a WebSocket signal. Polling remains disabled, and unconfirmed WebSocket logs are not projected directly.
+- Reconnect ownership and provider destruction remain with the F-Freedom realtime indexer; Freedom-Plus shared mode never opens or destroys another socket.
+- Expected worker evidence: REALTIME_EVENT_INDEXER_CONNECTED reports sharedConnection true and freedomPlusListeners 16; FREEDOM_PLUS_REALTIME_CONNECTED reports sharedConnection true and listeners 16.
+

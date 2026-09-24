@@ -96,7 +96,9 @@ async function startServer() {
     }
 
     if (env.RUN_INDEXER && env.FREEDOM_PLUS_ENABLED) {
-      await startFreedomPlusIndexer().catch((error) => {
+      await startFreedomPlusIndexer({
+        sharedRealtime: env.REALTIME_EVENT_INDEXER_ENABLED,
+      }).catch((error) => {
         console.error('Freedom-Plus indexer startup error:', error);
       });
     } else {

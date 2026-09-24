@@ -171,6 +171,7 @@ let wsIndex = 0;
 let liveQueue = Promise.resolve();
 let socketHandlers = null;
 let confirmationTimer = null;
+let sharedRealtimeConnection = false;
 
 async function scheduledPass() {
   if (running) return null;
@@ -195,8 +196,11 @@ async function scheduledPass() {
   }
 }
 
-export async function startFreedomPlusIndexer() {
+export async function startFreedomPlusIndexer(options = {}) {
   if (!env.FREEDOM_PLUS_ENABLED) return { enabled: false };
+  if (env.FREEDOM_PLUS_REALTIME_ENABLED && options.sharedRealtime) {
+    return startFreedomPlusSharedRealtimeIndexer();
+  }
   if (env.FREEDOM_PLUS_REALTIME_ENABLED) return startFreedomPlusRealtimeIndexer();
   if (!env.FREEDOM_PLUS_POLLING_ENABLED) {
     console.warn('[FREEDOM_PLUS_INDEXER_DISABLED] No realtime or polling mode is enabled');
@@ -218,7 +222,8 @@ export async function stopFreedomPlusIndexer() {
   reconnectTimer = null;
   if (confirmationTimer) clearTimeout(confirmationTimer);
   confirmationTimer = null;
-  await cleanupRealtime();
+  if (!sharedRealtimeConnection) await cleanupRealtime();
+  sharedRealtimeConnection = false;
   await liveQueue.catch(() => {});
   while (running) await new Promise((resolve) => setTimeout(resolve, 50));
 }
@@ -289,6 +294,16 @@ async function ingestLiveLog(provider, chainId, contractKey, contract, log) {
       });
       throw error;
     }
+  }
+  scheduleConfirmedRecovery();
+}
+
+export function notifyFreedomPlusRealtimeEvent(contractKey, log) {
+  if (log?.removed) {
+    console.warn('[FREEDOM_PLUS_REALTIME_REMOVED_LOG]', {
+      contractKey,
+      blockNumber: Number(log.blockNumber || 0),
+    });
   }
   scheduleConfirmedRecovery();
 }
@@ -406,6 +421,31 @@ async function connectFreedomPlusRealtime() {
     recoveredEvents: recovery?.targets?.reduce((sum, target) => sum + target.processed, 0) || 0,
     confirmedBlock: recovery?.confirmedBlock || null,
   });
+}
+
+async function startFreedomPlusSharedRealtimeIndexer() {
+  if (realtimeStarted) {
+    return { enabled: true, mode: 'realtime-shared', alreadyStarted: true };
+  }
+
+  realtimeStarted = true;
+  realtimeStopping = false;
+  sharedRealtimeConnection = true;
+  const recovery = await scheduledPass();
+  const listeners = getFreedomPlusContractEntries(getProvider()).length;
+
+  console.log('[FREEDOM_PLUS_REALTIME_CONNECTED]', {
+    sharedConnection: true,
+    listeners,
+    recoveredEvents: recovery?.targets?.reduce((sum, target) => sum + target.processed, 0) || 0,
+    confirmedBlock: recovery?.confirmedBlock || null,
+  });
+
+  return {
+    enabled: true,
+    mode: 'realtime-shared',
+    recovery: 'startup-event-confirmation-reconnect',
+  };
 }
 
 async function startFreedomPlusRealtimeIndexer() {

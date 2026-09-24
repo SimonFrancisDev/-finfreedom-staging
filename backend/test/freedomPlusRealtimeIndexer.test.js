@@ -27,6 +27,14 @@ test('realtime indexing does not start a periodic HTTP recovery scan', () => {
   assert.match(realtime, /startup-event-confirmation-reconnect/);
 });
 
+test('Freedom-Plus shares the F-Freedom WebSocket provider', () => {
+  const shared = functionBody(indexerSource, 'startFreedomPlusSharedRealtimeIndexer');
+
+  assert.doesNotMatch(shared, /new WebSocketProvider|connectFreedomPlusRealtime/);
+  assert.match(shared, /mode: 'realtime-shared'/);
+  assert.match(indexerSource, /export function notifyFreedomPlusRealtimeEvent/);
+});
+
 test('realtime reconciliation accepts quiet checkpoints at the latest indexed event', () => {
   assert.match(
     querySource,

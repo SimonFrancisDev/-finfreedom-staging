@@ -1,6 +1,8 @@
 import { Contract, WebSocketProvider } from 'ethers';
 import env from '../config/env.js';
 import { getContracts } from '../blockchain/contracts.js';
+import { getFreedomPlusContractEntries } from '../blockchain/freedomPlusContracts.js';
+import { notifyFreedomPlusRealtimeEvent } from './freedomPlusIndexerService.js';
 
 import {
   getBlockCached,
@@ -224,6 +226,32 @@ async function attachListener(contract, eventName, label) {
     handler,
     label,
   });
+}
+
+async function attachFreedomPlusListeners(provider) {
+  if (!env.FREEDOM_PLUS_ENABLED || !env.FREEDOM_PLUS_REALTIME_ENABLED) return 0;
+
+  const entries = getFreedomPlusContractEntries(provider);
+  for (let index = 0; index < entries.length; index += 1) {
+    const [contractKey, contract] = entries[index];
+    const filter = { address: contract.target };
+    const handler = (log) => notifyFreedomPlusRealtimeEvent(contractKey, log);
+
+    await provider.on(filter, handler);
+    activeListeners.push({
+      contract: provider,
+      eventName: filter,
+      handler,
+      label: 'freedomPlus.' + contractKey,
+    });
+    realtimeHealth.listenersAttached = activeListeners.length;
+
+    if (REALTIME_SUBSCRIPTION_DELAY_MS > 0 && index < entries.length - 1) {
+      await sleep(REALTIME_SUBSCRIPTION_DELAY_MS);
+    }
+  }
+
+  return entries.length;
 }
 
 async function processRealtimeEvent({ contract, eventName, label, log }) {
@@ -566,6 +594,8 @@ async function connectRealtimeProvider() {
     }
   }
 
+  const freedomPlusListeners = await attachFreedomPlusListeners(currentWsProvider);
+
   realtimeHealth.listenersAttached = activeListeners.length;
   reconnecting = false;
 
@@ -584,6 +614,8 @@ async function connectRealtimeProvider() {
     url: wsUrl,
     index: realtimeHealth.currentWsIndex,
     listeners: activeListeners.length,
+    freedomPlusListeners,
+    sharedConnection: freedomPlusListeners > 0,
   });
 }
 
