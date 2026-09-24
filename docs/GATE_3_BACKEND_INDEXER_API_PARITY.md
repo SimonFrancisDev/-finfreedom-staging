@@ -147,3 +147,10 @@ The Render worker was suspended and testers were paused. A temporary historical-
 - The recovered interval contained zero Freedom-Plus events. Reconciliation passed with 8/8 participants, 47/47 positions, 23/23 payments, and all 16 checkpoint checks passing.
 - The recovery process exited with code 0. No endpoint credential was stored.
 
+
+### Free-plan restart optimization (2026-09-24)
+
+- Startup HTTP calls now pass through a serialized sliding-window rate gate governed by RPC_MAX_RPS. Concurrent verification promises can no longer wake together and burst above the QuickNode limit.
+- Freedom-Plus confirmation recovery now requests logs for all 16 contract addresses in one filter per block chunk, sorts the combined logs by block and log index, and routes each log through its contract ABI and existing projection path.
+- Durable checkpoints remain separate for all 16 contracts. Reorg checks reuse checkpoint blocks, and checkpoint writes are batched per completed chunk.
+- Polling remains disabled. WebSocket events still trigger confirmation-delayed HTTP recovery, and only confirmed logs are projected.

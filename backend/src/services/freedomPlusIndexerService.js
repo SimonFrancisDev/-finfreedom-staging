@@ -38,53 +38,108 @@ function indexedAddresses(args) {
   )];
 }
 
-async function syncTarget(provider, chainId, contractKey, contract, confirmedBlock) {
+async function syncTargetsCombined(provider, chainId, entries, confirmedBlock) {
   const initialBlock = Math.max(0, Number(env.FREEDOM_PLUS_START_BLOCK));
-  const state = await FreedomPlusSyncState.findOneAndUpdate(
-    { chainId, contractKey },
-    { $setOnInsert: { lastProcessedBlock: Math.max(0, initialBlock - 1), status: 'idle' } },
-    { upsert: true, returnDocument: 'after' }
-  );
-  if (state.lastProcessedBlock > 0 && state.lastProcessedBlockHash) {
-    const checkpointBlock = await safeRpcCall((rpc) => rpc.getBlock(state.lastProcessedBlock));
-    if (!checkpointBlock || checkpointBlock.hash.toLowerCase() !== state.lastProcessedBlockHash) {
-      throw new Error(
-        `Freedom-Plus reorg detected for ${contractKey} at block ${state.lastProcessedBlock}; operator replay required`
-      );
-    }
-  }
-  let cursor = Math.max(initialBlock, state.lastProcessedBlock + 1);
-  if (cursor > confirmedBlock) return { contractKey, processed: 0, toBlock: state.lastProcessedBlock };
+  const targets = [];
+  const checkpointBlockCache = new Map();
 
-  await FreedomPlusSyncState.updateOne({ chainId, contractKey }, { $set: { status: 'running', errorMessage: '' } });
-  let processed = 0;
+  for (const [contractKey, contract] of entries) {
+    const state = await FreedomPlusSyncState.findOneAndUpdate(
+      { chainId, contractKey },
+      { $setOnInsert: { lastProcessedBlock: Math.max(0, initialBlock - 1), status: 'idle' } },
+      { upsert: true, returnDocument: 'after' }
+    );
+
+    if (state.lastProcessedBlock > 0 && state.lastProcessedBlockHash) {
+      let checkpointBlock = checkpointBlockCache.get(state.lastProcessedBlock);
+      if (!checkpointBlock) {
+        checkpointBlock = await safeRpcCall((rpc) => rpc.getBlock(state.lastProcessedBlock));
+        checkpointBlockCache.set(state.lastProcessedBlock, checkpointBlock);
+      }
+      if (!checkpointBlock || checkpointBlock.hash.toLowerCase() !== state.lastProcessedBlockHash) {
+        throw new Error(
+          'Freedom-Plus reorg detected for ' + contractKey + ' at block ' +
+          state.lastProcessedBlock + '; operator replay required'
+        );
+      }
+    }
+
+    targets.push({
+      contractKey,
+      contract,
+      state,
+      nextBlock: Math.max(initialBlock, state.lastProcessedBlock + 1),
+      processed: 0,
+    });
+  }
+
+  const pending = targets.filter((target) => target.nextBlock <= confirmedBlock);
+  if (pending.length === 0) {
+    return targets.map((target) => ({
+      contractKey: target.contractKey,
+      processed: 0,
+      toBlock: target.state.lastProcessedBlock,
+    }));
+  }
+
+  const contractKeys = pending.map((target) => target.contractKey);
+  await FreedomPlusSyncState.updateMany(
+    { chainId, contractKey: { $in: contractKeys } },
+    { $set: { status: 'running', errorMessage: '' } }
+  );
+
+  const targetsByAddress = new Map(
+    targets.map((target) => [target.contract.target.toLowerCase(), target])
+  );
+  let cursor = Math.min(...pending.map((target) => target.nextBlock));
+
   try {
     while (cursor <= confirmedBlock) {
       const toBlock = Math.min(cursor + env.SYNC_BLOCK_CHUNK_SIZE - 1, confirmedBlock);
-      const logs = await safeRpcCall((rpc) => rpc.getLogs({ address: contract.target, fromBlock: cursor, toBlock }));
+      const logs = await safeRpcCall((rpc) => rpc.getLogs({
+        address: entries.map(([, contract]) => contract.target),
+        fromBlock: cursor,
+        toBlock,
+      }));
+      logs.sort((left, right) => (
+        Number(left.blockNumber) - Number(right.blockNumber) ||
+        Number(left.index ?? left.logIndex) - Number(right.index ?? right.logIndex)
+      ));
+
       const blockCache = new Map();
       for (const log of logs) {
+        const target = targetsByAddress.get(String(log.address || '').toLowerCase());
+        if (!target || Number(log.blockNumber) < target.nextBlock) continue;
+
         let parsed;
-        try { parsed = contract.interface.parseLog(log); } catch { continue; }
+        try {
+          parsed = target.contract.interface.parseLog(log);
+        } catch {
+          continue;
+        }
         if (!parsed) continue;
+
         let block = blockCache.get(log.blockNumber);
         if (!block) {
           block = await safeRpcCall((rpc) => rpc.getBlock(log.blockNumber));
-          if (!block) throw new Error(`Missing confirmed block ${log.blockNumber}`);
+          if (!block) throw new Error('Missing confirmed block ' + log.blockNumber);
           blockCache.set(log.blockNumber, block);
         }
+
         const args = parsedArgs(parsed);
         const document = {
           chainId,
-          contractKey,
-          contractAddress: contract.target.toLowerCase(),
+          contractKey: target.contractKey,
+          contractAddress: target.contract.target.toLowerCase(),
           eventName: parsed.name,
           txHash: log.transactionHash.toLowerCase(),
-          logIndex: Number(log.index),
+          logIndex: Number(log.index ?? log.logIndex),
           blockNumber: Number(log.blockNumber),
           blockHash: log.blockHash.toLowerCase(),
           timestamp: new Date(Number(block.timestamp) * 1000),
-          activationId: String(args.activationId || args.recycleActivationId || args.rewardId || '').toLowerCase(),
+          activationId: String(
+            args.activationId || args.recycleActivationId || args.rewardId || ''
+          ).toLowerCase(),
           addresses: indexedAddresses(args),
           args,
         };
@@ -98,6 +153,7 @@ async function syncTarget(provider, chainId, contractKey, contract, confirmedBlo
           { $setOnInsert: document },
           { upsert: true }
         );
+
         if (write.upsertedCount > 0) {
           try {
             await projectFreedomPlusEvent(document);
@@ -110,37 +166,55 @@ async function syncTarget(provider, chainId, contractKey, contract, confirmedBlo
             });
             throw error;
           }
-          processed += 1;
+          target.processed += 1;
         }
       }
+
       const terminalBlock = await safeRpcCall((rpc) => rpc.getBlock(toBlock));
-      await FreedomPlusSyncState.updateOne(
-        { chainId, contractKey },
-        {
-          $set: {
-            lastProcessedBlock: toBlock,
-            lastProcessedBlockHash: terminalBlock?.hash?.toLowerCase() || '',
-            status: 'running',
-            lastSyncedAt: new Date(),
+      if (!terminalBlock) throw new Error('Missing terminal block ' + toBlock);
+
+      const advancedTargets = targets.filter((target) => target.nextBlock <= toBlock);
+      if (advancedTargets.length > 0) {
+        await FreedomPlusSyncState.updateMany(
+          {
+            chainId,
+            contractKey: { $in: advancedTargets.map((target) => target.contractKey) },
           },
+          {
+            $set: {
+              lastProcessedBlock: toBlock,
+              lastProcessedBlockHash: terminalBlock.hash.toLowerCase(),
+              status: 'running',
+              lastSyncedAt: new Date(),
+            },
+          }
+        );
+        for (const target of advancedTargets) {
+          target.nextBlock = toBlock + 1;
         }
-      );
+      }
+
       cursor = toBlock + 1;
     }
-    await FreedomPlusSyncState.updateOne(
-      { chainId, contractKey },
-      { $set: { status: 'idle', lastSyncedAt: new Date() } }
+
+    await FreedomPlusSyncState.updateMany(
+      { chainId, contractKey: { $in: contractKeys } },
+      { $set: { status: 'idle', errorMessage: '', lastSyncedAt: new Date() } }
     );
-    return { contractKey, processed, toBlock: confirmedBlock };
+
+    return targets.map((target) => ({
+      contractKey: target.contractKey,
+      processed: target.processed,
+      toBlock: Math.max(target.state.lastProcessedBlock, confirmedBlock),
+    }));
   } catch (error) {
-    await FreedomPlusSyncState.updateOne(
-      { chainId, contractKey },
+    await FreedomPlusSyncState.updateMany(
+      { chainId, contractKey: { $in: contractKeys } },
       { $set: { status: 'error', errorMessage: String(error?.message || error) } }
     );
     throw error;
   }
 }
-
 export async function syncFreedomPlusOnce() {
   if (!env.FREEDOM_PLUS_ENABLED) return { enabled: false, targets: [] };
   const provider = getProvider();
@@ -151,10 +225,8 @@ export async function syncFreedomPlusOnce() {
   }
   const head = await safeRpcCall((rpc) => rpc.getBlockNumber());
   const confirmedBlock = Math.max(0, head - env.SYNC_CONFIRMATIONS);
-  const targets = [];
-  for (const [contractKey, contract] of getFreedomPlusContractEntries(provider)) {
-    targets.push(await syncTarget(provider, chainId, contractKey, contract, confirmedBlock));
-  }
+  const entries = getFreedomPlusContractEntries(provider);
+  const targets = await syncTargetsCombined(provider, chainId, entries, confirmedBlock);
   const reconciledLedgerWallets = await reconcileFreedomPlusLedgerWallets(chainId);
   return { enabled: true, head, confirmedBlock, targets, reconciledLedgerWallets };
 }

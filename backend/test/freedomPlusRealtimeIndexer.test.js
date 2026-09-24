@@ -52,6 +52,26 @@ test('blockchain startup does not consume a second WebSocket connection', () => 
   const firstSubscription = realtimeSource.indexOf('await attachListener(');
   assert.ok(preflight >= 0 && preflight < firstSubscription);
 });
+test('Freedom-Plus catch-up scans all contract addresses once per block chunk', () => {
+  const combined = functionBody(indexerSource, 'syncTargetsCombined');
+  const once = functionBody(indexerSource, 'syncFreedomPlusOnce');
+
+  assert.match(combined, /address: entries\.map/);
+  assert.match(combined, /logs\.sort/);
+  assert.match(combined, /FreedomPlusSyncState\.updateMany/);
+  assert.doesNotMatch(once, /for \(const \[contractKey, contract\]/);
+  assert.match(once, /syncTargetsCombined/);
+});
+
+test('HTTP rate limiting uses a serialized sliding-window gate', () => {
+  const start = providerSource.indexOf('async function enforceRateLimit()');
+  const end = providerSource.indexOf('\nfunction sleep(', start);
+  const limiter = providerSource.slice(start, end);
+
+  assert.match(limiter, /rateLimitTail/);
+  assert.match(limiter, /lastCallTimestamps\.length < maxRps/);
+  assert.match(limiter, /1000 - \(now - lastCallTimestamps\[0\]\)/);
+});
 test('realtime reconciliation accepts quiet checkpoints at the latest indexed event', () => {
   assert.match(
     querySource,
