@@ -40,7 +40,7 @@ function clamp(value, min, max, fallback) {
 const nodeEnv = optional('NODE_ENV', 'production');
 const isStaging = nodeEnv === 'staging';
 const syncChunkSize = isStaging
-  ? clamp(optionalInteger('SYNC_BLOCK_CHUNK_SIZE', 5000), 1000, 5000, 5000)
+  ? clamp(optionalInteger('SYNC_BLOCK_CHUNK_SIZE', 5), 1, 5000, 5)
   : clamp(optionalInteger('SYNC_BLOCK_CHUNK_SIZE', 100), 1, 100, 100);
 
 const env = {

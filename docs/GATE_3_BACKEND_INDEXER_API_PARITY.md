@@ -115,3 +115,12 @@ Certified deployment commit: a6f005f6cb8edd398b798df1bfada130596f6c8a.
 - Render rolling deployments can temporarily overlap old and new worker instances and exceed two WebSocket connections. Suspend the worker before deploying on this free plan, wait for the old instance to stop, deploy the target commit, then resume it.
 - Acceptance logs must show `REALTIME_EVENT_INDEXER_CONNECTED`, `REALTIME_EVENT_INDEXER_STARTED`, and `FREEDOM_PLUS_REALTIME_CONNECTED` without `-32007`, WebSocket plan-limit closures, uncaught `eth_subscribe`, or process restarts.
 - The API service must keep all indexers disabled and does not consume either live WebSocket connection.
+## Controlled Historical Recovery (2026-09-24)
+
+The Render worker was suspended and testers were paused. A temporary historical-capable Polygon Amoy HTTPS RPC was supplied only through `RECOVERY_RPC_URL` to a local one-time process; it was not written to Render, source control, or runtime documentation.
+
+- F-Freedom: all nine current contract targets were replayed from their certified fresh deployment blocks through confirmed block 48,415,091. The replay resolved every recorded gap and produced 29 registration records, 23 activation summaries, 113 orbit events, and 29 token events with zero unresolved gaps.
+- Freedom-Plus: all 16 durable checkpoints advanced from block 48,199,166 through block 48,415,821. No new Freedom-Plus events were found in that interval. Every checkpoint finished `idle` with an empty error message.
+- Live API reconciliation subsequently passed in `event-driven` mode with 8/8 participants, 47/47 positions, 23/23 payments, and all 16 checkpoints satisfying the latest indexed event requirement.
+- Staging chunk configuration was corrected so `SYNC_BLOCK_CHUNK_SIZE` accepts values below 1,000. The free QuickNode Discover endpoint requires a maximum five-block log range; the worker value must remain `5` or lower while that endpoint is used.
+- The reusable recovery script is `backend/scripts/recoverStagingIndexerGaps.js`. It requires an operator-supplied `RECOVERY_RPC_URL` and never contains an RPC credential.
