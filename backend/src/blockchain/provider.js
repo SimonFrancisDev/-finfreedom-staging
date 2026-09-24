@@ -1064,8 +1064,6 @@ export async function connectBlockchain(options = {}) {
   const network = await safeRpcCall((provider) => provider.getNetwork(), retries, baseDelayMs);
   const blockNumber = await safeRpcCall((provider) => provider.getBlockNumber(), retries, baseDelayMs);
 
-  ensureWsBlockSubscriptionStarted();
-
   return {
     chainId: Number(network.chainId),
     name: network.name,

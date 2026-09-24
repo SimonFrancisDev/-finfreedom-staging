@@ -9,6 +9,13 @@ const indexerSource = await readFile(
 const querySource = await readFile(
   new URL('../src/services/read/freedomPlusQueryService.js', import.meta.url),
   'utf8'
+);const providerSource = await readFile(
+  new URL('../src/blockchain/provider.js', import.meta.url),
+  'utf8'
+);
+const realtimeSource = await readFile(
+  new URL('../src/services/realtimeEventIndexer.js', import.meta.url),
+  'utf8'
 );
 
 function functionBody(source, name) {
@@ -35,6 +42,16 @@ test('Freedom-Plus shares the F-Freedom WebSocket provider', () => {
   assert.match(indexerSource, /export function notifyFreedomPlusRealtimeEvent/);
 });
 
+test('blockchain startup does not consume a second WebSocket connection', () => {
+  const start = providerSource.indexOf('export async function connectBlockchain');
+  const end = providerSource.indexOf('\n}', start) + 2;
+  const connect = providerSource.slice(start, end);
+  assert.doesNotMatch(connect, /ensureWsBlockSubscriptionStarted|ensureRealtimeProviders/);
+
+  const preflight = realtimeSource.indexOf('await currentWsProvider.getBlockNumber()');
+  const firstSubscription = realtimeSource.indexOf('await attachListener(');
+  assert.ok(preflight >= 0 && preflight < firstSubscription);
+});
 test('realtime reconciliation accepts quiet checkpoints at the latest indexed event', () => {
   assert.match(
     querySource,

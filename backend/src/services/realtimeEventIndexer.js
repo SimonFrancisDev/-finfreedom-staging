@@ -566,6 +566,9 @@ async function connectRealtimeProvider() {
 
   attachSocketHandlers(currentWsProvider);
 
+  // Fail before creating subscriptions when the endpoint rejects this socket.
+  await currentWsProvider.getBlockNumber();
+
   const contracts = getContracts();
   const wsContracts = {
     registration: buildWsContract(contracts.registration, currentWsProvider),
@@ -599,16 +602,10 @@ async function connectRealtimeProvider() {
   realtimeHealth.listenersAttached = activeListeners.length;
   reconnecting = false;
 
-  try {
-    await currentWsProvider.getBlockNumber();
-    realtimeHealth.connected = true;
-    realtimeHealth.lastConnectedAt = new Date();
-    realtimeHealth.lastError = '';
-    realtimeHealth.reconnectAttempt = 0;
-  } catch (error) {
-    realtimeHealth.lastError = buildErrorMessage(error);
-    throw error;
-  }
+  realtimeHealth.connected = true;
+  realtimeHealth.lastConnectedAt = new Date();
+  realtimeHealth.lastError = '';
+  realtimeHealth.reconnectAttempt = 0;
 
   console.log('[REALTIME_EVENT_INDEXER_CONNECTED]', {
     url: wsUrl,

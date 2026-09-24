@@ -133,3 +133,9 @@ The Render worker was suspended and testers were paused. A temporary historical-
 - Reconnect ownership and provider destruction remain with the F-Freedom realtime indexer; Freedom-Plus shared mode never opens or destroys another socket.
 - Expected worker evidence: REALTIME_EVENT_INDEXER_CONNECTED reports sharedConnection true and freedomPlusListeners 16; FREEDOM_PLUS_REALTIME_CONNECTED reports sharedConnection true and listeners 16.
 
+
+### General provider WebSocket correction (2026-09-24)
+
+- A follow-up production log proved that connectBlockchain also started a general block-subscription WebSocket before the event indexer. This consumed a second connection despite polling being disabled.
+- connectBlockchain is now HTTP-only. The general block WebSocket remains available only when an explicit onNewBlock or ensureRealtimeProviders consumer requests it.
+- The realtime indexer now verifies its socket before creating any eth_subscribe listeners, preventing a rejected endpoint from leaving asynchronous ethers subscriber startup promises behind.
