@@ -154,3 +154,11 @@ The Render worker was suspended and testers were paused. A temporary historical-
 - Freedom-Plus confirmation recovery now requests logs for all 16 contract addresses in one filter per block chunk, sorts the combined logs by block and log index, and routes each log through its contract ABI and existing projection path.
 - Durable checkpoints remain separate for all 16 contracts. Reorg checks reuse checkpoint blocks, and checkpoint writes are batched per completed chunk.
 - Polling remains disabled. WebSocket events still trigger confirmation-delayed HTTP recovery, and only confirmed logs are projected.
+
+### Freedom-Plus startup verification pacing (2026-09-24)
+
+- API and worker deployment logs showed intermittent QuickNode `-32007` errors during Freedom-Plus contract verification even though both services became live and the worker's shared WebSocket connected correctly.
+- Root cause: Freedom-Plus startup verification made contract-code, wiring, orbit-manager, and owner reads directly. Those calls bypassed the shared `safeRpcCall` sliding-window limiter and could exceed the endpoint's 15 requests-per-second ceiling.
+- Every Freedom-Plus verification read now passes through `safeRpcCall`. This changes only request pacing; contract addresses, ownership assertions, indexer behavior, and persisted projections are unchanged.
+- API acceptance: `Freedom-Plus contracts verified` appears, all indexers remain disabled, and no `-32007` warning is emitted.
+- Worker acceptance: Freedom-Plus contracts verified appears, the shared realtime indexer reports 66 total listeners and 16 Freedom-Plus listeners, and no rate-limit warning or process restart occurs.

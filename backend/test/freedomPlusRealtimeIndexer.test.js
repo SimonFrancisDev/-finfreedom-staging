@@ -9,12 +9,17 @@ const indexerSource = await readFile(
 const querySource = await readFile(
   new URL('../src/services/read/freedomPlusQueryService.js', import.meta.url),
   'utf8'
-);const providerSource = await readFile(
+);
+const providerSource = await readFile(
   new URL('../src/blockchain/provider.js', import.meta.url),
   'utf8'
 );
 const realtimeSource = await readFile(
   new URL('../src/services/realtimeEventIndexer.js', import.meta.url),
+  'utf8'
+);
+const contractsSource = await readFile(
+  new URL('../src/blockchain/freedomPlusContracts.js', import.meta.url),
   'utf8'
 );
 
@@ -72,6 +77,20 @@ test('HTTP rate limiting uses a serialized sliding-window gate', () => {
   assert.match(limiter, /lastCallTimestamps\.length < maxRps/);
   assert.match(limiter, /1000 - \(now - lastCallTimestamps\[0\]\)/);
 });
+
+test('Freedom-Plus startup verification routes every RPC read through the limiter', () => {
+  const start = contractsSource.indexOf('export async function verifyFreedomPlusContracts');
+  const verification = contractsSource.slice(start);
+
+  assert.notEqual(start, -1);
+  assert.doesNotMatch(verification, /await contracts\.provider\.getCode/);
+  assert.doesNotMatch(verification, /await contracts\[[^\]]+\]\.manager\(/);
+  assert.doesNotMatch(verification, /await contract\.owner\(/);
+  assert.match(verification, /safeRpcCall\(\(provider\) => provider\.getCode/);
+  assert.match(verification, /safeRpcCall\(\(\) => contracts\.settlementRouter\.orbitByType/);
+  assert.match(verification, /safeRpcCall\(\(\) => contract\.owner\(\)\)/);
+});
+
 test('realtime reconciliation accepts quiet checkpoints at the latest indexed event', () => {
   assert.match(
     querySource,

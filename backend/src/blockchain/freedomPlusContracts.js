@@ -1,6 +1,6 @@
 import { Contract } from 'ethers';
 import env from '../config/env.js';
-import { getProvider } from './provider.js';
+import { getProvider, safeRpcCall } from './provider.js';
 import addresses, { freedomPlusSystemVaults } from './freedomPlusAddresses.js';
 
 import registrationAbi from './abis/freedom-plus/FreedomPlusRegistration.abi.json' with { type: 'json' };
@@ -73,7 +73,7 @@ export async function verifyFreedomPlusContracts() {
   const contracts = getFreedomPlusContracts();
   const entries = getFreedomPlusContractEntries(contracts.provider);
   for (const [key, contract] of entries) {
-    if ((await contracts.provider.getCode(contract.target)) === '0x') {
+    if ((await safeRpcCall((provider) => provider.getCode(contract.target))) === '0x') {
       throw new Error(`Freedom-Plus ${key} has no contract code at ${contract.target}`);
     }
   }
@@ -90,16 +90,16 @@ export async function verifyFreedomPlusContracts() {
     routerNftPoolVault,
     routerOperationsVault,
   ] = await Promise.all([
-    contracts.registration.levelManager(),
-    contracts.levelManager.registration(),
-    contracts.levelManager.settlementRouter(),
-    contracts.tokenController.levelManager(),
-    contracts.settlementRouter.configurationLocked(),
-    contracts.nftMembership.fpt(),
-    contracts.nftRewardDistributor.vault(),
-    contracts.nftPoolVault.distributor(),
-    contracts.settlementRouter.nftPoolVault(),
-    contracts.settlementRouter.operationsVault(),
+    safeRpcCall(() => contracts.registration.levelManager()),
+    safeRpcCall(() => contracts.levelManager.registration()),
+    safeRpcCall(() => contracts.levelManager.settlementRouter()),
+    safeRpcCall(() => contracts.tokenController.levelManager()),
+    safeRpcCall(() => contracts.settlementRouter.configurationLocked()),
+    safeRpcCall(() => contracts.nftMembership.fpt()),
+    safeRpcCall(() => contracts.nftRewardDistributor.vault()),
+    safeRpcCall(() => contracts.nftPoolVault.distributor()),
+    safeRpcCall(() => contracts.settlementRouter.nftPoolVault()),
+    safeRpcCall(() => contracts.settlementRouter.operationsVault()),
   ]);
   assertAddress('registration.levelManager', registrationManager, addresses.levelManager);
   assertAddress('levelManager.registration', managerRegistration, addresses.registration);
@@ -115,14 +115,14 @@ export async function verifyFreedomPlusContracts() {
   const orbitKeys = ['p39Orbit', 'p14Orbit', 'p12Orbit', 'p6Orbit', 'p4Orbit', 'p3Orbit'];
   for (let type = 0; type < orbitKeys.length; type += 1) {
     const key = orbitKeys[type];
-    assertAddress(`settlementRouter.orbitByType(${type})`, await contracts.settlementRouter.orbitByType(type), addresses[key]);
-    assertAddress(`${key}.manager`, await contracts[key].manager(), addresses.settlementRouter);
+    assertAddress(`settlementRouter.orbitByType(${type})`, await safeRpcCall(() => contracts.settlementRouter.orbitByType(type)), addresses[key]);
+    assertAddress(`${key}.manager`, await safeRpcCall(() => contracts[key].manager()), addresses.settlementRouter);
   }
 
   const owners = {};
   for (const [key, contract] of entries) {
     if (typeof contract.owner !== 'function') continue;
-    owners[key] = await contract.owner();
+    owners[key] = await safeRpcCall(() => contract.owner());
     if (env.MULTISIG_ADDRESS) assertAddress(`${key}.owner`, owners[key], env.MULTISIG_ADDRESS);
   }
   return {
