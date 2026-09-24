@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const recoveryRpcUrl = String(process.env.RECOVERY_RPC_URL || '').trim();
+const recoveryScope = String(process.env.RECOVERY_SCOPE || 'all').trim().toLowerCase();
 if (!recoveryRpcUrl) throw new Error('RECOVERY_RPC_URL is required');
 
 process.env.RPC_URL_1 = recoveryRpcUrl;
@@ -55,7 +56,8 @@ async function main() {
   const confirmedBlock = Math.max(0, head - Number(env.SYNC_CONFIRMATIONS));
   const fFreedom = [];
 
-  for (const [targetKey, startEnv] of Object.entries(TARGET_START_ENV)) {
+  if (recoveryScope !== 'freedom-plus') {
+    for (const [targetKey, startEnv] of Object.entries(TARGET_START_ENV)) {
     const fromBlock = Number(env[startEnv] || env.START_BLOCK);
     console.log('[RECOVERY_F_FREEDOM_TARGET_START]', { targetKey, fromBlock, confirmedBlock });
     const result = await replayIndexerRange({
@@ -67,6 +69,8 @@ async function main() {
     });
     fFreedom.push(result);
     console.log('[RECOVERY_F_FREEDOM_TARGET_COMPLETE]', result);
+
+    }
   }
 
   console.log('[RECOVERY_FREEDOM_PLUS_START]', { confirmedBlock });

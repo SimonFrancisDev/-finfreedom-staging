@@ -139,3 +139,11 @@ The Render worker was suspended and testers were paused. A temporary historical-
 - A follow-up production log proved that connectBlockchain also started a general block-subscription WebSocket before the event indexer. This consumed a second connection despite polling being disabled.
 - connectBlockchain is now HTTP-only. The general block WebSocket remains available only when an explicit onNewBlock or ensureRealtimeProviders consumer requests it.
 - The realtime indexer now verifies its socket before creating any eth_subscribe listeners, preventing a rejected endpoint from leaving asynchronous ethers subscriber startup promises behind.
+
+### Freedom-Plus checkpoint catch-up (2026-09-24)
+
+- The recovery script now accepts RECOVERY_SCOPE=freedom-plus, which skips every F-Freedom replay target and advances only the 16 Freedom-Plus checkpoints.
+- With the worker suspended, the scoped recovery advanced all 16 checkpoints through confirmed block 48,420,331 using the temporary operator-supplied recovery endpoint.
+- The recovered interval contained zero Freedom-Plus events. Reconciliation passed with 8/8 participants, 47/47 positions, 23/23 payments, and all 16 checkpoint checks passing.
+- The recovery process exited with code 0. No endpoint credential was stored.
+
