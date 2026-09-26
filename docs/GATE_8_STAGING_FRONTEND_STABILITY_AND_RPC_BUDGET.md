@@ -87,6 +87,30 @@ The 98-99 percent reduction is a target, not a certification until measured.
 - Controls must remain outside the transformed canvas and stay tappable.
 - Dense P39 labels must not overlap or force the viewport wider than the page.
 
+## Mobile Orbit Implementation (2026-09-26)
+
+- Removed the fixed 620px mobile orbit width. The focused orbit now fits the
+  available phone container at its natural square aspect ratio.
+- The canvas clips transformed content and contains overscroll so zooming does
+  not widen or displace the page.
+- Pan is enabled only above 100 percent zoom and is bounded to the visible
+  canvas.
+- Level and cycle changes restore the fitted 100 percent view.
+- Resize and orientation changes recalculate pan limits.
+- Pointer cancellation, lost pointer capture, and browser focus loss clear the
+  panning state so controls cannot remain stuck.
+- Live-device interaction and screenshot evidence at the required viewport
+  sizes remains a deployment verification step.
+
+## Verification Record (2026-09-26)
+
+- `git diff --check` passed before the first stabilization commit.
+- The repository had no installed frontend toolchain in this checkout.
+- Two bounded `npm install` attempts stalled without registry output and were
+  terminated cleanly. No dependency or lockfile change is part of this gate.
+- Vercel remains the production-build verification source for the pushed
+  staging commits until local dependency installation is restored.
+
 ## Testing Restriction
 
 Registration and level activation testing may continue. NFT unlock, upgrade,
@@ -103,4 +127,3 @@ wallet confirmation pass.
 5. Run the mobile orbit viewport and interaction matrix.
 6. Confirm API/worker ownership and shared WebSocket behavior.
 7. Record deployment commit, environment diff, evidence, and rollback point.
-

@@ -1,5 +1,5 @@
 import { ArrowLeft, CheckCircle2, Database, ExternalLink, RefreshCw, RotateCcw, Users, X, ZoomIn, ZoomOut } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { formatToken } from '../../Services/freedomPlus'
 import { lockBodyScroll } from '../../utils/bodyScrollLock'
 import FreedomPlusOrbit from './FreedomPlusOrbit'
@@ -49,15 +49,33 @@ export default function FreedomPlusFocusedOrbit(props) {
   }
   const changeZoom = (next) => { const value = Math.max(.75, Math.min(1.7, Number(next.toFixed(2)))); setZoom(value); setPan((current) => clampPan(current, value)) }
   const resetView = () => { setZoom(1); setPan({ x: 0, y: 0 }) }
-  const pointerDown = (event) => { if (zoom <= 1) return; event.currentTarget.setPointerCapture(event.pointerId); dragRef.current = { x: event.clientX, y: event.clientY, pan }; setPanning(true) }
+  const stopPanning = useCallback(() => { dragRef.current = null; setPanning(false) }, [])
+  const pointerDown = (event) => { if (zoom <= 1 || event.button !== 0) return; event.currentTarget.setPointerCapture(event.pointerId); dragRef.current = { x: event.clientX, y: event.clientY, pan }; setPanning(true) }
   const pointerMove = (event) => { if (!dragRef.current) return; setPan(clampPan({ x: dragRef.current.pan.x + event.clientX - dragRef.current.x, y: dragRef.current.pan.y + event.clientY - dragRef.current.y })) }
-  const pointerUp = (event) => { dragRef.current = null; setPanning(false); if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId) }
+  const pointerUp = (event) => { stopPanning(); if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId) }
+  useEffect(() => { setZoom(1); setPan({ x: 0, y: 0 }); stopPanning() }, [cycle, selectedLevel, stopPanning])
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return undefined
+    const fitPan = () => setPan((current) => {
+      if (zoom <= 1) return { x: 0, y: 0 }
+      const rect = canvas.getBoundingClientRect()
+      const maxX = rect.width * (zoom - 1) / 2
+      const maxY = rect.height * (zoom - 1) / 2
+      return { x: Math.max(-maxX, Math.min(maxX, current.x)), y: Math.max(-maxY, Math.min(maxY, current.y)) }
+    })
+    const observer = new ResizeObserver(fitPan)
+    observer.observe(canvas)
+    window.addEventListener('blur', stopPanning)
+    window.addEventListener('orientationchange', fitPan)
+    return () => { observer.disconnect(); window.removeEventListener('blur', stopPanning); window.removeEventListener('orientationchange', fitPan) }
+  }, [stopPanning, zoom])
   return <section className="fp-focused-orbit">
     <header className="fp-focused-orbit__header"><button type="button" onClick={onBack}><ArrowLeft />Activation</button><div><span>Focused Orbit View</span><h1>Level {selectedLevel} - {config?.orbit}</h1><p>Inspect this level using indexed placement and settlement records.</p></div><div className="fp-focused-orbit__member"><span>Orbit owner</span><strong title={account}>{short(account)}</strong><small>{activeLevels.has(selectedLevel) ? "Level active" : "Level not active"}</small></div></header>
     <div className="fp-focused-orbit__controls"><label>Level<select value={selectedLevel} onChange={(event) => { resetView(); setSelectedLevel(Number(event.target.value)); setCycle(""); setSelectedPosition(null) }}>{levels.map((item) => <option key={item.level} value={item.level} disabled={!activeLevels.has(item.level)}>Level {item.level} / {item.orbit}</option>)}</select></label><label>Cycle<select value={cycle} onChange={(event) => { resetView(); setCycle(event.target.value); setSelectedPosition(null) }}><option value="">Current</option>{cycles.map((item) => <option value={item} key={item}>Cycle {item}</option>)}</select></label><button type="button" onClick={onRefresh} disabled={loading}><RefreshCw className={loading ? "spin" : ""} />Refresh</button></div>
     <div className="fp-focused-orbit__summary"><article><span>Orbit engine</span><strong>{config?.orbit}</strong></article><article><span>Filled positions</span><strong>{positions.length} / {config?.positions}</strong></article><article><span>Ring structure</span><strong>{config?.rings}</strong></article><article><span>Source</span><strong>Indexer</strong></article></div>
     <div className="fp-orbit-zoom" aria-label="Orbit zoom controls"><button type="button" onClick={() => changeZoom(zoom - .1)} disabled={zoom <= .75} aria-label="Zoom out"><ZoomOut /></button><span>{Math.round(zoom * 100)}%</span><button type="button" onClick={() => changeZoom(zoom + .1)} disabled={zoom >= 1.7} aria-label="Zoom in"><ZoomIn /></button><button type="button" onClick={resetView} disabled={zoom === 1 && pan.x === 0 && pan.y === 0}><RotateCcw />Reset</button></div>
-    <div ref={canvasRef} className={"fp-focused-orbit__canvas " + (zoom > 1 ? "is-pannable" : "") + (panning ? " is-panning" : "")} onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={pointerUp} onPointerCancel={pointerUp}><div className="fp-focused-orbit__transform" style={{ transform: "translate(" + pan.x + "px," + pan.y + "px) scale(" + zoom + ")" }}><FreedomPlusOrbit orbitType={config?.orbit} positions={positions} owner={account} onSelect={setSelectedPosition} selectedPosition={selectedPosition} /></div></div>
+    <div ref={canvasRef} className={"fp-focused-orbit__canvas " + (zoom > 1 ? "is-pannable" : "") + (panning ? " is-panning" : "")} onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={pointerUp} onPointerCancel={pointerUp} onLostPointerCapture={stopPanning}><div className="fp-focused-orbit__transform" style={{ transform: "translate(" + pan.x + "px," + pan.y + "px) scale(" + zoom + ")" }}><FreedomPlusOrbit orbitType={config?.orbit} positions={positions} owner={account} onSelect={setSelectedPosition} selectedPosition={selectedPosition} /></div></div>
     <PositionModal position={selectedPosition} onClose={() => setSelectedPosition(null)} />
   </section>
 }
