@@ -75,3 +75,22 @@
   .fn-page>.fn-overview-hero .fn-page-hero__copy{min-height:680px}
   .fn-page>.fn-page-hero{aspect-ratio:.76/1}
 }
+
+/* NFT qualification state and irreversible-action review. */
+.fn-membership-status__mark{position:relative;display:grid;place-items:center;flex:none;width:52px;height:52px;border:1px solid color-mix(in srgb,var(--ffn-primary) 48%,var(--ffn-border));border-radius:50%;color:var(--ffn-primary);background:color-mix(in srgb,var(--ffn-primary) 12%,var(--ffn-surface))}
+.fn-membership-status__mark>svg:first-child{width:30px;height:30px}
+.fn-membership-status__mark>svg:last-child{position:absolute;right:-2px;bottom:-2px;width:19px;height:19px;padding:3px;border-radius:50%;color:#fff;background:var(--ffn-primary)}
+.fn-qualification-tool .fn-form{align-self:stretch}
+.fn-unlock-review{grid-column:1/-1;display:flex;gap:12px;padding:16px;border:1px solid #d97706;border-radius:6px;background:color-mix(in srgb,#d97706 10%,var(--ffn-surface));color:var(--ffn-text)}
+.fn-unlock-review.safe{border-color:var(--ffn-primary);background:color-mix(in srgb,var(--ffn-primary) 9%,var(--ffn-surface))}
+.fn-unlock-review>svg{flex:none;width:22px;color:#d97706}
+.fn-unlock-review.safe>svg{color:var(--ffn-primary)}
+.fn-unlock-review>div{flex:1}
+.fn-unlock-review dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}
+.fn-unlock-review dl>div{display:flex;justify-content:space-between;gap:10px;padding:8px;background:var(--ffn-surface)}
+.fn-unlock-review dt{color:var(--ffn-text-muted)}
+.fn-unlock-review dd{margin:0;font-weight:800}
+.fn-unlock-review p{margin:8px 0;color:var(--ffn-text)}
+.fn-unlock-review label{display:flex;align-items:flex-start;gap:8px;margin-top:12px;font-size:13px}
+.fn-unlock-review label input{width:auto;margin:2px 0 0}
+@media(max-width:680px){.fn-unlock-review dl{grid-template-columns:1fr}.fn-membership-status__mark{width:46px;height:46px}}

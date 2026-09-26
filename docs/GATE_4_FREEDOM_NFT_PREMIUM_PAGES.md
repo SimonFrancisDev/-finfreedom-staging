@@ -128,3 +128,19 @@ This final rule supersedes the source-ratio hero height while preserving the scr
 - Membership and Rewards heroes receive a smaller proportional height increase.
 - The redesigned light/dark desktop and mobile artwork remains contained at its natural proportions; no image stretching is introduced.
 - The adjustment is limited to hero geometry. Accepted tier cards and the remaining NFT page sections are unchanged.
+
+## Qualification Safety Closure (2026-09-26)
+
+- NFT qualification is locked FGT plus locked FPT only. FPTr must never appear
+  as an NFT-eligible token.
+- F-Freedom and Freedom-Plus levels are separate progression systems and must
+  be labelled separately from token-based NFT qualification.
+- Active NFT presentation must distinguish NFT ownership from current reward
+  eligibility.
+- Before unlock submission, Membership must show requested amounts, remaining
+  FGT/FPT, tier threshold, and resulting reward status.
+- An unlock that removes eligibility requires explicit acknowledgment.
+- Failed preflight, wallet rejection, and missing broadcast must not alter the
+  displayed NFT state or trigger success presentation.
+- Gate 8 contains the incident evidence, RPC budget, test restriction, and
+  production-port acceptance criteria.

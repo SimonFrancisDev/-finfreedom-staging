@@ -121,6 +121,9 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
   )
   const isProgramOverview = tab === 'overview'
   const isNftView = NFT_TABS.some(([value]) => value === tab)
+  const needsUsdtBalance = ['levels', 'dashboard', 'tokens', 'account', 'membership'].includes(tab)
+  const needsProgramTokenBalances = ['dashboard', 'tokens', 'account'].includes(tab)
+  const needsNftTokenBalances = tab === 'membership'
   const visibleTabs = isNftView ? NFT_TABS : PROGRAM_TABS
   const nextLevel = FREEDOM_PLUS_LEVELS.find((item) => !activeLevels.has(item.level))?.level || null
   const progressionData = useMemo(() => {
@@ -150,14 +153,14 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
         freedomPlusApi.reconciliation().catch(() => null),
         isNftView ? freedomPlusApi.rewardPeriods().catch(() => []) : Promise.resolve([]),
         freedomPlusApi.referralForWallet(account).catch(() => null),
-        contracts.usdt.balanceOf(account),
-        contracts.fgt.availableBalanceOf(account),
-        contracts.fpt.balanceOf(account),
-        contracts.fpt.availableBalanceOf(account),
-        contracts.fpt.lockedBalanceOf(account),
-        contracts.fptr.balanceOf(account),
-        contracts.fptr.availableBalanceOf(account),
-        contracts.fptr.lockedBalanceOf(account),
+        needsUsdtBalance ? contracts.usdt.balanceOf(account) : Promise.resolve(0n),
+        needsNftTokenBalances ? contracts.fgt.availableBalanceOf(account) : Promise.resolve(0n),
+        needsProgramTokenBalances || needsNftTokenBalances ? contracts.fpt.balanceOf(account) : Promise.resolve(0n),
+        needsProgramTokenBalances || needsNftTokenBalances ? contracts.fpt.availableBalanceOf(account) : Promise.resolve(0n),
+        needsProgramTokenBalances || needsNftTokenBalances ? contracts.fpt.lockedBalanceOf(account) : Promise.resolve(0n),
+        needsProgramTokenBalances ? contracts.fptr.balanceOf(account) : Promise.resolve(0n),
+        needsProgramTokenBalances ? contracts.fptr.availableBalanceOf(account) : Promise.resolve(0n),
+        needsProgramTokenBalances ? contracts.fptr.lockedBalanceOf(account) : Promise.resolve(0n),
         isNftView ? contracts.nftMembership.membershipOf(account) : Promise.resolve(null),
       ])
       let gatewayData = apiData?.gateway || {}
@@ -245,7 +248,7 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
     } finally {
       setLoading(false)
     }
-  }, [account, isNftView, toast])
+  }, [account, isNftView, needsNftTokenBalances, needsProgramTokenBalances, needsUsdtBalance, toast])
 
   useEffect(() => { load() }, [load])
   useEffect(() => { setTab(initialTab) }, [initialTab])
@@ -542,9 +545,11 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
       {!isProgramOverview && tab !== 'levels' && tab !== 'nftOverview' && tab !== 'tokens' && tab !== 'orbits' && isConnected && (
         <section className="fp-metrics">
             <article><span>FFN ID</span><strong>{data?.chain?.registered ? (referralId || 'Resolving...') : 'Not registered'}</strong><small>{short(account)}</small></article>
-            <article><span>Active levels</span><strong>{activeLevels.size} / 7</strong><small>Manual progression</small></article>
+            <article><span>Freedom-Plus levels</span><strong>{activeLevels.size} / 7</strong><small>Freedom-Plus progression only</small></article>
             <article><span>USDT available</span><strong>{data?.chain?.usdt || '0'} USDT</strong><small>Wallet balance</small></article>
-            <article><span>FGT / FPT / FPTr</span><strong>{data?.chain?.fgt || '0'} / {data?.chain?.fpt || '0'} / {data?.chain?.fptr || '0'}</strong><small>NFT qualifying / activation / recycle</small></article>
+            {isNftView
+              ? <article><span>NFT qualification locked</span><strong>{formatToken(BigInt(membership.lockedFGT || 0) + BigInt(membership.lockedFPT || 0))} tokens</strong><small>{formatToken(membership.lockedFGT)} FGT + {formatToken(membership.lockedFPT)} FPT; FPTr is not eligible</small></article>
+              : <article><span>Program token balances</span><strong>{data?.chain?.fpt || '0'} FPT / {data?.chain?.fptr || '0'} FPTr</strong><small>Activation token / recycle token</small></article>}
         </section>
       )}
 

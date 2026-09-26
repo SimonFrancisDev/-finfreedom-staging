@@ -1,6 +1,6 @@
 # Documentation Coverage Matrix
 
-Last audited: 2026-08-30
+Last audited: 2026-09-26
 
 | Area | Source | Status |
 | --- | --- | --- |
@@ -15,15 +15,14 @@ Last audited: 2026-08-30
 | WalletConnect, media notifications, video and Tasks | `docs/GATE_6_ENGAGEMENT_FEATURES.md` | Implemented and tested |
 | Temporary broad staging admin access | `docs/GATE_6_ENGAGEMENT_FEATURES.md` | Remove for production |
 | Reset and production port | `docs/STAGING_FULL_CLEAN_RESET.md`, `docs/MASTER_PRODUCTION_READINESS_GUIDE.md` | Final evidence pending |
+| Founder-test UI stability, NFT safety, RPC budget, mobile orbits | `docs/GATE_8_STAGING_FRONTEND_STABILITY_AND_RPC_BUDGET.md` | In progress |
 
 ## Remaining
 
-1. Purge only contaminated Freedom-Plus projections with API and worker suspended.
-2. Rebuild and prove all Freedom-Plus indexed blocks are at least 46209562.
-3. Run clean contract-to-UI staging tests and capture transaction, API,
-   responsive, light-theme, and dark-theme evidence.
-4. Restore strict multisig-owner admin authorization for production.
-5. Rotate staging credentials exposed during operations.
+1. Complete Gate 8 transaction-state, RPC-budget, and mobile-orbit acceptance.
+2. Capture clean contract-to-UI staging evidence in responsive light/dark views.
+3. Restore strict multisig-owner admin authorization for production.
+4. Rotate staging credentials exposed during operations.
 
 Never copy staging addresses, blocks, credentials, or temporary access switches
 to production. Port behavior and process, then certify production manifests.
@@ -35,3 +34,4 @@ to production. Port behavior and process, then certify production manifests.
 ## Founder testing package
 
 - Founder funding, delivered features, test scope, evidence requirements, and staging restrictions: FOUNDER_STAGING_TEST_INVITATION.md
+- Founder-test incidents, NFT safeguards, RPC budget, and mobile-orbit requirements: GATE_8_STAGING_FRONTEND_STABILITY_AND_RPC_BUDGET.md
