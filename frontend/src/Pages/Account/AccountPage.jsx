@@ -11,6 +11,7 @@ import { getApiUrl } from '../../Services/apiConfig'
 import { resolveIdentity } from '../../utils/identityResolver'
 import { NETWORK_CONFIG } from '../../constants/addresses'
 import { useToast } from '../../components/feedback'
+import { copyText } from '../../utils/clipboard'
 import { FREEDOM_PLUS_LEVELS, freedomPlusApi } from '../../Services/freedomPlus'
 import { 
   FaUserFriends, FaCoins, FaArrowRight, FaTelegram, 
@@ -289,13 +290,23 @@ const AccountPage = ({ program = 'f-freedom' }) => {
     return () => clearInterval(interval)
   }, [fetchFreedomPlusData, isFreedomPlus])
 
-  const handleCopyLink = () => {
+  const handleCopyLink = async () => {
     if (!referralLink) return
-
-    navigator.clipboard.writeText(referralLink)
+    const copied = await copyText(referralLink)
+    if (!copied) {
+      toast.danger(accountT('clipboard.copyFailed', 'Copy failed. Press and hold the link to copy it.'), { dedupeKey: 'account-referral-copy-failed' })
+      return
+    }
     setCopySuccess(true)
     toast.success(accountT('clipboard.referralCopied', 'Invitation link copied.'), { dedupeKey: 'account-referral-copied' })
     setTimeout(() => setCopySuccess(false), 2000)
+  }
+
+  const handleCopyId = async () => {
+    if (!referralShortCode) return
+    const copied = await copyText(referralShortCode)
+    if (copied) toast.success(accountT('clipboard.idCopied', 'FFN ID copied.'), { dedupeKey: 'account-referral-id-copied' })
+    else toast.danger(accountT('clipboard.copyFailed', 'Copy failed. Press and hold the ID to copy it.'), { dedupeKey: 'account-referral-copy-failed' })
   }
 
   const handleShare = (platform) => {
@@ -554,6 +565,7 @@ const AccountPage = ({ program = 'f-freedom' }) => {
                   <div className="referral-id-tile inner-surface">
                     <span>{accountT('referral.yourReferralId', 'Your Referral ID')}</span>
                     <strong>{referralShortCode}</strong>
+                    <button type="button" onClick={handleCopyId} aria-label={accountT('actions.copyId', 'Copy FFN ID')}><FaCopy /> {accountT('actions.copyId', 'Copy ID')}</button>
                   </div>
 
                   <div className="referral-id-tile inner-surface">

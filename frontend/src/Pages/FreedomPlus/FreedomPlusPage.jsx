@@ -1,13 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ethers } from 'ethers'
-import { Activity, AlertTriangle, ArrowRight, ArrowUpRight, Check, CheckCircle2, Coins, History, Info, LayoutDashboard, Lock, LockKeyhole, Network, RefreshCw, ShieldCheck, Trophy, User, UserPlus, Wallet, X } from 'lucide-react'
+import { Activity, AlertTriangle, ArrowRight, ArrowUpRight, Check, CheckCircle2, Coins, History, LayoutDashboard, Lock, LockKeyhole, Network, RefreshCw, ShieldCheck, Trophy, User, UserPlus, Wallet, X } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useWallet } from '../../hooks/useWallet'
 import { CHAIN_ID, NETWORK_CONFIG } from '../../constants/addresses'
 import { web3Service } from '../../Services/web3'
 import { useToast } from '../../components/feedback'
 import { TransactionStatus } from '../../components/feedback'
-import { InlineAlert } from '../../components/ui'
 import { ProgressionLineChart } from '../../components/charts/InstitutionalCharts'
 import { lockBodyScroll } from '../../utils/bodyScrollLock'
 import { normalizeError } from '../../utils/errorMap'
@@ -101,7 +100,6 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
   const [networkReady, setNetworkReady] = useState(true)
   const [pendingAction, setPendingAction] = useState(null)
   const [actionPreflight, setActionPreflight] = useState({ loading: false, allowance: 0n })
-  const [securityAccepted, setSecurityAccepted] = useState(false)
   const [gateway, setGateway] = useState({ registered: false, levelOneActive: false })
   const [onboardingPromptedAccount, setOnboardingPromptedAccount] = useState('')
   const [nftSuccess, setNftSuccess] = useState(null)
@@ -423,7 +421,6 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
     } finally { setBusy("") }
   }
   const prepareActionReview = useCallback(async (action) => {
-    setSecurityAccepted(false)
     setPendingAction(action)
     setActionPreflight({ loading: true, allowance: 0n })
     try {
@@ -455,7 +452,7 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
     openRegistrationReview()
   }, [account, data, gateway, isConnected, loading, onboardingPromptedAccount, openRegistrationReview, sponsor, tab])
   const confirmPendingAction = () => {
-    if (!pendingAction || !securityAccepted) return
+    if (!pendingAction) return
     const action = pendingAction
     setPendingAction(null)
     if (action.type === 'register') register()
@@ -679,7 +676,7 @@ export default function FreedomPlusPage({ initialTab = 'overview' }) {
 
             <footer>
               <button type="button" className="fp-action-secondary" onClick={() => setPendingAction(null)}>Cancel</button>
-              <button type="button" className="fp-action-primary" disabled={!securityAccepted || !networkReady || actionPreflight.loading || (pendingAction.type === 'register' && (!gateway.registered || !gateway.levelOneActive || (!ethers.isAddress(sponsor) || sponsor === ZERO || sponsor.toLowerCase() === account?.toLowerCase()))) || Number(String(data?.chain?.usdt || '0').replaceAll(',', '')) < pendingAction.price} onClick={confirmPendingAction}>Continue to wallet<ArrowRight /></button>
+              <button type="button" className="fp-action-primary" disabled={!networkReady || actionPreflight.loading || (pendingAction.type === 'register' && (!gateway.registered || !gateway.levelOneActive || (!ethers.isAddress(sponsor) || sponsor === ZERO || sponsor.toLowerCase() === account?.toLowerCase()))) || Number(String(data?.chain?.usdt || '0').replaceAll(',', '')) < pendingAction.price} onClick={confirmPendingAction}>Continue to wallet<ArrowRight /></button>
             </footer>
           </section>
         </div>

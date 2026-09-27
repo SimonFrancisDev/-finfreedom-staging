@@ -127,3 +127,29 @@ wallet confirmation pass.
 5. Run the mobile orbit viewport and interaction matrix.
 6. Confirm API/worker ownership and shared WebSocket behavior.
 7. Record deployment commit, environment diff, evidence, and rollback point.
+## 2026-09-27 tester incident batch
+
+### Verified state
+
+- Wallet 0x0de1B6F15Fe8E5Cf7fbBA2cD4C576357Ececa962 is registered in F-Freedom and has F-Freedom Level 1 active. Its permanent sponsor is 0xF0152a2490a854712fAe8FD32FFCD9729082A09d.
+- The same wallet has no Freedom-Plus participant record and no Freedom-Plus level activation. Freedom-Plus Level 2 must remain locked until the separate Freedom-Plus enrollment and Level 1 transaction succeeds.
+- Wallet 0xF0152a2490a854712fAe8FD32FFCD9729082A09d is correctly indexed in Freedom-Plus with Levels 1, 2, and 3 active. Any screen showing fewer levels is a read/display failure, not lost blockchain state.
+- Its indexed Foundational NFT mint records 5,100 FGT and 600 FPT locked. FPTr is not part of NFT qualification.
+
+### Frontend corrections
+
+- Added a clipboard fallback for mobile and wallet browsers that reject navigator.clipboard.
+- Added a dedicated Copy ID action in the Activation Center and Account referral views.
+- Referral links now use the same fallback copy path.
+- Direct visits without a referral URL continue to accept an FFN ID, referral link, or wallet address in the registration modal. Empty input explicitly uses system ID.
+- Removed the duplicate Freedom-Plus acknowledgment checkbox and How confirmation works block. Network, balance, sponsor, sequential-level, and allowance checks remain enforced.
+- Updated Freedom-Plus stage names to Ignition, Acceleration, Ascension, Prestige, Dominance, Eminence, and Pinnacle.
+- Removed the separate recurring F-Freedom security notice from onboarding; eligible unregistered wallets now proceed directly to the registration form.
+
+### Production rollout controls
+
+- Preserve permanent sponsor resolution and sequential activation checks when porting these UI changes.
+- Verify both indexed state and direct on-chain state before treating a missing level as a failed transaction.
+- Test clipboard behavior in MetaMask mobile, an in-app wallet browser, Android Chrome, and desktop Chrome.
+- Test direct entry, referral-ID entry, full referral-link entry, and wallet-address entry before production release.
+- A local production build could not be completed on this workstation because frontend dependencies were absent and npm install did not produce node_modules. Vercel deployment build must be green before testers are told the patch is live.

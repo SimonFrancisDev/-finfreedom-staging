@@ -4,7 +4,7 @@ import { ProgressionLineChart } from '../../components/charts/InstitutionalChart
 import FreedomPlusOrbit from './FreedomPlusOrbit'
 import '../ActivationCenter/ActivationCenterPage.css'
 
-const STAGES = ['Momentum', 'Expansion', 'Influence', 'Acceleration', 'Leadership', 'Legacy', 'Pinnacle']
+const STAGES = ['Ignition', 'Acceleration', 'Ascension', 'Prestige', 'Dominance', 'Eminence', 'Pinnacle']
 
 function LevelPreview({ config, filled = 0, locked }) {
   const rings = config.orbit === 'P39' ? [3, 9, 27] : config.orbit === 'P14' ? [2, 4, 8] : config.orbit === 'P12' ? [3, 9] : config.orbit === 'P6' ? [2, 4] : config.orbit === 'P4' ? [4] : [3]

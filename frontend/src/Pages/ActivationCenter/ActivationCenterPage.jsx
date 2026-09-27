@@ -10,6 +10,7 @@ import { useToast } from '../../components/feedback'
 import { normalizeError } from '../../utils/errorMap'
 import { buildTxOptions } from '../../utils/txOptions'
 import { lockBodyScroll } from '../../utils/bodyScrollLock'
+import { copyText } from '../../utils/clipboard'
 import { CHAIN_ID, NETWORK_CONFIG } from '../../constants/addresses'
 import { ethers } from 'ethers'
 // import { fetchAddressReceiptsApi } from '../../Services/orbitsApi'
@@ -717,11 +718,18 @@ const ActivationCenterPage = () => {
   const copyReferralLink = async () => {
     if (!myReferralLink) return
     try {
-      await navigator.clipboard.writeText(myReferralLink)
+      if (!(await copyText(myReferralLink))) throw new Error('Clipboard unavailable')
       alert('✅ Referral link copied successfully!')
     } catch (err) {
       alert('Failed to copy')
     }
+  }
+
+  const copyReferralId = async () => {
+    if (!myShortCode) return
+    const copied = await copyText(myShortCode)
+    if (copied) toast.success('FFN ID copied.', { dedupeKey: 'activation-referral-id-copied' })
+    else toast.danger('Copy failed. Press and hold the ID to copy it.', { dedupeKey: 'activation-referral-copy-failed' })
   }
 
   // ==================== WALLET-CHANGE EFFECT ====================
@@ -1468,9 +1476,7 @@ const ActivationCenterPage = () => {
       return
     }
 
-    if (shouldShowOnboarding) {
-      setShowSecurityNotice(true)
-    }
+    if (shouldShowOnboarding) setIsRegistrationModalOpen(true)
   }, [
     isConnected,
     contractsLoading,
@@ -2012,6 +2018,7 @@ const ActivationCenterPage = () => {
               <div className="activation-referral-card__mini">
                 <span>{activationT('referral.yourReferralId', 'Your Referral ID')}</span>
                 <strong>{myShortCode}</strong>
+                <button type="button" onClick={copyReferralId} className="activation-referral-card__copy-id" aria-label="Copy FFN ID"><FaCopy /> Copy ID</button>
               </div>
 
               <div className="activation-referral-card__mini">
