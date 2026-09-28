@@ -29,7 +29,7 @@ Freedom-Plus does share the participant's established F-Freedom identity. A wall
 13. Replenishing the required locked balance restores eligibility.
 14. Tokens consumed by non-NFT utilities are burned and cannot be counted again.
 15. The P14 structure is binary: 2 positions, then 4, then 8.
-16. ID1 and four Founder Representatives receive all seven levels without USDT at genesis.
+16. ID1 and three Founder Representatives receive all seven levels without USDT at genesis.
 17. Genesis participants receive the normal FPT entitlement for those levels.
 18. Genesis placement is structurally normal but produces no USDT distribution or system charge.
 19. After genesis, ID1 and Founder Representatives have the same participation rights as other eligible users.
@@ -46,7 +46,7 @@ Freedom-Plus does share the participant's established F-Freedom identity. A wall
 | 6 | P4 | 12,150 | 12,150 | 6,075 |
 | 7 | P3 | 36,450 | 36,450 | 18,225 |
 
-All monetary and utility-token values use six decimals. A fully activated participant receives 54,650 FPT. The five genesis participants receive 273,250 FPT in total.
+All monetary and utility-token values use six decimals. A fully activated participant receives 54,650 FPT. The four genesis participants receive 218,600 FPT in total.
 
 ## 4. Identity and Relationship Model
 
@@ -291,16 +291,15 @@ The designated final position supplies 100% of the level price. It closes the cy
 2. `0x3f6Bb1E6Bfeb9C52f763a197d27B580d7DE7f100`.
 3. `0xDd78425335C0c698615845d94f9FeE7492266396`.
 4. `0xf72873d6233B5e3dfbA6D1D8058BF90E990902f0`.
-5. `0xeE192BE4884B064281Fa426F3d855fb339445B83`.
 
-The four listed addresses are staging/test identities. Production addresses require a separate deployment manifest and founder confirmation.
+The three listed addresses are staging/test identities. Production addresses require a separate deployment manifest and founder confirmation.
 
 ### 11.2 Genesis sequence
 
 1. Initialize ID1 as the root.
 2. Activate all seven ID1 levels without USDT.
 3. Mint ID1's 54,650 FPT once.
-4. Register the four representatives under ID1 in the listed order.
+4. Register the three representatives under ID1 in the listed order.
 5. Activate each representative's seven levels without USDT.
 6. Place each activation through the ordinary deterministic orbit algorithm.
 7. Mint 54,650 FPT to each representative once.
@@ -312,8 +311,8 @@ Genesis creates no USDT participant payout, system charge, or funded recycle res
 
 If genesis fills an orbit boundary, the structural genesis cycle closes without FPTr or financial settlement and the next structural cycle opens normally. This specifically means:
 
-- The first three representatives close ID1's genesis P3 cycle; the fourth enters the next P3 cycle.
-- Four representatives close ID1's genesis P4 cycle; the next P4 cycle begins empty.
+- The three representatives close ID1's genesis P3 cycle.
+- Three representatives occupy the first three ID1 P4 positions; the first paid participant occupies position four.
 - P6, P12, P14, and P39 retain their resulting partial structural state.
 
 All later paid activity uses that state and follows ordinary financial rules.
@@ -624,7 +623,7 @@ Frontend safety:
 - Keep production untouched.
 - Save sanitized deployment manifests and start blocks.
 - Configure staging API, worker, and frontend.
-- Initialize ID1 and the four staging representatives.
+- Initialize ID1 and the three staging representatives.
 
 ### Phase 4: Automated staging certification
 

@@ -32,6 +32,7 @@ import { SpaceProvider } from './context/SpaceContext'
 import { SessionProvider } from './context/SessionContext'
 import { OverlayProvider } from './components/overlay'
 import { ToastProvider, useToast } from './components/feedback'
+import ProgramErrorBoundary from './components/feedback/ProgramErrorBoundary'
 import { NotificationProvider } from './components/notifications'
 import { useCompleteUserData } from './hooks/useUserData'
 import { LANGUAGES } from './constants/languages'
@@ -1179,16 +1180,16 @@ function App() {
 
               {FREEDOM_PLUS_ENABLED && (
                 <>
-                  <Route path="/freedom-plus" element={<FreedomPlusPage initialTab="overview" />} />
+                  <Route path="/freedom-plus" element={<ProgramErrorBoundary><FreedomPlusPage initialTab="overview" /></ProgramErrorBoundary>} />
                   <Route path="/freedom-plus/dashboard" element={<Navigate to="/dashboard?program=freedom-plus" replace />} />
-                  <Route path="/freedom-plus/activation" element={<FreedomPlusPage initialTab="levels" />} />
-                  <Route path="/freedom-plus/orbits" element={<FreedomPlusPage initialTab="orbits" />} />
-                  <Route path="/freedom-plus/tokens" element={<FreedomPlusPage initialTab="tokens" />} />
+                  <Route path="/freedom-plus/activation" element={<ProgramErrorBoundary><FreedomPlusPage initialTab="levels" /></ProgramErrorBoundary>} />
+                  <Route path="/freedom-plus/orbits" element={<ProgramErrorBoundary><FreedomPlusPage initialTab="orbits" /></ProgramErrorBoundary>} />
+                  <Route path="/freedom-plus/tokens" element={<ProgramErrorBoundary><FreedomPlusPage initialTab="tokens" /></ProgramErrorBoundary>} />
                   <Route path="/freedom-plus/activity" element={<Navigate to="/activity?program=freedom-plus" replace />} />
                   <Route path="/freedom-plus/account" element={<Navigate to="/account?program=freedom-plus" replace />} />
-                  <Route path="/freedom-nft" element={<FreedomPlusPage initialTab="nftOverview" />} />
-                  <Route path="/freedom-nft/membership" element={<FreedomPlusPage initialTab="membership" />} />
-                  <Route path="/freedom-nft/rewards" element={<FreedomPlusPage initialTab="rewards" />} />
+                  <Route path="/freedom-nft" element={<ProgramErrorBoundary><FreedomPlusPage initialTab="nftOverview" /></ProgramErrorBoundary>} />
+                  <Route path="/freedom-nft/membership" element={<ProgramErrorBoundary><FreedomPlusPage initialTab="membership" /></ProgramErrorBoundary>} />
+                  <Route path="/freedom-nft/rewards" element={<ProgramErrorBoundary><FreedomPlusPage initialTab="rewards" /></ProgramErrorBoundary>} />
                 </>
               )}
 

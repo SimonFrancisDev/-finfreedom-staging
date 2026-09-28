@@ -103,7 +103,7 @@ Every row must be marked `APPROVED`, linked to evidence, and translated into tes
 - Each payable arrival applies the approved ring percentage and 10% system charge.
 - Recycle uses the approved final qualifying arrivals and reopens the same level.
 - First activation issues FPT; recycle issues FPTr at 50% of that level's FPT amount.
-- Genesis ID1 and four approved representatives receive structural positions and activated levels without generating income; they retain normal future rights.
+- Genesis ID1 and three approved representatives receive structural positions and activated levels without generating income; they retain normal future rights.
 
 ### Freedom NFT
 
@@ -207,7 +207,7 @@ Use `smart-contract/test-plans/fresh-priority-wallet-roles.json` as the public r
 ## 11. Staging Certification Sequence
 
 1. Clean-state and deployment-address verification.
-2. Genesis verification for ID1 and four representatives.
+2. Genesis verification for ID1 and three representatives.
 3. F-Freedom gateway and shared-identity verification.
 4. Complete and visually certify all Freedom-Plus and Freedom NFT frontend pages before interactive testing begins.
 5. Freedom-Plus registration with automatic Level 1 purchase.

@@ -45,7 +45,7 @@ function matchesFilter(item, filter) {
   return ['token_lock', 'token_unlock', 'token_burn', 'nft_membership', 'nft_eligibility'].includes(item.category)
 }
 
-export default function FreedomPlusTokens({ account, data, loading, onRefresh }) {
+export default function FreedomPlusTokens({ account, data, loading, onRefresh, readIssues = [] }) {
   const [welcomeOpen, setWelcomeOpen] = useState(true)
   const [filter, setFilter] = useState('all')
   const [expanded, setExpanded] = useState(false)
@@ -74,14 +74,16 @@ export default function FreedomPlusTokens({ account, data, loading, onRefresh })
   const cards = [
     {
       key: 'fpt', title: 'FPT - Activation Rewards', image: '/images/fpt.png',
-      total: data?.chain?.fptTotal || data?.chain?.fpt || '0',
-      available: data?.chain?.fpt || '0', locked: data?.chain?.fptLocked || '0',
+      total: data?.chain?.fptTotal ?? data?.chain?.fpt ?? 'Unavailable',
+      available: data?.chain?.fpt ?? 'Unavailable', locked: data?.chain?.fptLocked ?? 'Unavailable',
+      stale: readIssues.some((item) => item.startsWith('FPT')),
       note: 'First activation rewards. Available FPT qualifies for Freedom NFT membership.',
     },
     {
       key: 'fptr', title: 'FPTr - Recycle Rewards', image: '/images/fptr.png',
-      total: data?.chain?.fptrTotal || data?.chain?.fptr || '0',
-      available: data?.chain?.fptr || '0', locked: data?.chain?.fptrLocked || '0',
+      total: data?.chain?.fptrTotal ?? data?.chain?.fptr ?? 'Unavailable',
+      available: data?.chain?.fptr ?? 'Unavailable', locked: data?.chain?.fptrLocked ?? 'Unavailable',
+      stale: readIssues.some((item) => item.startsWith('FPTr')),
       note: 'Issued when a Freedom-Plus orbit completes and re-enters the same level.',
     },
   ]
@@ -106,6 +108,7 @@ export default function FreedomPlusTokens({ account, data, loading, onRefresh })
             <div className="fp-token-card-copy">
               <span>{card.title}</span>
               <strong>{card.total}</strong>
+              {card.stale && <em>Live verification pending</em>}
               <div><small>Available <b>{card.available}</b></small><small>Locked <b>{card.locked}</b></small></div>
               <p>{card.note}</p>
             </div>

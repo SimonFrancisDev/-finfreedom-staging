@@ -273,9 +273,9 @@
       },
       {
         "indexed": false,
-        "internalType": "address[4]",
+        "internalType": "address[3]",
         "name": "representatives",
-        "type": "address[4]"
+        "type": "address[3]"
       }
     ],
     "name": "GenesisInitialized",
@@ -581,9 +581,9 @@
   {
     "inputs": [
       {
-        "internalType": "address[4]",
+        "internalType": "address[3]",
         "name": "representatives",
-        "type": "address[4]"
+        "type": "address[3]"
       }
     ],
     "name": "initializeGenesis",

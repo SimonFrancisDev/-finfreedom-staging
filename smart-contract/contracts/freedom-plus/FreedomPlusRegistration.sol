@@ -53,7 +53,7 @@ contract FreedomPlusRegistration is
     );
     event LevelManagerUpdated(address indexed previousManager, address indexed newManager);
     event GuardianUpdated(address indexed previousGuardian, address indexed newGuardian);
-    event GenesisInitialized(address indexed id1Wallet, address[4] representatives);
+    event GenesisInitialized(address indexed id1Wallet, address[3] representatives);
     event FFreedomRegistrationUpdated(address indexed previousRegistration, address indexed newRegistration);
 
     error InvalidAddress();
@@ -135,7 +135,7 @@ contract FreedomPlusRegistration is
         emit LevelActivated(participant, MIN_LEVEL, activationId);
     }
 
-    function initializeGenesis(address[4] calldata representatives)
+    function initializeGenesis(address[3] calldata representatives)
         external onlyOwner whenNotPaused nonReentrant
     {
         if (genesisInitialized) revert GenesisAlreadyInitialized();

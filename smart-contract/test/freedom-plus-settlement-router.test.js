@@ -318,9 +318,9 @@ describe("Freedom-Plus ordinary settlement router", function () {
     expect((await system.usdt.balanceOf(b.address)) - bBeforeRecovery).to.equal(180n * UNIT);
   });
 
-  it("initializes ID1 and four representatives without financial side effects", async function () {
+  it("initializes ID1 and three representatives without financial side effects", async function () {
     const system = await deployGraph();
-    const representatives = [a, b, c, d];
+    const representatives = [a, b, c];
     const trackedAddresses = [
       id1.address,
       ...representatives.map((representative) => representative.address),
@@ -343,7 +343,7 @@ describe("Freedom-Plus ordinary settlement router", function () {
     );
 
     expect(await system.registration.genesisInitialized()).to.equal(true);
-    expect(await system.registration.registeredCount()).to.equal(5);
+    expect(await system.registration.registeredCount()).to.equal(4);
     const genesisParticipants = [id1, ...representatives];
     for (let index = 0; index < genesisParticipants.length; index++) {
       const participant = genesisParticipants[index];
@@ -384,9 +384,7 @@ describe("Freedom-Plus ordinary settlement router", function () {
       expect(position.kind).to.equal(0);
     }
     const fourth = await p3.positionAt(id1.address, 7, 1, 1);
-    expect(fourth.participant).to.equal(d.address);
-    expect(fourth.structuralParent).to.equal(id1.address);
-    expect(fourth.kind).to.equal(0);
+    expect(fourth.participant).to.equal(ethers.ZeroAddress);
     expect(await p3.currentCycleOf(id1.address, 7)).to.equal(1);
 
     await expect(
@@ -396,10 +394,10 @@ describe("Freedom-Plus ordinary settlement router", function () {
     ).to.be.revertedWithCustomError(system.registration, "GenesisAlreadyInitialized");
   });
 
-  it("keeps normal descendants routable after the four genesis representatives", async function () {
+  it("keeps normal descendants routable after the three genesis representatives", async function () {
     const system = await deployGraph();
     const [, , , , , , , participant, child, child2, child3, child4] = await ethers.getSigners();
-    await system.registration.initializeGenesis([a.address, b.address, c.address, d.address]);
+    await system.registration.initializeGenesis([a.address, b.address, c.address]);
     await fundAndApprove(system, participant, 50n * UNIT);
     for (const descendant of [child, child2, child3, child4]) {
       await fundAndApprove(system, descendant, 50n * UNIT);
@@ -407,17 +405,17 @@ describe("Freedom-Plus ordinary settlement router", function () {
 
     await register(system, participant, id1.address);
 
-    const participantInId1 = await system.orbits[0].positionAt(id1.address, 1, 0, 5);
+    const participantInId1 = await system.orbits[0].positionAt(id1.address, 1, 0, 4);
     expect(participantInId1.participant).to.equal(participant.address);
-    expect(participantInId1.structuralParent).to.equal(b.address);
+    expect(participantInId1.structuralParent).to.equal(a.address);
     expect(participantInId1.kind).to.equal(1);
 
-    const participantInParent = await system.orbits[0].positionAt(b.address, 1, 0, 1);
+    const participantInParent = await system.orbits[0].positionAt(a.address, 1, 0, 1);
     expect(participantInParent.participant).to.equal(participant.address);
-    expect(participantInParent.structuralParent).to.equal(b.address);
+    expect(participantInParent.structuralParent).to.equal(a.address);
     expect(participantInParent.kind).to.equal(2);
     expect(await system.orbits[0].currentStructuralParentOf(participant.address, 1))
-      .to.equal(b.address);
+      .to.equal(a.address);
 
     await expect(register(system, child, participant.address))
       .to.not.be.reverted;

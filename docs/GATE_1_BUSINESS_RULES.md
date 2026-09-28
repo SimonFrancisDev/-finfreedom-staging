@@ -131,7 +131,7 @@ Current tier allocation is 50% Foundational, 30% Intermediate, and 20% Advanced.
 
 ## ID 1 And Genesis
 
-Current deployment behavior initializes ID 1 with all seven levels active and creates four genesis representatives sponsored by ID 1 with all seven levels active. This must be preserved only if explicitly accepted as the canonical launch rule; it must not be silently reproduced in production.
+The replacement staging deployment initializes ID 1 with all seven levels active and creates three approved genesis representatives sponsored by ID 1 with all seven levels active. Production must use a separately approved representative list and must not silently copy staging identities.
 
 ## Data And Presentation Contract
 
