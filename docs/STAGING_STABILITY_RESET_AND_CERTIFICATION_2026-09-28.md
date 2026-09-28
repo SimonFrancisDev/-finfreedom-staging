@@ -122,3 +122,5 @@ Production receives only certified changes and uses separate wallets, RPC creden
 - Preserved legacy four-representative genesis decoding separately from the generated three-representative ABI; tests decode both event signatures.
 - RPC reduction is not quantified. No 98-99% savings claim is supported yet.
 - Remaining release gates: passing rerun, browser/mobile scenarios, live receipt/index/API reconciliation for reported wallets, measured RPC budget, backup verification, and the complete reset dependency preflight.
+- Rerun cb1aee8: all 15 frontend regression tests and backend tests passed. The production build exposed an incorrect InlineAlert import added in this batch; corrected to the existing components/ui export before certification.
+- Added a post-genesis test activating all seven paid levels, checking exact USDT spend, custody conservation, FPT issuance, and ID1 P4 recycle rewards/reserve consumption.

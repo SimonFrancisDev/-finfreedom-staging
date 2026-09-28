@@ -457,6 +457,40 @@ describe("Freedom-Plus ordinary settlement router", function () {
       .to.equal(child.address);
   });
 
+  it("conserves funds through all seven first paid levels after three-representative genesis", async function () {
+    const system = await deployGraph();
+    await system.registration.initializeGenesis([a.address, b.address, c.address]);
+    const total = 54_650n * UNIT;
+    await fundAndApprove(system, d, total);
+    const prices = [50n, 150n, 450n, 1_350n, 4_050n, 12_150n, 36_450n];
+    let paid = 0n;
+    const holders = [
+      id1.address, a.address, b.address, c.address, d.address,
+      await system.manager.getAddress(), await system.router.getAddress(),
+      await system.nftVault.getAddress(), await system.operationsVault.getAddress(),
+    ];
+    for (let level = 1; level <= 7; level++) {
+      if (level === 1) await register(system, d, id1.address);
+      else await system.registration.connect(d).activateLevel(level);
+      paid += prices[level - 1] * UNIT;
+      expect(await system.registration.isLevelActive(d.address, level)).to.equal(true);
+      expect(await system.usdt.balanceOf(d.address)).to.equal(total - paid);
+      expect(await system.fpt.balanceOf(d.address)).to.equal(paid);
+      expect(await system.usdt.balanceOf(await system.manager.getAddress())).to.equal(0);
+      const balances = await Promise.all(holders.map((address) => system.usdt.balanceOf(address)));
+      expect(balances.reduce((sum, balance) => sum + balance, 0n)).to.equal(total);
+    }
+    expect(await system.registration.registeredCount()).to.equal(5);
+    expect(await system.registration.isRegistered(outsider.address)).to.equal(false);
+    expect(await system.fpt.totalSupply()).to.equal(5n * total);
+    expect(await system.fpt.balanceOf(id1.address)).to.equal(total);
+    expect(await system.fptr.balanceOf(id1.address)).to.equal((4_050n + 12_150n) * UNIT);
+    for (const level of [5, 6]) {
+      expect(await system.router.recycleReserveConsumed(id1.address, level, 0)).to.equal(true);
+      expect(await system.router.recycleReserve(id1.address, level, 0)).to.equal(0);
+    }
+  });
+
   it("rejects fee-on-transfer USDT and rolls registration back atomically", async function () {
     const system = await deployGraph("MockFeeOnTransferUSDT");
     await fundAndApprove(system, a, 50n * UNIT);
