@@ -100,6 +100,9 @@ Production receives only certified changes and uses separate wallets, RPC creden
 
 - Frontend resilience: implemented locally; build blocked by incomplete local node_modules (missing picomatch).
 - Three-representative contract/scripts: implemented locally.
-- Contract tests: not certified; focused Hardhat command stalled and was stopped.
-- Paid RPC: required before preflight, replay, and request-budget certification.
+- Contract dependency graph: Toolbox and unused Ignition sample removed; required plugins are explicit and pinned against Hardhat 2.26.3.
+- Contract tests: not certified; Windows package extraction repeatedly left node_modules incomplete before Hardhat could run.
+- Paid RPC HTTPS: verified on Polygon Amoy chain ID 80002 at block 48,785,231.
+- Paid RPC WSS: verified on Polygon Amoy chain ID 80002 at block 48,793,638.
+- Paid RPC still requires request-budget measurement before deployment and replay.
 - Reset: not started.
