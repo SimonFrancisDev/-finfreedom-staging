@@ -484,7 +484,8 @@ describe("Freedom-Plus ordinary settlement router", function () {
     expect(await system.registration.isRegistered(outsider.address)).to.equal(false);
     expect(await system.fpt.totalSupply()).to.equal(5n * total);
     expect(await system.fpt.balanceOf(id1.address)).to.equal(total);
-    expect(await system.fptr.balanceOf(id1.address)).to.equal((4_050n + 12_150n) * UNIT);
+    // Gate 1 token rules: funded recycle mints FPTr equal to half the level price.
+    expect(await system.fptr.balanceOf(id1.address)).to.equal((2_025n + 6_075n) * UNIT);
     for (const level of [5, 6]) {
       expect(await system.router.recycleReserveConsumed(id1.address, level, 0)).to.equal(true);
       expect(await system.router.recycleReserve(id1.address, level, 0)).to.equal(0);

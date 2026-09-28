@@ -124,3 +124,15 @@ Production receives only certified changes and uses separate wallets, RPC creden
 - Remaining release gates: passing rerun, browser/mobile scenarios, live receipt/index/API reconciliation for reported wallets, measured RPC budget, backup verification, and the complete reset dependency preflight.
 - Rerun cb1aee8: all 15 frontend regression tests and backend tests passed. The production build exposed an incorrect InlineAlert import added in this batch; corrected to the existing components/ui export before certification.
 - Added a post-genesis test activating all seven paid levels, checking exact USDT spend, custody conservation, FPT issuance, and ID1 P4 recycle rewards/reserve consumption.
+- The additional test initially expected full-price FPTr. That test expectation was wrong: Gate 1 section on utility tokens and FreedomPlusConfig define half-price FPTr. Corrected expected P4 Level 5/6 total to 2025 + 6075 = 8100 FPTr; no payout or contract rule was changed.
+- Added server-render tests of the actual NFT components for unknown/empty membership, mixed commitments, independent balance failures, disabled unlock/restore, and unavailable reward history. These complement unit tests; they are not interactive browser tests.
+
+### Read-only Amoy reset dependency check
+
+At 2026-09-28T18:25:22.850Z, three sequential requests to the supplied build-plan endpoint confirmed:
+
+- Chain ID: 80002 (Polygon Amoy).
+- Reported FGT contract 0x53a11f9c333Cf8f94E3A9Bd642dcf5168E7280E0: operatorConfigLocked() = false.
+- Reported NFT pool 0x6e127653D5c2032442fa7832b70967fbc13690aE: distributor() = 0x437a7bb9f05a19f6b095cd0038ebc77cfbf983df.
+
+No signer, transaction, database connection, reset, or environment update was used. This is a narrow read-only check, not the full deployment preflight, a live environment parity check, or an RPC consumption benchmark.
