@@ -3,7 +3,7 @@ import env from '../config/env.js';
 import { getProvider, safeRpcCall } from './provider.js';
 import addresses, { freedomPlusSystemVaults } from './freedomPlusAddresses.js';
 
-import registrationAbi from './abis/freedom-plus/FreedomPlusRegistration.abi.json' with { type: 'json' };
+import registrationAbi from './freedomPlusRegistrationAbi.js';
 import levelManagerAbi from './abis/freedom-plus/FreedomPlusLevelManager.abi.json' with { type: 'json' };
 import routerAbi from './abis/freedom-plus/FreedomPlusSettlementRouter.abi.json' with { type: 'json' };
 import p39Abi from './abis/freedom-plus/P39PlusOrbit.abi.json' with { type: 'json' };

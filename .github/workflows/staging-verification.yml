@@ -26,6 +26,7 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
+      - run: node --test test/*.test.js
       - run: npm run build
 
   backend:
@@ -43,7 +44,7 @@ jobs:
         working-directory: backend
       - name: Check backend JavaScript
         run: find backend/src backend/scripts -name '*.js' -print0 | xargs -0 -n1 node --check
-      - run: node --test test/*.test.js scripts/freedomPlusQueryService.test.js
+      - run: node --import ./test/setupEnv.js --test test/*.test.js scripts/freedomPlusQueryService.test.js
         working-directory: backend
 
   contracts:

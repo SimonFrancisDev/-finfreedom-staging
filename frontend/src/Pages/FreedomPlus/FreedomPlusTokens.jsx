@@ -74,16 +74,16 @@ export default function FreedomPlusTokens({ account, data, loading, onRefresh, r
   const cards = [
     {
       key: 'fpt', title: 'FPT - Activation Rewards', image: '/images/fpt.png',
-      total: data?.chain?.fptTotal ?? data?.chain?.fpt ?? 'Unavailable',
+      total: data?.chain?.fptTotal ?? 'Unavailable',
       available: data?.chain?.fpt ?? 'Unavailable', locked: data?.chain?.fptLocked ?? 'Unavailable',
-      stale: readIssues.some((item) => item.startsWith('FPT')),
+      stale: readIssues.some((item) => item.startsWith('FPT ')),
       note: 'First activation rewards. Available FPT qualifies for Freedom NFT membership.',
     },
     {
       key: 'fptr', title: 'FPTr - Recycle Rewards', image: '/images/fptr.png',
-      total: data?.chain?.fptrTotal ?? data?.chain?.fptr ?? 'Unavailable',
+      total: data?.chain?.fptrTotal ?? 'Unavailable',
       available: data?.chain?.fptr ?? 'Unavailable', locked: data?.chain?.fptrLocked ?? 'Unavailable',
-      stale: readIssues.some((item) => item.startsWith('FPTr')),
+      stale: readIssues.some((item) => item.startsWith('FPTr ')),
       note: 'Issued when a Freedom-Plus orbit completes and re-enters the same level.',
     },
   ]

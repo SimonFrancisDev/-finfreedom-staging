@@ -27,7 +27,7 @@ Every report must be compared at five layers: successful receipt and decoded eve
 
 ### Three founder representatives
 
-The current four-wallet genesis is immutable. The wallet 0xeE192BE4884B064281Fa426F3d855fb339445B83 cannot be safely deleted from the existing deployment.
+The current genesis initializer is one-time and has no representative-removal operation. These are upgradeable contracts, but an upgrade does not erase historical placements, balances, or payouts. The wallet 0xeE192BE4884B064281Fa426F3d855fb339445B83 must not be hidden or deleted from existing indexed history.
 
 The fresh deployment uses exactly:
 
@@ -68,7 +68,7 @@ Record request counts for disconnected load, connected load, refresh, every acti
 1. Freeze testing; suspend API and worker.
 2. Export MongoDB and archive current manifests/state.
 3. Pass tests and paid-RPC preflight.
-4. Deploy the three-representative Freedom-Plus graph.
+4. Resolve the reset scope for both programs, FGT operators, NFT membership, and shared vaults before deploying the three-representative graph. A Freedom-Plus-only replacement is not sufficient if existing FGT operator locks or vault-distributor locks prevent the new NFT contracts from operating. Do not execute a partial reset until this dependency preflight passes.
 5. Validate owner, guardian, gateway, token operators, vaults, NFT links, engines, prices, payout rates, and genesis.
 6. Record proxies, implementations, transactions, and deployment blocks.
 7. Clear only projections for the replaced Freedom-Plus deployment.
@@ -98,11 +98,27 @@ Production receives only certified changes and uses separate wallets, RPC creden
 
 ## Current status
 
-- Frontend resilience: implemented locally; build blocked by incomplete local node_modules (missing picomatch).
+- Frontend build at bbc9f98: passed on clean GitHub Actions Linux. Local node_modules remains incomplete; local build is not a verified result.
 - Three-representative contract/scripts: implemented locally.
 - Contract dependency graph: Toolbox and unused Ignition sample removed; required plugins are explicit and pinned against Hardhat 2.26.3.
-- Contract tests: not certified; Windows package extraction repeatedly left node_modules incomplete before Hardhat could run.
+- First clean contract run at bbc9f98: 155 passing, 1 failing. The descendant fixture retained the old representative B branch after changing the first paid position to representative A. The fixture is corrected; rerun required.
 - Paid RPC HTTPS: verified on Polygon Amoy chain ID 80002 at block 48,785,231.
 - Paid RPC WSS: verified on Polygon Amoy chain ID 80002 at block 48,793,638.
 - Paid RPC still requires request-budget measurement before deployment and replay.
+- Clean Linux CI: added for frontend regression tests/build, backend tests/syntax, and the complete local Hardhat suite. No staging credentials or live RPC are required.
 - Reset: not started.
+
+## Continuation findings and verification
+
+- Initial CI evidence: https://github.com/SimonFrancisDev/-finfreedom-staging/actions/runs/36460093966 (commit bbc9f98).
+- Initial backend result: 12 tests passed; the task-service test could not import configuration without MONGODB_URI. Added an explicit test-only preload with loopback endpoints and dummy addresses, rather than supplying staging secrets.
+- Activation dialog had undefined InlineAlert, Info, securityAccepted, and setSecurityAccepted references. Imported the warning component and removed the already-requested obsolete confirmation explanation/checkbox. This is a reproducible source defect; attribution to a specific tester still requires browser verification.
+- Skipped token reads previously fabricated successful zero results; skipped membership reads fabricated a no-NFT result. Skipped and failed reads now retain only same-wallet previously loaded values, otherwise null.
+- Wallet changes remount account-local state. Request generations reject late refresh/tab responses; orbit requests clear the previous selection and reject stale responses.
+- NFT actions are disabled while membership is unknown, refreshing, disconnected, or on an unverified/wrong network. Token parsing now happens within the transaction error handler.
+- NFT membership shows available FGT and FPT independently. Unverified membership does not show a false zero commitment, owned NFT, or active tier.
+- Unlock preview uses six-decimal integer arithmetic, including invalid, excessive, negative, and micro-unit tests. Sabina's 5100 FGT + 600 FPT example leaves 100 FGT + 600 FPT after a 5000 FGT unlock and loses eligibility. This arithmetic test does not certify her live transaction.
+- Reward-period failure is distinct from an empty reward history. Proof/claim reads run on the rewards view, not every NFT view. Audit/reconciliation endpoints are requested only on the activity view.
+- Preserved legacy four-representative genesis decoding separately from the generated three-representative ABI; tests decode both event signatures.
+- RPC reduction is not quantified. No 98-99% savings claim is supported yet.
+- Remaining release gates: passing rerun, browser/mobile scenarios, live receipt/index/API reconciliation for reported wallets, measured RPC budget, backup verification, and the complete reset dependency preflight.

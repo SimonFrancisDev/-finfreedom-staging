@@ -429,7 +429,7 @@ describe("Freedom-Plus ordinary settlement router", function () {
     expect(childSource.structuralParent).to.equal(participant.address);
     expect(childSource.kind).to.equal(1);
 
-    const childInParent = await system.orbits[0].positionAt(b.address, 1, 0, 4);
+    const childInParent = await system.orbits[0].positionAt(a.address, 1, 0, 4);
     expect(childInParent.participant).to.equal(child.address);
     expect(childInParent.structuralParent).to.equal(participant.address);
     expect(childInParent.kind).to.equal(2);
@@ -439,7 +439,7 @@ describe("Freedom-Plus ordinary settlement router", function () {
     const secondRingPositions = [4, 7, 10];
     for (let index = 0; index < secondRingPositions.length; index++) {
       const routed = await system.orbits[0].positionAt(
-        b.address,
+        a.address,
         1,
         0,
         secondRingPositions[index]
@@ -449,7 +449,7 @@ describe("Freedom-Plus ordinary settlement router", function () {
       expect(routed.kind).to.equal(2);
     }
 
-    const fourthInParent = await system.orbits[0].positionAt(b.address, 1, 0, 13);
+    const fourthInParent = await system.orbits[0].positionAt(a.address, 1, 0, 13);
     expect(fourthInParent.participant).to.equal(child4.address);
     expect(fourthInParent.structuralParent).to.equal(child.address);
     expect(fourthInParent.kind).to.equal(2);
