@@ -98,19 +98,41 @@ Production receives only certified changes and uses separate wallets, RPC creden
 
 ## Current status
 
-- Frontend build at bbc9f98: passed on clean GitHub Actions Linux. Local node_modules remains incomplete; local build is not a verified result.
-- Three-representative contract/scripts: implemented locally.
+- Frontend build and 21 regression/render tests at 1ff05fc: passed on clean GitHub Actions Linux. Local node_modules remains incomplete; no local preview or local full build was verified.
+- Three-representative contract/scripts: committed and pushed; not deployed. Existing on-chain representatives remain unchanged.
 - Contract dependency graph: Toolbox and unused Ignition sample removed; required plugins are explicit and pinned against Hardhat 2.26.3.
-- First clean contract run at bbc9f98: 155 passing, 1 failing. The descendant fixture retained the old representative B branch after changing the first paid position to representative A. The fixture is corrected; rerun required.
+- Full contract suite at 1ff05fc: 157 passing, including three-representative genesis, descendant routing and all seven first paid levels with exact token/custody checks.
+- Backend suite at 1ff05fc: 16 passing; syntax checks passed.
 - Paid RPC HTTPS: verified on Polygon Amoy chain ID 80002 at block 48,785,231.
 - Paid RPC WSS: verified on Polygon Amoy chain ID 80002 at block 48,793,638.
 - Paid RPC still requires request-budget measurement before deployment and replay.
 - Clean Linux CI: added for frontend regression tests/build, backend tests/syntax, and the complete local Hardhat suite. No staging credentials or live RPC are required.
 - Reset: not started.
 
+### Verified code checkpoint
+
+- Code commit: 1ff05fc34701491a4cc9596d325443f2988fb06f, pushed to staging main.
+- Passing CI: https://github.com/SimonFrancisDev/-finfreedom-staging/actions/runs/36465932813.
+- Frontend job 109075889785: 21 tests, zero failures; build passed.
+- Backend job 109075890226: 16 tests, zero failures; syntax passed.
+- Contract job 109075890360: 157 passing, including the added post-genesis accounting case.
+- This evidence covers clean installs, local simulated contracts, regression logic, and server-rendered NFT states. It does not cover interactive mobile wallets, production, or live indexing completeness.
+- Dependency audit findings have not been remediated by this batch. The initial CI backend install reported 9 vulnerabilities; passing tests do not clear that security gate.
+
+### Next checks, in order
+
+1. Verify Render API/worker and Vercel are actually serving the intended staging commit, chain, addresses, and RPC configuration.
+2. Exercise tester-wallet activation, NFT unlock/restore, balance failures, wallet switching, and mobile orbit controls; retain screenshots and transaction receipts.
+3. Compare reported missing placements and balances through receipt, contract state, indexer, API, and UI; repair only proven gaps.
+4. Measure connected, disconnected, idle, refresh, transaction and reconnect RPC usage. Set a budget from measurements, not a promised percentage.
+5. Verify backups and the full reset manifest, shared vault/token dependencies, ownership and deployer permissions before resetting anything.
+
+Production files, production deployment, live database contents and on-chain state were not changed by this continuation. Git pushes may trigger existing staging deployment integrations; their live outcome remains to be checked.
+
 ## Continuation findings and verification
 
 - Initial CI evidence: https://github.com/SimonFrancisDev/-finfreedom-staging/actions/runs/36460093966 (commit bbc9f98).
+- Initial contract run: 155 passing and one failing descendant fixture that retained the old representative B branch. Corrected the expected branch to representative A after verifying the new first paid position.
 - Initial backend result: 12 tests passed; the task-service test could not import configuration without MONGODB_URI. Added an explicit test-only preload with loopback endpoints and dummy addresses, rather than supplying staging secrets.
 - Activation dialog had undefined InlineAlert, Info, securityAccepted, and setSecurityAccepted references. Imported the warning component and removed the already-requested obsolete confirmation explanation/checkbox. This is a reproducible source defect; attribution to a specific tester still requires browser verification.
 - Skipped token reads previously fabricated successful zero results; skipped membership reads fabricated a no-NFT result. Skipped and failed reads now retain only same-wallet previously loaded values, otherwise null.
