@@ -34,14 +34,15 @@ evidence. It is excluded from the fresh genesis and may later register normally.
 
 | Gate | Status | Evidence |
 | --- | --- | --- |
-| Repository checkpoint clean | Passed before tooling repair | `main` matched `origin/main` at `c359f74` |
+| Repository checkpoint clean | Passed | Reset record pushed to staging `main` at `ead0ee8` |
 | Reset runbook inspected | Passed | `STAGING_STABILITY_RESET_AND_CERTIFICATION_2026-09-28.md` and `STAGING_FULL_CLEAN_RESET.md` |
 | MongoDB backup tooling | Passed | `mongodump` 100.12.2 installed |
-| Fresh pre-reset backup | Pending | Must be captured after API and worker suspension |
-| API and worker suspended | Pending operator confirmation | Both must be suspended, not merely restarted |
+| Fresh pre-reset backup | Passed | `backend/backups/finfreedom-staging-20260929-155247.archive.gz`; 146061 bytes; SHA-256 `64BFE4C35B8ECB413360406271B23C07E89B3F24BF071384446AFEA22BB2E5EF`; archive dry-run succeeded |
+| Pre-reset database inventory | Passed | Exact database `finfreedom-staging`; 41 collections; 1774 documents; guarded reset dry-run only |
+| API and worker suspended | Passed | Operator confirmed both Render staging services suspended before backup and preflight |
 | Contract environment keys | Present | Key names verified without printing values |
 | Pinned contract dependencies | Repaired locally | Generated `node_modules` only; no source change intended |
-| Read-only Amoy preflight | Awaiting explicit execution approval | Script inspected; automated execution gate stopped launch before it ran |
+| Read-only Amoy preflight | Blocked on deployer funding | Correct approved RPC reached the safety gate; deployer `0x296238e950ef0066D2119230Bf0eb3aDEBc94882` has 0.455509651334316622 POL and requires at least 5 POL; no transaction broadcast |
 | Contract deployments | Not started | No transaction broadcast |
 | Database reset | Not started | No data deleted |
 | Environment cutover | Not started | No Render or Vercel variables changed |
