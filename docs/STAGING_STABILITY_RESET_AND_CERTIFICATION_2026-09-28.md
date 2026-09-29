@@ -158,3 +158,22 @@ At 2026-09-28T18:25:22.850Z, three sequential requests to the supplied build-pla
 - Reported NFT pool 0x6e127653D5c2032442fa7832b70967fbc13690aE: distributor() = 0x437a7bb9f05a19f6b095cd0038ebc77cfbf983df.
 
 No signer, transaction, database connection, reset, or environment update was used. This is a narrow read-only check, not the full deployment preflight, a live environment parity check, or an RPC consumption benchmark.
+
+### 2026-09-29 three-wallet balance investigation
+
+See [the three-wallet evidence report](STAGING_THREE_WALLET_BALANCE_CHECK_2026-09-29.md)
+for pinned-block reads, successful activation receipts, public API comparison,
+deployed frontend RPC checks and remaining UI reproduction limits.
+
+- Wallet `0x296238e950ef0066d2119230bf0eb3adebc94882`: Level 1 active in both
+  programs; 10 available FGT, 50 available FPT, neither locked. Freedom-Plus
+  activation and FPT issuance are present in the public participant API.
+- Wallets `0x884e48f9897e8633238747b608dd49de12bf94df` and
+  `0x21f9edb0ce6b79afa98de14b03678cb29bc4859c`: unregistered in both current
+  staging registration contracts; zero balances in the current FGT/FPT tokens.
+- Supplied worker logs now show the new build-plan WebSocket host. The deployed
+  frontend still contains the old RPC host, which nevertheless returned the
+  correct first-wallet balances during direct tests.
+- The exact reported screen is needed to distinguish a false zero wallet
+  balance from correctly zero locked-token metrics. No UI root cause is yet
+  proven. No reset, chain write, database repair or production change was made.
