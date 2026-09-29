@@ -252,3 +252,56 @@ Verification for this patch:
   The reset remains staging-only and conditional on completing the reported
   issue checks and preserving a verified backup. A database-only wipe cannot
   reset old contract balances, placements, or genesis representatives.
+
+### Verification of ceb8462
+
+- Code commit: ceb846225748b582968004767c2e7ff727aa10a6, pushed to staging main.
+- CI: https://github.com/SimonFrancisDev/-finfreedom-staging/actions/runs/36551316801.
+- Frontend production build/tests: passed (job 109349903265).
+- Backend tests/syntax: passed (job 109349903304).
+- Smart-contract suite: passed (job 109349903070).
+- Local interactive browser/mobile verification has not been performed.
+
+The orbit comparison initially failed locally on the build-plan endpoint
+(fetch failure, then timeout). The repository's public Amoy fallback failed
+DNS resolution. The previously authorized old QuickNode endpoint then worked.
+No deployed RPC settings were changed, and these failures alone do not prove
+a provider-wide outage or exhausted credits.
+
+At block 48,854,289 on chain 80002, completed 2026-09-29T10:12:23.159Z,
+the following current-cycle comparisons all passed:
+
+| Orbit owner | Level | Cycle | On-chain occupied | Indexed occupied |
+| --- | --- | --- | --- | --- |
+| 0x3a596f67585f27cfd7f449fec0a92b7bf34b1df5 | 1 | 0 | 3 | 3 |
+| 0x3a596f67585f27cfd7f449fec0a92b7bf34b1df5 | 2 | 0 | 2 | 2 |
+| 0xf0152a2490a854712fae8fd32ffcd9729082a09d | 1 | 0 | 1 | 1 |
+| 0xf0152a2490a854712fae8fd32ffcd9729082a09d | 2 | 0 | 0 | 0 |
+| 0xf0152a2490a854712fae8fd32ffcd9729082a09d | 3 | 0 | 0 | 0 |
+
+For each occupied indexed slot, positionAt matched participant, structural
+parent, activation ID, placement ID, amount, kind and financial flag. Slot
+numbers were unique and the count matched cycleState.filledPositions.
+
+- Anthony Level 1: slot 1 Sabina (0xf0152a2490a854712fae8fd32ffcd9729082a09d);
+  slot 2 0x4a0295d7d9c007a7ab6688a8be54be52a9ab1e8a;
+  slot 4 0x0de1b6f15fe8e5cf7fbba2cd4c576357ececa962.
+- Anthony Level 2: slots 1 and 2 contain the same first two wallets.
+- Sabina Level 1: slot 1 contains 0x0de1b6f15fe8e5cf7fbba2cd4c576357ececa962.
+- Successful comparison used 18 RPC requests and five indexed orbit API reads.
+  API-internal RPC usage was not measured. There was no full-history scan.
+- These five current Freedom-Plus orbits are reconciled, not every historical
+  cycle, F-Freedom orbit, or browser-rendered diagram.
+
+Reset remains pending. Local staging configuration identifies chain 80002 and
+database finfreedom-staging; the fresh-vault/output-directory settings are
+prepared. The only existing backup found is dated August 29, so it is not a
+verified pre-reset backup of current testing data. Both staging services must
+be suspended for the final backup and coordinated transition. Production has
+not been modified; no old balances, placements or representatives were erased.
+
+The final Vercel HTML/bundle check timed out locally. Therefore the pushed code
+and passing CI are verified, but this continuation does not certify that the
+live frontend is serving ceb8462. No interactive phone-wallet signing test was
+performed. The user was asked to confirm suspension of both staging services
+before the final reset backup; no suspension is assumed.
