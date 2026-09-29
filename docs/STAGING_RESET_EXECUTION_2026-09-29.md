@@ -42,10 +42,13 @@ evidence. It is excluded from the fresh genesis and may later register normally.
 | API and worker suspended | Passed | Operator confirmed both Render staging services suspended before backup and preflight |
 | Contract environment keys | Present | Key names verified without printing values |
 | Pinned contract dependencies | Repaired locally | Generated `node_modules` only; no source change intended |
-| Read-only Amoy preflight | Blocked on deployer funding | Correct approved RPC reached the safety gate; deployer `0x296238e950ef0066D2119230Bf0eb3aDEBc94882` has 0.455509651334316622 POL and requires at least 5 POL; no transaction broadcast |
-| Contract deployments | Not started | No transaction broadcast |
-| Database reset | Not started | No data deleted |
-| Environment cutover | Not started | No Render or Vercel variables changed |
+| Read-only Amoy preflight | Passed | Chain 80002, retained mock USDT, treasury configuration, signers, and funded deployer verified |
+| F-Freedom deployment | Passed | Manifest `deployment-1790702999333.json`; validator passed; blocks 48880412-48880581 |
+| Freedom-Plus/NFT deployment | Passed with recovered script assertion | Final manifest `deployment-1790706637561.json`; validator passed at block 48884219 |
+| NFT FGT authorization | Passed | Multisig transaction 16 received two approvals, satisfied its timelock, and executed successfully |
+| Database reset | Passed | `finfreedom-staging` reset by guarded `deleteMany`; all 41 collections verified at zero |
+| Local environment cutover mirror | Passed | Backend and frontend ignored `.env` files match the fresh manifests |
+| Render/Vercel environment cutover | Pending operator application | Values are frozen in `operations/staging/CUTOVER_SOURCE_OF_TRUTH.md` |
 
 ## Required execution order
 
@@ -69,3 +72,33 @@ evidence. It is excluded from the fresh genesis and may later register normally.
 The fresh backup may be restored only with the matching old API, worker, and
 frontend address set. Old projections must never be combined with new contract
 addresses. Blockchain deployments cannot be rolled back.
+
+## Execution Notes
+
+The Freedom-Plus deployment transaction completed genesis correctly with four
+identities: ID1 plus the three approved representatives. The deployment script
+incorrectly asserted five identities and stopped before its final ownership and
+manifest steps. Existing contract tests already establish four as the correct
+count. The assertion and validator were corrected, and the guarded partial
+deployment finalizer validated all identities, seven active levels per identity,
+exact 54,650 FPT allocations, zero FPTr allocations, and the F-Freedom gateway
+before locking operator configuration and transferring ownership. No duplicate
+Freedom-Plus suite was deployed.
+
+The Atlas role did not permit `dropDatabase`, so the reset script used its guarded
+`deleteMany` fallback. It deleted 1,774 documents and verified every retained
+collection at zero. Production was not accessed or modified.
+
+## Verification Results
+
+- F-Freedom on-chain deployment validator: passed.
+- Freedom-Plus on-chain deployment validator: passed with four genesis identities
+  and zero pending governance actions.
+- Backend native Node tests: 17 passed, 0 failed.
+- Deployment, finalizer, and validator JavaScript syntax checks: passed.
+- Local Hardhat unit runner: did not start because the pre-existing Windows
+  `@nomicfoundation/edr` native binary is invalid; no test assertion ran.
+- Local frontend runner: eight dependency-free tests passed, while five suites did
+  not start because the local ignored `node_modules` is missing Babel, React, and
+  ethers packages. This is a local dependency installation issue, not a failed
+  application assertion. CI remains the clean dependency verification gate.

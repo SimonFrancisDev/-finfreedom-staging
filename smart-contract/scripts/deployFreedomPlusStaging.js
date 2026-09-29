@@ -211,7 +211,7 @@ async function main() {
   if (balancesBefore.some((balance, index) => balance !== balancesAfter[index])) {
     throw new Error("Genesis changed a tracked USDT balance");
   }
-  if ((await registration.registeredCount()) !== 5n) throw new Error("Genesis participant count mismatch");
+  if ((await registration.registeredCount()) !== 4n) throw new Error("Genesis participant count mismatch");
   for (const participant of [id1, ...representatives]) {
     for (let level = 1; level <= 7; level++) {
       if (!(await registration.isLevelActive(participant, level))) {

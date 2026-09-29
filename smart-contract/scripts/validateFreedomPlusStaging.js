@@ -48,7 +48,7 @@ async function main() {
   equal(await registration.id1Wallet(), manifest.id1, "registration ID1");
   if (!(await registration.genesisInitialized())) throw new Error("genesis is not initialized");
   const registeredCount = await registration.registeredCount();
-  if (registeredCount < 5n) throw new Error("registered count is below the five genesis identities");
+  if (registeredCount !== 4n) throw new Error("registered count does not match the four genesis identities");
   equal(await manager.registration(), c.FreedomPlusRegistration.proxy, "manager registration");
   equal(await manager.settlementRouter(), c.FreedomPlusSettlementRouter.proxy, "manager router");
   equal(await manager.tokenController(), c.FreedomPlusTokenController.proxy, "manager controller");

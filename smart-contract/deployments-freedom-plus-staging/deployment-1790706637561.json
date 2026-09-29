@@ -1,0 +1,90 @@
+{
+  "program": "Freedom-Plus",
+  "recoveredPartialDeployment": true,
+  "network": "amoy",
+  "chainId": "80002",
+  "commit": "9aead51a7b1b38b70d2e63a2fdc52b105b6af132",
+  "deployedAt": "2026-09-29T18:30:37.154Z",
+  "deployer": "0x296238e950ef0066D2119230Bf0eb3aDEBc94882",
+  "multisig": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+  "guardian": "0x52F22c1e396dF20c2078B4a86b4A0ac3b51a9911",
+  "usdt": "0x7b7E39f3D177B3356368431C5C285bca58b43A60",
+  "fgt": "0xF3CA84c5eC97E2dd9ee102240fA566514504C28A",
+  "fFreedomRegistration": "0xbF8F79a11a5A8BF48571C69B5C8b7a92B875970A",
+  "id1": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+  "representatives": [
+    "0x3f6Bb1E6Bfeb9C52f763a197d27B580d7DE7f100",
+    "0xDd78425335C0c698615845d94f9FeE7492266396",
+    "0xf72873d6233B5e3dfbA6D1D8058BF90E990902f0"
+  ],
+  "startBlock": 48880990,
+  "finalBlock": 48884219,
+  "contracts": {
+    "FPTToken": {
+      "proxy": "0x10007328ff5033bee3FbB053a731D09B0b979714",
+      "implementation": "0x646663857B89Cc8cb044E2A03327C52767eB0FA6"
+    },
+    "FPTrToken": {
+      "proxy": "0x1bd21D699D1F38Db05B70D49524aeC17600e7114",
+      "implementation": "0x04382D5e63BCabD0F59F751518c2EEA5E2266a52"
+    },
+    "FreedomPlusTokenController": {
+      "proxy": "0x8397cb6cD279650333cbFb22C09557F5ad96CE06",
+      "implementation": "0x56387075fB48a206C5a4Ab5D38f8c4f7a22C5d15"
+    },
+    "FreedomPlusLevelManager": {
+      "proxy": "0x0838506bc137D3a408866DEC5c0AfD3D1f6a2c10",
+      "implementation": "0x49215d27dd6Aa00c75A27ACcc82D1431d454c734"
+    },
+    "FreedomPlusRegistration": {
+      "proxy": "0x30067cE1974bBD92B4Ae29cBF5827eF5Ee7A4cd4",
+      "implementation": "0x0e1834EAfE00dCD39a7B6C3E6b5e2BF5f101a231"
+    },
+    "FreedomNFTPoolVault": {
+      "proxy": "0xF8a4F62fd253Aa2A036209F948Eec53810576fE7",
+      "implementation": "0x1B6ED819525d034537BA28aCEf26E29E5DA355cD"
+    },
+    "FreedomPlusOperationsVault": {
+      "proxy": "0xB41B0C9593fbAcbBCb1Cb525c20F5A2332D02f12",
+      "implementation": "0x44d179b93C85Db3d0A7516BCc9880daD55D2B05C"
+    },
+    "P39PlusOrbit": {
+      "proxy": "0xF8D13086327BB762E30689BA9036185EB1D15bfb",
+      "implementation": "0xB97278D44F7cc73AAaB3d06dEC0AADb454E92539"
+    },
+    "P14PlusOrbit": {
+      "proxy": "0xe6E4C69F9fBE5aF32923661B1cD8F04FDb00f78e",
+      "implementation": "0xCF53d8C24d97cE30d4b0f88bffDCF0218E9bD784"
+    },
+    "P12PlusOrbit": {
+      "proxy": "0xb0079d0c6F02f2Ed75dAAd98e31F0ce2Ab1EF660",
+      "implementation": "0x7e2c53668b190D4257797C88868383bDeE3D3Cb7"
+    },
+    "P6PlusOrbit": {
+      "proxy": "0xC5B48B2fC56D256fEa5B66Da7d54d470a4d3eD3A",
+      "implementation": "0x25350aE842F69B3F8eD2f4F72D62A2613C3d2395"
+    },
+    "P4PlusOrbit": {
+      "proxy": "0xcBFD83647b23ce44b268A11054b677DcA6c7C27a",
+      "implementation": "0x7FF3F09e90d0FB78AA3fE16AE8ae15046839949c"
+    },
+    "P3PlusOrbit": {
+      "proxy": "0x21541a7693a943C7eFC6ECB28CF2485efD0d0544",
+      "implementation": "0x784645007e59D6A2b528Ba28b15Cf206e42ff906"
+    },
+    "FreedomPlusSettlementRouter": {
+      "proxy": "0xcA20D9F04bbF8a99c6f332ebD05829F95B50C9cb",
+      "implementation": "0x11B0E0B4a9329bc1F8Faa00e2850139649E0D9ec"
+    },
+    "FreedomNFTMembership": {
+      "proxy": "0xf505282ced9df36F68705b6E5C17760d34E74FF8",
+      "implementation": "0xea63e6c21cF3E858d9f5ff3Be6e8f834c3D51374"
+    },
+    "FreedomNFTRewardDistributor": {
+      "proxy": "0x9B1e2271915e60ac9AB067cF586A0A2EF65D094d",
+      "implementation": "0xe9E68D6Eeb6cC8c68C46BA214D3d653FE2666A86"
+    }
+  },
+  "configuration": [],
+  "pendingGovernanceActions": []
+}
