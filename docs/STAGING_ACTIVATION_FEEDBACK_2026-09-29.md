@@ -64,8 +64,17 @@ remain unproven; do not describe them as fully resolved by this patch.
   unknown initial data, locale-safe balance badges, exact approval spender
   and amount, existing allowance, rejected/reverted approval and duplicate clicks.
 - Added the activation center to the existing unbound-render-identifier test.
-- Full frontend dependencies are absent locally. Full render/handler tests and
-  production build are to be verified by the existing clean GitHub CI workflow.
+- Full frontend dependencies are absent locally. The clean GitHub CI workflow
+  passed all frontend tests (including the new render/handler tests) and the
+  frontend production build. Backend tests/syntax and smart-contract tests
+  passed as well.
+- Verified code commit: 1fc8b40f2958a8e55f502e6e8393c8bd4112c20e, pushed to staging main.
+- CI run: https://github.com/SimonFrancisDev/-finfreedom-staging/actions/runs/36563299053.
+- Successful jobs: frontend 109389087922, backend 109389088005,
+  smart contracts 109389087585. All completed successfully.
+- The first local GitHub status request timed out; an IPv4 retry verified the
+  completed run and each job. A failed status request was not treated as a
+  failed build or as proof of success.
 - Phone-wallet interaction and desktop/mobile visual checks are still pending.
 - This is not certification of every historical event, orbit or NFT action.
 
