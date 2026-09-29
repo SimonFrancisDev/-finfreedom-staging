@@ -177,3 +177,78 @@ deployed frontend RPC checks and remaining UI reproduction limits.
 - The exact reported screen is needed to distinguish a false zero wallet
   balance from correctly zero locked-token metrics. No UI root cause is yet
   proven. No reset, chain write, database repair or production change was made.
+
+### 2026-09-29 direct tester checks and focused corrections
+
+The supplied screenshot resolves the first wallet's zero report: the metric
+was **NFT qualification locked**, not its available wallet balance. Its 10 FGT
+and 50 FPT are available and neither is locked. The NFT header now separates
+available FGT, available FPT, and the NFT-locked split. It no longer presents
+only Freedom-Plus progression in that NFT summary.
+
+Direct read-only checks completed at 2026-09-29T09:00:02.221Z against the
+authorized build-plan Amoy endpoint. Chain ID 80002 and block 48,849,960 were
+fixed before reading the wallets or simulating an action.
+
+| Wallet | F-Freedom checked levels | Freedom-Plus | Mock USDT | POL |
+| --- | --- | --- | --- | --- |
+| 0xf0152a2490a854712fae8fd32ffcd9729082a09d | 1 and 10 active | Registered; 1 and 2 active | 244653 | 0.770130158257022665 |
+| 0x0de1b6f15fe8e5cf7fbba2cd4c576357ececa962 | 1 and 10 active | Registered; 1 active, 2 inactive | 59800 | 9.948492808657828555 |
+| 0x31f9a0b00e75456571f77f2fd806479433494e9b | 1 active, 10 inactive | Not registered | 199990 | 9.93297262907717408 |
+
+Sabina's first wallet:
+
+- Membership token 9, Foundational tier, reward eligible.
+- Membership locks are 5100 FGT and 600 FPT, matching both token contracts.
+- FGT total 10230, locked 5100, hence available 5130.
+- FPT total 650, locked 600, hence available 50.
+- An eth_call from her wallet to the current NFT contract for
+  unlockQualification(5000000000, 0) succeeded with result 0x.
+- This proves the current contract allows the reported 5000 FGT unlock.
+  It does not identify the cause of her earlier failed wallet transaction;
+  that transaction hash and receipt are still needed.
+- The unlock would leave 100 FGT + 600 FPT and deactivate reward eligibility,
+  without deleting the NFT. No real unlock was sent.
+
+Sabina's second wallet:
+
+- Activation simulation for Freedom-Plus Level 2 reverts with "no allowance".
+- The first diagnostic checked allowance to registration, which is not the
+  spender. A separate correction checked the actual level manager
+  0x9dF6E3b6F37e67e6A0215683303a5cfFe9b1f177 and confirmed zero allowance.
+- Simone's allowance to that same level manager is also zero.
+- The frontend already approves the level manager before activation. Zero
+  allowance is a normal two-step flow, not a reason to disable Continue.
+
+Confirmed frontend defect and correction:
+
+- The activation modal parsed a locale-formatted USDT balance using Number()
+  after removing commas. Italian 59800 is displayed as 59.800 and was compared
+  as 59.8, incorrectly blocking a 150 USDT action. The same approach could
+  round a just-insufficient balance up before comparing.
+- Eligibility now uses the raw bigint balance and exact required token units.
+  Failed/skipped balance reads cannot authorize a transaction using cached
+  display text. Wallet, network, busy state, registration and previous-level
+  prerequisites are checked by the same predicate in the button and handler.
+- This reproduces a concrete locale-dependent defect consistent with the
+  Italian testers' report; their browser locale/session was not inspected.
+- NFT mint, tier changes, unlock and restoration now use the existing buffered
+  transaction helper instead of discarding an explicit gas estimate and asking
+  the wallet to estimate again. This is hardening, not proof of the historical
+  unlock failure's cause.
+- NFT transaction status is also visible for an F-Freedom-only participant.
+- Membership no longer requests unused FPT total and locked reads. Its header
+  uses available balances plus the authoritative membership lock split.
+
+Verification for this patch:
+
+- Local wallet-read/activation regression suite: 8 passed, zero failures.
+- Includes Italian/English/French/German display formats, unknown balances,
+  exact threshold, one-micro-unit insufficiency, partial reads and wallet races.
+- Direct check budget: 41 RPC requests (38 initial, 2 corrected spender reads,
+  1 decoded activation revert); no history scan or broadcast.
+- Full CI/build and live-browser confirmation are tracked below when complete.
+- No database reset, fresh deployment or representative removal has occurred.
+  The reset remains staging-only and conditional on completing the reported
+  issue checks and preserving a verified backup. A database-only wipe cannot
+  reset old contract balances, placements, or genesis representatives.

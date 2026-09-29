@@ -12,7 +12,7 @@ import { ProgressionLineChart } from '../../components/charts/InstitutionalChart
 import { lockBodyScroll } from '../../utils/bodyScrollLock'
 import { normalizeError } from '../../utils/errorMap'
 import { buildTxOptions } from '../../utils/txOptions'
-import { createRequestGate, optionalRead, retainedRead, skippedRead } from '../../utils/walletReads.js'
+import { createRequestGate, hasTokenBalance, optionalRead, retainedRead, skippedRead } from '../../utils/walletReads.js'
 import FreedomPlusOrbit from './FreedomPlusOrbit'
 import FreedomPlusActivationCenter from './FreedomPlusActivationCenter'
 import FreedomPlusFocusedOrbit from './FreedomPlusFocusedOrbit'
@@ -120,6 +120,12 @@ function WalletProgramPage({ initialTab = 'overview' }) {
   const membershipActionsReady = membershipVerified && !loading && isConnected && networkReady
   const membership = data?.chain?.membership || normalizeMembership(null)
   const displayBalance = (value) => value == null ? 'Temporarily unavailable' : value
+  const actionHasBalance = Boolean(pendingAction && hasTokenBalance(data?.chain?.usdtRaw, tokenUnits(pendingAction.price)))
+  const activationReady = Boolean(pendingAction && isConnected && networkReady && !loading && !busy && !actionPreflight.loading
+    && actionHasBalance && !activeLevels.has(pendingAction.level)
+    && (pendingAction.type === 'register'
+      ? gateway.registered && gateway.levelOneActive && ethers.isAddress(sponsor) && sponsor !== ZERO && sponsor.toLowerCase() !== account?.toLowerCase()
+      : data?.chain?.registered && activeLevels.has(pendingAction.level - 1)))
   const selectedLevelConfig = FREEDOM_PLUS_LEVELS.find((item) => item.level === selectedLevel)
   const orbitCycles = useMemo(() => [...new Set(orbit.map((item) => Number(item.cycle)))].sort((a, b) => b - a), [orbit])
   const visualOrbit = useMemo(() => {
@@ -135,7 +141,7 @@ function WalletProgramPage({ initialTab = 'overview' }) {
   const isNftView = NFT_TABS.some(([value]) => value === tab)
   const needsUsdtBalance = ['levels', 'dashboard', 'tokens', 'account', 'membership'].includes(tab)
   const needsProgramTokenBalances = ['dashboard', 'tokens', 'account'].includes(tab)
-  const needsNftTokenBalances = tab === 'membership'
+  const needsNftTokenBalances = ['membership', 'rewards'].includes(tab)
   const needsRewards = tab === 'rewards'
   const visibleTabs = isNftView ? NFT_TABS : PROGRAM_TABS
   const nextLevel = FREEDOM_PLUS_LEVELS.find((item) => !activeLevels.has(item.level))?.level || null
@@ -170,9 +176,9 @@ function WalletProgramPage({ initialTab = 'overview' }) {
         freedomPlusApi.referralForWallet(account).catch(() => null),
         needsUsdtBalance ? optionalRead(contracts.usdt.balanceOf(account)) : Promise.resolve(skippedRead),
         needsNftTokenBalances ? optionalRead(contracts.fgt.availableBalanceOf(account)) : Promise.resolve(skippedRead),
-        needsProgramTokenBalances || needsNftTokenBalances ? optionalRead(contracts.fpt.balanceOf(account)) : Promise.resolve(skippedRead),
+        needsProgramTokenBalances ? optionalRead(contracts.fpt.balanceOf(account)) : Promise.resolve(skippedRead),
         needsProgramTokenBalances || needsNftTokenBalances ? optionalRead(contracts.fpt.availableBalanceOf(account)) : Promise.resolve(skippedRead),
-        needsProgramTokenBalances || needsNftTokenBalances ? optionalRead(contracts.fpt.lockedBalanceOf(account)) : Promise.resolve(skippedRead),
+        needsProgramTokenBalances ? optionalRead(contracts.fpt.lockedBalanceOf(account)) : Promise.resolve(skippedRead),
         needsProgramTokenBalances ? optionalRead(contracts.fptr.balanceOf(account)) : Promise.resolve(skippedRead),
         needsProgramTokenBalances ? optionalRead(contracts.fptr.availableBalanceOf(account)) : Promise.resolve(skippedRead),
         needsProgramTokenBalances ? optionalRead(contracts.fptr.lockedBalanceOf(account)) : Promise.resolve(skippedRead),
@@ -216,9 +222,9 @@ function WalletProgramPage({ initialTab = 'overview' }) {
       const requestedReads = [
         [needsUsdtBalance, 'USDT balance', usdt],
         [needsNftTokenBalances, 'FGT balance', fgt],
-        [needsProgramTokenBalances || needsNftTokenBalances, 'FPT total', fptTotal],
+        [needsProgramTokenBalances, 'FPT total', fptTotal],
         [needsProgramTokenBalances || needsNftTokenBalances, 'FPT available', fptAvailable],
-        [needsProgramTokenBalances || needsNftTokenBalances, 'FPT locked', fptLocked],
+        [needsProgramTokenBalances, 'FPT locked', fptLocked],
         [needsProgramTokenBalances, 'FPTr total', fptrTotal],
         [needsProgramTokenBalances, 'FPTr available', fptrAvailable],
         [needsProgramTokenBalances, 'FPTr locked', fptrLocked],
@@ -242,6 +248,7 @@ function WalletProgramPage({ initialTab = 'overview' }) {
           participantNumber: String(apiData?.participant?.participantNumber || 0),
           sponsor: apiData?.participant?.sponsor || ZERO,
           usdt: retainedRead(usdt, current?.chain?.usdt, formatToken),
+          usdtRaw: usdt.ok ? usdt.value : null,
           fgt: retainedRead(fgt, current?.chain?.fgt, formatToken),
           fpt: retainedRead(fptAvailable, current?.chain?.fpt, formatToken),
           fptTotal: retainedRead(fptTotal, current?.chain?.fptTotal, formatToken),
@@ -513,7 +520,7 @@ function WalletProgramPage({ initialTab = 'overview' }) {
     openRegistrationReview()
   }, [account, data, gateway, isConnected, loading, onboardingPromptedAccount, openRegistrationReview, sponsor, tab])
   const confirmPendingAction = () => {
-    if (!pendingAction) return
+    if (!activationReady) return
     const action = pendingAction
     setPendingAction(null)
     if (action.type === 'register') register()
@@ -543,15 +550,12 @@ function WalletProgramPage({ initialTab = 'overview' }) {
       if (availableFpt < additionalFpt) throw new Error(`Insufficient available FPT. This change requires ${formatToken(additionalFpt)} additional FPT.`)
       if (current === tier) throw new Error('Choose a different membership tier or use the qualification controls below.')
       if (current === 0) {
-        await contracts.nftMembership.mintMembership.estimateGas(tier, fgt, fpt)
-        return contracts.nftMembership.mintMembership(tier, fgt, fpt)
+        return sendBuffered(contracts.nftMembership.mintMembership, [tier, fgt, fpt])
       }
       if (tier > current) {
-        await contracts.nftMembership.upgradeMembership.estimateGas(tier, fgt, fpt)
-        return contracts.nftMembership.upgradeMembership(tier, fgt, fpt)
+        return sendBuffered(contracts.nftMembership.upgradeMembership, [tier, fgt, fpt])
       }
-      await contracts.nftMembership.downgradeMembership.estimateGas(tier, fgt, fpt)
-      return contracts.nftMembership.downgradeMembership(tier, fgt, fpt)
+      return sendBuffered(contracts.nftMembership.downgradeMembership, [tier, fgt, fpt])
     }, 'Freedom NFT membership updated and qualifying balances reconciled.')
   }
 
@@ -564,8 +568,7 @@ function WalletProgramPage({ initialTab = 'overview' }) {
       if (fgt < 0n || fpt < 0n) throw new Error('Token amounts cannot be negative.')
       if (fgt + fpt === 0n) throw new Error('Enter at least one qualifying token amount to unlock.')
       if (fgt > membership.lockedFGT || fpt > membership.lockedFPT) throw new Error('The unlock amount exceeds the tokens currently locked in this membership.')
-      await contracts.nftMembership.unlockQualification.estimateGas(fgt, fpt)
-      return contracts.nftMembership.unlockQualification(fgt, fpt)
+      return sendBuffered(contracts.nftMembership.unlockQualification, [fgt, fpt])
     }, 'Qualifying tokens unlocked. Reward eligibility recalculated.')
   }
 
@@ -581,8 +584,7 @@ function WalletProgramPage({ initialTab = 'overview' }) {
       if (fgt + fpt !== missing) throw new Error(`Restoration requires exactly ${formatToken(missing)} qualifying tokens.`)
       const [availableFgt, availableFpt] = await Promise.all([contracts.fgt.availableBalanceOf(account), contracts.fpt.availableBalanceOf(account)])
       if (availableFgt < fgt || availableFpt < fpt) throw new Error('The selected FGT/FPT restoration split exceeds the available qualifying balance.')
-      await contracts.nftMembership.restoreEligibility.estimateGas(fgt, fpt)
-      return contracts.nftMembership.restoreEligibility(fgt, fpt)
+      return sendBuffered(contracts.nftMembership.restoreEligibility, [fgt, fpt])
     }, 'Freedom NFT reward eligibility restored.')
   }
 
@@ -619,9 +621,13 @@ function WalletProgramPage({ initialTab = 'overview' }) {
 
       {!isProgramOverview && tab !== 'levels' && tab !== 'nftOverview' && tab !== 'tokens' && tab !== 'orbits' && isConnected && (
         <section className="fp-metrics">
-            <article><span>FFN ID</span><strong>{data?.chain?.registered ? (referralId || 'Resolving...') : 'Not registered'}</strong><small>{short(account)}</small></article>
-            <article><span>Freedom-Plus levels</span><strong>{activeLevels.size} / 7</strong><small>Freedom-Plus progression only</small></article>
-            <article><span>USDT available</span><strong>{displayBalance(data?.chain?.usdt)}{data?.chain?.usdt != null ? ' USDT' : ''}</strong><small>Wallet balance</small></article>
+            <article><span>FFN ID</span><strong>{gateway.registered || data?.chain?.registered ? (referralId || 'Resolving...') : 'Not registered'}</strong><small>{short(account)}</small></article>
+            {isNftView
+              ? <article><span>FGT available</span><strong>{displayBalance(data?.chain?.fgt)}</strong><small>From F-Freedom; not locked</small></article>
+              : <article><span>Freedom-Plus levels</span><strong>{activeLevels.size} / 7</strong><small>Freedom-Plus progression only</small></article>}
+            {isNftView
+              ? <article><span>FPT available</span><strong>{displayBalance(data?.chain?.fpt)}</strong><small>From Freedom-Plus; not locked</small></article>
+              : <article><span>USDT available</span><strong>{displayBalance(data?.chain?.usdt)}{data?.chain?.usdt != null ? ' USDT' : ''}</strong><small>Wallet balance</small></article>}
             {isNftView
               ? <article><span>NFT qualification locked</span><strong>{membershipVerified ? formatToken(membership.lockedFGT + membership.lockedFPT) + ' tokens' : 'Temporarily unavailable'}</strong><small>{membershipVerified ? formatToken(membership.lockedFGT) + ' FGT + ' + formatToken(membership.lockedFPT) + ' FPT' : 'Live membership verification pending'}</small></article>
               : <article><span>Program token balances</span><strong>{displayBalance(data?.chain?.fpt)} FPT / {displayBalance(data?.chain?.fptr)} FPTr</strong><small>Activation token / recycle token</small></article>}
@@ -646,7 +652,7 @@ function WalletProgramPage({ initialTab = 'overview' }) {
             ))}
       </nav>}
 
-      {isConnected && (data?.chain?.registered || tab === 'levels') && <TransactionStatus txState={txState} onReset={() => setTxState({ status: 'idle', stage: 'idle', hash: '', note: '', error: null })} explorerBaseUrl={`${NETWORK_CONFIG.blockExplorerUrls[0]}/tx`} />}
+      {isConnected && (data?.chain?.registered || tab === 'levels' || isNftView) && <TransactionStatus txState={txState} onReset={() => setTxState({ status: 'idle', stage: 'idle', hash: '', note: '', error: null })} explorerBaseUrl={`${NETWORK_CONFIG.blockExplorerUrls[0]}/tx`} />}
 
           {tab === 'overview' && <FreedomPlusOverview registered={Boolean(data?.chain?.registered)} activeLevelCount={activeLevels.size} membershipTier={membership.tier} openView={openView} />}
 
@@ -738,14 +744,14 @@ function WalletProgramPage({ initialTab = 'overview' }) {
                 { label: 'F-Freedom Level 1 gateway', passed: pendingAction.type !== 'register' || (gateway.registered && gateway.levelOneActive), hint: pendingAction.type !== 'register' ? 'Gateway completed' : gateway.levelOneActive ? 'Registration and Level 1 confirmed on F-Freedom' : 'Activate F-Freedom Level 1 before joining Freedom-Plus' },
                 { label: pendingAction.type === 'register' ? 'Permanent F-Freedom sponsor' : 'Freedom-Plus registration complete', passed: pendingAction.type === 'register' ? ethers.isAddress(sponsor) && sponsor !== ZERO && sponsor.toLowerCase() !== account?.toLowerCase() : Boolean(data?.chain?.registered), hint: pendingAction.type === 'register' ? ethers.isAddress(sponsor) && sponsor !== ZERO ? `Inherited automatically: ${short(sponsor)}` : 'No permanent sponsor was returned by F-Freedom' : referralId || short(account) },
                 { label: pendingAction.level === 1 ? 'Level 1 entry is available' : `Level ${pendingAction.level - 1} is active`, passed: pendingAction.level === 1 || activeLevels.has(pendingAction.level - 1), hint: 'Levels activate sequentially' },
-                { label: `${pendingAction.price.toLocaleString()} USDT available`, passed: Number(String(data?.chain?.usdt || '0').replaceAll(',', '')) >= pendingAction.price, hint: `Wallet balance: ${data?.chain?.usdt || '0'} USDT` },
+                { label: `${pendingAction.price.toLocaleString()} USDT available`, passed: actionHasBalance, hint: `Wallet balance: ${displayBalance(data?.chain?.usdt)}${data?.chain?.usdt != null ? ' USDT' : ''}` },
                 { label: actionPreflight.loading ? 'Checking USDT approval' : actionPreflight.allowance >= tokenUnits(pendingAction.price) ? 'USDT approval ready' : 'USDT approval required', passed: !actionPreflight.loading, hint: actionPreflight.loading ? 'Reading current allowance from Amoy' : actionPreflight.allowance >= tokenUnits(pendingAction.price) ? 'One wallet confirmation is expected' : 'Approval first, then the program transaction' },
               ].map((item) => <article className={item.passed ? 'passed' : 'failed'} key={item.label}>{item.passed ? <CheckCircle2 /> : <AlertTriangle />}<div><strong>{item.label}</strong><span>{item.hint}</span></div></article>)}
             </div>
 
             <footer>
               <button type="button" className="fp-action-secondary" onClick={() => setPendingAction(null)}>Cancel</button>
-              <button type="button" className="fp-action-primary" disabled={!networkReady || actionPreflight.loading || (pendingAction.type === 'register' && (!gateway.registered || !gateway.levelOneActive || (!ethers.isAddress(sponsor) || sponsor === ZERO || sponsor.toLowerCase() === account?.toLowerCase()))) || Number(String(data?.chain?.usdt || '0').replaceAll(',', '')) < pendingAction.price} onClick={confirmPendingAction}>Continue to wallet<ArrowRight /></button>
+              <button type="button" className="fp-action-primary" disabled={!activationReady} onClick={confirmPendingAction}>Continue to wallet<ArrowRight /></button>
             </footer>
           </section>
         </div>
