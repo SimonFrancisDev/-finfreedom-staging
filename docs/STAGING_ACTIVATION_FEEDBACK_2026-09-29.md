@@ -89,3 +89,25 @@ request must leave the account unchanged and allow a retry.
 Keep existing staging services running for verification. Do not reset now.
 A later coordinated staging-only reset requires a fresh verified backup and
 the remaining issue checks; it is not a database-only wipe. Production is excluded.
+
+## Overview stage-name correction
+
+The user found that the overview still displayed Foundation, Positioning,
+Expansion, Momentum, Elevation, Leadership and Zenith. Those labels lived in a
+separate presentation list and were missed by the activation-card correction.
+
+- The overview now derives stage names, orbit engines and prices from
+  FREEDOM_PLUS_LEVELS, the same configuration used by activation.
+- Its presentation metadata only contains descriptions, icons and color tones.
+- Acceleration uses the lightning icon; Eminence uses the star icon.
+- Overview headings now describe the seven premium levels.
+- F-Freedom's ten stage names, contract rules and all stored data are unchanged.
+- Added dark/light overview render checks for all seven stage/engine/price
+  mappings and a regression test proving titles follow the shared configuration.
+- Added overview render-binding coverage, including its browser MutationObserver.
+- Full CI results for this follow-up are recorded below after verification.
+
+The user requested the coordinated staging reset as the next phase, without
+repeating the earlier Sabina investigation. This commit does not perform that
+reset or silently mark the historical reports resolved. The reset must retain
+a fresh backup and affect staging only, with three founder representatives.

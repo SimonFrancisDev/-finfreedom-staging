@@ -96,3 +96,39 @@ test('Italian display formatting does not turn a sufficient raw balance into an 
   const html = render({ data: { chain: { ...defaults.data.chain, usdtRaw: null } } })
   assert.doesNotMatch(html, /activation-level-price-token is-sufficient/)
 })
+
+function renderOverview(configuredLevels = levels, theme = 'dark') {
+  const { default: Overview } = compile('../src/Pages/FreedomPlus/FreedomPlusOverview.jsx', {
+    '../../Services/freedomPlus': { FREEDOM_PLUS_LEVELS: configuredLevels },
+  })
+  const previousDocument = globalThis.document
+  globalThis.document = { documentElement: { getAttribute: () => theme } }
+  try {
+    return renderToStaticMarkup(createElement(Overview, { registered: false, openView: noop }))
+  } finally {
+    if (previousDocument === undefined) delete globalThis.document
+    else globalThis.document = previousDocument
+  }
+}
+function overviewStages(html) {
+  return Array.from(html.matchAll(/class="fp-program-level-card__heading"><h3>([^<]+)<\/h3><span>([^<]+)<\/span><\/div><strong class="fp-program-level-card__price">([\d,]+) <small>USDT<\/small>/g),
+    (match) => match.slice(1))
+}
+
+for (const theme of ['dark', 'light']) {
+  test('overview uses all seven approved stages, engines and prices in ' + theme + ' mode', () => {
+    const html = renderOverview(levels, theme)
+    assert.deepEqual(overviewStages(html), levels.map((level) => [
+      level.stage, level.orbit + ' Orbit', level.price.toLocaleString('en-US'),
+    ]))
+    assert.match(html, /7 Premium Levels/)
+    assert.match(html, /lucide-zap/)
+    assert.match(html, /lucide-star/)
+  })
+}
+
+test('overview stage titles follow the shared configuration rather than a duplicate name list', () => {
+  const configured = levels.map((level) => ({ ...level, stage: 'SHARED STAGE ' + level.level }))
+  assert.deepEqual(overviewStages(renderOverview(configured)).map((row) => row[0]),
+    configured.map((level) => level.stage))
+})

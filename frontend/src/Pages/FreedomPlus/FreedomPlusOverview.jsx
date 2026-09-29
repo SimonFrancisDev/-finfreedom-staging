@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { FREEDOM_PLUS_LEVELS } from '../../Services/freedomPlus'
 import {
   ArrowRight,
   CheckCircle2,
   ChevronsUp,
   Coins,
   Compass,
-  Crown,
   DoorOpen,
   Eye,
   Expand,
@@ -20,7 +20,8 @@ import {
   ShieldCheck,
   Sparkles,
   Trophy,
-  TrendingUp,
+  Star,
+  Zap,
   Wallet,
   X,
 } from 'lucide-react'
@@ -33,7 +34,7 @@ const HERO_IMAGES = {
 }
 
 const HERO_FEATURES = [
-  { title: '7 Progressive Levels', text: 'Manual advancement from 50 to 36,450 USDT.', icon: Layers3 },
+  { title: '7 Premium Levels', text: 'Manual advancement from 50 to 36,450 USDT.', icon: Layers3 },
   { title: 'Multiple Orbit Engines', text: 'P39, P14, P12, P6, P4 and P3 structures.', icon: Orbit },
   { title: 'Manual Progression', text: 'You decide when to activate each next level.', icon: CheckCircle2 },
   { title: 'Automatic Recycling', text: 'Completed cycles reopen the same active level.', icon: Recycle },
@@ -59,15 +60,23 @@ const WHY_PILLARS = [
   { title: 'Freedom NFT Qualification Path', icon: Gem },
 ]
 
-const PROGRESSION_LEVELS = [
-  { number: 1, title: 'Foundation', orbit: 'P39', price: '50', text: 'Registration activates Level 1 and begins your Freedom-Plus journey.', icon: DoorOpen, tone: 'blue' },
-  { number: 2, title: 'Positioning', orbit: 'P14', price: '150', text: 'Your first participant-controlled progression into a new orbit structure.', icon: TrendingUp, tone: 'cyan' },
-  { number: 3, title: 'Expansion', orbit: 'P12', price: '450', text: 'A broader participation stage built around two structured rings.', icon: Expand, tone: 'green' },
-  { number: 4, title: 'Momentum', orbit: 'P6', price: '1,350', text: 'A focused six-position orbit for deliberate continued progression.', icon: Gauge, tone: 'yellow' },
-  { number: 5, title: 'Elevation', orbit: 'P4', price: '4,050', text: 'An advanced four-position orbit with participant-controlled entry.', icon: ChevronsUp, tone: 'orange' },
-  { number: 6, title: 'Leadership', orbit: 'P4', price: '12,150', text: 'A higher-commitment P4 stage for deeper ecosystem positioning.', icon: Crown, tone: 'purple' },
-  { number: 7, title: 'Zenith', orbit: 'P3', price: '36,450', text: 'The final Freedom-Plus level and highest progression milestone.', icon: Trophy, tone: 'gold' },
-]
+const LEVEL_PRESENTATION = {
+  1: { text: 'Registration activates Level 1 and begins your Freedom-Plus journey.', icon: DoorOpen, tone: 'blue' },
+  2: { text: 'Your first participant-controlled progression into a new orbit structure.', icon: Zap, tone: 'cyan' },
+  3: { text: 'A broader participation stage built around two structured rings.', icon: Expand, tone: 'green' },
+  4: { text: 'A focused six-position orbit for deliberate continued progression.', icon: Gauge, tone: 'yellow' },
+  5: { text: 'An advanced four-position orbit with participant-controlled entry.', icon: ChevronsUp, tone: 'orange' },
+  6: { text: 'A higher-commitment P4 stage for deeper ecosystem positioning.', icon: Star, tone: 'purple' },
+  7: { text: 'The final Freedom-Plus level and highest progression milestone.', icon: Trophy, tone: 'gold' },
+}
+
+const PROGRESSION_LEVELS = FREEDOM_PLUS_LEVELS.map(({ level, stage, orbit, price }) => ({
+  ...LEVEL_PRESENTATION[level],
+  number: level,
+  title: stage,
+  orbit,
+  price: price.toLocaleString('en-US'),
+}))
 
 const ORBIT_ENGINES = [
   { name: 'P39', label: '3 rings', rings: [3, 9, 27], parents: [0, 0, 0, 1, 2, 3, 1, 2, 3, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 4, 5, 6, 7, 8, 9, 10, 11, 12, 4, 5, 6, 7, 8, 9, 10, 11, 12], tone: 'blue', description: 'Three first-ring positions, each parenting three second-ring positions, which each parent three third-ring positions.' },
@@ -260,7 +269,7 @@ export default function FreedomPlusOverview({ registered, openView }) {
           <header className="fp-program-levels__header">
             <span>Your</span>
             <h2>Freedom-Plus</h2>
-            <strong>Progression Levels</strong>
+            <strong>7 Premium Levels</strong>
             <p>Seven sequential levels. Six orbit engines. Progress only when you choose.</p>
           </header>
 

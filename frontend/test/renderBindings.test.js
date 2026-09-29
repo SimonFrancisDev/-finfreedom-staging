@@ -6,9 +6,9 @@ import babel from '@babel/core'
 const browserGlobals = new Set([
   'undefined', 'window', 'document', 'console', 'setTimeout', 'clearTimeout',
   'Number', 'String', 'Boolean', 'BigInt', 'Map', 'Set', 'Promise', 'Error',
-  'Math', 'Date', 'Object', 'Array', 'Intl', 'JSON',
+  'Math', 'Date', 'Object', 'Array', 'Intl', 'JSON', 'MutationObserver',
 ])
-for (const name of ['FreedomPlusActivationCenter', 'FreedomPlusPage', 'FreedomNftPages', 'FreedomNftOverview', 'FreedomPlusTokens']) {
+for (const name of ['FreedomPlusOverview', 'FreedomPlusActivationCenter', 'FreedomPlusPage', 'FreedomNftPages', 'FreedomNftOverview', 'FreedomPlusTokens']) {
   test(name + ' has no unbound render or handler identifiers', () => {
     const source = readFileSync(new URL('../src/Pages/FreedomPlus/' + name + '.jsx', import.meta.url), 'utf8')
     const ast = babel.parseSync(source, {
