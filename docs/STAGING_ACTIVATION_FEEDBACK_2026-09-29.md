@@ -1,0 +1,82 @@
+# Freedom-Plus activation feedback - 2026-09-29
+
+Scope: staging-environment only. Requested by Anthony and reported by Sabina.
+Production, contract rules, prices, databases and founder representatives are unchanged.
+
+## Changes
+
+- Shared level configuration now holds the approved stages:
+  1. P39 IGNITION
+  2. P14 ACCELERATION (lightning icon)
+  3. P12 ASCENSION
+  4. P6 PRESTIGE
+  5. P4 DOMINANCE
+  6. P4 EMINENCE (star icon)
+  7. P3 PINNACLE
+- The existing card names were already correct. They no longer depend on a
+  separate array index, and the requested icons are present.
+- Removed the automatic registration review popup, its allowance prefetch,
+  the extra review modal/Continue button, and the duplicate registration panel.
+- Eligible Activate clicks now enter the existing transaction handler directly.
+  No activation starts simply by visiting the page.
+- The requested security checkbox and How confirmation works copy were already
+  absent from the inspected activation components; neither is reintroduced.
+- Kept wallet/network, permanent sponsor, raw balance, sequential-level,
+  already-active and F-Freedom gateway checks. Added a synchronous in-flight
+  guard against repeated clicks before React updates the busy state.
+- If allowance is insufficient, approve the exact amount to the existing
+  Freedom-Plus level manager, wait for a successful receipt, then request the
+  program transaction. A rejection or failed approval stops the flow.
+  Removing website clicks does not remove required wallet signatures.
+- Activation-card balance indicators use raw bigint units instead of parsing
+  formatted display strings (including Italian decimal/grouping conventions).
+- Failed initial API and registration RPC reads now leave account status
+  unavailable instead of constructing a false unregistered account.
+
+## Sabina account verification
+
+Read-only check completed 2026-09-29T11:36:10.696Z on Polygon Amoy (80002),
+using the authorized build-plan endpoint, at block 48,859,339.
+
+Wallet: 0xf0152a2490a854712fae8fd32ffcd9729082a09d
+
+- Each F-Freedom level 1 through 10: active on-chain.
+- Each Freedom-Plus level 1 through 3: active on-chain.
+- Each Freedom-Plus level 4 through 7: inactive on-chain.
+- Staging participant API: HTTP 200, registered, levels 1/2/3 active.
+- Indexed F-Freedom gateway: registered and Level 1 active.
+- Permanent sponsor returned by the API:
+  0x3a596f67585f27cfd7f449fec0a92b7bf34b1df5.
+- Budget: 19 RPC requests plus one API request. No transaction broadcast,
+  token mint/unlock, historical scan or deployment setting change.
+
+This verifies current activation state, not the historical browser screenshot.
+The five photos in the copied September 27 conversation were not attached.
+The exact page/display failure and the historical failed NFT transaction
+remain unproven; do not describe them as fully resolved by this patch.
+
+## Verification
+
+- Existing local walletReads suite: 8 passed, zero failures.
+- New activationFlow and activationRendering files pass node --check.
+- Added tests for all seven stage/engine/price mappings, no review flow,
+  network/loading/busy gates, F-Freedom prerequisite, next-level eligibility,
+  unknown initial data, locale-safe balance badges, exact approval spender
+  and amount, existing allowance, rejected/reverted approval and duplicate clicks.
+- Added the activation center to the existing unbound-render-identifier test.
+- Full frontend dependencies are absent locally. Full render/handler tests and
+  production build are to be verified by the existing clean GitHub CI workflow.
+- Phone-wallet interaction and desktop/mobile visual checks are still pending.
+- This is not certification of every historical event, orbit or NFT action.
+
+## Immediate rollout step
+
+After the code commit passes CI, confirm the staging Vercel deployment uses
+that commit. No API/worker configuration change is required by this frontend patch.
+Verify that opening Freedom-Plus does not automatically show a registration
+popup, and that Activate opens the expected wallet flow. Rejecting a wallet
+request must leave the account unchanged and allow a retry.
+
+Keep existing staging services running for verification. Do not reset now.
+A later coordinated staging-only reset requires a fresh verified backup and
+the remaining issue checks; it is not a database-only wipe. Production is excluded.

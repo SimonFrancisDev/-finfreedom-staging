@@ -23,13 +23,13 @@ export const FREEDOM_PLUS_ADDRESSES = Object.freeze({
 })
 
 export const FREEDOM_PLUS_LEVELS = Object.freeze([
-  { level: 1, orbit: 'P39', price: 50, positions: 39, rings: '3 / 9 / 27', payouts: '20% / 20% / 50%' },
-  { level: 2, orbit: 'P14', price: 150, positions: 14, rings: '2 / 4 / 8', payouts: '15% / 25% / 50%' },
-  { level: 3, orbit: 'P12', price: 450, positions: 12, rings: '3 / 9', payouts: '40% / 50%' },
-  { level: 4, orbit: 'P6', price: 1350, positions: 6, rings: '2 / 4', payouts: '40% / 50%' },
-  { level: 5, orbit: 'P4', price: 4050, positions: 4, rings: '4', payouts: '90% / recycle' },
-  { level: 6, orbit: 'P4', price: 12150, positions: 4, rings: '4', payouts: '90% / recycle' },
-  { level: 7, orbit: 'P3', price: 36450, positions: 3, rings: '3', payouts: '90% / recycle' },
+  { level: 1, stage: 'IGNITION', orbit: 'P39', price: 50, positions: 39, rings: '3 / 9 / 27', payouts: '20% / 20% / 50%' },
+  { level: 2, stage: 'ACCELERATION', orbit: 'P14', price: 150, positions: 14, rings: '2 / 4 / 8', payouts: '15% / 25% / 50%' },
+  { level: 3, stage: 'ASCENSION', orbit: 'P12', price: 450, positions: 12, rings: '3 / 9', payouts: '40% / 50%' },
+  { level: 4, stage: 'PRESTIGE', orbit: 'P6', price: 1350, positions: 6, rings: '2 / 4', payouts: '40% / 50%' },
+  { level: 5, stage: 'DOMINANCE', orbit: 'P4', price: 4050, positions: 4, rings: '4', payouts: '90% / recycle' },
+  { level: 6, stage: 'EMINENCE', orbit: 'P4', price: 12150, positions: 4, rings: '4', payouts: '90% / recycle' },
+  { level: 7, stage: 'PINNACLE', orbit: 'P3', price: 36450, positions: 3, rings: '3', payouts: '90% / recycle' },
 ])
 
 export const NFT_TIERS = Object.freeze([

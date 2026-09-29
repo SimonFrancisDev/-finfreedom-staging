@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ethers } from 'ethers'
-import { Activity, AlertTriangle, ArrowRight, ArrowUpRight, Check, CheckCircle2, Coins, History, LayoutDashboard, Lock, LockKeyhole, Network, RefreshCw, ShieldCheck, Trophy, User, UserPlus, Wallet, X } from 'lucide-react'
+import { Activity, AlertTriangle, ArrowRight, ArrowUpRight, Check, CheckCircle2, Coins, History, LayoutDashboard, Lock, LockKeyhole, Network, RefreshCw, ShieldCheck, Trophy, User, UserPlus, Wallet } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useWallet } from '../../hooks/useWallet'
 import { CHAIN_ID, NETWORK_CONFIG } from '../../constants/addresses'
@@ -9,10 +9,9 @@ import { useToast } from '../../components/feedback'
 import { InlineAlert } from '../../components/ui'
 import { TransactionStatus } from '../../components/feedback'
 import { ProgressionLineChart } from '../../components/charts/InstitutionalCharts'
-import { lockBodyScroll } from '../../utils/bodyScrollLock'
 import { normalizeError } from '../../utils/errorMap'
 import { buildTxOptions } from '../../utils/txOptions'
-import { createRequestGate, hasTokenBalance, optionalRead, retainedRead, skippedRead } from '../../utils/walletReads.js'
+import { createRequestGate, optionalRead, retainedRead, skippedRead } from '../../utils/walletReads.js'
 import FreedomPlusOrbit from './FreedomPlusOrbit'
 import FreedomPlusActivationCenter from './FreedomPlusActivationCenter'
 import FreedomPlusFocusedOrbit from './FreedomPlusFocusedOrbit'
@@ -105,27 +104,19 @@ function WalletProgramPage({ initialTab = 'overview' }) {
   const [txState, setTxState] = useState({ status: 'idle', stage: 'idle', hash: '', note: '', error: null })
   const [activationSummary, setActivationSummary] = useState(null)
   const [networkReady, setNetworkReady] = useState(false)
-  const [pendingAction, setPendingAction] = useState(null)
-  const [actionPreflight, setActionPreflight] = useState({ loading: false, allowance: 0n })
   const [gateway, setGateway] = useState({ registered: false, levelOneActive: false })
-  const [onboardingPromptedAccount, setOnboardingPromptedAccount] = useState('')
   const [nftSuccess, setNftSuccess] = useState(null)
   const [readIssues, setReadIssues] = useState([])
   const [rewardPeriodsVerified, setRewardPeriodsVerified] = useState(false)
   const loadGate = useRef(createRequestGate())
   const orbitGate = useRef(createRequestGate())
+  const activationInFlight = useRef(false)
 
   const activeLevels = useMemo(() => new Set((data?.levels || []).filter((item) => item.active).map((item) => Number(item.level))), [data])
   const membershipVerified = data?.chain?.membership != null && !readIssues.includes('NFT membership')
   const membershipActionsReady = membershipVerified && !loading && isConnected && networkReady
   const membership = data?.chain?.membership || normalizeMembership(null)
   const displayBalance = (value) => value == null ? 'Temporarily unavailable' : value
-  const actionHasBalance = Boolean(pendingAction && hasTokenBalance(data?.chain?.usdtRaw, tokenUnits(pendingAction.price)))
-  const activationReady = Boolean(pendingAction && isConnected && networkReady && !loading && !busy && !actionPreflight.loading
-    && actionHasBalance && !activeLevels.has(pendingAction.level)
-    && (pendingAction.type === 'register'
-      ? gateway.registered && gateway.levelOneActive && ethers.isAddress(sponsor) && sponsor !== ZERO && sponsor.toLowerCase() !== account?.toLowerCase()
-      : data?.chain?.registered && activeLevels.has(pendingAction.level - 1)))
   const selectedLevelConfig = FREEDOM_PLUS_LEVELS.find((item) => item.level === selectedLevel)
   const orbitCycles = useMemo(() => [...new Set(orbit.map((item) => Number(item.cycle)))].sort((a, b) => b - a), [orbit])
   const visualOrbit = useMemo(() => {
@@ -208,16 +199,21 @@ function WalletProgramPage({ initialTab = 'overview' }) {
         }
       }
       const indexedLevels = new Map((apiData?.levels || []).map((item) => [Number(item.level), item]))
+      let registrationVerified = Boolean(apiData?.participant)
       let chainRegistration = Boolean(apiData?.participant?.registered)
       const chainLevels = new Map()
       if (forceChain || !apiData?.participant || (apiData?.levels || []).length === 0) {
         const registeredOnChain = await contracts.registration.isRegistered(account).catch(() => null)
-        if (registeredOnChain != null) chainRegistration = Boolean(registeredOnChain)
+        if (registeredOnChain != null) {
+          chainRegistration = Boolean(registeredOnChain)
+          registrationVerified = true
+        }
         if (chainRegistration) {
           const results = await Promise.all(FREEDOM_PLUS_LEVELS.map((item) => contracts.registration.isLevelActive(account, item.level).catch(() => null)))
           results.forEach((active, index) => { if (active != null) chainLevels.set(FREEDOM_PLUS_LEVELS[index].level, Boolean(active)) })
         }
       }
+      if (!registrationVerified) throw new Error('Freedom-Plus account status is temporarily unavailable. Refresh to retry.')
       const levels = FREEDOM_PLUS_LEVELS.map((config) => ({ ...indexedLevels.get(config.level), ...config, active: Boolean(indexedLevels.get(config.level)?.active || chainLevels.get(config.level)) }))
       const requestedReads = [
         [needsUsdtBalance, 'USDT balance', usdt],
@@ -334,17 +330,6 @@ function WalletProgramPage({ initialTab = 'overview' }) {
     return () => provider?.removeListener?.('chainChanged', checkNetwork)
   }, [account, isConnected])
 
-  useEffect(() => {
-    if (!pendingAction) return undefined
-    const release = lockBodyScroll()
-    const closeOnEscape = (event) => { if (event.key === 'Escape' && !busy) setPendingAction(null) }
-    window.addEventListener('keydown', closeOnEscape)
-    return () => {
-      release()
-      window.removeEventListener('keydown', closeOnEscape)
-    }
-  }, [busy, pendingAction])
-
   const loadOrbit = useCallback(async () => {
     const isCurrent = orbitGate.current.begin()
     if (!account) return
@@ -409,10 +394,16 @@ function WalletProgramPage({ initialTab = 'overview' }) {
   }
 
   const register = async () => {
+    if (activationInFlight.current || busy) return
+    activationInFlight.current = true
     setBusy('register')
     setTxState({ status: 'running', stage: 'preflight', hash: '', note: 'Checking sponsor, F-Freedom gateway, balance, allowance and network.', error: null })
     let hash = ""
     try {
+      if (!isConnected || !account) throw new Error('Connect your wallet before continuing.')
+      if (!networkReady) throw new Error('Switch to ' + NETWORK_CONFIG.chainName + ' before activating.')
+      const gatewayRegistration = web3Service.getReadContracts().registration
+      if (!(await gatewayRegistration.isLevelActivated(account, 1))) throw new Error('FFreedomLevelOneInactive')
       const sponsorWallet = sponsor.trim()
       if (!ethers.isAddress(sponsorWallet) || sponsorWallet === ZERO || sponsorWallet.toLowerCase() === account?.toLowerCase()) throw new Error('PermanentSponsorMismatch')
       const read = getFreedomPlusReadContracts()
@@ -422,7 +413,7 @@ function WalletProgramPage({ initialTab = 'overview' }) {
       if (await read.registration.isRegistered(account)) { await load({ forceChain: true }); throw new Error('AlreadyRegistered') }
       const contracts = getFreedomPlusWriteContracts()
       await ensureApproval(contracts, 50)
-      setTxState({ status: 'running', stage: 'signing', hash: '', note: 'Step 2 of 2: confirm registration and atomic Level 1 activation.', error: null })
+      setTxState({ status: 'running', stage: 'signing', hash: '', note: 'Confirm Freedom-Plus Level 1 activation in your wallet.', error: null })
       const tx = await sendBuffered(contracts.registration.register, [sponsorWallet])
       hash = tx.hash
       setTxState({ status: 'running', stage: 'pending', hash, note: 'Registration and Level 1 activation submitted. Waiting for confirmation.', error: null })
@@ -435,15 +426,19 @@ function WalletProgramPage({ initialTab = 'overview' }) {
     } catch (error) {
       setTxState(txErrorState(error, 'Freedom-Plus registration did not complete.', hash))
       toast.error(normalizeError(error, 'Freedom-Plus registration did not complete.').message)
-    } finally { setBusy("") }
+    } finally { activationInFlight.current = false; setBusy("") }
   }
 
   const activate = async (level, price) => {
+    if (activationInFlight.current || busy) return
+    activationInFlight.current = true
     const key = 'level-' + level
     setBusy(key)
     setTxState({ status: 'running', stage: 'preflight', hash: '', note: 'Checking Level ' + level + ' eligibility, balance and previous-level state.', error: null })
     let hash = ""
     try {
+      if (!isConnected || !account) throw new Error('Connect your wallet before continuing.')
+      if (!networkReady) throw new Error('Switch to ' + NETWORK_CONFIG.chainName + ' before activating.')
       const read = getFreedomPlusReadContracts()
       if (!(await read.registration.isRegistered(account))) throw new Error('NotRegistered')
       if (level > 1 && !(await read.registration.isLevelActive(account, level - 1))) throw new Error('PreviousLevelInactive')
@@ -452,6 +447,7 @@ function WalletProgramPage({ initialTab = 'overview' }) {
       if (balance < tokenUnits(price)) throw new Error('Insufficient USDT balance. Level ' + level + ' requires ' + price.toLocaleString() + ' USDT; this wallet has ' + formatToken(balance) + ' USDT.')
       const contracts = getFreedomPlusWriteContracts()
       await ensureApproval(contracts, price)
+      setTxState({ status: 'running', stage: 'signing', hash: '', note: 'Confirm Level ' + level + ' activation in your wallet.', error: null })
       const tx = await sendBuffered(contracts.registration.activateLevel, [level])
       hash = tx.hash
       setTxState({ status: 'running', stage: 'pending', hash, note: 'Level ' + level + ' activation submitted. Waiting for confirmation.', error: null })
@@ -464,7 +460,7 @@ function WalletProgramPage({ initialTab = 'overview' }) {
     } catch (error) {
       setTxState(txErrorState(error, 'Level ' + level + ' activation did not complete.', hash))
       toast.error(normalizeError(error, 'Level ' + level + ' activation did not complete.').message)
-    } finally { setBusy("") }
+    } finally { activationInFlight.current = false; setBusy("") }
   }
   const transact = async (key, operation, success) => {
     setBusy(key)
@@ -488,45 +484,6 @@ function WalletProgramPage({ initialTab = 'overview' }) {
       toast.error(normalizeError(error, 'Transaction did not complete.').message)
     } finally { setBusy("") }
   }
-  const prepareActionReview = useCallback(async (action) => {
-    setPendingAction(action)
-    setActionPreflight({ loading: true, allowance: 0n })
-    try {
-      const contracts = getFreedomPlusReadContracts()
-      const allowance = await contracts.usdt.allowance(account, FREEDOM_PLUS_ADDRESSES.levelManager)
-      setActionPreflight({ loading: false, allowance })
-    } catch {
-      setActionPreflight({ loading: false, allowance: 0n })
-    }
-  }, [account])
-
-  const openRegistrationReview = useCallback(() => {
-    prepareActionReview({ type: 'register', level: 1, price: 50, orbit: 'P39' })
-  }, [prepareActionReview])
-
-  const openActivationReview = (item) => {
-    prepareActionReview({ type: 'activate', ...item })
-  }
-
-  useEffect(() => {
-    const normalizedAccount = String(account || '').toLowerCase()
-    if (
-      tab !== 'levels' || !isConnected || loading || !data || data.chain?.registered ||
-      !gateway.registered || !gateway.levelOneActive || !sponsor ||
-      onboardingPromptedAccount === normalizedAccount
-    ) return
-
-    setOnboardingPromptedAccount(normalizedAccount)
-    openRegistrationReview()
-  }, [account, data, gateway, isConnected, loading, onboardingPromptedAccount, openRegistrationReview, sponsor, tab])
-  const confirmPendingAction = () => {
-    if (!activationReady) return
-    const action = pendingAction
-    setPendingAction(null)
-    if (action.type === 'register') register()
-    else activate(action.level, action.price)
-  }
-
   const submitMembership = () => {
     transact('membership', async () => {
     if (!membershipActionsReady) throw new Error('Refresh and verify membership on the correct network before continuing.')
@@ -677,7 +634,7 @@ function WalletProgramPage({ initialTab = 'overview' }) {
               activeLevels={activeLevels} progressionData={progressionData} activationSummary={activationSummary}
               nextLevel={nextLevel} sponsor={sponsor} sponsorCode={sponsorCode} referralId={referralId} busy={busy}
               gateway={gateway}
-              onRegister={openRegistrationReview} onActivate={openActivationReview}
+              onRegister={register} onActivate={(item) => activate(item.level, item.price)}
               onViewOrbit={(level) => {
                 setSelectedLevel(level)
                 setCycle('')
@@ -720,42 +677,6 @@ function WalletProgramPage({ initialTab = 'overview' }) {
 
       <FreedomNftSuccessModal success={nftSuccess} onClose={() => setNftSuccess(null)} />
 
-      {pendingAction && (
-        <div className="activation-overlay fp-action-overlay" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget && !busy) setPendingAction(null) }}>
-          <section className="activation-modal fp-action-modal" role="dialog" aria-modal="true" aria-labelledby="fp-action-title">
-            <header>
-              <div><span className="fp-kicker">Review before signing</span><h2 id="fp-action-title">{pendingAction.type === 'register' ? 'Register and activate Level 1' : `Activate Level ${pendingAction.level}`}</h2></div>
-              <button type="button" className="fp-action-modal__close" onClick={() => setPendingAction(null)} aria-label="Close activation review"><X /></button>
-            </header>
-
-            <div className="fp-action-summary">
-              <article><span>Program action</span><strong>{pendingAction.type === 'register' ? 'Registration + Level 1' : `Level ${pendingAction.level} activation`}</strong></article>
-              <article><span>Orbit engine</span><strong>{pendingAction.orbit}</strong></article>
-              <article><span>Amount</span><strong>{pendingAction.price.toLocaleString()} USDT</strong></article>
-              <article><span>Token issuance</span><strong>{pendingAction.price.toLocaleString()} FPT</strong></article>
-            </div>
-
-            {pendingAction.type === 'register' && <div className="fp-action-sponsor"><User /><div><span>Permanent sponsor from F-Freedom</span><strong>{sponsorCode || short(sponsor)}</strong><small title={sponsor}>{short(sponsor)}</small></div></div>}
-
-            <div className="fp-action-checks">
-              {[
-                { label: 'Wallet connected', passed: isConnected, hint: short(account) },
-                { label: `Correct network`, passed: networkReady, hint: NETWORK_CONFIG.chainName },
-                { label: 'F-Freedom Level 1 gateway', passed: pendingAction.type !== 'register' || (gateway.registered && gateway.levelOneActive), hint: pendingAction.type !== 'register' ? 'Gateway completed' : gateway.levelOneActive ? 'Registration and Level 1 confirmed on F-Freedom' : 'Activate F-Freedom Level 1 before joining Freedom-Plus' },
-                { label: pendingAction.type === 'register' ? 'Permanent F-Freedom sponsor' : 'Freedom-Plus registration complete', passed: pendingAction.type === 'register' ? ethers.isAddress(sponsor) && sponsor !== ZERO && sponsor.toLowerCase() !== account?.toLowerCase() : Boolean(data?.chain?.registered), hint: pendingAction.type === 'register' ? ethers.isAddress(sponsor) && sponsor !== ZERO ? `Inherited automatically: ${short(sponsor)}` : 'No permanent sponsor was returned by F-Freedom' : referralId || short(account) },
-                { label: pendingAction.level === 1 ? 'Level 1 entry is available' : `Level ${pendingAction.level - 1} is active`, passed: pendingAction.level === 1 || activeLevels.has(pendingAction.level - 1), hint: 'Levels activate sequentially' },
-                { label: `${pendingAction.price.toLocaleString()} USDT available`, passed: actionHasBalance, hint: `Wallet balance: ${displayBalance(data?.chain?.usdt)}${data?.chain?.usdt != null ? ' USDT' : ''}` },
-                { label: actionPreflight.loading ? 'Checking USDT approval' : actionPreflight.allowance >= tokenUnits(pendingAction.price) ? 'USDT approval ready' : 'USDT approval required', passed: !actionPreflight.loading, hint: actionPreflight.loading ? 'Reading current allowance from Amoy' : actionPreflight.allowance >= tokenUnits(pendingAction.price) ? 'One wallet confirmation is expected' : 'Approval first, then the program transaction' },
-              ].map((item) => <article className={item.passed ? 'passed' : 'failed'} key={item.label}>{item.passed ? <CheckCircle2 /> : <AlertTriangle />}<div><strong>{item.label}</strong><span>{item.hint}</span></div></article>)}
-            </div>
-
-            <footer>
-              <button type="button" className="fp-action-secondary" onClick={() => setPendingAction(null)}>Cancel</button>
-              <button type="button" className="fp-action-primary" disabled={!activationReady} onClick={confirmPendingAction}>Continue to wallet<ArrowRight /></button>
-            </footer>
-          </section>
-        </div>
-      )}
     </main>
   )
 }

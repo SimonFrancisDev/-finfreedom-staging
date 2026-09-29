@@ -305,3 +305,11 @@ and passing CI are verified, but this continuation does not certify that the
 live frontend is serving ceb8462. No interactive phone-wallet signing test was
 performed. The user was asked to confirm suspension of both staging services
 before the final reset backup; no suspension is assumed.
+
+### Activation feedback follow-up
+
+See [the September 29 activation report](STAGING_ACTIVATION_FEEDBACK_2026-09-29.md)
+for the direct activation flow, shared premium-stage names, regression tests,
+and the full 10/3 Sabina activation check at block 48,859,339.
+The immediate next step is frontend deployment verification, not a reset.
+Keep staging services running until the remaining checks and reset backup are ready.

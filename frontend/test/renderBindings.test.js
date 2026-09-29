@@ -8,7 +8,7 @@ const browserGlobals = new Set([
   'Number', 'String', 'Boolean', 'BigInt', 'Map', 'Set', 'Promise', 'Error',
   'Math', 'Date', 'Object', 'Array', 'Intl', 'JSON',
 ])
-for (const name of ['FreedomPlusPage', 'FreedomNftPages', 'FreedomNftOverview', 'FreedomPlusTokens']) {
+for (const name of ['FreedomPlusActivationCenter', 'FreedomPlusPage', 'FreedomNftPages', 'FreedomNftOverview', 'FreedomPlusTokens']) {
   test(name + ' has no unbound render or handler identifiers', () => {
     const source = readFileSync(new URL('../src/Pages/FreedomPlus/' + name + '.jsx', import.meta.url), 'utf8')
     const ast = babel.parseSync(source, {

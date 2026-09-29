@@ -677,6 +677,18 @@
   text-transform: uppercase;
 }
 
+.freedom-plus-activation-page .activation-level-stage {
+  font-size: 12px;
+  line-height: 1.4;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+}
+
+.freedom-plus-activation-page .activation-level-stage svg {
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
 .activation-level-info-cell strong {
   min-width: 0;
   color: #fff;
