@@ -44,8 +44,8 @@ function requiredSystemAddress(envName) {
 }
 
 export const freedomPlusSystemVaults = Object.freeze({
-  nftPoolVault: requiredSystemAddress('NFT_POOL_VAULT_ADDRESS'),
-  operationsVault: requiredSystemAddress('OPERATIONS_VAULT_ADDRESS'),
+  nftPoolVault: requiredSystemAddress('FREEDOM_NFT_POOL_VAULT_ADDRESS'),
+  operationsVault: requiredSystemAddress('FREEDOM_PLUS_OPERATIONS_VAULT_ADDRESS'),
 });
 
 export default Object.freeze(values);

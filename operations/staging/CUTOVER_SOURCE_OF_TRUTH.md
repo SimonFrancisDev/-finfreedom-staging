@@ -90,3 +90,12 @@ stores and ignored local files.
    completion from the exact start blocks.
 4. Resume the API, deploy Vercel with the matching `VITE_` addresses, and run the
    staging certification matrix before reopening tester access.
+## Runtime Verifier Mapping
+
+The F-Freedom vault variables (`NFT_POOL_VAULT_ADDRESS` and
+`OPERATIONS_VAULT_ADDRESS`) and the Freedom-Plus vault variables
+(`FREEDOM_NFT_POOL_VAULT_ADDRESS` and
+`FREEDOM_PLUS_OPERATIONS_VAULT_ADDRESS`) belong to separate deployed suites.
+The Freedom-Plus startup verifier must compare its settlement router only with
+the Freedom-Plus variables. This mapping was corrected after the first hosted
+restart exposed the distinction between the fresh vault addresses.
