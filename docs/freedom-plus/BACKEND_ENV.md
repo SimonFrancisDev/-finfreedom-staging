@@ -6,6 +6,7 @@ Freedom-Plus is opt-in. Keep `FREEDOM_PLUS_ENABLED=false` until the deployment m
 FREEDOM_PLUS_ENABLED=true
 FREEDOM_PLUS_REALTIME_ENABLED=true
 FREEDOM_PLUS_POLLING_ENABLED=false
+FREEDOM_PLUS_STARTUP_REPLAY_ENABLED=true
 FREEDOM_PLUS_START_BLOCK=46209562
 FREEDOM_PLUS_REGISTRATION_ADDRESS=0xB23B64dB6c3Be53B532d611d0f66DC63e2A68655
 FREEDOM_PLUS_LEVEL_MANAGER_ADDRESS=0x9dF6E3b6F37e67e6A0215683303a5cfFe9b1f177
@@ -27,6 +28,6 @@ NFT_POOL_VAULT_ADDRESS=0x6e127653D5c2032442fa7832b70967fbc13690aE
 OPERATIONS_VAULT_ADDRESS=0x33D5B37Cc4Dfb1EC91dAC000ee0c412ed523b746
 ```
 
-Use the proxy addresses and earliest deployment block from `deployments-freedom-plus-staging/deployment-*.json`. Configure the same values on the API and worker, but only the worker runs the Freedom-Plus indexer. Realtime mode performs one bounded checkpoint recovery at startup and after a WebSocket reconnect; it does not run the recurring Freedom-Plus poller.
+Use the proxy addresses and earliest deployment block from `deployments-freedom-plus-staging/deployment-*.json`. Configure the same values on the API and worker, but only the worker runs the Freedom-Plus indexer. Realtime mode normally performs checkpoint recovery at startup and after a WebSocket reconnect; it does not run the recurring Freedom-Plus poller. Set `FREEDOM_PLUS_STARTUP_REPLAY_ENABLED=false` only when an operator has deliberately initialized the fresh projection state and wants to retain live event capture without a historical startup scan.
 
 These values belong to `deployment-1788028241010.json`. Do not combine them with addresses from an earlier manifest.

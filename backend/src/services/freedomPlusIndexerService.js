@@ -245,6 +245,14 @@ let socketHandlers = null;
 let confirmationTimer = null;
 let sharedRealtimeConnection = false;
 
+async function startupRecovery() {
+  if (!env.FREEDOM_PLUS_STARTUP_REPLAY_ENABLED) {
+    console.warn('[FREEDOM_PLUS_STARTUP_REPLAY_SKIPPED]');
+    return null;
+  }
+  return scheduledPass();
+}
+
 async function scheduledPass() {
   if (running) return null;
   running = true;
@@ -485,7 +493,7 @@ async function connectFreedomPlusRealtime() {
   socket?.[method]?.('error', socketHandlers.error);
 
   // Subscriptions only trigger confirmed catch-up; projections never consume unconfirmed logs.
-  const recovery = await scheduledPass();
+  const recovery = await startupRecovery();
   reconnectAttempt = 0;
   console.log('[FREEDOM_PLUS_REALTIME_CONNECTED]', {
     wsIndex: wsIndex % env.WS_RPC_URLS.length,
@@ -503,7 +511,7 @@ async function startFreedomPlusSharedRealtimeIndexer() {
   realtimeStarted = true;
   realtimeStopping = false;
   sharedRealtimeConnection = true;
-  const recovery = await scheduledPass();
+  const recovery = await startupRecovery();
   const listeners = getFreedomPlusContractEntries(getProvider()).length;
 
   console.log('[FREEDOM_PLUS_REALTIME_CONNECTED]', {

@@ -99,3 +99,11 @@ The F-Freedom vault variables (`NFT_POOL_VAULT_ADDRESS` and
 The Freedom-Plus startup verifier must compare its settlement router only with
 the Freedom-Plus variables. This mapping was corrected after the first hosted
 restart exposed the distinction between the fresh vault addresses.
+## Hosted Replay Control
+
+The first clean hosted worker restart exposed a staging default of five blocks per
+`eth_getLogs` request. That made startup catch-up scan thousands of empty ranges.
+Historical Freedom-Plus startup replay is disabled on the reset staging services
+with `FREEDOM_PLUS_STARTUP_REPLAY_ENABLED=false`; the shared WebSocket connection
+continues to attach all 16 Freedom-Plus listeners for new tester transactions.
+Production was not changed.
