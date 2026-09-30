@@ -48,7 +48,7 @@ evidence. It is excluded from the fresh genesis and may later register normally.
 | NFT FGT authorization | Passed | Multisig transaction 16 received two approvals, satisfied its timelock, and executed successfully |
 | Database reset | Passed | `finfreedom-staging` reset by guarded `deleteMany`; all 41 collections verified at zero |
 | Local environment cutover mirror | Passed | Backend and frontend ignored `.env` files match the fresh manifests |
-| Render/Vercel environment cutover | Pending operator application | Values are frozen in `operations/staging/CUTOVER_SOURCE_OF_TRUTH.md` |
+| Render/Vercel environment cutover | Passed; Render restart blocked by billing suspension | Vercel: 31 variables updated in Production and Preview and live bundle verified. Render: 47 variables per service updated and 94 values read back successfully. |
 
 ## Required execution order
 
@@ -102,3 +102,29 @@ collection at zero. Production was not accessed or modified.
   not start because the local ignored `node_modules` is missing Babel, React, and
   ethers packages. This is a local dependency installation issue, not a failed
   application assertion. CI remains the clean dependency verification gate.
+
+## Hosted Cutover Evidence
+
+On 2026-09-30, the hosted staging configuration was cut over to the fresh
+deployment source of truth without modifying production:
+
+- Vercel project `finfreedom-staging`: 31 allowlisted public address variables
+  were updated in both Production and Preview scopes (62 scoped updates).
+- The staging frontend was redeployed and aliased to
+  `https://finfreedom-staging.vercel.app`.
+- The live JavaScript bundle was inspected and contained all 28 distinct contract
+  and system addresses used by the frontend.
+- Render worker `srv-d8h3bptdt1ts73fuc7eg` and API
+  `srv-d8h37kj7uimc73cg3750`: 47 allowlisted public addresses/start-block values
+  were updated on each service using the per-variable API endpoint.
+- All 94 Render values were independently retrieved by key and matched the local
+  cutover source of truth exactly.
+- RPC URLs, database credentials, JWT values, private keys, indexer modes, and
+  unrelated hosted variables were not modified during this cutover.
+
+Both Render staging services remain suspended because the workspace added a
+`billing` suspender. Their `user` suspension also remains. Render cannot resume or
+redeploy either service until the billing suspension is cleared in the Render
+account. After billing is restored, resume/redeploy the worker first, verify its
+F-Freedom and Freedom-Plus startup/replay logs, then resume/redeploy the API and
+run the final staging certification matrix.
