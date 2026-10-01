@@ -1,0 +1,15 @@
+{
+  "chainId": 80002,
+  "service": "srv-d8h3bptdt1ts73fuc7eg",
+  "operator": "0x4e0b5aE304d657fF9E460161DaBD38E1566306a8",
+  "operatorPol": "0.2",
+  "firstPeriod": 202611,
+  "enabled": true,
+  "deployId": "dep-davci77avr4c73bf5jlg",
+  "status": "live",
+  "at": "2026-10-01T20:57:00.414Z",
+  "scope": "staging worker only; user explicitly approved key upload",
+  "checkedAt": "2026-10-01T21:05:57.567Z",
+  "enabledReadback": true,
+  "signerPresent": true
+}

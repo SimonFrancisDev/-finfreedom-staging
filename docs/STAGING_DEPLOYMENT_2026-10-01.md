@@ -96,6 +96,50 @@ is validated. Never promote this Amoy-specific page to the production project.
 
 ## Build observations
 
+## Final follow-up: approved automation and live smoke
+
+This section supersedes earlier statements that monthly signing is disabled
+or that no fresh transaction smoke was run.
+
+The user explicitly approved uploading the dedicated staging NFT operator key
+to the Render staging worker. The key was uploaded only to that worker, never
+to the API, frontend, repository or production. The on-chain rewardOperator
+matched 0x4e0b5aE304d657fF9E460161DaBD38E1566306a8; its observed balance was
+0.2 test POL. NFT_AUTO_DISTRIBUTION_ENABLED is true. Deployment
+dep-davci77avr4c73bf5jlg reached live and environment readback passed.
+The first scheduled cutoff is November 1, 2026 at 00:00 UTC (202611).
+No monthly payout has occurred yet; enabling the scheduler is not proof
+of a future live monthly distribution. Fourteen focused backend tests passed
+for scheduling, retry/idempotency, snapshot checks and membership catch-up.
+
+Controlled canonical Account 86:
+0x15C21633a9231f6DACc0eBFf6a790Bf0c20ad171.
+october-live-transactions.json contains eighteen successful transaction
+receipts, including gas top-ups, approvals, all ten F-Freedom activations,
+Plus Level 1 registration, NFT mint, unlock and restoration.
+Its earned balances were 10,230 FGT and 50 FPT before NFT locking.
+Plus founder receipts matched actual USDT Transfer logs for every one of
+the eight configured recipients: 35 mock USDT total, 4.375 per wallet,
+comprising the 10 and 25 USDT founder components. This check covers this
+specific activation, not every future orbit position or recycle scenario.
+
+Foundational NFT was minted with 5,650 FGT and 50 FPT. Unlocking 100 FGT
+removed eligibility; restoring 100 FGT restored eligibility. Both token
+locked balances matched membership accounting. The live dashboard API
+returned the active Plus level, orbit placement and NFT restore event.
+Testers' accounts and activity were not reset or modified by this check.
+
+Initial mint estimation failed because the test wallet had only 0.01050699
+POL, below the 389139-gas estimate at 30 gwei. The provider returned a
+misleading empty revert. A separate bounded test-POL top-up resolved it;
+the mint, unlock and restore then succeeded. This was not a contract change.
+
+Production handoff: preserve production data and existing contracts; use the
+documented mainnet deployment/configuration process. Staging addresses, test
+signer, mock USDT and the staging November cutoff must not be copied blindly.
+This focused smoke does not supersede the remaining security-audit warnings
+or constitute exhaustive production certification.
+
 ## Completed cutover preparation (supersedes earlier pending items)
 
 All three representatives registered under ID1. Fresh Plus/NFT deployment is

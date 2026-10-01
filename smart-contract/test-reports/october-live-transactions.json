@@ -1,0 +1,202 @@
+{
+  "chainId": 80002,
+  "transactions": [
+    {
+      "action": "fundTestGas",
+      "hash": "0x6395007d9f3466f4d4842d0f95c2f96ecceb5314767f94d9d91824aadb773319",
+      "status": 1,
+      "blockNumber": 49066235
+    },
+    {
+      "action": "approveFF",
+      "hash": "0x1b17db77caa3940be06b319c135e515b7ff625b983184ccad014cb4045c8d202",
+      "status": 1,
+      "blockNumber": 49066239
+    },
+    {
+      "action": "registerFF",
+      "hash": "0xeec32bddc149d7e748128014bd6e4b158d4c039ba4ea3c3de46fc503828ed469",
+      "status": 1,
+      "blockNumber": 49066245
+    },
+    {
+      "action": "activateFF2",
+      "hash": "0xaa1c1ebd5b8b194c117120f1d034f7b36426d55cfd4fbc224e3e89cca8b0bf95",
+      "status": 1,
+      "blockNumber": 49066248
+    },
+    {
+      "action": "activateFF3",
+      "hash": "0x0d8635bd8312fb033764c19d0c6230a549e736b27160fe8929f04d78c105054b",
+      "status": 1,
+      "blockNumber": 49066255
+    },
+    {
+      "action": "activateFF4",
+      "hash": "0x5ee9a1bea98f2d09956bf87a2eed653fec08ddf18a6e447aab2e2c0b2d9856c2",
+      "status": 1,
+      "blockNumber": 49066262
+    },
+    {
+      "action": "activateFF5",
+      "hash": "0x65f5e102abd6fee704807b5c8f32971bea258bde74bb9a9be1e4d5e3c27151a1",
+      "status": 1,
+      "blockNumber": 49066269
+    },
+    {
+      "action": "activateFF6",
+      "hash": "0x5c0ff94caba0f5881d01775bd81ba1afe8b6a0839a221c0d0cd5ac04dbf8b159",
+      "status": 1,
+      "blockNumber": 49066276
+    },
+    {
+      "action": "activateFF7",
+      "hash": "0xf621de228ccdb140a3c494c6576f49fee2fd9715138fd092fd3c41289fe8a147",
+      "status": 1,
+      "blockNumber": 49066283
+    },
+    {
+      "action": "activateFF8",
+      "hash": "0x70824935d2dbb5f92d9456cebd1fa1e7df6125554335e8034b61876f587ef5e2",
+      "status": 1,
+      "blockNumber": 49066290
+    },
+    {
+      "action": "activateFF9",
+      "hash": "0xce61f5ee87b465e06c698f10d00a94d3326c5a98e216ffcb373c4240a3114d6c",
+      "status": 1,
+      "blockNumber": 49066293
+    },
+    {
+      "action": "activateFF10",
+      "hash": "0xb04c04fb26a6b410021db1a23ad8094a1174f8c16970aec4d17ec055c62066c5",
+      "status": 1,
+      "blockNumber": 49066300
+    },
+    {
+      "action": "approvePlus",
+      "hash": "0xca55a80b60fec95a537a53040011190577f99173a4c49e87fbb34b3cd7aeb35d",
+      "status": 1,
+      "blockNumber": 49066303
+    },
+    {
+      "action": "registerPlus",
+      "hash": "0x27c72297db65c4879351c38b38c774af7183fceca27712e8186e2ed5b8fb79f7",
+      "status": 1,
+      "blockNumber": 49066306
+    },
+    {
+      "action": "fundNftTestGas",
+      "hash": "0x2bffe1e76145ee08ad66a6ce10f331f0c58b726fd6c76ea02f563527798af63a",
+      "status": 1,
+      "blockNumber": 49066678
+    },
+    {
+      "action": "mintMixedFoundation",
+      "hash": "0xc8f9fedbf0f1cf4a3412bcf86c6eb5032c4b2a46af564fdd712ba3ceff34ad5e",
+      "status": 1,
+      "blockNumber": 49066681
+    },
+    {
+      "action": "unlockFGT",
+      "hash": "0x5fc26e749345aea684f902cf90a068b841a72fedae387165b41a33f8027f16c7",
+      "status": 1,
+      "blockNumber": 49066684
+    },
+    {
+      "action": "restoreFGT",
+      "hash": "0x0b26f70665f4aaadb03bce9fa1e1b8af4c762f223825e3d4046342f96926f076",
+      "status": 1,
+      "blockNumber": 49066691
+    }
+  ],
+  "wallet": "0x15C21633a9231f6DACc0eBFf6a790Bf0c20ad171",
+  "founderPayments": [
+    {
+      "wallet": "0x21f9eDB0CE6b79afA98dE14b03678CB29bc4859C",
+      "amount": "1250000",
+      "role": 2
+    },
+    {
+      "wallet": "0xA32332B104aa9Fc5E5415a227D58d6914f3D7478",
+      "amount": "1250000",
+      "role": 2
+    },
+    {
+      "wallet": "0x8B051978893087DE7e7Ca6BeF63206Cc35Bd732D",
+      "amount": "1250000",
+      "role": 2
+    },
+    {
+      "wallet": "0xAE8012334a9c2aF7fb14cD6bF99978B177e6B28C",
+      "amount": "1250000",
+      "role": 2
+    },
+    {
+      "wallet": "0x53B04033ABFe56C72cA0595dcAE26c5287619a97",
+      "amount": "1250000",
+      "role": 2
+    },
+    {
+      "wallet": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+      "amount": "1250000",
+      "role": 2
+    },
+    {
+      "wallet": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+      "amount": "1250000",
+      "role": 2
+    },
+    {
+      "wallet": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+      "amount": "1250000",
+      "role": 2
+    },
+    {
+      "wallet": "0x21f9eDB0CE6b79afA98dE14b03678CB29bc4859C",
+      "amount": "3125000",
+      "role": 3
+    },
+    {
+      "wallet": "0xA32332B104aa9Fc5E5415a227D58d6914f3D7478",
+      "amount": "3125000",
+      "role": 3
+    },
+    {
+      "wallet": "0x8B051978893087DE7e7Ca6BeF63206Cc35Bd732D",
+      "amount": "3125000",
+      "role": 3
+    },
+    {
+      "wallet": "0xAE8012334a9c2aF7fb14cD6bF99978B177e6B28C",
+      "amount": "3125000",
+      "role": 3
+    },
+    {
+      "wallet": "0x53B04033ABFe56C72cA0595dcAE26c5287619a97",
+      "amount": "3125000",
+      "role": 3
+    },
+    {
+      "wallet": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+      "amount": "3125000",
+      "role": 3
+    },
+    {
+      "wallet": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+      "amount": "3125000",
+      "role": 3
+    },
+    {
+      "wallet": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+      "amount": "3125000",
+      "role": 3
+    }
+  ],
+  "verdict": "PASS",
+  "completedAt": "2026-10-01T21:12:01.300Z",
+  "resolvedAttempt": {
+    "error": "execution reverted (no data present; likely require(false) occurred",
+    "cause": "Test wallet gas balance below mint estimate; bounded test-POL top-up completed before successful retry"
+  }
+}
