@@ -23,6 +23,18 @@ const P = {
 
 async function main() {
   const { ethers, upgrades } = hre;
+  const hash = value => require("node:crypto").createHash("sha256").update(value).digest("hex");
+  const scriptHash = hash(fs.readFileSync(__filename));
+  const artifactNames = [
+    "FPTToken", "FPTrToken", "FreedomPlusTokenController", "FreedomPlusLevelManager",
+    "FreedomPlusRegistration", "FreedomNFTPoolVault", "P39PlusOrbit", "P14PlusOrbit",
+    "P12PlusOrbit", "P6PlusOrbit", "P4PlusOrbit", "P3PlusOrbit",
+    "FreedomPlusSettlementRouter", "FreedomNFTMembership", "FreedomNFTRewardDistributor",
+  ];
+  const artifactHashes = {};
+  for (const name of artifactNames) {
+    artifactHashes[name] = hash((await hre.artifacts.readArtifact(name)).bytecode);
+  }
   const rehearsal = process.env.PRODUCTION_LAYER_FORK_REHEARSAL === "true";
   if (rehearsal) {
     if (hre.network.name !== "hardhat") throw new Error("Rehearsal must use local hardhat");
@@ -73,10 +85,15 @@ async function main() {
   const oldRegistration = new ethers.Contract(P.registration, [
     "function isRegistered(address) view returns(bool)",
     "function isLevelActivated(address,uint8) view returns(bool)",
+    "function getReferrer(address) view returns(address)",
   ], signer);
   for (const rep of P.representatives) {
     if (!(await oldRegistration.isRegistered(rep)) || !(await oldRegistration.isLevelActivated(rep, 1))) {
       throw new Error("Representative is not eligible: " + rep);
+    }
+    const sponsor = await oldRegistration.getReferrer(rep);
+    if (!equal(sponsor, ethers.ZeroAddress) && !equal(sponsor, P.id1)) {
+      throw new Error("Representative has a conflicting permanent sponsor: " + rep);
     }
   }
   const stable = new ethers.Contract(P.usdt, ["function balanceOf(address) view returns(uint256)"], signer);
@@ -91,6 +108,10 @@ async function main() {
       "../deployments-production-migration/production-layer-fork-rehearsal.json"), "utf8"));
     if (proof.status !== "LOCAL_FORK_WIRING_PASS" || !proof.rehearsal) {
       throw new Error("Passing local-fork wiring evidence is required");
+    }
+    if (proof.sourceScriptSha256 !== scriptHash ||
+        JSON.stringify(proof.artifactHashes) !== JSON.stringify(artifactHashes)) {
+      throw new Error("Rehearsal does not match the current deployment script and compiled contracts");
     }
     if (!process.env.POLYGON_GAS_PRICE || hre.network.config.gasPrice === "auto") {
       throw new Error("Set an explicit POLYGON_GAS_PRICE after checking live fees");
@@ -114,8 +135,7 @@ async function main() {
     createdAt: new Date().toISOString(), existing: P, founderWallets: [...founders],
     oldPoolBalance: String(oldPoolBalance), contracts: {}, transactions: [], proposals: [],
     existingFundsMoved: false, productionReset: false,
-    sourceScriptSha256: require("node:crypto").createHash("sha256")
-      .update(fs.readFileSync(__filename)).digest("hex"),
+    sourceScriptSha256: scriptHash, artifactHashes,
     startBlock: Number(BigInt(await ethers.provider.send("eth_blockNumber", []))),
   };
   const save = () => fs.writeFileSync(output, JSON.stringify(manifest, null, 2) + "\n");

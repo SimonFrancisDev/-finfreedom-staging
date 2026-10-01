@@ -151,6 +151,7 @@ contract FreedomPlusRegistration is
                 revert FFreedomLevelOneInactive(representative);
             }
             address sponsor = fFreedom.getReferrer(representative);
+            if (sponsor == address(0)) sponsor = id1Wallet;
             if (sponsor != id1Wallet) revert PermanentSponsorMismatch(id1Wallet, sponsor);
         }
         genesisInitialized = true;

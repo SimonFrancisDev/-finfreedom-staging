@@ -1,5 +1,47 @@
 # Production rollout: 2026-10-01
 
+## Latest execution checkpoint
+
+Staging live activation/NFT smoke and approved worker setup are committed at
+8f1b2b4. Production backend and frontend worktrees were clean at this checkpoint.
+No production database reset or mainnet write has been performed in this step.
+
+Refreshed mainnet preflight passed for existing governance, eight founder
+ratios, representative registration/Level 1 and preserved charge recipients.
+The historical NFT pool balance remains 3,306.24 USDT and is excluded from
+this additive deployment. The deployer balance was 30.354428239655199348 POL.
+The observed gas quote was 251.581560587 gwei, exceeding the existing 50-gwei
+guard. Approval was requested for a 300-gwei cap and 15-POL ceiling; it has
+not yet been received. The old rehearsal estimate at 300 gwei with 25% buffer
+is approximately 14.95 POL; refresh actual estimates before execution.
+
+The three configured mainnet representatives are registered but each has
+getReferrer() equal to zero in the legacy gateway. Ordinary Plus registration
+already normalizes zero to ID1; genesis did not. The candidate now uses the
+same normalization, without modifying legacy records. Explicit non-ID1 sponsors
+remain rejected. Production preflight now checks this before spending gas.
+This changes genesis only and does not require resetting existing staging.
+
+Attempts to rehearse the current package on the configured RPC and a public
+Polygon fallback both failed because historical state was unavailable, before
+any deployment. The earlier local-fork report is historical evidence, not a
+passing rehearsal of this updated candidate. Do not label these attempts PASS.
+
+Validation completed: 42 tests passed in the settlement-router and
+registration/token-controller suites, including zero-referrer genesis,
+conflicting-sponsor rejection, founder distributions and all recycle engines.
+The deployment guard now binds rehearsal evidence to the script hash and
+all fifteen compiled deployment-artifact hashes. Old evidence cannot authorize
+the updated candidate. No deployed staging implementation was upgraded.
+The configured primary mainnet RPC also failed the minimal historical read.
+
+Next gates: obtain gas approval,
+refresh the local-fork wiring rehearsal with usable historical RPC state,
+deploy the paused layer, and submit exact governance proposals. Three real
+multisig-owner approvals and execution remain necessary before opening.
+The production reward operator requires its own explicit setup; the staging
+private key must not be reused or copied into production.
+
 Status: preparation started; no production deployment executed.
 The user approved moving to production preparation with acknowledged residual risk.
 This does not establish that unfinished features passed validation.

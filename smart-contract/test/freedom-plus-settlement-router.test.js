@@ -150,6 +150,25 @@ describe("Freedom-Plus ordinary settlement router", function () {
     expect(await system.registration.sponsorOf(a.address)).to.equal(await system.gateway.getReferrer(a.address));
   });
 
+  it("normalizes legacy zero-referrer representatives to ID1 without changing gateway records", async function () {
+    const system = await deployGraph();
+    for (const representative of [a, b, c]) {
+      await system.gateway.setParticipant(representative.address, ethers.ZeroAddress, true, true);
+    }
+    await system.registration.pause();
+    await system.registration.initializeGenesis([a.address, b.address, c.address]);
+    expect(await system.registration.registeredCount()).to.equal(4);
+    expect(await system.registration.paused()).to.equal(true);
+    for (const representative of [a, b, c]) {
+      expect(await system.gateway.getReferrer(representative.address)).to.equal(ethers.ZeroAddress);
+      expect(await system.registration.sponsorOf(representative.address)).to.equal(id1.address);
+      expect(await system.fpt.balanceOf(representative.address)).to.equal(54650n * UNIT);
+      for (let level = 1; level <= 7; level++) {
+        expect(await system.registration.isLevelActive(representative.address, level)).to.equal(true);
+      }
+    }
+  });
+
   it("splits ID1 income equally among eight founders without changing genesis placements", async function () {
     const system = await deployGraph();
     await system.registration.initializeGenesis([a.address, b.address, c.address]);
