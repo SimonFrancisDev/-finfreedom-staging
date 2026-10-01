@@ -1,0 +1,39 @@
+{
+  "status": "PREPARED_NOT_DEPLOYED",
+  "at": "2026-10-01T19:44:25.955Z",
+  "chainId": 80002,
+  "inputs": {
+    "MULTISIG_ADDRESS": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+    "GUARDIAN_ADDRESS": "0x52F22c1e396dF20c2078B4a86b4A0ac3b51a9911",
+    "USDT_ADDRESS": "0x7b7E39f3D177B3356368431C5C285bca58b43A60",
+    "FGT_TOKEN_ADDRESS": "0x2C675980C6431d40312b258cE9c982C41CAC4393",
+    "ID1_WALLET": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+    "REGISTRATION_ADDRESS": "0xC5750BfA5b4Dd888e55420911b58CB57539aEb90",
+    "NFT_REWARD_OPERATOR_ADDRESS": "0x4e0b5aE304d657fF9E460161DaBD38E1566306a8",
+    "FREEDOM_PLUS_FOUNDER_WALLETS": "0x21f9eDB0CE6b79afA98dE14b03678CB29bc4859C,0xA32332B104aa9Fc5E5415a227D58d6914f3D7478,0x8B051978893087DE7e7Ca6BeF63206Cc35Bd732D,0xAE8012334a9c2aF7fb14cD6bF99978B177e6B28C,0x53B04033ABFe56C72cA0595dcAE26c5287619a97,0x8844a10391801d5b1a4273588F8c6bF1DFE06E36,0x3B7651dF08915f740a7eB079690327c4E8cCD3F0,0x48F0356220E2220d5aB9ba9de83EA993A510e7CF"
+  },
+  "founderRatios": [
+    "1250",
+    "1250",
+    "1250",
+    "1250",
+    "1250",
+    "1250",
+    "1250",
+    "1250"
+  ],
+  "fgtOwner": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+  "fgtOperatorConfigLocked": false,
+  "rewardOperatorPOL": "0.2",
+  "deployerPOL": "10.772113844839844929",
+  "fFreedomStartBlock": 49054197,
+  "gates": [
+    "Third representative registered and Level 1 active under ID1",
+    "Deploy Plus/NFT and authorize NFT membership on FGT via multisig",
+    "Align F-Freedom NFT charge recipient with shared NFT vault, preserve operations recipient",
+    "Configure explicit first NFT reward period and operator on worker only",
+    "Back up staging database before coordinated suspension/reset/address cutover"
+  ],
+  "hostedChangesApplied": false,
+  "productionChangesApplied": false
+}

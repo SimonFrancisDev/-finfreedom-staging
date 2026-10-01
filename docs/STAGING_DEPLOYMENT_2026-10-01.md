@@ -52,7 +52,13 @@ the corrected Plus genesis can run:
 
 1. 0x3f6Bb1E6Bfeb9C52f763a197d27B580d7DE7f100
 2. 0xDd78425335C0c698615845d94f9FeE7492266396
-3. 0xf72873d6233B5e3dfbA6D1D8058BF90E990902f0
+3. 0x0de1B6F15Fe8E5Cf7fbBA2cD4C576357Ececa962
+
+The third entry supersedes the original unused f728 wallet. Its on-chain
+replacement is recorded in STAGING_REPRESENTATIVE_REPLACEMENT_2026-10-01.md.
+The first two registrations were confirmed under ID1; the third owner signature
+remains pending as of the preparation record below. The signing-page gas-tip fix
+is deployed in commit 40ea2c9.
 
 Registration is under ID1 and costs zero mock USDT because these three wallets
 are configured as F-Freedom representatives. Their own test POL pays gas.
@@ -61,6 +67,23 @@ request private keys or substitute wallets. The main app remains on its previous
 address set until the coordinated cutover; the temporary page is independent.
 
 ## Still gated before general testing
+
+Prepared independently while checking the third signature every ten seconds:
+
+- Non-secret deployment inputs: smart-contract/deployments-staging/october-plus-preparation.json.
+- Fresh manager confirms eight distinct founder payout wallets at 1250 each.
+- Fresh FGT configuration is unlocked, but its owner is the multisig. NFT
+  membership authorization therefore requires a governance transaction.
+- Dedicated NFT operator has 0.2 test POL; deployer has approximately 10.77 test POL.
+  These balances are observations, not a guarantee of sufficient deployment gas.
+- Earliest F-Freedom indexer block remains 49054197.
+- The shared NFT vault must be wired into F-Freedom after Plus deployment,
+  preserving the existing operations recipient.
+- The worker requires an explicit NFT_REWARD_FIRST_PERIOD (YYYYMM); none was
+  selected or enabled during this preparation. Do not imply monthly payouts are live.
+
+This preparation made no hosted-environment or database changes. The signing
+monitor was a bounded session, not a permanent cloud service.
 
 - Fresh Plus/NFT deployment and genesis after representative signatures.
 - NFT operator funding/role, monthly schedule and shared pool configuration.
