@@ -59,6 +59,10 @@ async function main() {
   const usdt = requiredAddress("USDT_ADDRESS");
   const fgt = requiredAddress("FGT_TOKEN_ADDRESS");
   const id1 = requiredAddress("ID1_WALLET");
+  const rewardOperator = requiredAddress("NFT_REWARD_OPERATOR_ADDRESS");
+  if ([ethers.ZeroAddress, deployer.address, multisig, id1].includes(rewardOperator)) {
+    throw new Error("NFT_REWARD_OPERATOR_ADDRESS must be a dedicated approved reward signer");
+  }
   const founderWallets = String(process.env.FREEDOM_PLUS_FOUNDER_WALLETS || '')
     .split(',').filter(Boolean).map((value) => ethers.getAddress(value.trim()));
   if (founderWallets.length !== 8 || new Set(founderWallets).size !== 8
@@ -84,6 +88,20 @@ async function main() {
   }
 
   const representatives = APPROVED_REPRESENTATIVES.map(ethers.getAddress);
+  const fFreedomRegistration = requiredAddress("REGISTRATION_ADDRESS");
+  await requireContract("REGISTRATION_ADDRESS", fFreedomRegistration);
+  const gateway = new ethers.Contract(fFreedomRegistration, [
+    "function isRegistered(address) view returns(bool)",
+    "function isLevelActivated(address,uint8) view returns(bool)",
+    "function getReferrer(address) view returns(address)",
+  ], ethers.provider);
+  for (const representative of representatives) {
+    if (!(await gateway.isRegistered(representative))
+      || !(await gateway.isLevelActivated(representative, 1))
+      || ethers.getAddress(await gateway.getReferrer(representative)) !== id1) {
+      throw new Error(`Representative must first activate F-Freedom Level 1 under ID1: ${representative}`);
+    }
+  }
   const manifest = {
     program: "Freedom-Plus",
     network: hre.network.name,
@@ -122,7 +140,6 @@ async function main() {
     [await manager.getAddress(), id1, deployer.address, guardian],
     manifest
   );
-  const fFreedomRegistration = requiredAddress("REGISTRATION_ADDRESS");
   await send(
     "registration.setFFreedomRegistration",
     registration.setFFreedomRegistration(fFreedomRegistration),
@@ -183,6 +200,10 @@ async function main() {
     nftVault.configureDistributor(await rewardDistributor.getAddress()),
     manifest
   );
+  await send("rewards.setRewardOperator", rewardDistributor.setRewardOperator(rewardOperator), manifest);
+  if (await rewardDistributor.rewardOperator() !== rewardOperator) {
+    throw new Error("Reward operator read-back mismatch");
+  }
 
   const qualifyingToken = new ethers.Contract(
     fgt,

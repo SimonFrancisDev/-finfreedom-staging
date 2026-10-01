@@ -136,10 +136,23 @@ contract FreedomPlusRegistration is
     }
 
     function initializeGenesis(address[3] calldata representatives)
-        external onlyOwner whenNotPaused nonReentrant
+        external onlyOwner nonReentrant
     {
         if (genesisInitialized) revert GenesisAlreadyInitialized();
         if (registeredCount != 1) revert InvalidRepresentativeCount();
+        address gateway = fFreedomRegistration;
+        if (gateway == address(0)) revert FFreedomGatewayNotConfigured();
+        IFFreedomGatewayRegistration fFreedom = IFFreedomGatewayRegistration(gateway);
+        // Genesis placement must not create a second permanent referral sponsor.
+        for (uint8 index = 0; index < representatives.length; index++) {
+            address representative = representatives[index];
+            if (representative == address(0) || representative == id1Wallet) revert InvalidAddress();
+            if (!fFreedom.isRegistered(representative) || !fFreedom.isLevelActivated(representative, MIN_LEVEL)) {
+                revert FFreedomLevelOneInactive(representative);
+            }
+            address sponsor = fFreedom.getReferrer(representative);
+            if (sponsor != id1Wallet) revert PermanentSponsorMismatch(id1Wallet, sponsor);
+        }
         genesisInitialized = true;
 
         for (uint8 level = MIN_LEVEL; level <= MAX_LEVEL; level++) {

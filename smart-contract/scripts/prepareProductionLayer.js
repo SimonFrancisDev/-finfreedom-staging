@@ -180,11 +180,9 @@ async function main() {
   await send("fpt.membership", () => fpt.setAuthorizedOperator(membership.target, true));
   await send("fptr.controller", () => fptr.setAuthorizedOperator(controller.target, true));
   await send("pool.distributor", () => pool.configureDistributor(rewards.target));
-  // Keep the F-Freedom gateway unset until genesis; public registration cannot succeed.
-  await send("registration.genesisEnable", () => registration.unpause());
-  await send("registration.genesis", () => registration.initializeGenesis(P.representatives));
-  await send("registration.genesisClose", () => registration.pause());
+  // Owner-only genesis runs while public registration remains paused.
   await send("registration.gateway", () => registration.setFFreedomRegistration(P.registration));
+  await send("registration.genesis", () => registration.initializeGenesis(P.representatives));
   if (await registration.registeredCount() !== 4n) throw new Error("Genesis count mismatch");
   for (const wallet of [P.id1, ...P.representatives]) {
     for (let level = 1; level <= 7; level++) {

@@ -52,6 +52,9 @@ describe("Freedom-Plus ordinary settlement router", function () {
     const Gateway = await ethers.getContractFactory("MockFFreedomGatewayRegistration");
     const gateway = await Gateway.deploy();
     await registration.setFFreedomRegistration(await gateway.getAddress());
+    for (const representative of [a, b, c]) {
+      await gateway.setParticipant(representative.address, id1.address, true, true);
+    }
 
     const orbitSpecs = [
       ["P39PlusOrbit", 0],
@@ -126,6 +129,26 @@ describe("Freedom-Plus ordinary settlement router", function () {
       await system.registration.connect(signer).activateLevel(level);
     }
   }
+
+  it("rejects genesis representatives without matching active F-Freedom sponsorship", async function () {
+    const system = await deployGraph();
+    await system.gateway.setParticipant(a.address, id1.address, false, false);
+    await expect(system.registration.initializeGenesis([a.address, b.address, c.address]))
+      .to.be.revertedWithCustomError(system.registration, "FFreedomLevelOneInactive");
+    expect(await system.registration.genesisInitialized()).to.equal(false);
+    await system.gateway.setParticipant(a.address, id1.address, true, false);
+    await expect(system.registration.initializeGenesis([a.address, b.address, c.address]))
+      .to.be.revertedWithCustomError(system.registration, "FFreedomLevelOneInactive");
+    await system.gateway.setParticipant(a.address, d.address, true, true);
+    await expect(system.registration.initializeGenesis([a.address, b.address, c.address]))
+      .to.be.revertedWithCustomError(system.registration, "PermanentSponsorMismatch");
+    expect(await system.registration.registeredCount()).to.equal(1);
+    await system.gateway.setParticipant(a.address, id1.address, true, true);
+    await system.registration.pause();
+    await system.registration.initializeGenesis([a.address, b.address, c.address]);
+    expect(await system.registration.paused()).to.equal(true);
+    expect(await system.registration.sponsorOf(a.address)).to.equal(await system.gateway.getReferrer(a.address));
+  });
 
   it("splits ID1 income equally among eight founders without changing genesis placements", async function () {
     const system = await deployGraph();
