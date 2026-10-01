@@ -1,0 +1,61 @@
+{
+  "checkedAt": "2026-10-01T10:01:48.693Z",
+  "chainId": 137,
+  "block": 94762513,
+  "transactionsSent": 0,
+  "fgt": {
+    "address": "0x615201edaddB5CFD839Cc4eE693Dc464F6E2B5E4",
+    "owner": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+    "operatorConfigLocked": false,
+    "paused": false
+  },
+  "founderWallets": [
+    "0x88d350Bd016751B08Baf6508e1bdF186A1B1305B",
+    "0x5fd791B457aD32A8E2A2e81FC211238639824127",
+    "0xa2033515F0f35A5FA4803eDde306c293a81c2da9",
+    "0xf73d4Ae3a9EFeBAb76ab9053Cd055b4503929231",
+    "0xb850f836d0e3CfeD4A7DbDCAa7A4c78aFac0d911",
+    "0x435363daD972a7abb2A739525c461F06A45CE294",
+    "0xf4F83F8181cD9A8C96a33f4d9aF487b444353a15",
+    "0x120FBeeeb36c003CAEE1F4B37Ac9297C88d51D42"
+  ],
+  "founderRatios": [
+    "1250",
+    "1250",
+    "1250",
+    "1250",
+    "1250",
+    "1250",
+    "1250",
+    "1250"
+  ],
+  "representatives": [
+    {
+      "wallet": "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+      "registered": true,
+      "levelOneActive": true
+    },
+    {
+      "wallet": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "registered": true,
+      "levelOneActive": true
+    },
+    {
+      "wallet": "0x117C9258a95775Ecf448fd086D00cA22506Ea79d",
+      "registered": true,
+      "levelOneActive": true
+    }
+  ],
+  "governance": {
+    "address": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+    "owners": [
+      "0x17Fb12B3d5A2bbb4dD10bd3C5C35618baDA3D2D6",
+      "0x67E138a2f46AEF2a0031CfCb5Ae843b41c973f41",
+      "0x04eaa54e7896C24aF2622b804Bf35E4C662bf12f",
+      "0xEA51893495D285D737db5062500C4F003E2b3A4D"
+    ],
+    "requiredConfirmations": "3",
+    "timelockSeconds": "120",
+    "deployerCanSubmit": true
+  }
+}

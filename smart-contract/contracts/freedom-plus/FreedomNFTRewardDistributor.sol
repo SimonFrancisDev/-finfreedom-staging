@@ -77,6 +77,22 @@ contract FreedomNFTRewardDistributor is
 
     uint256 private constant BPS = 10_000;
     uint16[3] private TIER_BPS;
+    address public rewardOperator;
+    uint256 public constant MAX_DISTRIBUTION_BATCH = 50;
+
+    event RewardOperatorUpdated(address indexed previousOperator, address indexed newOperator);
+    error UnauthorizedRewardOperator();
+    error InvalidDistributionBatch();
+
+    modifier onlyRewardPublisher() {
+        if (msg.sender != owner() && msg.sender != rewardOperator) revert UnauthorizedRewardOperator();
+        _;
+    }
+
+    function setRewardOperator(address operator) external onlyOwner {
+        emit RewardOperatorUpdated(rewardOperator, operator);
+        rewardOperator = operator;
+    }
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() { _disableInitializers(); }
@@ -114,7 +130,7 @@ contract FreedomNFTRewardDistributor is
         uint256 poolAmount,
         bytes32[3] calldata eligibleRoots,
         uint256[3] calldata eligibleCounts
-    ) external onlyOwner whenNotPaused nonReentrant returns (uint32 periodId) {
+    ) external onlyRewardPublisher whenNotPaused nonReentrant returns (uint32 periodId) {
         if (year < 1970 || month == 0 || month > 12) revert InvalidDate(year, month);
         if (poolAmount == 0) revert InvalidPoolAmount();
         uint64 cutoff = uint64(_timestampFromDate(year, month, 1));
@@ -160,22 +176,48 @@ contract FreedomNFTRewardDistributor is
     function claim(uint32 periodId, uint8 tier, bytes32[] calldata proof)
         external whenNotPaused nonReentrant
     {
+        _payReward(periodId, msg.sender, tier, proof, false);
+    }
+
+    // A gas-paying executor cannot redirect a member's immutable entitlement.
+    function distributeBatch(
+        uint32 periodId,
+        address[] calldata members,
+        uint8[] calldata tiers,
+        bytes32[][] calldata proofs
+    ) external whenNotPaused nonReentrant {
+        if (members.length == 0 || members.length > MAX_DISTRIBUTION_BATCH
+            || members.length != tiers.length || members.length != proofs.length) {
+            revert InvalidDistributionBatch();
+        }
+        for (uint256 i; i < members.length; ++i) {
+            _payReward(periodId, members[i], tiers[i], proofs[i], true);
+        }
+    }
+
+    function _payReward(uint32 periodId, address member, uint8 tier, bytes32[] calldata proof, bool skipPaid)
+        internal
+    {
         Period storage period = _periods[periodId];
         if (!period.created) revert PeriodNotFound(periodId);
         if (tier < 1 || tier > 3) revert InvalidTier(tier);
-        if (claimed[periodId][msg.sender]) revert AlreadyClaimed(periodId, msg.sender);
+        if (member == address(0)) revert InvalidAddress();
+        if (claimed[periodId][member]) {
+            if (skipPaid) return;
+            revert AlreadyClaimed(periodId, member);
+        }
         uint8 index = tier - 1;
-        bytes32 leaf = keccak256(bytes.concat(keccak256(abi.encode(msg.sender, tier))));
+        bytes32 leaf = keccak256(bytes.concat(keccak256(abi.encode(member, tier))));
         if (!MerkleProof.verifyCalldata(proof, period.eligibleRoots[index], leaf)) {
             revert InvalidProof();
         }
         uint256 amount = period.rewardPerMember[index];
-        claimed[periodId][msg.sender] = true;
+        claimed[periodId][member] = true;
         bytes32 distributionId = keccak256(
-            abi.encode("FREEDOM_NFT_CLAIM", periodId, msg.sender, tier)
+            abi.encode("FREEDOM_NFT_CLAIM", periodId, member, tier)
         );
-        vault.disburse(rewardToken, msg.sender, amount, distributionId);
-        emit RewardClaimed(periodId, msg.sender, tier, amount);
+        if (amount > 0) vault.disburse(rewardToken, member, amount, distributionId);
+        emit RewardClaimed(periodId, member, tier, amount);
     }
 
     function periodOf(uint32 periodId) external view returns (Period memory) {
@@ -215,5 +257,5 @@ contract FreedomNFTRewardDistributor is
         if (target == address(0) || target.code.length == 0) revert InvalidContract(target);
     }
 
-    uint256[43] private __gap;
+    uint256[42] private __gap;
 }

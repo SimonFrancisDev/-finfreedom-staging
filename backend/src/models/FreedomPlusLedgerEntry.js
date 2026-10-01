@@ -7,7 +7,7 @@ const schema = new mongoose.Schema({
     enum: [
       'system_charge', 'recycle_reserve', 'recycle', 'fpt', 'fptr',
       'token_lock', 'token_unlock', 'token_burn', 'nft_membership',
-      'nft_eligibility', 'nft_period', 'nft_claim', 'cycle_close',
+      'nft_eligibility', 'nft_period', 'nft_claim', 'cycle_close', 'founder_income',
     ],
     required: true,
     index: true,

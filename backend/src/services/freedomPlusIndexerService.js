@@ -233,6 +233,31 @@ export async function syncFreedomPlusOnce() {
 
 let timer = null;
 let running = false;
+
+export async function syncNftMembershipThrough(cutoffBlock) {
+  if (!env.RUN_INDEXER || !env.FREEDOM_PLUS_ENABLED || running) return;
+  if (!Number.isSafeInteger(cutoffBlock) || cutoffBlock < 0) throw new Error('Invalid NFT cutoff block');
+  running = true;
+  try {
+    const provider = getProvider();
+    const chainId = Number((await provider.getNetwork()).chainId);
+    if (chainId !== Number(env.CHAIN_ID)) throw new Error('NFT catchup chain mismatch');
+    const state = await FreedomPlusSyncState.findOne({ chainId, contractKey: 'nftMembership' }).lean();
+    const start = Math.max(Number(env.FREEDOM_PLUS_START_BLOCK), Number(state?.lastProcessedBlock ?? -1) + 1);
+    if (start > cutoffBlock) return;
+    const head = await safeRpcCall((rpc) => rpc.getBlockNumber());
+    const through = Math.min(cutoffBlock, head - env.SYNC_CONFIRMATIONS,
+      start + env.SYNC_BLOCK_CHUNK_SIZE * 10 - 1);
+    if (through < start) return;
+    const entries = getFreedomPlusContractEntries(provider).filter(([key]) => key === 'nftMembership');
+    if (entries.length !== 1) throw new Error('NFT membership contract is not configured');
+    // Checkpoints advance only after actual log scans, including empty ranges.
+    return await syncTargetsCombined(provider, chainId, entries, through);
+  } finally {
+    running = false;
+  }
+}
+
 let realtimeProvider = null;
 let realtimeContracts = [];
 let realtimeStarted = false;

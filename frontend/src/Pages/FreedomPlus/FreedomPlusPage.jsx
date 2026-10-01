@@ -545,14 +545,6 @@ function WalletProgramPage({ initialTab = 'overview' }) {
     }, 'Freedom NFT reward eligibility restored.')
   }
 
-  const claimReward = (period) => {
-    transact(`claim-${period.periodId}`, () => {
-      if (!rewardPeriodsVerified || !networkReady || !period.proof?.eligible || period.readError) throw new Error('Refresh and verify this reward before claiming.')
-      const contracts = getFreedomPlusWriteContracts({ includeNft: true })
-      return contracts.nftRewardDistributor.claim(period.periodId, period.proof.tier, period.proof.proof)
-    }, `Reward for ${period.periodId} claimed.`)
-  }
-
   if (!FREEDOM_PLUS_ENABLED) {
     return <main className={tab === 'levels' ? 'freedom-plus-activation-shell' : 'freedom-plus-page'}><section className="fp-empty"><ShieldCheck /><h1>Freedom-Plus is not enabled</h1><p>This environment has not been connected to a verified Freedom-Plus deployment.</p></section></main>
   }
@@ -625,7 +617,7 @@ function WalletProgramPage({ initialTab = 'overview' }) {
 
           {tab === 'nftOverview' && <FreedomNftOverview membership={membership} membershipVerified={membershipVerified} formatToken={formatToken} openView={openView} />}
 
-          {tab === 'rewards' && <FreedomNftRewards membership={membership} membershipVerified={membershipVerified} rewardPeriodsVerified={rewardPeriodsVerified} rewardPeriods={rewardPeriods} formatToken={formatToken} busy={busy} claimReward={claimReward} />}
+          {tab === 'rewards' && <FreedomNftRewards membership={membership} membershipVerified={membershipVerified} rewardPeriodsVerified={rewardPeriodsVerified} rewardPeriods={rewardPeriods} formatToken={formatToken} />}
 
           {tab === 'levels' && (
             <FreedomPlusActivationCenter

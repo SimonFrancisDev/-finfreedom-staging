@@ -59,6 +59,12 @@ async function main() {
   const usdt = requiredAddress("USDT_ADDRESS");
   const fgt = requiredAddress("FGT_TOKEN_ADDRESS");
   const id1 = requiredAddress("ID1_WALLET");
+  const founderWallets = String(process.env.FREEDOM_PLUS_FOUNDER_WALLETS || '')
+    .split(',').filter(Boolean).map((value) => ethers.getAddress(value.trim()));
+  if (founderWallets.length !== 8 || new Set(founderWallets).size !== 8
+      || founderWallets.includes(ethers.ZeroAddress) || founderWallets.includes(id1)) {
+    throw new Error("FREEDOM_PLUS_FOUNDER_WALLETS must contain eight distinct approved payout wallets, excluding ID1");
+  }
   await requireContract("GUARDIAN_ADDRESS", guardian);
   await requireContract("USDT_ADDRESS", usdt);
   await requireContract("FGT_TOKEN_ADDRESS", fgt);
@@ -93,6 +99,7 @@ async function main() {
     fgt,
     id1,
     representatives,
+    founderWallets,
     contracts: {},
     configuration: [],
     pendingGovernanceActions: [],
@@ -163,6 +170,7 @@ async function main() {
     await send(`router.configureOrbit.${type}`, router.configureOrbit(type, await orbits[type].getAddress()), manifest);
     await send(`${orbitNames[type]}.setManager`, orbits[type].setManager(await router.getAddress()), manifest);
   }
+  await send("router.configureFounderWallets", router.configureFounderWallets(founderWallets), manifest);
   await send("router.lockConfiguration", router.lockConfiguration(), manifest);
   await send("manager.configureRegistration", manager.configureRegistration(await registration.getAddress()), manifest);
   await send("manager.configureSettlementRouter", manager.configureSettlementRouter(await router.getAddress()), manifest);

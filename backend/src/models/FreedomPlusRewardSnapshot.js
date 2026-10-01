@@ -10,6 +10,7 @@ const eligibilitySchema = new mongoose.Schema({
 const schema = new mongoose.Schema({
   chainId: { type: Number, required: true, index: true },
   periodId: { type: Number, required: true, index: true },
+  membershipAddress: { type: String, default: '', lowercase: true },
   year: { type: Number, required: true },
   month: { type: Number, required: true },
   cutoff: { type: Date, required: true, index: true },

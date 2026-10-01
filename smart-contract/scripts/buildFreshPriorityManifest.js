@@ -315,9 +315,8 @@ function buildManifest() {
   addAction(actions, "P14", "register", "Account 80", { sponsor: roles.primaryOwner });
   addAction(actions, "P14", "ensureLevel", "Account 80", {
     level: 2,
-    expectedRecycleChain: [
-      { orbitOwner: roles.primaryOwner, receiver: "ID1", amount: "20" },
-    ],
+    expectedRecycleChain: [],
+    purpose: "post-recycle normal route after nested recycle proof in P12",
   });
 
   const publicWallets = Object.fromEntries([...wallets.entries()]);

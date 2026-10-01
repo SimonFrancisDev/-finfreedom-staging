@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "phase": "P1",
+  "startedAt": "2026-09-30T21:44:14.330Z",
+  "chainId": "80002",
+  "startBlock": 48982235,
+  "contracts": {
+    "usdt": "0x7b7E39f3D177B3356368431C5C285bca58b43A60",
+    "registration": "0xbF8F79a11a5A8BF48571C69B5C8b7a92B875970A",
+    "levelManager": "0xb49130f8a48E358c867c8aBee5381f6138f7B6b2",
+    "settlementRouter": "0xF36C0014821c58AC0eab4e8e1963e2a00533F525",
+    "escrow": "0x5B4f8Ffd24de4401DDf060C78d3B254605b15086",
+    "p4": "0x34f28e8c010298B71Dfd10B84dC3C90F91a57676",
+    "p12": "0x5Fbf65eFa87a90E2443368f0b9e440BD335971CA",
+    "p39": "0xb4391Ca5FB2C248D85Ad0Ba88516AA25035AbE21",
+    "id1": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+    "nftPool": "0x42819C37a22E5d9432B33fc8378e1B489D246cC2",
+    "operations": "0xB5810C98c8077Cc587c9248f709ecAfF531EbD22"
+  },
+  "results": [
+    {
+      "id": "P1-001",
+      "status": "PASS",
+      "outcome": "assertCleanState"
+    }
+  ],
+  "status": "PASS",
+  "endBlock": 48982262,
+  "completedAt": "2026-09-30T21:44:40.802Z"
+}

@@ -564,7 +564,14 @@ contract FreedomPlusSettlementRouter is
             }
         }
 
-        usdt.safeTransfer(recipient, amount);
+        if (recipient == id1Wallet) {
+            _distributeFounders(activationId, component.role, level, amount);
+            emit FounderComponentSettled(activationId, component.role, recipient, component.candidate,
+                level, component.bps, amount, fallbackToId1, placementId);
+            return false;
+        } else {
+            usdt.safeTransfer(recipient, amount);
+        }
         emit ComponentSettled(
             activationId,
             component.role,
@@ -633,5 +640,43 @@ contract FreedomPlusSettlementRouter is
         if (target == address(0) || target.code.length == 0) revert InvalidContract(target);
     }
 
-    uint256[40] private __gap;
+    address[8] public founderWallets;
+
+    event FounderWalletsConfigured(address[8] wallets);
+    event FounderComponentSettled(
+        bytes32 indexed activationId, uint8 indexed role, address indexed recipient,
+        address originalCandidate, uint8 level, uint16 bps, uint256 amount,
+        bool id1Fallback, bytes32 placementId
+    );
+    event FounderPaymentDistributed(
+        bytes32 indexed activationId, uint8 indexed role, address indexed founder,
+        uint8 level, uint256 amount
+    );
+    error InvalidFounderWallets();
+
+    function configureFounderWallets(address[8] calldata wallets) external onlyOwner {
+        for (uint256 i; i < 8; ++i) {
+            if (wallets[i] == address(0) || wallets[i] == address(this) || wallets[i] == id1Wallet) {
+                revert InvalidFounderWallets();
+            }
+            for (uint256 j; j < i; ++j) {
+                if (wallets[i] == wallets[j]) revert InvalidFounderWallets();
+            }
+        }
+        founderWallets = wallets;
+        emit FounderWalletsConfigured(wallets);
+    }
+
+    function _distributeFounders(bytes32 activationId, uint8 role, uint8 level, uint256 amount) internal {
+        if (founderWallets[0] == address(0)) revert InvalidFounderWallets();
+        uint256 share = amount / 8;
+        uint256 remainder = amount % 8;
+        for (uint256 i; i < 8; ++i) {
+            uint256 payment = share + (i < remainder ? 1 : 0);
+            if (payment > 0) usdt.safeTransfer(founderWallets[i], payment);
+            emit FounderPaymentDistributed(activationId, role, founderWallets[i], level, payment);
+        }
+    }
+
+    uint256[32] private __gap;
 }

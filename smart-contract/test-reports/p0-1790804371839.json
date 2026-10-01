@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "phase": "P0",
+  "startedAt": "2026-09-30T21:39:24.602Z",
+  "chainId": "80002",
+  "startBlock": 48981946,
+  "contracts": {
+    "usdt": "0x7b7E39f3D177B3356368431C5C285bca58b43A60",
+    "registration": "0x462DDc6C3Ba984b8BFd343948eADf321f8607792",
+    "levelManager": "0x83dA1D3fF64411b1D2e73f236C8525bF08483fEb",
+    "settlementRouter": "0xb7Fc5B65122149D17759de894ea3d90ceaD87CC2",
+    "escrow": "0xBdc077952E3711cd7749e1325D4Cc3195A5d7eBb",
+    "p4": "0x9A8d3708ff88F98E02cF1bf072fCa7AC9D2A72db",
+    "p12": "0xD3E2B02A18172513AEDbeaE3C11AB5c28A55cb9b",
+    "p39": "0xAFFD9Dcb638F0bFC81331EdCEB0c0c01652E4d4C",
+    "id1": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+    "nftPool": "0x1AF1e23b2820935AF9D8FD4DE0024B79E6119aaA",
+    "operations": "0x8C53D90348A4C73C73db2E21dF07DAa29144A823"
+  },
+  "results": [
+    {
+      "id": "P0-001",
+      "status": "PASS",
+      "outcome": "assertDeployment"
+    }
+  ],
+  "status": "PASS",
+  "endBlock": 48981953,
+  "completedAt": "2026-09-30T21:39:31.838Z"
+}

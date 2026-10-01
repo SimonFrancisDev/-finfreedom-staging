@@ -42,6 +42,47 @@ describe("Freedom NFT monthly rewards", function () {
     await usdt.mint(await vault.getAddress(), 1_001n * UNIT);
   });
 
+  it("automatically pays all tiers through an executor and safely retries paid batches", async function () {
+    await expect(distributor.connect(outsider).createPeriod(2026, 1, 1_000n * UNIT,
+      [leaf(foundational.address, 1), leaf(intermediate.address, 2), leaf(advanced.address, 3)], [1, 1, 1]))
+      .to.be.revertedWithCustomError(distributor, "UnauthorizedRewardOperator");
+    await distributor.setRewardOperator(outsider.address);
+    await distributor.connect(outsider).createPeriod(2026, 1, 1_000n * UNIT,
+      [leaf(foundational.address, 1), leaf(intermediate.address, 2), leaf(advanced.address, 3)], [1, 1, 1]);
+    const members = [foundational.address, intermediate.address, advanced.address];
+    await distributor.connect(outsider).distributeBatch(202601, members, [1, 2, 3], [[], [], []]);
+    await distributor.connect(outsider).distributeBatch(202601, members, [1, 2, 3], [[], [], []]);
+    expect(await usdt.balanceOf(foundational.address)).to.equal(500n * UNIT);
+    expect(await usdt.balanceOf(intermediate.address)).to.equal(300n * UNIT);
+    expect(await usdt.balanceOf(advanced.address)).to.equal(200n * UNIT);
+    expect(await usdt.balanceOf(outsider.address)).to.equal(0);
+    expect(await vault.reservedBalance(await usdt.getAddress())).to.equal(0);
+    await expect(distributor.connect(foundational).claim(202601, 1, []))
+      .to.be.revertedWithCustomError(distributor, "AlreadyClaimed");
+    await distributor.setRewardOperator(ethers.ZeroAddress);
+    await expect(distributor.connect(outsider).createPeriod(2026, 2, UNIT,
+      [leaf(foundational.address, 1), ethers.ZeroHash, ethers.ZeroHash], [1, 0, 0]))
+      .to.be.revertedWithCustomError(distributor, "UnauthorizedRewardOperator");
+  });
+
+  it("rejects redirected, malformed, oversized and paused automatic batches", async function () {
+    await distributor.createPeriod(2026, 1, 100n * UNIT,
+      [leaf(foundational.address, 1), ethers.ZeroHash, ethers.ZeroHash], [1, 0, 0]);
+    await expect(distributor.distributeBatch(202601, [outsider.address], [1], [[]]))
+      .to.be.revertedWithCustomError(distributor, "InvalidProof");
+    await expect(distributor.distributeBatch(202601, [], [], []))
+      .to.be.revertedWithCustomError(distributor, "InvalidDistributionBatch");
+    await expect(distributor.distributeBatch(202601, [foundational.address], [], [[]]))
+      .to.be.revertedWithCustomError(distributor, "InvalidDistributionBatch");
+    await expect(distributor.distributeBatch(202601, Array(51).fill(foundational.address),
+      Array(51).fill(1), Array(51).fill([])))
+      .to.be.revertedWithCustomError(distributor, "InvalidDistributionBatch");
+    await distributor.pause();
+    await expect(distributor.distributeBatch(202601, [foundational.address], [1], [[]]))
+      .to.be.revertedWithCustomError(distributor, "EnforcedPause");
+    expect(await distributor.claimed(202601, foundational.address)).to.equal(false);
+  });
+
   it("reserves 50/30/20 at the UTC monthly cutoff and pays permanent direct claims", async function () {
     const roots = [
       leaf(foundational.address, 1),

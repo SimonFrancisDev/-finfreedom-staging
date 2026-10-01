@@ -52,7 +52,7 @@ export async function freedomPlusReconciliation() {
     FreedomPlusParticipant.countDocuments({ chainId: env.CHAIN_ID, registered: true }),
     FreedomPlusEvent.countDocuments({ chainId: env.CHAIN_ID, eventName: 'PositionRecorded' }),
     FreedomPlusPosition.countDocuments({ chainId: env.CHAIN_ID }),
-    FreedomPlusEvent.countDocuments({ chainId: env.CHAIN_ID, eventName: 'ComponentSettled' }),
+    FreedomPlusEvent.countDocuments({ chainId: env.CHAIN_ID, eventName: { $in: ['ComponentSettled', 'FounderComponentSettled'] } }),
     FreedomPlusPayment.countDocuments({ chainId: env.CHAIN_ID }),
     FreedomPlusSyncState.find({ chainId: env.CHAIN_ID }).lean(),
     FreedomPlusEvent.findOne({ chainId: env.CHAIN_ID }).sort({ blockNumber: -1, logIndex: -1 }).select('blockNumber').lean(),
@@ -157,7 +157,7 @@ export async function freedomPlusParticipant(address) {
     FreedomPlusLevelState.find({ chainId: env.CHAIN_ID, wallet: normalized }).sort({ level: 1 }).lean(),
     FreedomPlusPosition.find({ chainId: env.CHAIN_ID, participant: normalized })
       .sort({ blockNumber: -1, position: -1 }).limit(200).lean(),
-    FreedomPlusPayment.find({ chainId: env.CHAIN_ID, recipient: normalized })
+    FreedomPlusPayment.find({ chainId: env.CHAIN_ID, recipient: normalized, distributedToFounders: { $ne: true } })
       .sort({ blockNumber: -1 }).limit(200).lean(),
     FreedomPlusLedgerEntry.find({ chainId: env.CHAIN_ID, wallet: normalized })
       .sort({ blockNumber: -1, logIndex: -1 }).limit(200).lean(),
@@ -196,7 +196,9 @@ export async function freedomPlusParticipant(address) {
       sponsor: gatewaySponsor,
       source: gatewaySource,
     },
-    participant, levels, positions, payments, ledger, network,
+    participant, levels, positions,
+    payments: [...payments, ...ledger.filter((entry) => entry.category === 'founder_income').map(founderPayment)],
+    ledger, network,
   };
 }
 
@@ -291,13 +293,26 @@ export async function freedomPlusOrbit(address, level, query = {}) {
 export async function freedomPlusPayments(address, query = {}) {
   const normalized = wallet(address);
   const { limit, skip, page } = pageOptions(query);
-  const filter = { chainId: env.CHAIN_ID, recipient: normalized };
+  const filter = { chainId: env.CHAIN_ID, recipient: normalized, distributedToFounders: { $ne: true } };
   if (query.level) filter.level = Number(query.level);
-  const [items, total] = await Promise.all([
-    FreedomPlusPayment.find(filter).sort({ blockNumber: -1, role: 1 }).skip(skip).limit(limit).lean(),
+  const founderFilter = { chainId: env.CHAIN_ID, wallet: normalized, category: 'founder_income' };
+  if (query.level) founderFilter.level = Number(query.level);
+  const [ordinary, ordinaryCount, founders, founderCount] = await Promise.all([
+    FreedomPlusPayment.find(filter).sort({ blockNumber: -1, _id: 1 }).limit(skip + limit).lean(),
     FreedomPlusPayment.countDocuments(filter),
+    FreedomPlusLedgerEntry.find(founderFilter).sort({ blockNumber: -1, _id: 1 }).limit(skip + limit).lean(),
+    FreedomPlusLedgerEntry.countDocuments(founderFilter),
   ]);
+  const items = [...ordinary, ...founders.map(founderPayment)]
+    .sort((a, b) => b.blockNumber - a.blockNumber || String(a._id).localeCompare(String(b._id)))
+    .slice(skip, skip + limit);
+  const total = ordinaryCount + founderCount;
   return { page, limit, total, items };
+}
+
+function founderPayment(entry) {
+  return { ...entry, recipient: entry.wallet, role: Number(entry.details?.role || 0),
+    bps: 1250, id1Fallback: false, founderDistribution: true };
 }
 
 export async function freedomPlusEvents(address, query = {}) {

@@ -69,6 +69,13 @@ contract rollback requires its separately validated governance procedure.
 
 ## Current execution status
 
-Implemented in canonical staging source. Hosted deployment and production
-invitation issuance have not occurred in this record. Record commit IDs and
-deployment IDs here after execution; source implementation is not deployment.
+Implemented and pushed in canonical staging commit fb3223d. Vercel logs confirm
+that exact commit built and deployed successfully on 2026-10-01 at 09:35 UTC:
+https://finfreedom-staging-g15pfmjq6-chukwuemeka-francis-s-projects.vercel.app
+
+This is the staging project, not the main production site. Scoped launch controls
+still require the documented hosted configuration. Production invitation issuance
+has not occurred. Three isolated launch-access tests passed. The build reported
+28 dependency vulnerabilities (1 low, 7 moderate, 17 high, 3 critical); their
+exploitability was not assessed by the build and no forced dependency update was
+performed. A successful build is not a security audit.

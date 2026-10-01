@@ -18,6 +18,7 @@ import {
   stopNotificationDeliveryWorker,
 } from './services/notifications/notificationDeliveryWorker.js';
 import env from './config/env.js';
+import { startNftRewardDistributionWorker, stopNftRewardDistributionWorker } from './services/nftRewardDistributionWorker.js';
 
 async function initializeBlockchainForServer() {
   try {
@@ -106,9 +107,11 @@ async function startServer() {
     }
 
     startNotificationDeliveryWorker();
+    startNftRewardDistributionWorker();
 
     const shutdown = async (signal) => {
       console.log(`${signal} received. Shutting down gracefully...`);
+      await stopNftRewardDistributionWorker();
       await stopRealtimeEventIndexer();
       await stopFreedomPlusIndexer();
       await stopIndexer();

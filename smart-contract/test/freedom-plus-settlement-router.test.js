@@ -95,6 +95,8 @@ describe("Freedom-Plus ordinary settlement router", function () {
       await router.configureOrbit(type, await orbits[type].getAddress());
       await orbits[type].setManager(await router.getAddress());
     }
+    const founders = Array.from({ length: 8 }, (_, i) => ethers.getAddress(ethers.toBeHex(1000 + i, 20)));
+    await router.configureFounderWallets(founders);
     await router.lockConfiguration();
     await manager.configureRegistration(await registration.getAddress());
     await manager.configureSettlementRouter(await router.getAddress());
@@ -102,7 +104,12 @@ describe("Freedom-Plus ordinary settlement router", function () {
     await fpt.setAuthorizedOperator(await controller.getAddress(), true);
     await fptr.setAuthorizedOperator(await controller.getAddress(), true);
 
-    return { usdt, fpt, fptr, controller, manager, registration, router, orbits, nftVault, operationsVault, gateway };
+    return { usdt, fpt, fptr, controller, manager, registration, router, orbits, nftVault, operationsVault, gateway, founders };
+  }
+
+  async function founderBalance(system) {
+    const balances = await Promise.all(system.founders.map((wallet) => system.usdt.balanceOf(wallet)));
+    return balances.reduce((total, balance) => total + balance, 0n);
   }
 
   async function register(system, signer, sponsor) {
@@ -119,6 +126,33 @@ describe("Freedom-Plus ordinary settlement router", function () {
       await system.registration.connect(signer).activateLevel(level);
     }
   }
+
+  it("splits ID1 income equally among eight founders without changing genesis placements", async function () {
+    const system = await deployGraph();
+    await system.registration.initializeGenesis([a.address, b.address, c.address]);
+    await fundAndApprove(system, d, 50n * UNIT);
+    const tx = await register(system, d, id1.address);
+    const receipt = await tx.wait();
+    const transfers = receipt.logs.map((log) => {
+      try { return system.router.interface.parseLog(log); } catch { return null; }
+    }).filter((event) => event?.name === "FounderPaymentDistributed");
+    expect(transfers.length).to.be.greaterThan(0);
+    for (const event of transfers) {
+      expect(system.founders).to.include(event.args.founder);
+    }
+    const balances = await Promise.all(system.founders.map((wallet) => system.usdt.balanceOf(wallet)));
+    expect(balances.every((balance) => balance === balances[0])).to.equal(true);
+    expect(await system.usdt.balanceOf(id1.address)).to.equal(0);
+    for (let i = 0; i < 3; i++) {
+      expect((await system.orbits[0].positionAt(id1.address, 1, 0, i + 1)).participant)
+        .to.equal([a, b, c][i].address);
+    }
+    await expect(system.router.connect(outsider).configureFounderWallets(system.founders))
+      .to.be.revertedWithCustomError(system.router, "OwnableUnauthorizedAccount");
+    const duplicate = [...system.founders]; duplicate[7] = duplicate[0];
+    await expect(system.router.configureFounderWallets(duplicate))
+      .to.be.revertedWithCustomError(system.router, "InvalidFounderWallets");
+  });
 
   it("updates both system vaults atomically without changing router storage shape", async function () {
     const system = await deployGraph();
@@ -161,7 +195,7 @@ describe("Freedom-Plus ordinary settlement router", function () {
 
     const bBefore = await system.usdt.balanceOf(b.address);
     const aBefore = await system.usdt.balanceOf(a.address);
-    const id1Before = await system.usdt.balanceOf(id1.address);
+    const id1Before = await founderBalance(system);
     const nftBefore = await system.usdt.balanceOf(await system.nftVault.getAddress());
     const operationsBefore = await system.usdt.balanceOf(await system.operationsVault.getAddress());
 
@@ -170,7 +204,7 @@ describe("Freedom-Plus ordinary settlement router", function () {
 
     expect((await system.usdt.balanceOf(b.address)) - bBefore).to.equal(10n * UNIT);
     expect((await system.usdt.balanceOf(a.address)) - aBefore).to.equal(10n * UNIT);
-    expect((await system.usdt.balanceOf(id1.address)) - id1Before).to.equal(25n * UNIT);
+    expect((await founderBalance(system)) - id1Before).to.equal(25n * UNIT);
     expect((await system.usdt.balanceOf(await system.nftVault.getAddress())) - nftBefore).to.equal(4n * UNIT);
     expect((await system.usdt.balanceOf(await system.operationsVault.getAddress())) - operationsBefore).to.equal(1n * UNIT);
     expect(await system.usdt.balanceOf(await system.router.getAddress())).to.equal(0);
@@ -193,7 +227,7 @@ describe("Freedom-Plus ordinary settlement router", function () {
       .map((log) => {
         try { return system.router.interface.parseLog(log); } catch { return null; }
       })
-      .filter((parsed) => parsed && parsed.name === "ComponentSettled");
+      .filter((parsed) => parsed && ["ComponentSettled", "FounderComponentSettled"].includes(parsed.name));
     expect(componentLogs).to.have.length(3);
     expect(componentLogs.map((log) => log.args.bps)).to.deep.equal([2000n, 2000n, 5000n]);
     expect(componentLogs.map((log) => log.args.recipient)).to.deep.equal([b.address, a.address, id1.address]);
@@ -230,7 +264,7 @@ describe("Freedom-Plus ordinary settlement router", function () {
 
     await register(system, a, id1.address);
 
-    expect(await system.usdt.balanceOf(id1.address)).to.equal(45n * UNIT);
+    expect(await founderBalance(system)).to.equal(45n * UNIT);
     expect(await system.usdt.balanceOf(await system.nftVault.getAddress())).to.equal(4n * UNIT);
     expect(await system.usdt.balanceOf(await system.operationsVault.getAddress())).to.equal(1n * UNIT);
     const id1Cycle = await system.orbits[0].cycleState(id1.address, 1, 0);
@@ -250,12 +284,12 @@ describe("Freedom-Plus ordinary settlement router", function () {
     await fundAndApprove(system, extra, 50n * UNIT);
     const bBefore = await system.usdt.balanceOf(b.address);
     const aBefore = await system.usdt.balanceOf(a.address);
-    const id1Before = await system.usdt.balanceOf(id1.address);
+    const id1Before = await founderBalance(system);
     await register(system, extra, a.address);
 
     expect((await system.usdt.balanceOf(b.address)) - bBefore).to.equal(10n * UNIT);
     expect((await system.usdt.balanceOf(a.address)) - aBefore).to.equal(10n * UNIT);
-    expect((await system.usdt.balanceOf(id1.address)) - id1Before).to.equal(25n * UNIT);
+    expect((await founderBalance(system)) - id1Before).to.equal(25n * UNIT);
     const source = await system.orbits[0].positionAt(a.address, 1, 0, 4);
     expect(source.participant).to.equal(extra.address);
     expect(source.structuralParent).to.equal(b.address);
@@ -272,11 +306,11 @@ describe("Freedom-Plus ordinary settlement router", function () {
     await system.registration.connect(b).activateLevel(2);
 
     const aBefore = await system.usdt.balanceOf(a.address);
-    const id1Before = await system.usdt.balanceOf(id1.address);
+    const id1Before = await founderBalance(system);
     await system.registration.connect(b).activateLevel(3);
 
     expect((await system.usdt.balanceOf(a.address)) - aBefore).to.equal(180n * UNIT);
-    expect((await system.usdt.balanceOf(id1.address)) - id1Before).to.equal(225n * UNIT);
+    expect((await founderBalance(system)) - id1Before).to.equal(225n * UNIT);
     expect(await system.usdt.balanceOf(await system.router.getAddress())).to.equal(0);
   });
 
@@ -302,13 +336,13 @@ describe("Freedom-Plus ordinary settlement router", function () {
     for (const [level, toA, toId1, toNft, toOperations] of cases) {
       const before = {
         a: await system.usdt.balanceOf(a.address),
-        id1: await system.usdt.balanceOf(id1.address),
+        id1: await founderBalance(system),
         nft: await system.usdt.balanceOf(await system.nftVault.getAddress()),
         operations: await system.usdt.balanceOf(await system.operationsVault.getAddress()),
       };
       await system.registration.connect(b).activateLevel(level);
       expect((await system.usdt.balanceOf(a.address)) - before.a).to.equal(toA);
-      expect((await system.usdt.balanceOf(id1.address)) - before.id1).to.equal(toId1);
+      expect((await founderBalance(system)) - before.id1).to.equal(toId1);
       expect((await system.usdt.balanceOf(await system.nftVault.getAddress())) - before.nft).to.equal(toNft);
       expect((await system.usdt.balanceOf(await system.operationsVault.getAddress())) - before.operations).to.equal(toOperations);
       expect(await system.usdt.balanceOf(await system.router.getAddress())).to.equal(0);
@@ -490,7 +524,7 @@ describe("Freedom-Plus ordinary settlement router", function () {
     const prices = [50n, 150n, 450n, 1_350n, 4_050n, 12_150n, 36_450n];
     let paid = 0n;
     const holders = [
-      id1.address, a.address, b.address, c.address, d.address,
+      id1.address, ...system.founders, a.address, b.address, c.address, d.address,
       await system.manager.getAddress(), await system.router.getAddress(),
       await system.nftVault.getAddress(), await system.operationsVault.getAddress(),
     ];
@@ -705,7 +739,7 @@ describe("Freedom-Plus ordinary settlement router", function () {
       const recycle = parsed.find((event) => event.name === "RecycleCompleted");
       expect(recycle).to.not.equal(undefined);
       const recycleComponents = parsed.filter(
-        (event) => event.name === "ComponentSettled"
+        (event) => ["ComponentSettled", "FounderComponentSettled"].includes(event.name)
           && event.args.activationId === recycle.args.recycleActivationId
       );
       expect(recycleComponents.some(

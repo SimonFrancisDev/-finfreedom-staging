@@ -123,7 +123,7 @@ export async function projectFreedomPlusEvent(event) {
     return;
   }
 
-  if (contractKey === 'settlementRouter' && eventName === 'ComponentSettled') {
+  if (contractKey === 'settlementRouter' && ['ComponentSettled', 'FounderComponentSettled'].includes(eventName)) {
     await FreedomPlusPayment.updateOne(
       { chainId, activationId: args.activationId, role: Number(args.role) },
       {
@@ -134,6 +134,7 @@ export async function projectFreedomPlusEvent(event) {
           bps: Number(args.bps),
           amount: args.amount,
           id1Fallback: Boolean(args.id1Fallback),
+          distributedToFounders: eventName === 'FounderComponentSettled',
           placementId: args.placementId,
           txHash,
           blockNumber,
@@ -204,6 +205,9 @@ export async function projectFreedomPlusEvent(event) {
 }
 
 function ledgerFields(contractKey, eventName, args) {
+  if (contractKey === 'settlementRouter' && eventName === 'FounderPaymentDistributed') {
+    return { category: 'founder_income', wallet: args.founder, level: Number(args.level), amount: args.amount };
+  }
   if (contractKey === 'settlementRouter' && eventName === 'SystemChargeSettled') {
     return { category: 'system_charge', wallet: '', level: Number(args.level), amount: args.grossCharge };
   }

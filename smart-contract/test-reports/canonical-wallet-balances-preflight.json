@@ -1,0 +1,848 @@
+{
+  "generatedAt": "2026-09-30T19:06:04.196Z",
+  "chainId": "80002",
+  "walletCount": 104,
+  "thresholds": {
+    "pol": "0.30",
+    "mockUsdt": "1000"
+  },
+  "usdt": "0x7b7E39f3D177B3356368431C5C285bca58b43A60",
+  "wallets": [
+    {
+      "label": "Account 8",
+      "address": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+      "pol": "1.096412473982959437",
+      "mockUsdt": "213486.375",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 9",
+      "address": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+      "pol": "3.487641051129164169",
+      "mockUsdt": "110676.375",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 10",
+      "address": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+      "pol": "4.358984822167422093",
+      "mockUsdt": "110476.375",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 11",
+      "address": "0xC9f74323878edF59eB60c3713B938dE298C962eF",
+      "pol": "6.055450860962003574",
+      "mockUsdt": "105995.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 12",
+      "address": "0x998be76968Fe24fFf8f59D93EeE3fE49653781BB",
+      "pol": "6.295690025832549419",
+      "mockUsdt": "141865.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 13",
+      "address": "0xC1E95C22503871D23A6149280dd1A9Ca1CE8FA99",
+      "pol": "1.52901319584683853",
+      "mockUsdt": "158065.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 14",
+      "address": "0x86f8010A988AF0d6ffB79f59FdE372b350e744F9",
+      "pol": "5.877140983607398641",
+      "mockUsdt": "158065.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 15",
+      "address": "0x9Dfa0839EC4843db035d60141B2168a718cC2B74",
+      "pol": "2.152277030102878951",
+      "mockUsdt": "159370.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 16",
+      "address": "0xF3cC607185Aba21E476C124b15e59663BB7D8cA3",
+      "pol": "3.521298325788627457",
+      "mockUsdt": "159370.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 17",
+      "address": "0x9DB58586cc6FA287Fa9eA37c60C94372FF6B02f6",
+      "pol": "4.530963635957456108",
+      "mockUsdt": "159370.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 18",
+      "address": "0xa6aF0D0Ac4CBE9f5bBa569E8a560bb67129A990E",
+      "pol": "1.119597057985680387",
+      "mockUsdt": "159370.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 19",
+      "address": "0x1d0ffCF85A4f726a64CA860188C140d2f9Ba36D6",
+      "pol": "1.244325971962482455",
+      "mockUsdt": "159370.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 20",
+      "address": "0x5E5aC608C7F49DA450D332594dB8171CfA8C84F6",
+      "pol": "1.305385167321717412",
+      "mockUsdt": "159370.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 21",
+      "address": "0x1aBcE5B912B4452D9FB09DBA4175275Aa8Fb3558",
+      "pol": "0.427429924817123411",
+      "mockUsdt": "159790.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 22",
+      "address": "0xC47ff153e0D4269b46bEe0Ad3f5ACf4185dddf1A",
+      "pol": "1.324460944176736545",
+      "mockUsdt": "159790.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 23",
+      "address": "0x14D8682e2b47dA8132A4Cd1568AfeD3ef68Da261",
+      "pol": "1.04388481539084577",
+      "mockUsdt": "159940.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 24",
+      "address": "0xDa82a7480c476F5Ca05C7bc4f0C694564b480087",
+      "pol": "1.388777661895883057",
+      "mockUsdt": "159940.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 25",
+      "address": "0x02E54356BAA19a1108931338c784DC4874101c9F",
+      "pol": "2.325115090887620857",
+      "mockUsdt": "159940.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 26",
+      "address": "0xB21Ba397c47a864FB169871825E8f7c917e65544",
+      "pol": "2.190066661114610314",
+      "mockUsdt": "159940.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 27",
+      "address": "0x882d178ACa5a3B798214ca2dAD0043dAa9Df1518",
+      "pol": "2.261427416676441691",
+      "mockUsdt": "159940.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 28",
+      "address": "0x4174E35d87d775D20bfF6df09311a0D3eDc7940e",
+      "pol": "1.952294909727756719",
+      "mockUsdt": "159940.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 29",
+      "address": "0xE2832Cb339B3381dCdB3DBf409a5e3f55cf27F9d",
+      "pol": "2.314137026125497498",
+      "mockUsdt": "159940.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 30",
+      "address": "0x69907AF03135c2659f282b694c5B98F403b2fBc0",
+      "pol": "2.126519947145533793",
+      "mockUsdt": "159940.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 31",
+      "address": "0x8EF83F33747b9B26bD41A06FaBcDC86821227546",
+      "pol": "1.884864124112887495",
+      "mockUsdt": "159940.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 32",
+      "address": "0x8B76Ff1ca69B91037Ac27a277fE0B374C3afb406",
+      "pol": "2.097809652314622654",
+      "mockUsdt": "159940.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 33",
+      "address": "0x8a671D17694619843769104e39deaDe2D710e4C8",
+      "pol": "2.045755593123867326",
+      "mockUsdt": "159940.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 34",
+      "address": "0xA449ffB5b67292f474Dee8d15a6242895E354C8D",
+      "pol": "2.394211655400660525",
+      "mockUsdt": "159940.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 35",
+      "address": "0xE4445b6820E8461e3437fFc2156c1e2B4b2CEe63",
+      "pol": "2.255119173823435658",
+      "mockUsdt": "159940.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 36",
+      "address": "0x23f75e81Ee1E6ad54504f71481135cCD59977188",
+      "pol": "2.330132913507497266",
+      "mockUsdt": "159940.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 37",
+      "address": "0xB862AF9D4F6C53cB959EEF314B1d494A44C3530c",
+      "pol": "2.470284910947568529",
+      "mockUsdt": "159940.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 38",
+      "address": "0xc6dF47fc84bbafa288B5b7aB45D207EfA1b76c0d",
+      "pol": "2.365776261624122013",
+      "mockUsdt": "159940.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 39",
+      "address": "0xE381Fdb68314DB956960e56501B1c1336986a992",
+      "pol": "2.043965919592147993",
+      "mockUsdt": "159940.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 40",
+      "address": "0x384f80f28543259E1EC1dC8265Cca80A49d24312",
+      "pol": "1.888965171960026907",
+      "mockUsdt": "159940.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 41",
+      "address": "0xca8fFf69932287CC3bC81bc16302A088b6d4061d",
+      "pol": "1.816981844582055417",
+      "mockUsdt": "159940.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 42",
+      "address": "0x5CFcd5348e40e8CA2589b2Ff9f095DB884894f7a",
+      "pol": "1.816680439581296645",
+      "mockUsdt": "159940.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 43",
+      "address": "0xD4e95aCDD1caB914Cc000eB5B3Fc9dddf5828858",
+      "pol": "1.811746509568863406",
+      "mockUsdt": "159940.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 44",
+      "address": "0x624DA3BbaC91Bac7E8966645a29fCD7Bc43A38F9",
+      "pol": "1.815079329577262377",
+      "mockUsdt": "159940.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 45",
+      "address": "0x90cCF97c3BA1b35C02687A274a5B0856d9faF04a",
+      "pol": "1.816123454579894328",
+      "mockUsdt": "159940.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 46",
+      "address": "0x10b58995711d27dC785A7D42609222bD781fA355",
+      "pol": "1.810243339567163918",
+      "mockUsdt": "159940.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 47",
+      "address": "0xd91F0c6895eB20085ac7B457505244383C128F48",
+      "pol": "1.709754479345883852",
+      "mockUsdt": "159940.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 48",
+      "address": "0x2506FDEf2f0bF3023A7aaBcEF7dE50f73f7301D0",
+      "pol": "1.089297328299045469",
+      "mockUsdt": "5340.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 49",
+      "address": "0xd2E775aC8B206C13635B1641995F5FA0F13c5Fe4",
+      "pol": "1.383855292384379809",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 50",
+      "address": "0xfC534404F521632903Df2F98b30675f66420afbB",
+      "pol": "1.390522952426781027",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 51",
+      "address": "0x3F0C851E152CFaF2ED0Ce7DA8C699951D169aCee",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 52",
+      "address": "0x2897724Dc29EB3f884F5622e69C12d728033497b",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 53",
+      "address": "0x1F36B69360B19DD5E8Cb0C3E20D7cbb76351EB92",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 54",
+      "address": "0xA1ab1Ae1Fb69f5E9f5277c69094845848245D6e2",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 55",
+      "address": "0xC0B00d5A265132a764fE065c848C8470c8b1b6E0",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 56",
+      "address": "0x86E72d1AF304ee3764703C4bAF43209618279343",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 57",
+      "address": "0x32905E5719B46f190A39E90Bc3ee93dF8F24B1c3",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 58",
+      "address": "0x3af990Ef1e54FABF282ac2fCdfD48A2C4518bA9a",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 59",
+      "address": "0xdb9729de32aA334AD0e004c68C3aC93E8092883a",
+      "pol": "1.233173555216604891",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 60",
+      "address": "0x029C2Fe02ba464EAC2d4bFA46659994b1b8C6746",
+      "pol": "1.106994986532466206",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 61",
+      "address": "0xCC7F9D61a60E35d334AfB0a878744EC5F9BC7a9D",
+      "pol": "1.057424147788520849",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 62",
+      "address": "0xad985f06b03881a4187D473253989DfC07748c85",
+      "pol": "0.974381365588143872",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 63",
+      "address": "0x52e5f4434Fc989057C5037A4d1E87Eb6ce0d91Ea",
+      "pol": "0.646835031481206216",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 64",
+      "address": "0x9921472D01c8d5f33CD9a661E0851f243599730E",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 65",
+      "address": "0xA870a0097e19D29c02A04cadB3DAc4640Dc8a852",
+      "pol": "0.532901176185258779",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 66",
+      "address": "0xdCa29DBaD26c1e6b237efA29dDb77ec81AC9692f",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 67",
+      "address": "0x568766F9Df1614cC76E6fE8128d4b0F49F3485c8",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 68",
+      "address": "0xc00831FA1a30B9876ED0C36Aa4C3Ce72D99853b5",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 69",
+      "address": "0xE94285D9b602f6bdD7a6E97F14De627f93F05A05",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 70",
+      "address": "0xCd185DF1F3dB2BeEe318e42139D8Fd2950D2157E",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 71",
+      "address": "0xd97BABc017791be918DC94757990A3667FCd5618",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 72",
+      "address": "0xde95193518181e6193112703456E03Da1b559C65",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 73",
+      "address": "0x86e9921D6e197A695c97B933f62b0b0261e87f02",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 74",
+      "address": "0x1d9Fa0fBAd58aBB608bB612415F58dFDbd4088A8",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 75",
+      "address": "0x9D5414099fC2F460d0Fa927704D602Df74607640",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 76",
+      "address": "0xa282B5c66A4afbDbf5B3b87De85497DC6f481fB6",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 77",
+      "address": "0x30f821D54ef57642E5410318e149B2b929aaabCa",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 78",
+      "address": "0xBB634dc5861aDd3663aB580b6b2b556e096f0aA4",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 79",
+      "address": "0xAF6757C44aafa857f1b09008e44E6ff3a135FA92",
+      "pol": "0.603622989563933593",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 80",
+      "address": "0x38C56598e56Ff5B38C33C96a4F825ED433FF55d0",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 81",
+      "address": "0x7DF3aA6e4b404A9C08Ca1c9dF238666A756dCcAa",
+      "pol": "0.534096501028381999",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 82",
+      "address": "0xe3Bc7006a39D9265aEc2373709A38Bf25F62DC37",
+      "pol": "0.677385929306000946",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 83",
+      "address": "0xBf245C7EdF690cf7f8544CF359F7421F2E0C58b9",
+      "pol": "0.543679539023205286",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 84",
+      "address": "0x78709f3fbEf07F5393021EEA97a4CA6723761262",
+      "pol": "0.54812033903399076",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 85",
+      "address": "0x8fA29b513b5c7eDDC48Ee1C0C95c945D5de0748F",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 86",
+      "address": "0x15C21633a9231f6DACc0eBFf6a790Bf0c20ad171",
+      "pol": "0.536147909009401104",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 87",
+      "address": "0x7eAF5e3E3E0e6C3a109408c363294A162357AdbA",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 88",
+      "address": "0xe5Fe4206d7860179905112930C79755f019B0B8A",
+      "pol": "0.544101479025551154",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 89",
+      "address": "0xec1a59AB19Ac594276F5DCC080D4D8cA06CAcfA9",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 90",
+      "address": "0xa984B0d2F7bF3BFD24575429fa4326520681D310",
+      "pol": "0.552969629044726716",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 91",
+      "address": "0xbeAbC4cd52952A0C9D67546e0efCf1d76F19687f",
+      "pol": "0.543495459022818718",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 92",
+      "address": "0x693Ab7f95327501CB8BB48dF799076Fe16222d26",
+      "pol": "0.547928459033587812",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 93",
+      "address": "0x20B7055b189a97dB61d467E7132cf7B724B7894D",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 94",
+      "address": "0xF2C52951787f90326C438a72181f8b2B9FEe0c1E",
+      "pol": "0.55676636905269987",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 95",
+      "address": "0xe5f4f58F6829E4f28664F6B5a600Cb514b25b7bb",
+      "pol": "0.555085059047156878",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 96",
+      "address": "0x4e2ceDaaDD72D1C67b8Cd8E873dc896E67db1782",
+      "pol": "0.558449999055683046",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 97",
+      "address": "0x3d9dA59003fc2ecED31184c40dEF795Ef5630DDf",
+      "pol": "0.505054003944110235",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 98",
+      "address": "0xe300055c34B28fcd1aDA8ca8feC9C2088b7801E3",
+      "pol": "0.54647756903109339",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 99",
+      "address": "0x97eA7f7A56f820065d7C804A6b6caF8eb338F3F8",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 100",
+      "address": "0x0c7B9e0b194375B68069c70C94464b2A0F76c88E",
+      "pol": "0.547381079032438314",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 101",
+      "address": "0xC3af789c71CaC9CD43D6F51Ec6B3CFd83a373411",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 102",
+      "address": "0xb33213348FF6806295e89A5CD3ee520f14d4ca07",
+      "pol": "0.54967976903781801",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 103",
+      "address": "0x68C0E14c0531cf4F4E9D6FbA53B496cA4E22F07B",
+      "pol": "0.540826959017214868",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 104",
+      "address": "0x011DFe8Ab4d29FeA460B87849706A3aA8053c284",
+      "pol": "0.545259959027983962",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 105",
+      "address": "0xaeC38Acf2a16879C9FDFec764b0678565a6292DF",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 106",
+      "address": "0x36F4E3E469FE6Efd64b086BDF61f38a562724545",
+      "pol": "0.539949629017384716",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 107",
+      "address": "0x63bE36525e890Aef6CC1921F89E4ADe40E7E6AeC",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 108",
+      "address": "0x3D9FB37ed69Ffb77DB5AC662f7B074988143ee22",
+      "pol": "0.548937899035707636",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 109",
+      "address": "0xAdb228FFE9461412C89A128209B040a3e62DC98E",
+      "pol": "0.502328023938385677",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 110",
+      "address": "0x25a7a29A6Cdc9715A094eF804e08f88A3B98cab7",
+      "pol": "0.54336896902456533",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    },
+    {
+      "label": "Account 111",
+      "address": "0xfC93cefea584ee7166C76c2Da74Be27766D17Ea0",
+      "pol": "0.5",
+      "mockUsdt": "59990.0",
+      "polSufficient": true,
+      "mockUsdtSufficient": true
+    }
+  ],
+  "summary": {
+    "polInsufficient": 0,
+    "mockUsdtInsufficient": 0
+  }
+}

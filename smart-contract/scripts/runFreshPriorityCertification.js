@@ -13,6 +13,14 @@ const LEVEL_PRICE = {
 const MIN_POL = ethers.parseEther("0.30");
 const MAX_P39_COMPLETION_GAS = 15_000_000n;
 
+function transactionOverrides(extra = {}) {
+  const configured = String(process.env.TEST_GAS_PRICE_WEI || "").trim();
+  if (!configured) return extra;
+  const gasPrice = BigInt(configured);
+  if (gasPrice <= 0n) throw new Error("TEST_GAS_PRICE_WEI must be a positive integer");
+  return { ...extra, gasPrice };
+}
+
 function boolEnv(name, fallback = false) {
   const value = process.env[name];
   if (value == null || value === "") return fallback;
@@ -306,6 +314,7 @@ function assertMatrixRules(events) {
     const level = Number(event.args.level);
     const arrival = Number(event.args.linePaymentNumber);
     const amounts = [event.args.toOwner, event.args.toSpillover1, event.args.toSpillover2, event.args.toEscrow, event.args.toRecycle];
+    let ruleGross = LEVEL_PRICE[level];
     if (amounts.some((amount) => amount < 0n)) throw new Error("negative payout amount");
     if (line < 1 || line > 3) throw new Error(`invalid payment line ${line}`);
 
@@ -314,14 +323,24 @@ function assertMatrixRules(events) {
     // approved behavior is one 28 USDT mirror (8 + 20).
     if (link?.args.isMirror) {
       const routed = event.args.toOwner + event.args.toEscrow + event.args.toRecycle;
-      const fullDistributable = LEVEL_PRICE[level] - (LEVEL_PRICE[level] / 10n);
+      const matchingFill = events.find(
+        (candidate) => candidate.name === "PositionFilled" && candidate.index > event.index &&
+          ethers.getAddress(candidate.address) === ethers.getAddress(event.address) &&
+          ethers.getAddress(candidate.args.orbitOwner) === ethers.getAddress(event.args.orbitOwner) &&
+          Number(candidate.args.level) === level &&
+          Number(candidate.args.position) === Number(event.args.position)
+      );
+      const mirrorGross = matchingFill?.args.amount || 0n;
+      const mirrorDistributable = mirrorGross - (mirrorGross / 10n);
       const appliesFreshRecycleSplit =
+        mirrorGross > 0n &&
         (event.args.toSpillover1 !== 0n || event.args.toSpillover2 !== 0n) &&
-        routed + event.args.toSpillover1 + event.args.toSpillover2 === fullDistributable;
+        routed + event.args.toSpillover1 + event.args.toSpillover2 === mirrorDistributable;
       if (event.args.toSpillover1 !== 0n || event.args.toSpillover2 !== 0n) {
         if (!appliesFreshRecycleSplit) {
           throw new Error(`fragment mirror attempted duplicate spillover at level ${level} position ${event.args.position}`);
         }
+        ruleGross = mirrorGross;
       } else {
         const allowedMirrorAmounts = level === 2
           ? [ethers.parseUnits("8", 6), ethers.parseUnits("10", 6), ethers.parseUnits("18", 6)]
@@ -346,7 +365,7 @@ function assertMatrixRules(events) {
     // The original non-mirror fill must always execute the exact full
     // activation percentages.
     if (!link) continue;
-    const gross = LEVEL_PRICE[level];
+    const gross = ruleGross;
     // P5 can trigger a nested higher-level auto-upgrade in the same receipt.
     // Higher levels are certified by their dedicated phase, not by the
     // Level 1-3 percentage table below.
@@ -474,7 +493,9 @@ function assertFounderTerminal(action, events, config) {
 async function approveIfNeeded(wallet, amount, contracts, config) {
   const allowance = await contracts.usdt.allowance(wallet.address, config.levelManager);
   if (allowance >= amount) return null;
-  const tx = await contracts.usdt.connect(wallet).approve(config.levelManager, ethers.MaxUint256);
+  const tx = await contracts.usdt
+    .connect(wallet)
+    .approve(config.levelManager, ethers.MaxUint256, transactionOverrides());
   return tx.wait();
 }
 
@@ -498,7 +519,7 @@ async function executePaidAction(action, wallet, contracts, config, ifaces) {
       outcome = "RECOVERED_AND_AUDITED";
     } else {
       await approveIfNeeded(wallet, LEVEL_PRICE[1], contracts, config);
-      const tx = await contracts.registration.connect(wallet).register(sponsor);
+      const tx = await contracts.registration.connect(wallet).register(sponsor, transactionOverrides());
       receipt = await tx.wait();
       txHash = tx.hash;
       events = decodeLogs(receipt, ifaces);
@@ -535,7 +556,10 @@ async function executePaidAction(action, wallet, contracts, config, ifaces) {
     }
     await approveIfNeeded(wallet, LEVEL_PRICE[level], contracts, config);
     const gasEstimate = await contracts.registration.connect(wallet).activateLevel.estimateGas(level);
-    const tx = await contracts.registration.connect(wallet).activateLevel(level, { gasLimit: (gasEstimate * 125n) / 100n });
+    const tx = await contracts.registration.connect(wallet).activateLevel(
+      level,
+      transactionOverrides({ gasLimit: (gasEstimate * 125n) / 100n })
+    );
     const receipt = await tx.wait();
     const events = decodeLogs(receipt, ifaces);
     assertReceiptArithmetic(events, wallet.address, level);
@@ -643,31 +667,61 @@ async function validatePrimaryP39Topology(manifest, contracts, report, config) {
   }
 
   const id1Orbit = await contracts.p39.getUserOrbit(config.id1, 3);
-  if (Number(id1Orbit.currentPosition) !== 3 || id1Orbit.totalCycles !== 0n) {
+  if (
+    Number(id1Orbit.currentPosition) !== 9 ||
+    Number(id1Orbit.positionsInLine1) !== 3 ||
+    Number(id1Orbit.positionsInLine2) !== 6 ||
+    Number(id1Orbit.positionsInLine3) !== 9 ||
+    id1Orbit.totalCycles !== 0n
+  ) {
     throw new Error(`P5 ID1 checkpoint mismatch position=${id1Orbit.currentPosition} cycles=${id1Orbit.totalCycles}`);
   }
   const primary = walletForLabel(manifest.roles.primaryOwner);
-  for (let position = 1; position <= 2; position += 1) {
+  const expectedId1Positions = new Map([
+    [1, ["Account 8", false, "36"]],
+    [2, ["Account 10", true, "20"]],
+    [3, ["Account 11", true, "8"]],
+    [4, ["Account 9", true, "8"]],
+    [5, ["Account 11", true, "20"]],
+    [6, ["Account 8", true, "36"]],
+    [7, ["Account 9", true, "20"]],
+    [8, ["Account 8", true, "0"]],
+    [10, ["Account 10", true, "8"]],
+    [14, ["Account 14", true, "20"]],
+    [16, ["Account 12", true, "20"]],
+    [19, ["Account 13", true, "20"]],
+    [23, ["Account 17", true, "20"]],
+    [25, ["Account 15", true, "20"]],
+    [28, ["Account 16", true, "20"]],
+    [32, ["Account 20", true, "20"]],
+    [34, ["Account 18", true, "20"]],
+    [37, ["Account 19", true, "20"]],
+  ]);
+  for (let position = 1; position <= 39; position += 1) {
     const [row, activation, rule] = await Promise.all([
       contracts.p39.getPosition(config.id1, 3, position),
       contracts.p39.getPositionActivationData(config.id1, 3, position),
       contracts.p39.getPositionRuleView(config.id1, 3, position),
     ]);
-    if (ethers.getAddress(row.occupant) !== ethers.getAddress(primary)) {
+    const expected = expectedId1Positions.get(position);
+    if (!expected) {
+      if (ethers.getAddress(row.occupant) !== ethers.ZeroAddress) {
+        throw new Error(`ID1 P39 position ${position} is unexpectedly occupied`);
+      }
+      continue;
+    }
+    const [label, isMirror, routedUsdt] = expected;
+    if (ethers.getAddress(row.occupant) !== ethers.getAddress(walletForLabel(label))) {
       throw new Error(`ID1 P39 position ${position} occupant mismatch`);
     }
-    if (activation.isMirror !== (position === 2)) {
+    if (activation.isMirror !== isMirror) {
       throw new Error(`ID1 P39 position ${position} mirror status mismatch`);
     }
-    if (
-      rule.toOwner !== ethers.parseUnits("8", 6) ||
-      rule.toSpillover1 !== ethers.parseUnits("8", 6) ||
-      rule.toSpillover2 !== ethers.parseUnits("20", 6)
-    ) {
-      throw new Error(`ID1 P39 position ${position} normal 20/20/50 route mismatch`);
+    const routed = rule.toOwner + rule.toSpillover1 + rule.toSpillover2 + rule.toEscrow + rule.toRecycle;
+    if (routed !== ethers.parseUnits(routedUsdt, 6)) {
+      throw new Error(`ID1 P39 position ${position} routed ${ethers.formatUnits(routed, 6)}, expected ${routedUsdt}`);
     }
   }
-
   const primaryOrbit = await contracts.p39.getUserOrbit(primary, 3);
   if (Number(primaryOrbit.currentPosition) !== 1 || primaryOrbit.totalCycles !== 1n) {
     throw new Error(`P5 primary checkpoint mismatch position=${primaryOrbit.currentPosition} cycles=${primaryOrbit.totalCycles}`);
@@ -782,17 +836,17 @@ async function validateP2RegistrationStructure(manifest, contracts, report, conf
       ? config.id1
       : ethers.getAddress(walletForLabel(action.sponsor));
     const registration = result.events.find(
-      (event) => event.name === "Registered" && ethers.getAddress(event.args[0]) === actor
+      (event) => event.name === "Registered" && ethers.getAddress(event.args.user) === actor
     );
-    if (!registration || ethers.getAddress(registration.args[1]) !== sponsor) {
+    if (!registration || ethers.getAddress(registration.args.referrer) !== sponsor) {
       throw new Error(`${action.actor} registration event sponsor mismatch`);
     }
     const sourceFill = result.events.find(
       (event) => event.name === "PositionFilled" &&
         ethers.getAddress(event.address) === ethers.getAddress(contracts.p4.target) &&
-        ethers.getAddress(event.args[0]) === sponsor &&
-        ethers.getAddress(event.args[1]) === actor &&
-        Number(event.args[2]) === 1
+        ethers.getAddress(event.args.orbitOwner) === sponsor &&
+        ethers.getAddress(event.args.user) === actor &&
+        Number(event.args.level) === 1
     );
     if (!sourceFill) throw new Error(`${action.actor} missing source placement in sponsor P4 orbit`);
   }
@@ -838,7 +892,13 @@ async function validateAutoUpgrade(action, contracts) {
 async function validateLatestOccurrence(manifest, contracts, config) {
   const actors = ["Account 63", "Account 64", "Account 65"].map(walletForLabel);
   const id1State = await contracts.p39.getUserOrbit(config.id1, 3);
-  if (id1State.totalCycles !== 0n || Number(id1State.currentPosition) !== 3) {
+  if (
+    id1State.totalCycles !== 0n ||
+    Number(id1State.currentPosition) !== 13 ||
+    Number(id1State.positionsInLine1) !== 3 ||
+    Number(id1State.positionsInLine2) !== 9 ||
+    Number(id1State.positionsInLine3) !== 12
+  ) {
     throw new Error(`ID1 fallback incorrectly changed P39 cycles=${id1State.totalCycles} position=${id1State.currentPosition}`);
   }
 
@@ -881,21 +941,23 @@ async function expectRevert(label, action) {
 async function executeNegativeCase(action, wallet, signers, contracts, config) {
   const caseName = action.caseName;
   if (caseName === "insufficientUsdt") {
-    const balance = await contracts.usdt.balanceOf(wallet.address);
-    if (balance >= LEVEL_PRICE[1]) throw new Error("insufficient-USDT wallet must remain below 10 USDT");
-    await expectRevert(caseName, () => contracts.registration.connect(wallet).register.staticCall(config.id1));
+    const probeAddress = ethers.getAddress(ethers.dataSlice(ethers.id("FREEDOM_P10_INSUFFICIENT_USDT"), 12));
+    const balance = await contracts.usdt.balanceOf(probeAddress);
+    if (balance >= LEVEL_PRICE[1]) throw new Error("insufficient-USDT probe unexpectedly has 10 or more USDT");
+    const probe = new ethers.VoidSigner(probeAddress, ethers.provider);
+    await expectRevert(caseName, () => contracts.registration.connect(probe).register.staticCall(config.id1));
     return;
   }
   if (caseName === "missingAllowance") {
     if ((await contracts.usdt.balanceOf(wallet.address)) < LEVEL_PRICE[1]) throw new Error("missing-allowance wallet needs USDT");
-    await (await contracts.usdt.connect(wallet).approve(config.levelManager, 0)).wait();
+    await (await contracts.usdt.connect(wallet).approve(config.levelManager, 0, transactionOverrides())).wait();
     await expectRevert(caseName, () => contracts.registration.connect(wallet).register.staticCall(config.id1));
     return;
   }
   if (caseName === "duplicateRegistration") {
     if (!(await contracts.registration.isRegistered(wallet.address))) {
       await approveIfNeeded(wallet, LEVEL_PRICE[1], contracts, config);
-      await (await contracts.registration.connect(wallet).register(config.id1)).wait();
+      await (await contracts.registration.connect(wallet).register(config.id1, transactionOverrides())).wait();
     }
     await expectRevert(caseName, () => contracts.registration.connect(wallet).register.staticCall(config.id1));
     return;
@@ -903,7 +965,7 @@ async function executeNegativeCase(action, wallet, signers, contracts, config) {
   if (caseName === "previousLevelMissing") {
     if (!(await contracts.registration.isRegistered(wallet.address))) {
       await approveIfNeeded(wallet, LEVEL_PRICE[1], contracts, config);
-      await (await contracts.registration.connect(wallet).register(config.id1)).wait();
+      await (await contracts.registration.connect(wallet).register(config.id1, transactionOverrides())).wait();
     }
     if (await contracts.levelManager.userLevelActivated(wallet.address, 2)) {
       throw new Error("previous-level test wallet unexpectedly has Level 2 active");

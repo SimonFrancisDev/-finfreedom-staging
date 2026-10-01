@@ -10,6 +10,7 @@ const schema = new mongoose.Schema({
   bps: { type: Number, required: true },
   amount: { type: String, required: true },
   id1Fallback: { type: Boolean, required: true, index: true },
+  distributedToFounders: { type: Boolean, default: false },
   placementId: { type: String, default: '', lowercase: true },
   txHash: { type: String, required: true, lowercase: true },
   blockNumber: { type: Number, required: true, index: true },

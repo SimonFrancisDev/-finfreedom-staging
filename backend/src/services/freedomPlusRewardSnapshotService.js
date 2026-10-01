@@ -5,6 +5,7 @@ import FreedomPlusEvent from '../models/FreedomPlusEvent.js';
 import FreedomPlusRewardSnapshot from '../models/FreedomPlusRewardSnapshot.js';
 import FreedomPlusSyncState from '../models/FreedomPlusSyncState.js';
 import { buildTree, rewardLeaf } from './freedomPlusMerkle.js';
+import { syncNftMembershipThrough } from './freedomPlusIndexerService.js';
 
 const MEMBERSHIP_EVENTS = [
   'MembershipMinted',
@@ -62,15 +63,34 @@ export async function buildFreedomPlusRewardSnapshot({ year, month }) {
   const cutoff = periodDate(Number(year), Number(month));
   if (cutoff.getTime() > Date.now()) throw new Error('Cannot build a future reward snapshot');
   const periodId = Number(year) * 100 + Number(month);
+  const existing = await FreedomPlusRewardSnapshot.findOne({ chainId: env.CHAIN_ID, periodId }).lean();
+  if (existing) {
+    if (existing.membershipAddress !== env.FREEDOM_NFT_MEMBERSHIP_ADDRESS.toLowerCase()
+        || existing.proofDataAvailable !== true) {
+      throw new Error('Reward snapshot belongs to an unverified deployment or lacks proofs');
+    }
+    return existing;
+  }
   const provider = getProvider();
   const cutoffBlock = await cutoffBlockFor(provider, Math.floor(cutoff.getTime() / 1000));
-  const checkpoints = await FreedomPlusSyncState.find({ chainId: env.CHAIN_ID }).lean();
+  if (cutoffBlock < Number(env.FREEDOM_PLUS_START_BLOCK)) {
+    throw new Error('NFT reward cutoff precedes this deployment');
+  }
+  if ((await provider.getBlockNumber()) - env.SYNC_CONFIRMATIONS < cutoffBlock) {
+    throw new Error('NFT cutoff block is not confirmed yet');
+  }
+  let checkpoints = await FreedomPlusSyncState.find({ chainId: env.CHAIN_ID, contractKey: 'nftMembership' }).lean();
+  if (!checkpoints.length || checkpoints.some((item) => item.lastProcessedBlock < cutoffBlock)) {
+    await syncNftMembershipThrough(cutoffBlock);
+    checkpoints = await FreedomPlusSyncState.find({ chainId: env.CHAIN_ID, contractKey: 'nftMembership' }).lean();
+  }
   if (!checkpoints.length || checkpoints.some((item) => item.status === 'error' || item.lastProcessedBlock < cutoffBlock)) {
     throw new Error(`Freedom-Plus index is not reconciled through cutoff block ${cutoffBlock}`);
   }
   const events = await FreedomPlusEvent.find({
     chainId: env.CHAIN_ID,
     contractKey: 'nftMembership',
+    contractAddress: env.FREEDOM_NFT_MEMBERSHIP_ADDRESS.toLowerCase(),
     eventName: { $in: MEMBERSHIP_EVENTS },
     blockNumber: { $lte: cutoffBlock },
   }).sort({ blockNumber: 1, logIndex: 1 }).lean();
@@ -89,6 +109,7 @@ export async function buildFreedomPlusRewardSnapshot({ year, month }) {
   const snapshot = {
     chainId: env.CHAIN_ID,
     periodId,
+    membershipAddress: env.FREEDOM_NFT_MEMBERSHIP_ADDRESS.toLowerCase(),
     year: Number(year),
     month: Number(month),
     cutoff,
@@ -101,11 +122,15 @@ export async function buildFreedomPlusRewardSnapshot({ year, month }) {
     status: 'draft',
     publishedTxHash: '',
   };
-  return FreedomPlusRewardSnapshot.findOneAndUpdate(
+  const saved = await FreedomPlusRewardSnapshot.findOneAndUpdate(
     { chainId: env.CHAIN_ID, periodId },
     { $setOnInsert: snapshot },
     { upsert: true, new: true }
   ).lean();
+  if (saved.membershipAddress !== snapshot.membershipAddress) {
+    throw new Error('Reward snapshot belongs to an unverified or different membership deployment');
+  }
+  return saved;
 }
 
 export async function freedomPlusRewardProof(periodId, address) {
