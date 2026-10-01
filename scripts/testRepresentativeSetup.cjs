@@ -16,6 +16,13 @@ function setup(options = {}) {
       case 'eth_requestAccounts': case 'eth_accounts': return [options.wallet || wallet];
       case 'wallet_switchEthereumChain': return null;
       case 'eth_chainId': return options.chain || '0x13882';
+      case 'eth_getBlockByNumber':
+        if(options.rpcUnavailable)throw Error('RPC endpoint not found or unavailable.');
+        return options.legacy?{}:{baseFeePerGas:'0x3b9aca00'};
+      case 'eth_maxPriorityFeePerGas':
+        if(options.tipUnsupported)throw Object.assign(Error('Unsupported method'),{code:-32601});
+        return options.tip || '0x59682f00';
+      case 'eth_gasPrice': return options.gasPrice || '0x59682f00';
       case 'eth_call': {
         const data = request.params[0].data;
         if (data.startsWith('0xc8e33990')) return '0x' + word(options.id1 || id1);
@@ -44,7 +51,37 @@ test('signs only the expected Amoy registration with ID1 and zero value', async 
   assert.equal(sent.chainId, '0x13882'); assert.equal(sent.value, '0x0');
   assert.equal(sent.to, '0xc5750bfa5b4dd888e55420911b58cb57539aeb90');
   assert.equal(sent.data, '0x4420e486' + word(id1));
+  assert.equal(BigInt(sent.maxPriorityFeePerGas),30000000000n);
+  assert.equal(BigInt(sent.maxFeePerGas),32000000000n);
+  assert.equal(BigInt(sent.gas),(0x50000n*120n+99n)/100n);
+  assert.equal(sent.gasPrice,undefined);
   assert.match(elements.status.textContent, /Confirmed/);
+});
+
+for(const [name,options,tip] of [
+  ['higher live priority fee',{tip:'0xba43b7400'},50000000000n],
+  ['unsupported priority RPC',{tipUnsupported:true},30000000000n],
+]){
+  test(name,async()=>{
+    const {elements,calls}=setup(options);
+    await elements.connect.onclick();await elements.register.onclick();
+    const tx=calls.find(x=>x.method==='eth_sendTransaction').params[0];
+    assert.equal(BigInt(tx.maxPriorityFeePerGas),tip);
+    assert.equal(BigInt(tx.maxFeePerGas),tip+2000000000n);
+  });
+}
+test('legacy fees retain the floor without mixing EIP1559 fields',async()=>{
+  const {elements,calls}=setup({legacy:true});
+  await elements.connect.onclick();await elements.register.onclick();
+  const tx=calls.find(x=>x.method==='eth_sendTransaction').params[0];
+  assert.equal(BigInt(tx.gasPrice),30000000000n);
+  assert.equal(tx.maxFeePerGas,undefined);assert.equal(tx.maxPriorityFeePerGas,undefined);
+});
+test('unavailable RPC never submits a transaction',async()=>{
+  const {elements,calls}=setup({rpcUnavailable:true});
+  await elements.connect.onclick();await elements.register.onclick();
+  assert.equal(calls.some(x=>x.method==='eth_sendTransaction'),false);
+  assert.match(elements.status.textContent,/RPC endpoint/);
 });
 for (const [name, options] of Object.entries({ wrongNetwork: { chain: '0x89' }, wrongWallet: { wallet: id1 },
   retiredRepresentative: {wallet:'0xf72873d6233b5e3dfba6d1d8058bf90e990902f0'},

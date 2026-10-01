@@ -41,6 +41,24 @@
   let provider,account,busy=false,pending=false;
   const word=a=>a.slice(2).padStart(64,'0');
   const call=data=>provider.request({method:'eth_call',params:[{to:contract,data},'latest']});
+  const hex=value=>'0x'+value.toString(16);
+  async function registrationFees(){
+    const floor=30000000000n;
+    const block=await provider.request({method:'eth_getBlockByNumber',params:['latest',false]});
+    if(!block)throw Error('Amoy RPC unavailable. Reconnect after checking your wallet network.');
+    if(block.baseFeePerGas!=null){
+      let tip=floor;
+      try{
+        const suggested=BigInt(await provider.request({method:'eth_maxPriorityFeePerGas'}));
+        if(suggested>tip)tip=suggested;
+      }catch(error){
+        if(error.code===4001)throw error;
+      }
+      return {maxPriorityFeePerGas:hex(tip),maxFeePerGas:hex(2n*BigInt(block.baseFeePerGas)+tip)};
+    }
+    const suggested=BigInt(await provider.request({method:'eth_gasPrice'}));
+    return {gasPrice:hex(suggested>floor?suggested:floor)};
+  }
   function fail(error){status.textContent=error.code===4001?'Wallet request cancelled.':(error.message||'Wallet request failed.');}
   async function check(){
     button.disabled=true;
@@ -73,7 +91,13 @@
     try{
       if(!await check())return;
       const tx={from:account,to:contract,chainId:'0x13882',value:'0x0',data:'0x4420e486'+word(id1)};
-      await provider.request({method:'eth_estimateGas',params:[tx]});
+      Object.assign(tx,await registrationFees());
+      const gas=BigInt(await provider.request({method:'eth_estimateGas',params:[tx]}));
+      tx.gas=hex((gas*120n+99n)/100n);
+      if(await provider.request({method:'eth_chainId'})!=='0x13882' ||
+          (await provider.request({method:'eth_accounts'}))[0]?.toLowerCase()!==tx.from){
+        throw Error('Wallet changed. Reconnect before registering.');
+      }
       const hash=await provider.request({method:'eth_sendTransaction',params:[tx]});
       pending=true;status.textContent='Transaction submitted. Awaiting confirmation.';
       const link=document.getElementById('transaction');link.href='https://amoy.polygonscan.com/tx/'+hash;link.hidden=false;
