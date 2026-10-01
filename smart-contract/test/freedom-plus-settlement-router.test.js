@@ -199,6 +199,31 @@ describe("Freedom-Plus ordinary settlement router", function () {
     expect(componentLogs.map((log) => log.args.recipient)).to.deep.equal([b.address, a.address, id1.address]);
   });
 
+  it("keeps a nested participant under its immediate matrix parent after three sibling branches", async function () {
+    const system = await deployGraph();
+    const signers = await ethers.getSigners();
+    const parent = signers[7];
+    const children = signers.slice(8, 12);
+    await system.registration.initializeGenesis([a.address, b.address, c.address]);
+    for (const signer of [parent, ...children]) {
+      await fundAndApprove(system, signer, 50n * UNIT);
+    }
+
+    await register(system, parent, a.address);
+    await register(system, children[0], parent.address);
+    await register(system, children[1], parent.address);
+    await register(system, children[2], parent.address);
+    await expect(register(system, children[3], children[0].address)).to.not.be.reverted;
+
+    const p39 = system.orbits[0];
+    const source = await p39.positionAt(children[0].address, 1, 0, 1);
+    expect(source.participant).to.equal(children[3].address);
+    expect(source.structuralParent).to.equal(children[0].address);
+
+    const nestedMirror = await p39.positionAt(a.address, 1, 0, 13);
+    expect(nestedMirror.participant).to.equal(children[3].address);
+    expect(nestedMirror.structuralParent).to.equal(children[0].address);
+  });
   it("routes exhausted structural components to ID1 without artificial ID1 placements", async function () {
     const system = await deployGraph();
     await fundAndApprove(system, a, 50n * UNIT);
@@ -539,6 +564,91 @@ describe("Freedom-Plus ordinary settlement router", function () {
     ["P3", 7, 3, 5, 36_450n, false],
   ];
   const cumulativeCosts = [0n, 50n, 200n, 650n, 2_000n, 6_050n, 18_200n, 54_650n];
+
+  const routedCases = [
+    [1, 0, 50n, [0,0,0,1,2,3,1,2,3,1,2,3,4,5,6,7,8,9,10,11,12,4,5,6,7,8,9,10,11,12,4,5,6,7,8,9,10,11,12]],
+    [2, 1, 150n, [0,0,1,2,1,2,3,4,5,6,3,4,5,6]],
+    [3, 2, 450n, [0,0,0,1,2,3,1,2,3,1,2,3]],
+    [4, 3, 1350n, [0,0,1,2,1,2]],
+  ];
+  it('repairs only the audited staging reserve with real funding and rejects a second repair', async function () {
+    const system = await deployGraph();
+    const account = await ethers.getImpersonatedSigner('0x8844a10391801d5b1a4273588F8c6bF1DFE06E36');
+    await ethers.provider.send('hardhat_setBalance', [account.address, ethers.toBeHex(ethers.parseEther('10'))]);
+    await fundAndApprove(system, account, 50n * UNIT);
+    await register(system, account, id1.address);
+    const parents = routedCases[0][3];
+    const participants = [];
+    for (let index = 0; index < 38; index++) {
+      const wallet = ethers.Wallet.createRandom().connect(ethers.provider);
+      participants.push(wallet);
+      await owner.sendTransaction({ to: wallet.address, value: ethers.parseEther('0.2') });
+      await fundAndApprove(system, wallet, 50n * UNIT);
+      await register(system, wallet, parents[index] === 0 ? account.address : participants[parents[index] - 1].address);
+    }
+    const proxy = await system.router.getAddress();
+    expect(await system.router.recycleReserve(account.address, 1, 0)).to.equal(25n * UNIT);
+    // Reproduce the pre-fix state: the first contribution was paid out rather than reserved.
+    const build = await require('hardhat').artifacts.getBuildInfo('contracts/freedom-plus/FreedomPlusSettlementRouter.sol:FreedomPlusSettlementRouter');
+    const layout = build.output.contracts['contracts/freedom-plus/FreedomPlusSettlementRouter.sol'].FreedomPlusSettlementRouter.storageLayout;
+    const slot = layout.storage.find((entry) => entry.label === 'recycleReserve').slot;
+    const coder = ethers.AbiCoder.defaultAbiCoder();
+    let key = ethers.keccak256(coder.encode(['address', 'uint256'], [account.address, slot]));
+    key = ethers.keccak256(coder.encode(['uint256', 'bytes32'], [1, key]));
+    key = ethers.keccak256(coder.encode(['uint256', 'bytes32'], [0, key]));
+    await ethers.provider.send('hardhat_setStorageAt', [proxy, key, ethers.ZeroHash]);
+    const proxySigner = await ethers.getImpersonatedSigner(proxy);
+    await ethers.provider.send('hardhat_setBalance', [proxy, ethers.toBeHex(ethers.parseEther('1'))]);
+    await system.usdt.connect(proxySigner).transfer(account.address, 25n * UNIT);
+    const Repair = await ethers.getContractFactory('FreedomPlusStagingReserveRepair');
+    const repaired = await upgrades.upgradeProxy(proxy, Repair, { kind: 'uups' });
+    await expect(repaired.connect(outsider).repairStagingP39Reserve()).to.be.revertedWithCustomError(repaired, 'OwnableUnauthorizedAccount');
+    await expect(repaired.repairStagingP39Reserve()).to.be.reverted;
+    await system.usdt.connect(account).approve(proxy, 25n * UNIT);
+    const before = await system.usdt.balanceOf(account.address);
+    await repaired.repairStagingP39Reserve();
+    expect(before - await system.usdt.balanceOf(account.address)).to.equal(25n * UNIT);
+    expect(await repaired.recycleReserve(account.address, 1, 0)).to.equal(25n * UNIT);
+    await expect(repaired.repairStagingP39Reserve()).to.be.revertedWithCustomError(repaired, 'StagingRepairPrecondition');
+    const last = ethers.Wallet.createRandom().connect(ethers.provider);
+    await owner.sendTransaction({ to: last.address, value: ethers.parseEther('0.2') });
+    await fundAndApprove(system, last, 50n * UNIT);
+    await register(system, last, participants[parents[38] - 1].address);
+    expect(await repaired.recycleReserveConsumed(account.address, 1, 0)).to.equal(true);
+    expect(await repaired.recycleReserve(account.address, 1, 0)).to.equal(0);
+    expect(await system.fptr.balanceOf(account.address)).to.equal(25n * UNIT);
+  });
+  for (const [level, orbitType, price, parents, mode] of routedCases.flatMap((row) => [[...row, 'routed'], [...row, 'mixed']])) {
+    it(`reserves the final two ${mode} arrivals and recycles Level ${level} exactly once`, async function () {
+      const system = await deployGraph();
+      await fundAndApprove(system, a, cumulativeCosts[level] * UNIT);
+      await register(system, a, id1.address);
+      await activateThrough(system, a, level);
+      const participants = [];
+      for (let index = 0; index < parents.length; index++) {
+        const wallet = ethers.Wallet.createRandom().connect(ethers.provider);
+        participants.push(wallet);
+        await owner.sendTransaction({ to: wallet.address, value: ethers.parseEther('0.2') });
+        await fundAndApprove(system, wallet, cumulativeCosts[level] * UNIT);
+        const sponsor = parents[index] === 0 || (mode === 'mixed' && index === parents.length - 1)
+          ? a.address : participants[parents[index] - 1].address;
+        await register(system, wallet, sponsor);
+        await activateThrough(system, wallet, level);
+        if (index === parents.length - 2) {
+          expect(await system.orbits[orbitType].ringFilledCount(a.address, level, 0, level <= 2 ? 3 : 2))
+            .to.equal(level === 1 ? 26 : level === 2 ? 7 : level === 3 ? 8 : 3);
+          expect(await system.router.recycleReserve(a.address, level, 0)).to.equal(price * UNIT / 2n);
+          expect(await system.router.recycleReserveConsumed(a.address, level, 0)).to.equal(false);
+        }
+      }
+      expect((await system.orbits[orbitType].cycleState(a.address, level, 0)).closed).to.equal(true);
+      expect(await system.router.recycleReserve(a.address, level, 0)).to.equal(0);
+      expect(await system.router.recycleReserveConsumed(a.address, level, 0)).to.equal(true);
+      expect(await system.fptr.balanceOf(a.address)).to.equal(price * UNIT / 2n);
+      const reservedBefore = await system.usdt.balanceOf(await system.router.getAddress());
+      expect(reservedBefore).to.equal(0);
+    });
+  }
 
   for (const [label, level, capacity, orbitType, price, hasTwoFillReserve] of recycleCases) {
     it(`completes ${label} reserve, recycle re-entry, and FPTr exactly once`, async function () {

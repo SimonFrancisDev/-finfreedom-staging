@@ -1,6 +1,6 @@
 # Staging Cutover Source of Truth
 
-Last updated: 2026-09-29
+Last updated: 2026-10-01
 Environment: Polygon Amoy staging only (chain ID 80002)
 Production: excluded
 
@@ -54,6 +54,12 @@ stores and ignored local files.
 | `FREEDOM_PLUS_OPERATIONS_VAULT_ADDRESS` | `0xB41B0C9593fbAcbBCb1Cb525c20F5A2332D02f12` |
 
 ## Start Blocks
+
+The Freedom-Plus settlement-router proxy remains unchanged. Its implementation
+was upgraded to `0x25ce7d3328Db65aaBf7D80B2e05C72f20E58415A` through multisig
+transaction 21. This fixes routed final-ring reserves and atomically repairs the
+audited 25 mock-USDT staging shortfall. See `docs/STAGING_RELEASE_2026-10-01.md`.
+The temporary staging repair implementation is excluded from mainnet deployment.
 
 | Variable | Block |
 | --- | ---: |

@@ -335,15 +335,17 @@ contract FreedomPlusSettlementRouter is
                 reservedTotal += amount;
                 _addRecycleReserve(source, level, amount, price);
             } else {
-                componentTotal += amount;
-                _settleComponent(
+                bool reserved = _settleComponent(
                     participant,
                     level,
                     activationId,
                     source,
                     components[index],
-                    amount
+                    amount,
+                    recycleDepth
                 );
+                if (reserved) reservedTotal += amount;
+                else componentTotal += amount;
             }
         }
 
@@ -497,7 +499,7 @@ contract FreedomPlusSettlementRouter is
                 3,
                 5_000,
                 source.orbit.currentStructuralParentOf(parentOutsideOwner, level),
-                parentOutsideOwner
+                orbitOwner
             );
         } else if (source.ring == 2) {
             components[0] = Component(1, firstBps, source.parent, source.parent);
@@ -522,8 +524,9 @@ contract FreedomPlusSettlementRouter is
         bytes32 activationId,
         SourcePlacement memory source,
         Component memory component,
-        uint256 amount
-    ) internal {
+        uint256 amount,
+        uint8 recycleDepth
+    ) internal returns (bool reserved) {
         address recipient = _resolveRecipient(component.candidate, participant, level);
         bool fallbackToId1 = recipient == id1Wallet
             && (component.candidate != id1Wallet || component.candidate == participant);
@@ -536,7 +539,11 @@ contract FreedomPlusSettlementRouter is
         ) {
             placementId = keccak256(abi.encode(activationId, "COMPONENT", component.role));
             address anchor = recipient == component.candidate ? component.anchor : recipient;
-            source.orbit.recordPosition(
+            SourcePlacement memory routed;
+            routed.orbit = source.orbit;
+            routed.orbitType = source.orbitType;
+            routed.orbitOwner = recipient;
+            (routed.cycle, routed.position, routed.ring, routed.parent) = source.orbit.recordPosition(
                 recipient,
                 participant,
                 anchor,
@@ -547,6 +554,14 @@ contract FreedomPlusSettlementRouter is
                 IFreedomPlusOrbit.PlacementKind.RoutedPayment,
                 true
             );
+            // Routed final-ring arrivals fund the recipient's cycle just like direct arrivals.
+            if (component.bps == 5_000 && _isRecycleWindow(routed, level)) {
+                uint256 price = FreedomPlusConfig.levelConfig(level).price;
+                if (_addRecycleReserve(routed, level, amount, price)) {
+                    _executeRecycle(routed, participant, level, price, recycleDepth);
+                }
+                return true;
+            }
         }
 
         usdt.safeTransfer(recipient, amount);

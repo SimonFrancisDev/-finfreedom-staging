@@ -1,0 +1,11 @@
+{
+  "chainId": "80002",
+  "proxy": "0xcA20D9F04bbF8a99c6f332ebD05829F95B50C9cb",
+  "implementation": "0x25ce7d3328Db65aaBf7D80B2e05C72f20E58415A",
+  "account": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+  "amount": "25",
+  "approvalTx": "0xd70db29efad4c15d787cc6d4419743067ba7d1321b54198f842890ccf7e704de",
+  "multisig": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+  "guardian": "0x52F22c1e396dF20c2078B4a86b4A0ac3b51a9911",
+  "preparedAt": "2026-10-01T03:20:32.064Z"
+}

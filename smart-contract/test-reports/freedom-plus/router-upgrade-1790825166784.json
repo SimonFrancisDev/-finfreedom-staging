@@ -1,0 +1,26 @@
+{
+  "verdict": "PASS",
+  "completedAt": "2026-10-01T03:26:06.783Z",
+  "chainId": "80002",
+  "multisig": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+  "guardian": "0x52F22c1e396dF20c2078B4a86b4A0ac3b51a9911",
+  "proxy": "0xcA20D9F04bbF8a99c6f332ebD05829F95B50C9cb",
+  "implementation": "0x25ce7d3328Db65aaBf7D80B2e05C72f20E58415A",
+  "stagingReserveRepair": true,
+  "actions": [
+    {
+      "label": "guardian-approve-implementation",
+      "multisigTxId": "20",
+      "submitTx": "0x545e087f35f0a4695caf006b8d5cc4888352207ff92eb03c0e39620bc9a32f6c",
+      "executeTx": "0x8e1502b0b6832e942c7d39693c6d24297312839baa61cdc20ad8baba5733835d",
+      "blockNumber": 49002612
+    },
+    {
+      "label": "upgrade-router-proxy",
+      "multisigTxId": "21",
+      "submitTx": "0x84c903735fdd4618bb018eba25f91429d8925207fa9a77a73c706819b8fc72e7",
+      "executeTx": "0x6b62c565baaa39a6b082f2b84f411c2390977ed836f1a0cb3d13201129e6420e",
+      "blockNumber": 49002740
+    }
+  ]
+}
