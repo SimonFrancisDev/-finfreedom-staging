@@ -5,7 +5,7 @@ const path = require("path");
 const APPROVED_REPRESENTATIVES = [
   "0x3f6Bb1E6Bfeb9C52f763a197d27B580d7DE7f100",
   "0xDd78425335C0c698615845d94f9FeE7492266396",
-  "0xf72873d6233B5e3dfbA6D1D8058BF90E990902f0",
+  "0x0de1B6F15Fe8E5Cf7fbBA2cD4C576357Ececa962",
 ];
 
 function requiredAddress(name) {

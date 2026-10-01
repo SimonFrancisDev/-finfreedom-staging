@@ -47,6 +47,7 @@ test('signs only the expected Amoy registration with ID1 and zero value', async 
   assert.match(elements.status.textContent, /Confirmed/);
 });
 for (const [name, options] of Object.entries({ wrongNetwork: { chain: '0x89' }, wrongWallet: { wallet: id1 },
+  retiredRepresentative: {wallet:'0xf72873d6233b5e3dfba6d1d8058bf90e990902f0'},
   wrongContractID1: { id1: wallet }, wrongHost: { host: 'production.example' }, conflictingSponsor: { registered: true, sponsor: wallet } })) {
   test('blocks ' + name, async () => {
     const { elements, calls } = setup(options); await elements.connect.onclick();
@@ -58,4 +59,17 @@ test('already registered under ID1 does not prompt another payment', async () =>
   const { elements, calls } = setup({ registered: true }); await elements.connect.onclick();
   assert.match(elements.status.textContent, /Confirmed/);
   assert.equal(elements.register.disabled, true); assert.equal(calls.some(x => x.method === 'eth_sendTransaction'), false);
+});
+
+test('replacement representative can sign the exact ID1 registration', async () => {
+  const replacement='0x0de1b6f15fe8e5cf7fbba2cd4c576357ececa962';
+  const {elements,calls}=setup({wallet:replacement});
+  await elements.connect.onclick();
+  assert.equal(elements.register.disabled,false);
+  await elements.register.onclick();
+  const sent=calls.find(x=>x.method==='eth_sendTransaction').params[0];
+  assert.equal(sent.from,replacement);
+  assert.equal(sent.data,'0x4420e486'+word(id1));
+  assert.equal(sent.chainId,'0x13882');
+  assert.equal(sent.value,'0x0');
 });

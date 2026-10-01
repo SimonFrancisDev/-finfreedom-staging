@@ -1,0 +1,103 @@
+{
+  "chainId": 80002,
+  "proxy": "0xaf6cC44C5B860BA076Ee703244edcaB0C806c27A",
+  "previous": "0xf72873d6233B5e3dfbA6D1D8058BF90E990902f0",
+  "replacement": "0x0de1B6F15Fe8E5Cf7fbBA2cD4C576357Ececa962",
+  "transactions": {
+    "deploy-implementation": {
+      "hash": "0x7da24941bdf2a04140a7339cdab3b947085856c58e060134cdce2560bf397c50",
+      "block": 49058645
+    },
+    "approve-proxy-submit": {
+      "hash": "0x4d65d0b273448a78e43c097163137a2439eeeac3bf2f34a5b83f35ee9e64211c",
+      "block": 49058649
+    },
+    "approve-proxy-approve1": {
+      "hash": "0xe6434739ff55f536d7f6b17a0a0f5aaba08a7d44befb27137e6eac0b3a4635a2",
+      "block": 49058652
+    },
+    "approve-proxy-approve2": {
+      "hash": "0xbd8ab71b67ca9af11315d399c0a5fe5326791c920c7b99f616f96e26c8a9adb2",
+      "block": 49058655
+    },
+    "approve-proxy-execute": {
+      "hash": "0x1fb0ed521eb11868e1ddfe2a78072edb12153c14f5bf8ba7d2845c35c59c1edc",
+      "block": 49058776
+    },
+    "approve-implementation-submit": {
+      "hash": "0x90ed7caf69236ef95dce6ecbbeb4c9226e5bdc3baad4965c86299f0dff83e76a",
+      "block": 49058779
+    },
+    "approve-implementation-approve1": {
+      "hash": "0x268f37f3f9f3d41e7d73f442c60d507c79064c913f4698beb23d7dd947747a00",
+      "block": 49058784
+    },
+    "approve-implementation-approve2": {
+      "hash": "0x14e8f6cfde8d673f19b6a7a62f55280817e3e19c4cf5f64d5550edc6ddc54606",
+      "block": 49058789
+    },
+    "approve-restore-submit": {
+      "hash": "0x08ed141929d016e4ddf9b61dcb7017aee05dab68781a0754e548f99c585708ea",
+      "block": 49058999
+    },
+    "approve-restore-approve1": {
+      "hash": "0x0ee4fb3ab869699876d5a4777b4fef3858278353533964c1a6210b16f0a29ac1",
+      "block": 49059004
+    },
+    "approve-restore-approve2": {
+      "hash": "0x3a104bd27791a6718025a8e085de914cde813ce6ac2d967856c08039a5305d4b",
+      "block": 49059009
+    },
+    "replace-submit": {
+      "hash": "0xa99fab17c8716370783012332caffd5de15561d6a74fd8c5235660d60eabe2e8",
+      "block": 49059014
+    },
+    "replace-approve1": {
+      "hash": "0xb92fd88800ebeeee070d556c3f7cb268377acb72152a60c2a63dcd35e5a2f405",
+      "block": 49059017
+    },
+    "replace-approve2": {
+      "hash": "0x3d6671e868c94c97ee42d6b91cc1d9e85ff84eb8a0774f267a0b0b77915c11c3",
+      "block": 49059022
+    },
+    "approve-implementation-execute": {
+      "hash": "0x211bafd6de0d2a3f98537d7b2200a2ca7452b69f9f34627b6d56a075a34a16a4",
+      "block": 49059026
+    },
+    "approve-restore-execute": {
+      "hash": "0x38c25d73df83e99ee2d548dca0ba0a2e6f2934d3cabd7ce4f8796b1b61a6d10a",
+      "block": 49059124
+    },
+    "replace-execute": {
+      "hash": "0x0a64222f76b01f394ae0b84e5e4e4c85023a9860a3e77b8b02b92c39081ffe08",
+      "block": 49059141
+    }
+  },
+  "before": {
+    "implementation": "0x21f7C00544AF92625888B40dc3F8cc19668d0EB7",
+    "representatives": [
+      {
+        "address": "0x3f6Bb1E6Bfeb9C52f763a197d27B580d7DE7f100",
+        "registered": true,
+        "sponsor": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+        "active": true
+      },
+      {
+        "address": "0xDd78425335C0c698615845d94f9FeE7492266396",
+        "registered": true,
+        "sponsor": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+        "active": true
+      },
+      {
+        "address": "0xf72873d6233B5e3dfbA6D1D8058BF90E990902f0",
+        "registered": false,
+        "sponsor": "0x0000000000000000000000000000000000000000",
+        "active": false
+      }
+    ]
+  },
+  "implementation": "0x6714F98C1fEC94f30DDEad1E5F9e3909B96E5eb8",
+  "registrationGas": "1306652",
+  "verdict": "PASS",
+  "completedAt": "2026-10-01T19:06:11.786Z"
+}
