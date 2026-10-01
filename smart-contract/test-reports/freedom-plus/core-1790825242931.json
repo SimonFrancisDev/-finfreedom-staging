@@ -1,0 +1,1435 @@
+{
+  "startedAt": "2026-10-01T03:27:22.931Z",
+  "chainId": "80002",
+  "owner": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+  "levels": [
+    {
+      "level": 1,
+      "price": 50,
+      "capacity": 39,
+      "actions": [
+        {
+          "position": 1,
+          "participant": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+          "structuralParent": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+          "resumed": true
+        },
+        {
+          "position": 2,
+          "participant": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+          "structuralParent": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+          "resumed": true
+        },
+        {
+          "position": 3,
+          "participant": "0xC9f74323878edF59eB60c3713B938dE298C962eF",
+          "structuralParent": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+          "resumed": true
+        },
+        {
+          "position": 4,
+          "participant": "0x998be76968Fe24fFf8f59D93EeE3fE49653781BB",
+          "structuralParent": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+          "resumed": true
+        },
+        {
+          "position": 5,
+          "participant": "0xC1E95C22503871D23A6149280dd1A9Ca1CE8FA99",
+          "structuralParent": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+          "resumed": true
+        },
+        {
+          "position": 6,
+          "participant": "0x86f8010A988AF0d6ffB79f59FdE372b350e744F9",
+          "structuralParent": "0xC9f74323878edF59eB60c3713B938dE298C962eF",
+          "resumed": true
+        },
+        {
+          "position": 7,
+          "participant": "0x9Dfa0839EC4843db035d60141B2168a718cC2B74",
+          "structuralParent": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+          "resumed": true
+        },
+        {
+          "position": 8,
+          "participant": "0xF3cC607185Aba21E476C124b15e59663BB7D8cA3",
+          "structuralParent": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+          "resumed": true
+        },
+        {
+          "position": 9,
+          "participant": "0x9DB58586cc6FA287Fa9eA37c60C94372FF6B02f6",
+          "structuralParent": "0xC9f74323878edF59eB60c3713B938dE298C962eF",
+          "resumed": true
+        },
+        {
+          "position": 10,
+          "participant": "0xa6aF0D0Ac4CBE9f5bBa569E8a560bb67129A990E",
+          "structuralParent": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+          "resumed": true
+        },
+        {
+          "position": 11,
+          "participant": "0x1d0ffCF85A4f726a64CA860188C140d2f9Ba36D6",
+          "structuralParent": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+          "resumed": true
+        },
+        {
+          "position": 12,
+          "participant": "0x5E5aC608C7F49DA450D332594dB8171CfA8C84F6",
+          "structuralParent": "0xC9f74323878edF59eB60c3713B938dE298C962eF",
+          "resumed": true
+        },
+        {
+          "position": 13,
+          "participant": "0x1aBcE5B912B4452D9FB09DBA4175275Aa8Fb3558",
+          "structuralParent": "0x998be76968Fe24fFf8f59D93EeE3fE49653781BB",
+          "resumed": true
+        },
+        {
+          "position": 14,
+          "participant": "0xC47ff153e0D4269b46bEe0Ad3f5ACf4185dddf1A",
+          "structuralParent": "0xC1E95C22503871D23A6149280dd1A9Ca1CE8FA99",
+          "resumed": true
+        },
+        {
+          "position": 15,
+          "participant": "0x14D8682e2b47dA8132A4Cd1568AfeD3ef68Da261",
+          "structuralParent": "0x86f8010A988AF0d6ffB79f59FdE372b350e744F9",
+          "resumed": true
+        },
+        {
+          "position": 16,
+          "participant": "0xDa82a7480c476F5Ca05C7bc4f0C694564b480087",
+          "structuralParent": "0x9Dfa0839EC4843db035d60141B2168a718cC2B74",
+          "resumed": true
+        },
+        {
+          "position": 17,
+          "participant": "0x02E54356BAA19a1108931338c784DC4874101c9F",
+          "structuralParent": "0xF3cC607185Aba21E476C124b15e59663BB7D8cA3",
+          "resumed": true
+        },
+        {
+          "position": 18,
+          "participant": "0xB21Ba397c47a864FB169871825E8f7c917e65544",
+          "structuralParent": "0x9DB58586cc6FA287Fa9eA37c60C94372FF6B02f6",
+          "resumed": true
+        },
+        {
+          "position": 19,
+          "participant": "0x882d178ACa5a3B798214ca2dAD0043dAa9Df1518",
+          "structuralParent": "0xa6aF0D0Ac4CBE9f5bBa569E8a560bb67129A990E",
+          "resumed": true
+        },
+        {
+          "position": 20,
+          "participant": "0x4174E35d87d775D20bfF6df09311a0D3eDc7940e",
+          "structuralParent": "0x1d0ffCF85A4f726a64CA860188C140d2f9Ba36D6",
+          "resumed": true
+        },
+        {
+          "position": 21,
+          "participant": "0xE2832Cb339B3381dCdB3DBf409a5e3f55cf27F9d",
+          "structuralParent": "0x5E5aC608C7F49DA450D332594dB8171CfA8C84F6",
+          "resumed": true
+        },
+        {
+          "position": 22,
+          "participant": "0x69907AF03135c2659f282b694c5B98F403b2fBc0",
+          "structuralParent": "0x998be76968Fe24fFf8f59D93EeE3fE49653781BB",
+          "resumed": true
+        },
+        {
+          "position": 23,
+          "participant": "0x8EF83F33747b9B26bD41A06FaBcDC86821227546",
+          "structuralParent": "0xC1E95C22503871D23A6149280dd1A9Ca1CE8FA99",
+          "resumed": true
+        },
+        {
+          "position": 24,
+          "participant": "0x8B76Ff1ca69B91037Ac27a277fE0B374C3afb406",
+          "structuralParent": "0x86f8010A988AF0d6ffB79f59FdE372b350e744F9",
+          "resumed": true
+        },
+        {
+          "position": 25,
+          "participant": "0x8a671D17694619843769104e39deaDe2D710e4C8",
+          "structuralParent": "0x9Dfa0839EC4843db035d60141B2168a718cC2B74",
+          "resumed": true
+        },
+        {
+          "position": 26,
+          "participant": "0xA449ffB5b67292f474Dee8d15a6242895E354C8D",
+          "structuralParent": "0xF3cC607185Aba21E476C124b15e59663BB7D8cA3",
+          "resumed": true
+        },
+        {
+          "position": 27,
+          "participant": "0xE4445b6820E8461e3437fFc2156c1e2B4b2CEe63",
+          "structuralParent": "0x9DB58586cc6FA287Fa9eA37c60C94372FF6B02f6",
+          "resumed": true
+        },
+        {
+          "position": 28,
+          "participant": "0x23f75e81Ee1E6ad54504f71481135cCD59977188",
+          "structuralParent": "0xa6aF0D0Ac4CBE9f5bBa569E8a560bb67129A990E",
+          "resumed": true
+        },
+        {
+          "position": 29,
+          "participant": "0xB862AF9D4F6C53cB959EEF314B1d494A44C3530c",
+          "structuralParent": "0x1d0ffCF85A4f726a64CA860188C140d2f9Ba36D6",
+          "resumed": true
+        },
+        {
+          "position": 30,
+          "participant": "0xc6dF47fc84bbafa288B5b7aB45D207EfA1b76c0d",
+          "structuralParent": "0x5E5aC608C7F49DA450D332594dB8171CfA8C84F6",
+          "resumed": true
+        },
+        {
+          "position": 31,
+          "participant": "0xE381Fdb68314DB956960e56501B1c1336986a992",
+          "structuralParent": "0x998be76968Fe24fFf8f59D93EeE3fE49653781BB",
+          "resumed": true
+        },
+        {
+          "position": 32,
+          "participant": "0x384f80f28543259E1EC1dC8265Cca80A49d24312",
+          "structuralParent": "0xC1E95C22503871D23A6149280dd1A9Ca1CE8FA99",
+          "resumed": true
+        },
+        {
+          "position": 33,
+          "participant": "0xca8fFf69932287CC3bC81bc16302A088b6d4061d",
+          "structuralParent": "0x86f8010A988AF0d6ffB79f59FdE372b350e744F9",
+          "resumed": true
+        },
+        {
+          "position": 34,
+          "participant": "0x5CFcd5348e40e8CA2589b2Ff9f095DB884894f7a",
+          "structuralParent": "0x9Dfa0839EC4843db035d60141B2168a718cC2B74",
+          "resumed": true
+        },
+        {
+          "position": 35,
+          "participant": "0xD4e95aCDD1caB914Cc000eB5B3Fc9dddf5828858",
+          "structuralParent": "0xF3cC607185Aba21E476C124b15e59663BB7D8cA3",
+          "resumed": true
+        },
+        {
+          "position": 36,
+          "participant": "0x624DA3BbaC91Bac7E8966645a29fCD7Bc43A38F9",
+          "structuralParent": "0x9DB58586cc6FA287Fa9eA37c60C94372FF6B02f6",
+          "resumed": true
+        },
+        {
+          "position": 37,
+          "participant": "0x90cCF97c3BA1b35C02687A274a5B0856d9faF04a",
+          "structuralParent": "0xa6aF0D0Ac4CBE9f5bBa569E8a560bb67129A990E",
+          "resumed": true
+        },
+        {
+          "position": 38,
+          "participant": "0x10b58995711d27dC785A7D42609222bD781fA355",
+          "structuralParent": "0x1d0ffCF85A4f726a64CA860188C140d2f9Ba36D6",
+          "resumed": true
+        },
+        {
+          "tx": "0x5fd1bb0b1f8ca155ec0d73d3571209799ceccd40beffffdf280b5223d2f9f2bf",
+          "position": 39,
+          "participant": "0xd91F0c6895eB20085ac7B457505244383C128F48",
+          "structuralParent": "0x5E5aC608C7F49DA450D332594dB8171CfA8C84F6",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x5E5aC608C7F49DA450D332594dB8171CfA8C84F6",
+              "bps": 2000,
+              "amount": "10.0",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0xC9f74323878edF59eB60c3713B938dE298C962eF",
+              "bps": 2000,
+              "amount": "10.0",
+              "fallback": false
+            },
+            {
+              "role": 1,
+              "recipient": "0xDd78425335C0c698615845d94f9FeE7492266396",
+              "bps": 2000,
+              "amount": "10.0",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+              "bps": 2000,
+              "amount": "10.0",
+              "fallback": false
+            },
+            {
+              "role": 3,
+              "recipient": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+              "bps": 5000,
+              "amount": "25.0",
+              "fallback": true
+            }
+          ],
+          "reserveAdded": "25.0",
+          "systemCharge": "10.0",
+          "recycle": true
+        }
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "level": 2,
+      "price": 150,
+      "capacity": 14,
+      "actions": [
+        {
+          "tx": "0x26c5b51e32326a5a4efe944bf162c33d42c7535d7ed10089936ac56aa2e7d874",
+          "position": 1,
+          "participant": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+          "structuralParent": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 1500,
+              "amount": "22.5",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0xDd78425335C0c698615845d94f9FeE7492266396",
+              "bps": 2500,
+              "amount": "37.5",
+              "fallback": false
+            },
+            {
+              "role": 3,
+              "recipient": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+              "bps": 5000,
+              "amount": "75.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "15.0",
+          "recycle": false
+        },
+        {
+          "tx": "0x582921aa904f05af7e8bf74db0a9b8b112def93100a377b4cac3cace230bb479",
+          "position": 2,
+          "participant": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+          "structuralParent": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 1500,
+              "amount": "22.5",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0xDd78425335C0c698615845d94f9FeE7492266396",
+              "bps": 2500,
+              "amount": "37.5",
+              "fallback": false
+            },
+            {
+              "role": 3,
+              "recipient": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+              "bps": 5000,
+              "amount": "75.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "15.0",
+          "recycle": false
+        },
+        {
+          "tx": "0x44d41549fcd596fe4681f36baa41c01c2a755a1d89f81ffa95e90564ea41e550",
+          "position": 3,
+          "participant": "0x998be76968Fe24fFf8f59D93EeE3fE49653781BB",
+          "structuralParent": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+              "bps": 1500,
+              "amount": "22.5",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 2500,
+              "amount": "37.5",
+              "fallback": false
+            },
+            {
+              "role": 3,
+              "recipient": "0xDd78425335C0c698615845d94f9FeE7492266396",
+              "bps": 5000,
+              "amount": "75.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "15.0",
+          "recycle": false
+        },
+        {
+          "tx": "0xd1a8fe45497b5b59baa779118365863448545648e0b37398cd1a9db0e6b75752",
+          "position": 4,
+          "participant": "0xC1E95C22503871D23A6149280dd1A9Ca1CE8FA99",
+          "structuralParent": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+              "bps": 1500,
+              "amount": "22.5",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 2500,
+              "amount": "37.5",
+              "fallback": false
+            },
+            {
+              "role": 3,
+              "recipient": "0xDd78425335C0c698615845d94f9FeE7492266396",
+              "bps": 5000,
+              "amount": "75.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "15.0",
+          "recycle": false
+        },
+        {
+          "tx": "0x2723022c5ea2aeba9ca9f205bc483c4f9f7056638c52093ab801c72e973daa94",
+          "position": 5,
+          "participant": "0x9Dfa0839EC4843db035d60141B2168a718cC2B74",
+          "structuralParent": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+              "bps": 1500,
+              "amount": "22.5",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 2500,
+              "amount": "37.5",
+              "fallback": false
+            },
+            {
+              "role": 3,
+              "recipient": "0xDd78425335C0c698615845d94f9FeE7492266396",
+              "bps": 5000,
+              "amount": "75.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "15.0",
+          "recycle": false
+        },
+        {
+          "tx": "0x72b2d3cc1be1951456571cac47392db35c813959d2bd8918dd8dba07523dd7a0",
+          "position": 6,
+          "participant": "0xF3cC607185Aba21E476C124b15e59663BB7D8cA3",
+          "structuralParent": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+              "bps": 1500,
+              "amount": "22.5",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 2500,
+              "amount": "37.5",
+              "fallback": false
+            },
+            {
+              "role": 3,
+              "recipient": "0xDd78425335C0c698615845d94f9FeE7492266396",
+              "bps": 5000,
+              "amount": "75.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "15.0",
+          "recycle": false
+        },
+        {
+          "tx": "0x84365735384c6590b8fbd361a3f110417aa23a2b4091484aa9b9cf6ee4fe8872",
+          "position": 7,
+          "participant": "0x1aBcE5B912B4452D9FB09DBA4175275Aa8Fb3558",
+          "structuralParent": "0x998be76968Fe24fFf8f59D93EeE3fE49653781BB",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x998be76968Fe24fFf8f59D93EeE3fE49653781BB",
+              "bps": 1500,
+              "amount": "22.5",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+              "bps": 2500,
+              "amount": "37.5",
+              "fallback": false
+            },
+            {
+              "role": 3,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 5000,
+              "amount": "75.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "15.0",
+          "recycle": false
+        },
+        {
+          "tx": "0x0108b0a51557d24a05652a951b6b43962b51fd759936a5a0291d85fb14e781c9",
+          "position": 8,
+          "participant": "0xC47ff153e0D4269b46bEe0Ad3f5ACf4185dddf1A",
+          "structuralParent": "0xC1E95C22503871D23A6149280dd1A9Ca1CE8FA99",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0xC1E95C22503871D23A6149280dd1A9Ca1CE8FA99",
+              "bps": 1500,
+              "amount": "22.5",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+              "bps": 2500,
+              "amount": "37.5",
+              "fallback": false
+            },
+            {
+              "role": 3,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 5000,
+              "amount": "75.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "15.0",
+          "recycle": false
+        },
+        {
+          "tx": "0x7be66145a9139b1bebb17a3c6b01dc03da2e6bafce1e0b673c7485693a10d111",
+          "position": 9,
+          "participant": "0xDa82a7480c476F5Ca05C7bc4f0C694564b480087",
+          "structuralParent": "0x9Dfa0839EC4843db035d60141B2168a718cC2B74",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x9Dfa0839EC4843db035d60141B2168a718cC2B74",
+              "bps": 1500,
+              "amount": "22.5",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+              "bps": 2500,
+              "amount": "37.5",
+              "fallback": false
+            },
+            {
+              "role": 3,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 5000,
+              "amount": "75.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "15.0",
+          "recycle": false
+        },
+        {
+          "tx": "0x1087e2c89275a358c42b6061f9794858f372dc330d8097229c4470585914b7b0",
+          "position": 10,
+          "participant": "0x02E54356BAA19a1108931338c784DC4874101c9F",
+          "structuralParent": "0xF3cC607185Aba21E476C124b15e59663BB7D8cA3",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0xF3cC607185Aba21E476C124b15e59663BB7D8cA3",
+              "bps": 1500,
+              "amount": "22.5",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+              "bps": 2500,
+              "amount": "37.5",
+              "fallback": false
+            },
+            {
+              "role": 3,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 5000,
+              "amount": "75.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "15.0",
+          "recycle": false
+        },
+        {
+          "tx": "0x6a20c2f944dc5a05b22b28890c81dbfbebc91135179694f135879850fcd6897e",
+          "position": 11,
+          "participant": "0x69907AF03135c2659f282b694c5B98F403b2fBc0",
+          "structuralParent": "0x998be76968Fe24fFf8f59D93EeE3fE49653781BB",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x998be76968Fe24fFf8f59D93EeE3fE49653781BB",
+              "bps": 1500,
+              "amount": "22.5",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+              "bps": 2500,
+              "amount": "37.5",
+              "fallback": false
+            },
+            {
+              "role": 3,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 5000,
+              "amount": "75.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "15.0",
+          "recycle": false
+        },
+        {
+          "tx": "0x07cb434f71798aac4960b8734d6099ddcabecb2bd1eef01478bde712148c7f5f",
+          "position": 12,
+          "participant": "0x8EF83F33747b9B26bD41A06FaBcDC86821227546",
+          "structuralParent": "0xC1E95C22503871D23A6149280dd1A9Ca1CE8FA99",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0xC1E95C22503871D23A6149280dd1A9Ca1CE8FA99",
+              "bps": 1500,
+              "amount": "22.5",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+              "bps": 2500,
+              "amount": "37.5",
+              "fallback": false
+            },
+            {
+              "role": 3,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 5000,
+              "amount": "75.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "15.0",
+          "recycle": false
+        },
+        {
+          "tx": "0xd2c2b5fdbbfbc3ae8d005c97d01538581523ff239640c6b4b08df85752ba68a7",
+          "position": 13,
+          "participant": "0x8a671D17694619843769104e39deaDe2D710e4C8",
+          "structuralParent": "0x9Dfa0839EC4843db035d60141B2168a718cC2B74",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x9Dfa0839EC4843db035d60141B2168a718cC2B74",
+              "bps": 1500,
+              "amount": "22.5",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+              "bps": 2500,
+              "amount": "37.5",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "75.0",
+          "systemCharge": "15.0",
+          "recycle": false
+        },
+        {
+          "tx": "0x4a6cd4733719f8f66242ced8c0065d6deea519f7e32fb667c2826b5b93cbc56f",
+          "position": 14,
+          "participant": "0xA449ffB5b67292f474Dee8d15a6242895E354C8D",
+          "structuralParent": "0xF3cC607185Aba21E476C124b15e59663BB7D8cA3",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0xF3cC607185Aba21E476C124b15e59663BB7D8cA3",
+              "bps": 1500,
+              "amount": "22.5",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+              "bps": 2500,
+              "amount": "37.5",
+              "fallback": false
+            },
+            {
+              "role": 1,
+              "recipient": "0x3f6Bb1E6Bfeb9C52f763a197d27B580d7DE7f100",
+              "bps": 1500,
+              "amount": "22.5",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+              "bps": 2500,
+              "amount": "37.5",
+              "fallback": false
+            },
+            {
+              "role": 3,
+              "recipient": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+              "bps": 5000,
+              "amount": "75.0",
+              "fallback": true
+            }
+          ],
+          "reserveAdded": "75.0",
+          "systemCharge": "30.0",
+          "recycle": true
+        }
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "level": 3,
+      "price": 450,
+      "capacity": 12,
+      "actions": [
+        {
+          "tx": "0xb52f451a0ef6cd6d199cc12bb8ab82179fcf7ffdef8fc49117c7ca848e997a1d",
+          "position": 1,
+          "participant": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+          "structuralParent": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 4000,
+              "amount": "180.0",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0x3f6Bb1E6Bfeb9C52f763a197d27B580d7DE7f100",
+              "bps": 5000,
+              "amount": "225.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "45.0",
+          "recycle": false
+        },
+        {
+          "tx": "0xa272ea73b3ab1e0fd7dab78b3d7e3ba4f7ce34b98b8a9dd12a478a50ecef7ff2",
+          "position": 2,
+          "participant": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+          "structuralParent": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 4000,
+              "amount": "180.0",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0x3f6Bb1E6Bfeb9C52f763a197d27B580d7DE7f100",
+              "bps": 5000,
+              "amount": "225.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "45.0",
+          "recycle": false
+        },
+        {
+          "tx": "0x67ea83de1df3724f0bcd265695e9d169d37f37c71c0ade0e59551197a8e2f63b",
+          "position": 3,
+          "participant": "0xC9f74323878edF59eB60c3713B938dE298C962eF",
+          "structuralParent": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 4000,
+              "amount": "180.0",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0x3f6Bb1E6Bfeb9C52f763a197d27B580d7DE7f100",
+              "bps": 5000,
+              "amount": "225.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "45.0",
+          "recycle": false
+        },
+        {
+          "tx": "0x2e54b43c23ddd860b881bbb8836494f5a4c6374344109e40ec8e179508851908",
+          "position": 4,
+          "participant": "0x998be76968Fe24fFf8f59D93EeE3fE49653781BB",
+          "structuralParent": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+              "bps": 4000,
+              "amount": "180.0",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 5000,
+              "amount": "225.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "45.0",
+          "recycle": false
+        },
+        {
+          "tx": "0xdad1cadc39b30c9ccdda89dd8edfb5e2e698f2cdb9bba2df8a095b5386ba8c9d",
+          "position": 5,
+          "participant": "0xC1E95C22503871D23A6149280dd1A9Ca1CE8FA99",
+          "structuralParent": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+              "bps": 4000,
+              "amount": "180.0",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 5000,
+              "amount": "225.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "45.0",
+          "recycle": false
+        },
+        {
+          "tx": "0xf2e34f4246fe32dc8a20a9c117fed44f8ef1f87456a062876d9411457b110f4b",
+          "position": 6,
+          "participant": "0x86f8010A988AF0d6ffB79f59FdE372b350e744F9",
+          "structuralParent": "0xC9f74323878edF59eB60c3713B938dE298C962eF",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0xC9f74323878edF59eB60c3713B938dE298C962eF",
+              "bps": 4000,
+              "amount": "180.0",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 5000,
+              "amount": "225.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "45.0",
+          "recycle": false
+        },
+        {
+          "tx": "0x67dd80e9efe289ae07a7fda1566030335d65656961d7eef7ad0b852cbb14bddb",
+          "position": 7,
+          "participant": "0x9Dfa0839EC4843db035d60141B2168a718cC2B74",
+          "structuralParent": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+              "bps": 4000,
+              "amount": "180.0",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 5000,
+              "amount": "225.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "45.0",
+          "recycle": false
+        },
+        {
+          "tx": "0xa2cc48fd4bb19759ce6138cdab36da4a4cc2b4b5c36fd20eaf4feec33c573185",
+          "position": 8,
+          "participant": "0xF3cC607185Aba21E476C124b15e59663BB7D8cA3",
+          "structuralParent": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+              "bps": 4000,
+              "amount": "180.0",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 5000,
+              "amount": "225.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "45.0",
+          "recycle": false
+        },
+        {
+          "tx": "0xdc3647732254cef98519b915c3073de1a1a9714978e8ca5c3334b87e8c05af35",
+          "position": 9,
+          "participant": "0x9DB58586cc6FA287Fa9eA37c60C94372FF6B02f6",
+          "structuralParent": "0xC9f74323878edF59eB60c3713B938dE298C962eF",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0xC9f74323878edF59eB60c3713B938dE298C962eF",
+              "bps": 4000,
+              "amount": "180.0",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 5000,
+              "amount": "225.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "45.0",
+          "recycle": false
+        },
+        {
+          "tx": "0xb5f3024075bc17784d19a4924ef67f7b2392f5fcdf884d024eea6fcc1482982c",
+          "position": 10,
+          "participant": "0xa6aF0D0Ac4CBE9f5bBa569E8a560bb67129A990E",
+          "structuralParent": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+              "bps": 4000,
+              "amount": "180.0",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 5000,
+              "amount": "225.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "45.0",
+          "recycle": false
+        },
+        {
+          "tx": "0x7efde492fb867b2adb6a3a4b181f7e1c6ece75117b265b8a0c4add8bec4ba1d0",
+          "position": 11,
+          "participant": "0x1d0ffCF85A4f726a64CA860188C140d2f9Ba36D6",
+          "structuralParent": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+              "bps": 4000,
+              "amount": "180.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "225.0",
+          "systemCharge": "45.0",
+          "recycle": false
+        },
+        {
+          "tx": "0xdf0db6644f396372f51faf280e9406895fe4d04685fe168005d2c36036d03356",
+          "position": 12,
+          "participant": "0x5E5aC608C7F49DA450D332594dB8171CfA8C84F6",
+          "structuralParent": "0xC9f74323878edF59eB60c3713B938dE298C962eF",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0xC9f74323878edF59eB60c3713B938dE298C962eF",
+              "bps": 4000,
+              "amount": "180.0",
+              "fallback": false
+            },
+            {
+              "role": 1,
+              "recipient": "0xDd78425335C0c698615845d94f9FeE7492266396",
+              "bps": 4000,
+              "amount": "180.0",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+              "bps": 5000,
+              "amount": "225.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "225.0",
+          "systemCharge": "90.0",
+          "recycle": true
+        }
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "level": 4,
+      "price": 1350,
+      "capacity": 6,
+      "actions": [
+        {
+          "tx": "0x923223da0fa971db9aea30b54499273a44857aa0d04fa0232c23c3c20582b349",
+          "position": 1,
+          "participant": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+          "structuralParent": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 4000,
+              "amount": "540.0",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0xDd78425335C0c698615845d94f9FeE7492266396",
+              "bps": 5000,
+              "amount": "675.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "135.0",
+          "recycle": false
+        },
+        {
+          "tx": "0x29402abd5b22165b2eefd4ed55787cdd6f78537641b959c00a3af92bba7fef8e",
+          "position": 2,
+          "participant": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+          "structuralParent": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 4000,
+              "amount": "540.0",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0xDd78425335C0c698615845d94f9FeE7492266396",
+              "bps": 5000,
+              "amount": "675.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "135.0",
+          "recycle": false
+        },
+        {
+          "tx": "0xf3d4ecfe1a8383de753bd95d63330968762d354ee2670194eeeca0d0f2c4270b",
+          "position": 3,
+          "participant": "0x998be76968Fe24fFf8f59D93EeE3fE49653781BB",
+          "structuralParent": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+              "bps": 4000,
+              "amount": "540.0",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 5000,
+              "amount": "675.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "135.0",
+          "recycle": false
+        },
+        {
+          "tx": "0x94e07280c7389074e0350b6e19f500a9e0d23dff551b0af971e04b33c0b8cfe8",
+          "position": 4,
+          "participant": "0xC1E95C22503871D23A6149280dd1A9Ca1CE8FA99",
+          "structuralParent": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+              "bps": 4000,
+              "amount": "540.0",
+              "fallback": false
+            },
+            {
+              "role": 2,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 5000,
+              "amount": "675.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "135.0",
+          "recycle": false
+        },
+        {
+          "tx": "0x10e6935e928f3564c4ed18901bb487a13cbdb74d6a8e308b1169654379bc3a85",
+          "position": 5,
+          "participant": "0x9Dfa0839EC4843db035d60141B2168a718cC2B74",
+          "structuralParent": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+              "bps": 4000,
+              "amount": "540.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "675.0",
+          "systemCharge": "135.0",
+          "recycle": false
+        },
+        {
+          "tx": "0xf48e1f5290ca27a63508fbf2ebd1cd8e395fe770c4015d41317d4f37045f97d7",
+          "position": 6,
+          "participant": "0xF3cC607185Aba21E476C124b15e59663BB7D8cA3",
+          "structuralParent": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+              "bps": 4000,
+              "amount": "540.0",
+              "fallback": false
+            },
+            {
+              "role": 1,
+              "recipient": "0x3f6Bb1E6Bfeb9C52f763a197d27B580d7DE7f100",
+              "bps": 4000,
+              "amount": "540.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "1350.0",
+          "systemCharge": "270.0",
+          "recycle": true
+        }
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "level": 5,
+      "price": 4050,
+      "capacity": 4,
+      "actions": [
+        {
+          "tx": "0xeaeacabf8c21518f6a0b14652e62bfb2eced2ab7adcfcf0c7c6f745bc164bbdb",
+          "position": 1,
+          "participant": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+          "structuralParent": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 9000,
+              "amount": "3645.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "405.0",
+          "recycle": false
+        },
+        {
+          "tx": "0x145620f29da6ec25d95ab78b32dbb58c95563d030c9fbb6861dec68fab60eb10",
+          "position": 2,
+          "participant": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+          "structuralParent": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 9000,
+              "amount": "3645.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "405.0",
+          "recycle": false
+        },
+        {
+          "tx": "0x8d5bdd35b98e89c38c3af5b41a260a4b3004b2838ec9759b26d7f04cbd07c63a",
+          "position": 3,
+          "participant": "0xC9f74323878edF59eB60c3713B938dE298C962eF",
+          "structuralParent": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 9000,
+              "amount": "3645.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "405.0",
+          "recycle": false
+        },
+        {
+          "tx": "0xc4ad439eee54d04967887ce24b8c1f102704beb723b71c9ad5f9e557da6d49b0",
+          "position": 4,
+          "participant": "0xCd185DF1F3dB2BeEe318e42139D8Fd2950D2157E",
+          "structuralParent": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+              "bps": 9000,
+              "amount": "3645.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "4050.0",
+          "systemCharge": "405.0",
+          "recycle": true
+        }
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "level": 6,
+      "price": 12150,
+      "capacity": 4,
+      "actions": [
+        {
+          "tx": "0xab73c048c56c78755da972fb733df587c23a38d55d33359cb521df92ee71427d",
+          "position": 1,
+          "participant": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+          "structuralParent": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 9000,
+              "amount": "10935.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "1215.0",
+          "recycle": false
+        },
+        {
+          "tx": "0x5d84c2dbb3aadf33d4ecd03b401b4d3d6135ff6fa52827576468749082a8808e",
+          "position": 2,
+          "participant": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+          "structuralParent": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 9000,
+              "amount": "10935.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "1215.0",
+          "recycle": false
+        },
+        {
+          "tx": "0xc3289acf71d46dca4ed0d755315507418d6abf67feb315295aef549b5384543e",
+          "position": 3,
+          "participant": "0xC9f74323878edF59eB60c3713B938dE298C962eF",
+          "structuralParent": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 9000,
+              "amount": "10935.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "1215.0",
+          "recycle": false
+        },
+        {
+          "tx": "0xff438b72e4007d5306045d56f32d776b8c1d45ab087766c624316bd6a281b0a2",
+          "position": 4,
+          "participant": "0xCd185DF1F3dB2BeEe318e42139D8Fd2950D2157E",
+          "structuralParent": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+              "bps": 9000,
+              "amount": "10935.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "12150.0",
+          "systemCharge": "1215.0",
+          "recycle": true
+        }
+      ],
+      "verdict": "PASS"
+    },
+    {
+      "level": 7,
+      "price": 36450,
+      "capacity": 3,
+      "actions": [
+        {
+          "tx": "0xf8a942a747ff9e582d08e168587eaab65480feb20f3ac04581f70fda44162919",
+          "position": 1,
+          "participant": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+          "structuralParent": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 9000,
+              "amount": "32805.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "3645.0",
+          "recycle": false
+        },
+        {
+          "tx": "0xca5109f584733641f6a562b25c0c7fc6d4b3d0aa01cd2100c247db56d545f05c",
+          "position": 2,
+          "participant": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+          "structuralParent": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+              "bps": 9000,
+              "amount": "32805.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "0.0",
+          "systemCharge": "3645.0",
+          "recycle": false
+        },
+        {
+          "tx": "0x5c47cbe519243c082a284f29a456c06d9ced212ec1042348bc836b674cf9ca3d",
+          "position": 3,
+          "participant": "0xC9f74323878edF59eB60c3713B938dE298C962eF",
+          "structuralParent": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+          "components": [
+            {
+              "role": 1,
+              "recipient": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+              "bps": 9000,
+              "amount": "32805.0",
+              "fallback": false
+            }
+          ],
+          "reserveAdded": "36450.0",
+          "systemCharge": "3645.0",
+          "recycle": true
+        }
+      ],
+      "verdict": "PASS"
+    }
+  ],
+  "verdict": "PASS",
+  "completedAt": "2026-10-01T03:32:48.322Z"
+}

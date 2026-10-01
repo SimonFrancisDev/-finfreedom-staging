@@ -45,11 +45,28 @@ Evidence: `smart-contract/test-reports/freedom-plus/router-upgrade-1790825166784
 The repair implementation must
 not be selected for Polygon mainnet. Production uses the base corrected router.
 
+## Additional completed live certification
+
+- Freedom-Plus Levels 1-7 passed on Amoy. Evidence:
+  `smart-contract/test-reports/freedom-plus/core-1790825242931.json`.
+- NFT membership certification passed for FPT-only, FGT-only and mixed backing,
+  including unlocking 5,000 FGT, restoring eligibility, upgrading and downgrading.
+  Evidence: `smart-contract/test-reports/freedom-plus/nft-membership-1790825960241.json`.
+  This does not certify reward-period creation or reward claims.
+- Account 8 earned prerequisite FGT through F-Freedom Levels 5-10. Evidence:
+  `smart-contract/test-reports/freedom-plus/nft-fgt-prerequisites.json`.
+- A hosted staging API health check passed. The observed Freedom-Plus
+  reconciliation passed with 45 chain/database participants, 273 raw position
+  events/projected positions and 251 raw payment events/projected payments.
+  This is a point-in-time observation, not an independent full-chain audit.
+- Fix and staging recovery committed and pushed as `abfb554`.
+
 ## Remaining release checklist
 
 - [x] Validate and execute the funded staging recovery through existing governance.
-- [ ] Finish live Freedom-Plus Levels 1-7 certification and preserve receipts.
-- [ ] Finish NFT certification for FGT, FPT, mixed balances, membership and rewards.
+- [x] Finish live Freedom-Plus Levels 1-7 certification and preserve receipts.
+- [x] Finish live NFT membership certification for FGT, FPT and mixed balances.
+- [ ] Certify NFT reward-period eligibility, proofs and claims.
 - [ ] Verify reported referral, wallet, activation, orbit and mobile UI issues.
 - [ ] Reconcile hosted indexed data and confirm RPC usage under actual workflows.
 - [ ] Confirm the three-representative configuration and final rehearsal scope.

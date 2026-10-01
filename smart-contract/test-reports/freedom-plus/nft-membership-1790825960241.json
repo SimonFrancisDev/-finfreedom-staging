@@ -1,0 +1,64 @@
+{
+  "verdict": "PASS",
+  "completedAt": "2026-10-01T03:39:20.004Z",
+  "member": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+  "finalTier": 1,
+  "finalTokenId": "5",
+  "lockedFPT": "5700.0",
+  "lockedFGT": "0.0",
+  "availableFPT": "48950.0",
+  "transactions": [
+    {
+      "action": "mintFoundational",
+      "hash": "0xc08915323939c78c11aec67e9a212fc452c502924c8e14313e721b8a12ea0e83"
+    },
+    {
+      "action": "unlockAndFreeze",
+      "hash": "0xb5598a44cf5d14528ccbce6ffb697fde45bd533ebf0bb85047f874e0f05b4279"
+    },
+    {
+      "action": "restoreEligibility",
+      "hash": "0xdeb12d7743268963583159a84a161ad3af7767e4ac15edebe1a6cfcdbd849061"
+    },
+    {
+      "action": "upgradeIntermediate",
+      "hash": "0x382f8b2333cf5a12c26281c80d3ade5776bf43036e26fa57c24d974fd8d6e1c9"
+    },
+    {
+      "action": "downgradeFoundational",
+      "hash": "0x3520565c9fc83f47f3c454b9ebd97fd25d2d996ccda932a3486af86715099bf3"
+    },
+    {
+      "action": "unlockFptOnly",
+      "hash": "0xfd357f927320ca686782f8a13df5c8ff431b13596b711e1187ce31cfc56fede3"
+    },
+    {
+      "action": "restoreMixed",
+      "hash": "0xf0a65630b91ed0cd82ea8d11da6222f9c19a883f12ce6e5c0c42847a2e13df97"
+    },
+    {
+      "action": "unlock5000Fgt",
+      "hash": "0x6fa2c5c1d37df05ae2ffa137d7eaa35d14d17dc9310bf3147758ce19f8b8b990"
+    },
+    {
+      "action": "restore5000Fgt",
+      "hash": "0xeae79bebccfcf5a492d973445d052f69498c0b1b83f721dcacbf819ee2148a6f"
+    },
+    {
+      "action": "unlockMixed",
+      "hash": "0x25d39c8a392b196318afbb62adce4193221e972dd4e729c02165f4593cf3d7dd"
+    },
+    {
+      "action": "restoreFgtOnly",
+      "hash": "0x79573132f3480a212c31b5c086b7ee464cdb3fbc836ecd497cf356da4f8141dd"
+    },
+    {
+      "action": "upgradeAdvancedMixed",
+      "hash": "0x69dfaf1cf5fd2073190ff1a5904e9e5c593e2f89f6523f7cb82ecd6e770412f5"
+    },
+    {
+      "action": "finalFoundationalFptOnly",
+      "hash": "0x506c93cd8def7b2db37bb8af6ab50f411eba093db43aabd9bb379a1522d75d17"
+    }
+  ]
+}
