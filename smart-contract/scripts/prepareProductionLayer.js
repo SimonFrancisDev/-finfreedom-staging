@@ -120,6 +120,8 @@ async function main() {
     const cap = ethers.parseUnits(process.env.PRODUCTION_LAYER_MAX_GAS_PRICE_GWEI || "50", "gwei");
     if (price <= 0n || price > cap) throw new Error("Gas price exceeds the approved cap");
     const budget = BigInt(proof.rehearsalGasUsed) * price * 125n / 100n;
+    const ceiling = ethers.parseEther(process.env.PRODUCTION_LAYER_MAX_COST_POL || "15");
+    if (budget > ceiling) throw new Error("Estimated deployment exceeds the approved total cost ceiling");
     if (await ethers.provider.getBalance(signer.address) < budget) {
       throw new Error("Insufficient deployment funding including the 25% buffer");
     }
@@ -141,6 +143,42 @@ async function main() {
   const save = () => fs.writeFileSync(output, JSON.stringify(manifest, null, 2) + "\n");
   fs.mkdirSync(path.dirname(output), { recursive: true });
   save();
+  if (!rehearsal) {
+    const originalSend = signer.sendTransaction.bind(signer);
+    const price = BigInt(process.env.POLYGON_GAS_PRICE);
+    const ceiling = ethers.parseEther(process.env.PRODUCTION_LAYER_MAX_COST_POL || "15");
+    let spent = 0n;
+    manifest.costLimitWei = String(ceiling);
+    manifest.gasPriceWei = String(price);
+    manifest.costTransactions = [];
+    signer.sendTransaction = async request => {
+      const tx = await ethers.resolveProperties(request);
+      tx.gasPrice = price;
+      delete tx.maxFeePerGas;
+      delete tx.maxPriorityFeePerGas;
+      tx.type = 0;
+      tx.gasLimit = tx.gasLimit == null
+        ? (await signer.estimateGas(tx)) * 120n / 100n
+        : BigInt(tx.gasLimit);
+      const value = BigInt(tx.value || 0);
+      if (spent + tx.gasLimit * price + value > ceiling) {
+        throw new Error("Next transaction could exceed the approved total cost ceiling");
+      }
+      const sent = await originalSend(tx);
+      const record = { hash: sent.hash, gasLimit: String(tx.gasLimit), status: "PENDING" };
+      manifest.costTransactions.push(record);
+      save();
+      const receipt = await sent.wait();
+      spent += receipt.fee + value;
+      Object.assign(record, { status: receipt.status === 1 ? "CONFIRMED" : "FAILED",
+        feeWei: String(receipt.fee), block: receipt.blockNumber });
+      manifest.totalCostWei = String(spent);
+      save();
+      if (receipt.status !== 1) throw new Error("Deployment transaction reverted: " + sent.hash);
+      return sent;
+    };
+    save();
+  }
   async function send(label, action) {
     const tx = await action();
     const record = { label, hash: tx.hash, status: "PENDING" };

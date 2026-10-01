@@ -2,8 +2,8 @@
   "chainId": 31337,
   "rehearsal": true,
   "status": "LOCAL_FORK_WIRING_PASS",
-  "sourceCommit": "9f35542d83b70dfc54a3bd075367eb2d0090ab49",
-  "createdAt": "2026-10-01T13:51:34.759Z",
+  "sourceCommit": "514594bbf6d3b3563c57a67bc9f3e23bb2b834cb",
+  "createdAt": "2026-10-01T21:57:49.830Z",
   "existing": {
     "governance": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
     "guardian": "0x290c2300296379BD0048aFe9099Ed6Fc81BF75fC",
@@ -35,395 +35,383 @@
   "contracts": {
     "FPTToken": {
       "proxy": "0xc60FD9438725a040609333b05d0E3AD0C31f7012",
-      "transactionHash": "0x6c4a4d4d587baa1038a68a4ff52c22463c563e1a2d5db6aa97dcba5bb6857923",
-      "deploymentBlock": 94771560,
+      "transactionHash": "0x71e20df46ed3ce8d201a27e2aae1c1a46a7b05ad29a97394712a8b39d47a474b",
+      "deploymentBlock": 94791003,
       "implementation": "0xB16cA8a208Bd7Ea1C215f0BAae68cE1b92988356"
     },
     "FPTrToken": {
       "proxy": "0x2a8f8d47aFB903A9223A04EfcaE32422424E2363",
-      "transactionHash": "0x89db7c012f4b2d211afe5fcacd469a9f2f72630663c50939f6d9feff59ff3ae9",
-      "deploymentBlock": 94771562,
+      "transactionHash": "0xebc52a324ab0ea3e88d51be86f01f7f70813ff5bcf58332ad99fcbfa72b46889",
+      "deploymentBlock": 94791005,
       "implementation": "0x9CE36628974CcA9aE28ce03E47e54Ac5C70C7297"
     },
     "FreedomPlusTokenController": {
       "proxy": "0x9a649Ef09874E2def7Ca78E19E118eF4021697bC",
-      "transactionHash": "0x0921fa953a6b67668b02054b55b0c68fbefe91771d477bae15f135759057652c",
-      "deploymentBlock": 94771564,
+      "transactionHash": "0xc0657aa9179bdff942032f2655113f00ffb17eda3cfecf5d76edc4151cac1c2b",
+      "deploymentBlock": 94791007,
       "implementation": "0xaA5fb4ef90a2B14Ae30C5753c57bdc820f5c35bc"
     },
     "FreedomPlusLevelManager": {
       "proxy": "0x6E59b6580826DCcC4c1c9E5497F6bE3BE9C77384",
-      "transactionHash": "0xa2d0b536021b5575a616286669b2814cebae3fac708e83fd3898473028852ff7",
-      "deploymentBlock": 94771566,
+      "transactionHash": "0xd35d2d245d3ff77d5a530aef4a051e2b57835eff70141426f00e9c69e732247f",
+      "deploymentBlock": 94791009,
       "implementation": "0x636b55b22B045dCDBAe734F26B8221a32DFEb369"
     },
     "FreedomPlusRegistration": {
       "proxy": "0x7eC9D69fD82B1e62E01d497d495fEdfFfC34a0B6",
-      "transactionHash": "0xc345267d3776bd29fcb0c0e8d976b67291250114e8e026b98b1bc5962e4acf3a",
-      "deploymentBlock": 94771568,
+      "transactionHash": "0x9292438cc6a736659c10c5ce3f7a3e610ba99c9002ecbca7ea02852915dd71e8",
+      "deploymentBlock": 94791011,
       "implementation": "0x4D90763ca437abdA3E9FDBe1315f369324263AB2"
     },
     "FreedomNFTPoolVault": {
       "proxy": "0xbb2cF7ef867F46A93ae1F9DEd564927874b79B52",
-      "transactionHash": "0x57b686ebc56bdabc070bf6643d546316828ccc06ef5b085f1a751351d3c6b0b7",
-      "deploymentBlock": 94771571,
+      "transactionHash": "0xd7bfcd170977bf2f9ff0dc18a694571f480c4714f490148009906b1f68327ac0",
+      "deploymentBlock": 94791014,
       "implementation": "0xC62c0863DDeA0a2e189bEF86Be8E20f1F645569a"
     },
     "P39PlusOrbit": {
       "proxy": "0x1DFC59c915163D56998b764E6536CF869550B233",
-      "transactionHash": "0xbfb50af444c46eee10399c0013bab9a81da4a0805d2590e0207cb40572c77efc",
-      "deploymentBlock": 94771573,
+      "transactionHash": "0xe20e802390659207182cd7b339dc3086f135622a90084f406c0d3a4266885e6c",
+      "deploymentBlock": 94791016,
       "implementation": "0xAF5789235Be05F5dA68932213666Dd29A0F35de8"
     },
     "P14PlusOrbit": {
       "proxy": "0x81e21a812181404325818dc042676e93293e0751",
-      "transactionHash": "0xcb8cf6fea1ab85ee58736a52b6126c163a31341aaa52a53bac21cb0ec1254755",
-      "deploymentBlock": 94771575,
+      "transactionHash": "0x4834e3d628dbe41082b4496059c0be532f3c0576ccb03632f265c06fa41b59d9",
+      "deploymentBlock": 94791018,
       "implementation": "0x5BbC9323471Db6Ee0F0E9D7FCb9A75B86CeB6753"
     },
     "P12PlusOrbit": {
       "proxy": "0xf1C9A1AFa0534cEb1075726Fab6Ac364224BD45d",
-      "transactionHash": "0xf55be85e63a3db02f0800addbcd37f4e1afba9c9d0253ed824e93b080421db9d",
-      "deploymentBlock": 94771577,
+      "transactionHash": "0x67f6e250eede1bb12b16b16e3f3895b08e8f725634dc4c32bd2c8cf9f23786ac",
+      "deploymentBlock": 94791020,
       "implementation": "0xBfAA5B5C4A170Fb753B6B89215352B00Cd303c69"
     },
     "P6PlusOrbit": {
       "proxy": "0x4C2A8058f87E194e277BADB853C87E1a9f44BC0d",
-      "transactionHash": "0xf82ffec50fa689d8a15ff76aa9628336488ab2a22b988e8acd8b8d8cd2fc9f08",
-      "deploymentBlock": 94771579,
+      "transactionHash": "0x1aa69a3074c13997fcc6f16827e26225b3bfd51f8289dc22fbcc0fc748d311a7",
+      "deploymentBlock": 94791022,
       "implementation": "0x3E57C6C167f47b83e1708349CB973c322E57DA32"
     },
     "P4PlusOrbit": {
       "proxy": "0xfD57a9c35AD9d46C4899817915f1A9b6c843a608",
-      "transactionHash": "0x258e7add2c16b053cdbf62c531935747e94ec1ae3e9e7fd4e0f4a34305c13995",
-      "deploymentBlock": 94771581,
+      "transactionHash": "0xca32598a386e0e70ff57f7a0b500a958d26b3ecffee620e01ff1d2503151ad19",
+      "deploymentBlock": 94791024,
       "implementation": "0x4C90dFe7252df6a93aF2EDA19392eCe3a84c3848"
     },
     "P3PlusOrbit": {
       "proxy": "0x8Ce32a2f23dEF2a31e46228758084724f9828C8d",
-      "transactionHash": "0x915db74c1ac0281188a2c9e05d3f342358159ed3f5c807a67db04bec6d72e968",
-      "deploymentBlock": 94771583,
+      "transactionHash": "0x89927e1ca47f6f93d9b556cb7714fe985c3dfd7a35dd9319ce33a78a487e7eac",
+      "deploymentBlock": 94791026,
       "implementation": "0xF58a3a50AfF26eA46acaf0aB015AF4C9ACDA0aE4"
     },
     "FreedomPlusSettlementRouter": {
       "proxy": "0x8C88262595cbEAA5FffB60a0689b3EAbe22B0498",
-      "transactionHash": "0xbe7fe44df95dfaa1695f81f64d5ff17aa5f6ba43e580a253a82d15c20e8c6021",
-      "deploymentBlock": 94771585,
+      "transactionHash": "0x027d1f8a93a2e2d5e4e5c38a66cdc05ba53756d011e6e3ae4ca2f3de68bb5367",
+      "deploymentBlock": 94791028,
       "implementation": "0x0820857424EFF93f0D3326DDea6caa7E872B0bB5"
     },
     "FreedomNFTMembership": {
       "proxy": "0xef54b5B9038A282c651E2992B885D074fb43DcDb",
-      "transactionHash": "0x883eb90d40abcf0223c0df3617a861a0dffec0df96eefc39a9a4025df27fd625",
-      "deploymentBlock": 94771587,
+      "transactionHash": "0x3096ab7f8f86818ee219819a9018ab1a688309e9199fc1160be13d84522848eb",
+      "deploymentBlock": 94791030,
       "implementation": "0x603f48dE4c24bEAdd8C14cA60216C95A4257fc8c"
     },
     "FreedomNFTRewardDistributor": {
       "proxy": "0xD3b9637281C41fc7575aF34d5e63C4dE2D86c838",
-      "transactionHash": "0x476a0948088a649a07f2075286527f0f20768de5c45e5a9398dfc4a269231ea7",
-      "deploymentBlock": 94771590,
+      "transactionHash": "0xfa95423c9e7069e441a039aff3d4b928d4ed1ddc28de35cf99a00fabd66e44fb",
+      "deploymentBlock": 94791033,
       "implementation": "0x1d1FF16D7EBac633094fd4405dba6A9B4B074B2b"
     }
   },
   "transactions": [
     {
       "label": "registration.pause",
-      "hash": "0x1081c2f6e94812e2774a6c07473f76e21b2d513a0d66a890179d36ccb6eaa86f",
+      "hash": "0x6995ab17076111bf19ad0bb54147e003024a70db25a1c8c59c2c3e227cdb00f6",
       "status": "CONFIRMED",
-      "block": 94771569
+      "block": 94791012
     },
     {
       "label": "membership.pause",
-      "hash": "0xa96f23804812fe1658ba2838bfb27835a84b8b9fa867f3690fd657b4b6f39609",
+      "hash": "0xf0f504191a7e4e5272d8bb626f9f31733a9a6f30be3173ad515233f41e7e4c2f",
       "status": "CONFIRMED",
-      "block": 94771588
+      "block": 94791031
     },
     {
       "label": "router.orbit.0",
-      "hash": "0x5dbb779e4088b21a3170e79e9ee2b05de182b0d97de6ea85436e7d46ac117b1f",
+      "hash": "0xb08885686c8d9905b4ddf938a34e2c6795686626f535fe37d9c4a67330f50cc5",
       "status": "CONFIRMED",
-      "block": 94771591
+      "block": 94791034
     },
     {
       "label": "orbit.manager.0",
-      "hash": "0xc7fa593fdae5aeafb468d10651fa5fbd218ae622d18eb6e698a18327e7e498d7",
+      "hash": "0x9326419985397153639dfae0714a6184cac30e9d42979276b73f8c0e4cdb584e",
       "status": "CONFIRMED",
-      "block": 94771592
+      "block": 94791035
     },
     {
       "label": "router.orbit.1",
-      "hash": "0x976ebe893506142e280d465310ba226c5fd70b0b2ddfe61a6420f96e28c40f7b",
+      "hash": "0x138deaea53ebaf10dda8ca4f2369d92c93054ce094d01aec687eeeee27f7755b",
       "status": "CONFIRMED",
-      "block": 94771593
+      "block": 94791036
     },
     {
       "label": "orbit.manager.1",
-      "hash": "0xaaff2eb62b7f812e6b773786a6a537f4dabe6e0e1f22822262045736fdc1426b",
+      "hash": "0xf1976c588c1a0e9bcd2f4e2cceefad96b7381d219f26bf03b484068ea5c8e860",
       "status": "CONFIRMED",
-      "block": 94771594
+      "block": 94791037
     },
     {
       "label": "router.orbit.2",
-      "hash": "0x10e16d4efab113e63f66f3f3db97d339c986acfbca178b54fb08eaf032d86c3f",
+      "hash": "0xd6831a6899a2458f046a6e88328562d89820e1280bfb3520d4d9564ff780ad48",
       "status": "CONFIRMED",
-      "block": 94771595
+      "block": 94791038
     },
     {
       "label": "orbit.manager.2",
-      "hash": "0x09aaee43800df2bc78ab408db5437fef62af93e9b5d1986d0cf2c1109737feea",
+      "hash": "0xae792af7ddae27a807fe0d9a81df9b6687223eee11cd5760f4bcf8491b09c8c7",
       "status": "CONFIRMED",
-      "block": 94771596
+      "block": 94791039
     },
     {
       "label": "router.orbit.3",
-      "hash": "0xbc933e37c7f685e649958663bdcc6e1b0ad28ea82d4661c77ae1c51d8191e17d",
+      "hash": "0xd43cc1b61bdcb93f8eb81426f4c720d2de3580d4c014c3015caaf805138990e7",
       "status": "CONFIRMED",
-      "block": 94771597
+      "block": 94791040
     },
     {
       "label": "orbit.manager.3",
-      "hash": "0x343b823799af7b08b18a6a0d5181128bc91118a662da696bd0d2685e1e81ecd4",
+      "hash": "0x29d5d49d305156d331ea8887abe9eb72480bf989c4117b13887c43673ad3fc14",
       "status": "CONFIRMED",
-      "block": 94771598
+      "block": 94791041
     },
     {
       "label": "router.orbit.4",
-      "hash": "0x861a9adb3084094afb914f241a09e7797e6a9e0c720ac3d4d10c759a51aa5184",
+      "hash": "0x7d8fa5abe3a8ad4fd366a0239986201b6bcef87d23a5dc575449fb2e71d96a59",
       "status": "CONFIRMED",
-      "block": 94771599
+      "block": 94791042
     },
     {
       "label": "orbit.manager.4",
-      "hash": "0x28650968c0866535dc315dfc632be064259e056a93526896c26388483cda2940",
+      "hash": "0x6f28550f853d53e7cb34c4e60c7a25af354c24ba3f8bfed72d3e351e87b5f8bd",
       "status": "CONFIRMED",
-      "block": 94771600
+      "block": 94791043
     },
     {
       "label": "router.orbit.5",
-      "hash": "0xfbfbabb29d16f7058c733a4c544b08cfcf605e1fd36cdb169eba6e5c5b4bcf53",
+      "hash": "0xd6dad99eb3753b96ace56d708d2ac33d7689763a9753a8cdfac225e8e55ff19a",
       "status": "CONFIRMED",
-      "block": 94771601
+      "block": 94791044
     },
     {
       "label": "orbit.manager.5",
-      "hash": "0xc03253d68b026149515db19170be30513a15cd8fa5f439d92615d10d299a3dd0",
+      "hash": "0xb6d1e05024bad85f8542c8a7285437864268740afca2dc9b30f0c94a62f01e83",
       "status": "CONFIRMED",
-      "block": 94771602
+      "block": 94791045
     },
     {
       "label": "router.founders",
-      "hash": "0xc006b88f083e0b7bfc9610c23a51ca17d8b290fb3a71e30125a37875f5918a52",
+      "hash": "0xc9e15fd6c32b820e2ff58851504914a7393a49ce1dc5aa682b7cc94792ee1488",
       "status": "CONFIRMED",
-      "block": 94771603
+      "block": 94791046
     },
     {
       "label": "router.lock",
-      "hash": "0x993790fc119a23b3541c42e2973d5a3a02225f58f7030d637de7112c529adb98",
+      "hash": "0xc4fe7c6bb4a15c01c8d9b0d76633198c071133b478c1f0e7d4fa1bbb70c8d700",
       "status": "CONFIRMED",
-      "block": 94771604
+      "block": 94791047
     },
     {
       "label": "manager.registration",
-      "hash": "0xd60202a2c2cee3d6f33f2f88392592804d41a158bcdeba40a2cecfe82f09c894",
+      "hash": "0x116b3fa58a5a8f9b23c5eb0702f19e047ea76a30d7da8ec191c6cfff073b3ff7",
       "status": "CONFIRMED",
-      "block": 94771605
+      "block": 94791048
     },
     {
       "label": "manager.router",
-      "hash": "0xd225ef60949c421722937aef63d6f9996964ca3a002246675ac5bd52e9501b96",
+      "hash": "0x8a1eef09bdd28193972475383942722485f9fe610726e6728af29d2168365be4",
       "status": "CONFIRMED",
-      "block": 94771606
+      "block": 94791049
     },
     {
       "label": "controller.manager",
-      "hash": "0x8ffd676ef37884ac86293f456d32f75476182c1fa472112381012d73a1a865d5",
+      "hash": "0x6099e0948491ba90a382990f8072f257b72026e43e407cb4664e80dbc917ea51",
       "status": "CONFIRMED",
-      "block": 94771607
+      "block": 94791050
     },
     {
       "label": "fpt.controller",
-      "hash": "0xbe8da127946cf9abe692a501e2a676173dcaa926df31225ebe8ba685f6f1aaae",
+      "hash": "0x16d7122f674393c7cf04e74f322ef44575c0ef88545b305372db1ad0b80fa9fc",
       "status": "CONFIRMED",
-      "block": 94771608
+      "block": 94791051
     },
     {
       "label": "fpt.membership",
-      "hash": "0x868476cfad5d948fc9269af4c819e0c7c819bfe9fa376558859fa09042bc2d76",
+      "hash": "0x1fe61e8c7e0f947ffa0cb517d11902ea7a399b90028ad4da643858ad53184820",
       "status": "CONFIRMED",
-      "block": 94771609
+      "block": 94791052
     },
     {
       "label": "fptr.controller",
-      "hash": "0xef84a803631c2d5bb3a1cccba19111c74e8cffb5022e8664a3ca1e1d19c85b01",
+      "hash": "0x350f6c6c71b2203f7acc5f94cb07c699e987f24b4550fce11455b567e4295239",
       "status": "CONFIRMED",
-      "block": 94771610
+      "block": 94791053
     },
     {
       "label": "pool.distributor",
-      "hash": "0x5e09f6797e4ae8f0154aa2209fdb12fac7a104c6ce6e9d125b9b1b13d2d07606",
+      "hash": "0xf2027ce33059427acc0a5298418d28a6f6fc8446a9a0876b5d836d2d9ec981e5",
       "status": "CONFIRMED",
-      "block": 94771611
-    },
-    {
-      "label": "registration.genesisEnable",
-      "hash": "0x2a48debd0cc55ad0d797f3eca831d1e811205e51a9dd6aabbbef5fd55f4794aa",
-      "status": "CONFIRMED",
-      "block": 94771612
-    },
-    {
-      "label": "registration.genesis",
-      "hash": "0xec68aa27f2b242327d3b1283eb8562ab244ea6c09a63e37b377024245882da8d",
-      "status": "CONFIRMED",
-      "block": 94771613
-    },
-    {
-      "label": "registration.genesisClose",
-      "hash": "0x8834543b57d662b3532ed65ed8bfaf8a44b62d84db3a94aa576800d14f4502ca",
-      "status": "CONFIRMED",
-      "block": 94771614
+      "block": 94791054
     },
     {
       "label": "registration.gateway",
-      "hash": "0x250c6b060e377569638f78824b0ccad20e4d33b1ded8868abfd1229246bc7a1c",
+      "hash": "0x5f2895e71d560d51fc6b51649904fa73a9bf8273cc56430cfdbe6f56faad5e25",
       "status": "CONFIRMED",
-      "block": 94771615
+      "block": 94791055
+    },
+    {
+      "label": "registration.genesis",
+      "hash": "0x3c469d89f258223fde94479d71184b1b12cf0c064aa427ff6c239d728a039d84",
+      "status": "CONFIRMED",
+      "block": 94791056
     },
     {
       "label": "manager.pause",
-      "hash": "0x2f31634f2d180c83f014bba226e9e0814a02aa5bec204c256092145fb70444f3",
+      "hash": "0xb3412e44d03c63b162c42683f5858f4ecb4a8457b831077a742f7b533aced8d6",
       "status": "CONFIRMED",
-      "block": 94771616
+      "block": 94791057
     },
     {
       "label": "fpt.lock",
-      "hash": "0x4a22272170da08eddf17d2cfe0ff955daf38ddfae470e198073c6ed24e619485",
+      "hash": "0x3b6af70d777d90ad20b4b0056c4ae0cae94b5f17a2a50cef9db7a3653c21d4aa",
       "status": "CONFIRMED",
-      "block": 94771617
+      "block": 94791058
     },
     {
       "label": "fptr.lock",
-      "hash": "0xbce6bae6062686e25ffbbf8fda1617dac1df5361cfa635a957f8a75b3a837c4a",
+      "hash": "0x75660c8cf1caf296935a46cc1e879eadcd959f9c7c37b525567aad3f7124ee2b",
       "status": "CONFIRMED",
-      "block": 94771618
+      "block": 94791059
     },
     {
       "label": "FPTToken.ownership",
-      "hash": "0xfe837bdad74bf1c84418a5d2a851c6548d40c84241294f01dedd0923c1cd86d7",
+      "hash": "0xc9387d8a7140f679722755b94f8562102872d77ffd2e36e5c5a5d7dd749f8f8b",
       "status": "CONFIRMED",
-      "block": 94771619
+      "block": 94791060
     },
     {
       "label": "FPTrToken.ownership",
-      "hash": "0xf52f63cc209298b78aa9f610c5001b34cbcdac7c40a512c8f7487544fa83b585",
+      "hash": "0x2c0eafea249e0189e22bb9a8d6e51aa65a4fc7b7ac5fa7e2ceb9db0c61f7c236",
       "status": "CONFIRMED",
-      "block": 94771620
+      "block": 94791061
     },
     {
       "label": "FreedomPlusTokenController.ownership",
-      "hash": "0x96b0649c0984b09be6dac8ef4bdda7082e5216cedbba9b5d7739f5e895cd769f",
+      "hash": "0x0d3c1c9ef4f165e8344db203caa8df72dff2d528e1276bac6d254eb293e08db6",
       "status": "CONFIRMED",
-      "block": 94771621
+      "block": 94791062
     },
     {
       "label": "FreedomPlusLevelManager.ownership",
-      "hash": "0xe1cdd2ca7215fb9fe1d97ab3bbc31999213624a82312f9a18db730db7b0d4e28",
+      "hash": "0x94f8db7991063506cef7c513b44d2b731d5150a5f0cadea268effb272d9c5316",
       "status": "CONFIRMED",
-      "block": 94771622
+      "block": 94791063
     },
     {
       "label": "FreedomPlusRegistration.ownership",
-      "hash": "0x393b4328d2033ab19bca2248ef336e45f2fadf92477a7d4986369f759e12a190",
+      "hash": "0x210c22540ff9fab083442a6bdf0bafea0430092af2be9b0d669540032b4a9122",
       "status": "CONFIRMED",
-      "block": 94771623
+      "block": 94791064
     },
     {
       "label": "FreedomNFTPoolVault.ownership",
-      "hash": "0xf5e46d64f133024c82fb630a84b637737ff97b73eae0c789036a704f34371859",
+      "hash": "0x15258558da713cb8fb07b006e000346e9a51211c5b9ef666f934390383527274",
       "status": "CONFIRMED",
-      "block": 94771624
+      "block": 94791065
     },
     {
       "label": "P39PlusOrbit.ownership",
-      "hash": "0x5e728eaeb4be9ce7947ff7f0b2578e6ae2eb39416aec21037ead52fb2ae91375",
+      "hash": "0x2e6b449278721a352aa037ce66131dcbb273abf846a0ecedc40e21a0cb830652",
       "status": "CONFIRMED",
-      "block": 94771625
+      "block": 94791066
     },
     {
       "label": "P14PlusOrbit.ownership",
-      "hash": "0x09bc31ecbb689236b1fbe94a74a0f3cd73e543a8a0b1692d4da11e313d0b3db9",
+      "hash": "0x61bc9bb6a094f49a41eea16dad2dcf688e8f693a2aacf3b199c4cc2a58213a39",
       "status": "CONFIRMED",
-      "block": 94771626
+      "block": 94791067
     },
     {
       "label": "P12PlusOrbit.ownership",
-      "hash": "0x265ee62bb8e8f285e78b1b9e7e002db1a900e9be2101244134eb2f62500c9017",
+      "hash": "0x832abdaf174c5f1d4604d153f85ed214148cae603a18bca9dff8df17ce385ef2",
       "status": "CONFIRMED",
-      "block": 94771627
+      "block": 94791068
     },
     {
       "label": "P6PlusOrbit.ownership",
-      "hash": "0x77e189493d488f51ad0d5373251f2ea97f505ab8bc643f40646fa5f8073b727a",
+      "hash": "0x164a241e3d7457430c5884b7b07753bdec7a36b1a66eae4c6b367eb501b6ea8b",
       "status": "CONFIRMED",
-      "block": 94771628
+      "block": 94791069
     },
     {
       "label": "P4PlusOrbit.ownership",
-      "hash": "0x9dabdf7ca43bdce1b3a5dbf6e924d2ea42271074473bcf6f822707e86b6c56c3",
+      "hash": "0xa1dea951ea68777a2a4de1f3d8f3a26787b19dac1058c0baaa39620c7ff76ab1",
       "status": "CONFIRMED",
-      "block": 94771629
+      "block": 94791070
     },
     {
       "label": "P3PlusOrbit.ownership",
-      "hash": "0x542f5ee619bbec6f248420d49fa9d898425ac0bfae751cd91b697b027e76f0b5",
+      "hash": "0x616bd0f37b666a90c39c9b037d4f3da2a4a2b467235d5393ab6d3289c733e627",
       "status": "CONFIRMED",
-      "block": 94771630
+      "block": 94791071
     },
     {
       "label": "FreedomPlusSettlementRouter.ownership",
-      "hash": "0x32843ff10e0f4b46d5098756e2c28e74c70fdbb530a4f152edfe625972012e90",
+      "hash": "0xae2f355518407f8a1609eeb22f48a5581c33f4e0f0186b1dc1a7ee001967c3ed",
       "status": "CONFIRMED",
-      "block": 94771631
+      "block": 94791072
     },
     {
       "label": "FreedomNFTMembership.ownership",
-      "hash": "0xe2bf3d9b2a542efcff49cbd8550c48fccd21ece2583bd19d4a51bd4112f61589",
+      "hash": "0x7698e674df04a4778b0b936e9750d6267f27fe261fa22757d718daef47652c18",
       "status": "CONFIRMED",
-      "block": 94771632
+      "block": 94791073
     },
     {
       "label": "FreedomNFTRewardDistributor.ownership",
-      "hash": "0x3ea4ff13243730c08a28e641d928e69f54fc15de48bb995577a995d8d757ae1c",
+      "hash": "0xd2b21f5676a31ef4d444a2af5d0433ac71bf3d67577bcb7346c7aab7acf58ad1",
       "status": "CONFIRMED",
-      "block": 94771633
+      "block": 94791074
     },
     {
       "label": "REHEARSAL: Authorize NFT membership for existing FGT",
-      "hash": "0x31d8d17be2b87fc821b3b37f130d7b804746afb1cf41e1a6aa8c89458054c4c9",
+      "hash": "0x212ffeb7b5bc28fdaaf885b0e414fc9bed7ac1bb1b0d6703c98676d6a6d69200",
       "status": "CONFIRMED",
-      "block": 94771634
+      "block": 94791075
     },
     {
       "label": "REHEARSAL: Connect F-Freedom to the shared NFT pool; preserve operations",
-      "hash": "0x78e4809c6a344bd109decb2db9020da7294e3981c6b947c85a40775b0b202080",
+      "hash": "0x7d9e97c974aa512f3c83340572f56a55eb0e6a8547fd1b9daf29298949095629",
       "status": "CONFIRMED",
-      "block": 94771635
+      "block": 94791076
     },
     {
       "label": "REHEARSAL: Enable new manager after integration verification",
-      "hash": "0xd30c653c8190710a655ab7f8eea7973490c3ced85ebfc5874ee6cda623860cc8",
+      "hash": "0x2bb329331fda260afcb099cbc05b5ec8d3a43d0b1d9f6b65c41ab3b28997a3f7",
       "status": "CONFIRMED",
-      "block": 94771636
+      "block": 94791077
     },
     {
       "label": "REHEARSAL: Enable new registration after integration verification",
-      "hash": "0xff4a405fea1964b8d8b271494d3eb1eb5bd83f17ec47dcde4d086324e101e2d7",
+      "hash": "0x8e9edef25378f0bde3adea765977421d6c351bce0b516a90b225d1a5a23e01c9",
       "status": "CONFIRMED",
-      "block": 94771637
+      "block": 94791078
     },
     {
       "label": "REHEARSAL: Enable NFT membership after integration verification",
-      "hash": "0xc94216d76f31aa003d3bf7cb2c81fc45014d1bb19a0bc3ff399b68d7094e95ea",
+      "hash": "0x688382ab7293787d4fa9dfcdb7a6250b85abaddcf32c2aeedc5896ca1d975e16",
       "status": "CONFIRMED",
-      "block": 94771638
+      "block": 94791079
     }
   ],
   "proposals": [
@@ -465,8 +453,25 @@
   ],
   "existingFundsMoved": false,
   "productionReset": false,
-  "sourceScriptSha256": "dffc8926034c95d7fe6c86c4e567bb668bdae8efc4531ec6443af8cd16d59ae5",
-  "startBlock": 94771558,
+  "sourceScriptSha256": "0d21d90be3bf34a5dbefb85e2124271307e20a5bf735de007b9586a845e9a134",
+  "artifactHashes": {
+    "FPTToken": "4677bc40200e97bc19d1ba46b5c5d107cebe9191bef556c548cee8165901e1cc",
+    "FPTrToken": "b7031ff1d7d47157abe0ec171659f5d0acb05d3bae6563fdcf5958f7d91460bc",
+    "FreedomPlusTokenController": "eb47143747957df1cf982e5b76ff518cd1a75ebb407ba49062c27a7fb6e8887c",
+    "FreedomPlusLevelManager": "31a2d442cfd4d134c980cf1d30d4c353b3f5f1c790ebd4f0c5e0ba6d6a5b781c",
+    "FreedomPlusRegistration": "fd9429331f27171eeb947484d25dc0415c51f3d5907c0f2ec84788f98440972b",
+    "FreedomNFTPoolVault": "a5d591d5c157cdf4ff85de6a64435f6b3172b9f8514c275690b977133629f6e2",
+    "P39PlusOrbit": "eac3f2fcd7dc5cb1267d0c932ed9ed8447c261eab8d634bb4c8d868dc4076b82",
+    "P14PlusOrbit": "1029751751b9b26e85f90e199ebffb80f8be6d38f63f6a46ec67bf2c8397a213",
+    "P12PlusOrbit": "e0b8737faecbca4caf0440f17037dc592428ecf5c25c36a2a4a1cebcee79554a",
+    "P6PlusOrbit": "c26ad6d7a78cfff2356f4e5eef99088d56b99c497060f277cfecb46b71c67ec6",
+    "P4PlusOrbit": "467bb2baf6ea5ee478afbca09012400171d7a623bf16c2de52892425a3dd1b1a",
+    "P3PlusOrbit": "0ab5c6ea2cb6a7948898e681984eb5e452c346060bd8aeb3d8c84a3c6f86d644",
+    "FreedomPlusSettlementRouter": "5dbcef9a6f91916094bc9aa887c5bac57c5a96825626986ead6befa437366bc9",
+    "FreedomNFTMembership": "01c4472a8f6b3bd46a58159f4f5b5364a5ca70879e271c6bca6fec1c9660818e",
+    "FreedomNFTRewardDistributor": "8b3a01fd38e1f2898c435bbb9a534194d95d064f85ac823d99bc010e98cb47ee"
+  },
+  "startBlock": 94791001,
   "rewardOperatorConfigured": false,
   "executionWarnings": [
     "A dedicated reward operator must be approved before enabling the monthly worker.",
@@ -474,6 +479,6 @@
     "Do not enable the website countdown release until integration and genesis are verified."
   ],
   "governanceSimulation": "Owner impersonation on local fork; real multisig approvals still required",
-  "finalBlock": 94771638,
-  "rehearsalGasUsed": "39863886"
+  "finalBlock": 94791079,
+  "rehearsalGasUsed": "39897538"
 }

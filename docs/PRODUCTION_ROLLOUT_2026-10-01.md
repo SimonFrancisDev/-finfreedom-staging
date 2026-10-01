@@ -2,6 +2,24 @@
 
 ## Latest execution checkpoint
 
+The refreshed local fork completed with LOCAL_FORK_WIRING_PASS. It used
+39,897,538 gas, including simulated governance integration and opening.
+The evidence binds the current deployment script and fifteen artifact hashes.
+Genesis, ownership handoff, shared-pool wiring and preservation of historical
+pool funds passed. At the approved maximum 300 gwei, the rehearsal estimate
+including a 25% buffer is 14.96157675 POL, below the 15-POL ceiling.
+The approval and passing evidence supersede the earlier pending checkpoints
+below. The next action is the real paused mainnet deployment, not another
+rehearsal. Real governance approvals and reward-operator setup remain pending.
+
+The user subsequently approved the 300-gwei maximum and 15-POL deployment
+ceiling and supplied a new Polygon mainnet RPC. Chain 137 was verified;
+the refreshed quote was 170.97091912 gwei and funding remained 30.3544 POL.
+The deployment sender now enforces cumulative fees plus each next
+transaction's maximum gas cost against the approved ceiling. RPC credentials
+are passed in process environment, not committed. A fresh local rehearsal
+with this endpoint passed; mainnet execution is now authorized within the caps.
+
 Staging live activation/NFT smoke and approved worker setup are committed at
 8f1b2b4. Production backend and frontend worktrees were clean at this checkpoint.
 No production database reset or mainnet write has been performed in this step.
