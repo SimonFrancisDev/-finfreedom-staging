@@ -1,0 +1,23 @@
+{
+  "chainId": 80002,
+  "rows": {
+    "NFTPoolVault": {
+      "address": "0xB3f249c152214e12EeC1a74E32BAB0cE55F0c168",
+      "block": 49054197
+    },
+    "OperationsVault": {
+      "address": "0x483e6795b5BFbF1F4d757226Ba5e28633Bcc3b27",
+      "block": 49054201
+    },
+    "FGTToken": {
+      "address": "0x2C675980C6431d40312b258cE9c982C41CAC4393",
+      "block": 49054210,
+      "transactionHash": "0x51ce1cdade19f5b6539bf409424a3fbd0b88de4e9fa58a33e73729583c62f1c0"
+    },
+    "FGTrToken": {
+      "address": "0x780B047A46d65D15C5F34ff8c66d5e2F20dFc960",
+      "block": 49054215,
+      "transactionHash": "0x044a47adb848c6c61fff5f85460b294d05441cfb1d340e3f5574f893a0442f91"
+    }
+  }
+}

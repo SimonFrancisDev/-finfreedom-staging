@@ -1,0 +1,15 @@
+.git
+backend
+smart-contract
+env-files
+docs
+scripts
+**/node_modules
+**/.env
+**/.env.*
+**/*.private.*
+**/.vercel
+**/dist
+**/coverage
+**/screenshots
+**/*.log

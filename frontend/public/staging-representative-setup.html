@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Staging Representative Registration</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#f5f7f8;color:#19232c;font:16px/1.5 system-ui,sans-serif;letter-spacing:0}
+    header{background:#12242f;padding:20px}header img{width:170px;height:auto}
+    main{max-width:680px;margin:40px auto;padding:0 20px}h1{font-size:26px;line-height:1.25}
+    dl{display:grid;grid-template-columns:110px minmax(0,1fr);gap:16px 12px;padding:24px 0;border-block:1px solid #ced8dd}
+    dt{color:#52616c}dd{margin:0;overflow-wrap:anywhere}button{font:inherit;padding:12px 20px;border:0;border-radius:4px;background:#087b64;color:white;cursor:pointer;margin:8px 8px 8px 0}
+    button:disabled{opacity:.5;cursor:default}a{color:#086d98;overflow-wrap:anywhere}#status{min-height:48px;overflow-wrap:anywhere}
+    @media(max-width:420px){dl{grid-template-columns:1fr;gap:4px}dd{margin-bottom:12px}}
+  </style>
+</head>
+<body>
+  <header><img src="/images/title_bar_logo.png" alt="Fin Freedom Network"></header>
+  <main>
+    <h1>Staging Representative Registration</h1>
+    <dl>
+      <dt>Network</dt><dd>Polygon Amoy testnet (80002)</dd>
+      <dt>Program</dt><dd>F-Freedom &middot; Level 1</dd>
+      <dt>Sponsor</dt><dd>ID1 &middot; 0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A</dd>
+      <dt>Contract</dt><dd>0xC5750BfA5b4Dd888e55420911b58CB57539aEb90</dd>
+      <dt>Payment</dt><dd>0 mock USDT &middot; test POL gas required</dd>
+      <dt>Wallet</dt><dd id="wallet">Not connected</dd>
+    </dl>
+    <button id="connect">Connect Wallet</button>
+    <button id="register" disabled>Register Under ID1</button>
+    <p id="status" role="status" aria-live="polite">Awaiting wallet connection.</p>
+    <a id="transaction" hidden target="_blank" rel="noopener noreferrer">View transaction</a>
+  </main>
+  <script>
+  'use strict';
+  const contract='0xc5750bfa5b4dd888e55420911b58cb57539aeb90';
+  const id1='0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A'.toLowerCase();
+  const allowed=new Set(['0x3f6bb1e6bfeb9c52f763a197d27b580d7de7f100','0xdd78425335c0c698615845d94f9fee7492266396','0xf72873d6233b5e3dfba6d1d8058bf90e990902f0']);
+  const status=document.getElementById('status'), button=document.getElementById('register');
+  let provider,account,busy=false,pending=false;
+  const word=a=>a.slice(2).padStart(64,'0');
+  const call=data=>provider.request({method:'eth_call',params:[{to:contract,data},'latest']});
+  function fail(error){status.textContent=error.code===4001?'Wallet request cancelled.':(error.message||'Wallet request failed.');}
+  async function check(){
+    button.disabled=true;
+    if(location.hostname!=='finfreedom-staging.vercel.app' && location.hostname!=='localhost')throw Error('Staging host required.');
+    if(await provider.request({method:'eth_chainId'})!=='0x13882')throw Error('Select Polygon Amoy (80002) in your wallet.');
+    const accounts=await provider.request({method:'eth_accounts'});account=accounts[0]?.toLowerCase();
+    document.getElementById('wallet').textContent=account||'Not connected';
+    if(!allowed.has(account))throw Error('This wallet is not one of the three approved staging representatives.');
+    if((await call('0xc8e33990')).slice(-40).toLowerCase()!==id1.slice(2))throw Error('Contract ID1 verification failed.');
+    if(BigInt(await call('0xc3c5a547'+word(account)))!==0n){
+      const sponsor=(await call('0x4a9fefc7'+word(account))).slice(-40).toLowerCase();
+      const active=BigInt(await call('0xe79738ea'+word(account)+'1'.padStart(64,'0')))===1n;
+      if(sponsor!==id1.slice(2)||!active)throw Error('Registration requires operator review; do not submit again.');
+      status.textContent='Confirmed: registered under ID1, Level 1 active.';return false;
+    }
+    status.textContent=pending?'Transaction submitted. Awaiting confirmation.':'Ready to register under ID1.';
+    button.disabled=busy||pending;return true;
+  }
+  document.getElementById('connect').onclick=async()=>{
+    try{
+      provider=window.ethereum;
+      if(!provider)throw Error('Open this staging page in your wallet browser or enable your wallet extension.');
+      await provider.request({method:'eth_requestAccounts'});
+      await provider.request({method:'wallet_switchEthereumChain',params:[{chainId:'0x13882'}]});
+      await check();
+    }catch(error){fail(error);}
+  };
+  button.onclick=async()=>{
+    if(busy||pending)return;busy=true;button.disabled=true;
+    try{
+      if(!await check())return;
+      const tx={from:account,to:contract,chainId:'0x13882',value:'0x0',data:'0x4420e486'+word(id1)};
+      await provider.request({method:'eth_estimateGas',params:[tx]});
+      const hash=await provider.request({method:'eth_sendTransaction',params:[tx]});
+      pending=true;status.textContent='Transaction submitted. Awaiting confirmation.';
+      const link=document.getElementById('transaction');link.href='https://amoy.polygonscan.com/tx/'+hash;link.hidden=false;
+      for(let n=0;n<60;n++){
+        await new Promise(resolve=>setTimeout(resolve,4000));
+        const receipt=await provider.request({method:'eth_getTransactionReceipt',params:[hash]});
+        if(receipt){pending=false;if(receipt.status!=='0x1')throw Error('Transaction failed. Contact the staging operator.');await check();return;}
+      }
+      status.textContent='Confirmation pending. Check the transaction link; do not submit again.';
+    }catch(error){fail(error);}finally{busy=false;button.disabled=true;}
+  };
+  if(window.ethereum?.on){for(const event of ['accountsChanged','chainChanged'])window.ethereum.on(event,()=>{button.disabled=true;account=null;status.textContent='Wallet changed. Reconnect to verify registration.';});}
+  </script>
+</body>
+</html>

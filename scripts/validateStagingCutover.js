@@ -1,9 +1,15 @@
 ﻿import fs from 'node:fs'
 import path from 'node:path'
+import { createRequire } from 'node:module'
 
 const root = process.cwd()
-const f = JSON.parse(fs.readFileSync(path.join(root, 'smart-contract/deployments-staging/deployment-1788027951360.json'), 'utf8'))
-const p = JSON.parse(fs.readFileSync(path.join(root, 'smart-contract/deployments-freedom-plus-staging/deployment-1788028241010.json'), 'utf8'))
+const [ffManifest, plusManifest] = process.argv.slice(2)
+if (!ffManifest || !plusManifest) throw new Error('Pass explicit F-Freedom and Freedom-Plus staging manifest paths')
+const f = JSON.parse(fs.readFileSync(path.resolve(root, ffManifest), 'utf8'))
+const p = JSON.parse(fs.readFileSync(path.resolve(root, plusManifest), 'utf8'))
+if (String(f.chainId) !== '80002' || String(p.chainId) !== '80002') throw new Error('Amoy manifests required')
+const require = createRequire(path.join(root, 'backend/package.json'))
+const { parse } = require('dotenv')
 const proxy = (name) => p.contracts[name].proxy
 const expected = {
   CHAIN_ID: '80002',
@@ -18,12 +24,6 @@ const expected = {
   NFT_POOL_VAULT_ADDRESS: proxy('FreedomNFTPoolVault'),
   OPERATIONS_VAULT_ADDRESS: proxy('FreedomPlusOperationsVault'),
 }
-const parse = (text) => Object.fromEntries(text.split(/\r?\n/)
-  .filter((line) => line && !line.trimStart().startsWith('#') && line.includes('='))
-  .map((line) => {
-    const index = line.indexOf('=')
-    return [line.slice(0, index).trim(), line.slice(index + 1).trim().replace(/^["']|["']$/g, '')]
-  }))
 const files = [
   'backend/.env',
   'env-files/render-staging-api.runtime.env',
@@ -32,10 +32,10 @@ const files = [
 const errors = []
 for (const relative of files) {
   const file = path.join(root, relative)
-  if (!fs.existsSync(file)) continue
+  if (!fs.existsSync(file)) { errors.push(relative + ': missing configuration file'); continue }
   const actual = parse(fs.readFileSync(file, 'utf8'))
   for (const [key, value] of Object.entries(expected)) {
-    if (actual[key] !== undefined && actual[key].toLowerCase() !== value.toLowerCase()) {
+    if (actual[key] === undefined || actual[key].toLowerCase() !== value.toLowerCase()) {
       errors.push(relative + ': ' + key + ' is stale')
     }
   }

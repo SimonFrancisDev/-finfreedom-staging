@@ -1,6 +1,7 @@
 const hre = require("hardhat");
 const fs = require("fs");
 const path = require("path");
+let recovery = {};
 
 function readRequiredAddress(ethers, name) {
   const raw = process.env[name];
@@ -104,13 +105,23 @@ async function assertDeploymentSafety(provider, networkName, usdt, id1Wallet, de
 
 // Helper function to capture deployment block
 async function captureDeploymentBlock(contractName, contractAddress, provider, deploymentBlocks) {
-  const blockNumber = await provider.getBlockNumber();
+  const saved = recovery[contractName];
+  if (saved && saved.address.toLowerCase() !== contractAddress.toLowerCase()) throw new Error('Recovery address mismatch');
+  const blockNumber = saved ? saved.block : await provider.getBlockNumber();
   deploymentBlocks[contractName] = blockNumber;
   console.log(`✅ ${contractName} proxy: ${contractAddress} (block: ${blockNumber})`);
   return blockNumber;
 }
 
 async function deployOrUseTreasuryVault(ethers, provider, deploymentBlocks, contractName, envAddress, usdt, multisig) {
+  if (recovery[contractName]) {
+    const address = recovery[contractName].address;
+    if (await provider.getCode(address) === '0x') throw new Error('Missing recovered vault');
+    const vault = await ethers.getContractAt(contractName, address);
+    if ((await vault.owner()).toLowerCase() !== multisig.toLowerCase()) throw new Error('Recovered vault owner mismatch');
+    await captureDeploymentBlock(contractName, address, provider, deploymentBlocks);
+    return address;
+  }
   if (envAddress) {
     const code = await provider.getCode(envAddress);
     if (code === "0x") {
@@ -201,8 +212,21 @@ async function main() {
       readOptionalAddress(ethers, "OPERATIONS_WALLET_ADDRESS");
   const founderWallets = readRequiredAddressList(ethers, "FOUNDER_WALLETS", 8);
   const founderRatios = readRequiredRatioList("FOUNDER_RATIOS", 8);
-  const founderRepresentatives = readOptionalAddressList(ethers, "FOUNDER_REPRESENTATIVES", 4);
+  const founderRepresentatives = readOptionalAddressList(ethers, "FOUNDER_REPRESENTATIVES");
+  if (founderRepresentatives.length > 4 || new Set(founderRepresentatives).size !== founderRepresentatives.length) {
+    throw new Error("FOUNDER_REPRESENTATIVES must contain at most four distinct wallets");
+  }
   const chainId = await assertDeploymentSafety(provider, hre.network.name, USDT, ID1_WALLET, deployer.address);
+  if (process.env.STAGING_RECOVERY_FILE) {
+    if (chainId !== 80002n || hre.network.name !== 'amoy') throw new Error('Recovery is Amoy-only');
+    const record = JSON.parse(fs.readFileSync(process.env.STAGING_RECOVERY_FILE, 'utf8'));
+    if (record.chainId !== 80002) throw new Error('Recovery chain mismatch');
+    recovery = record.rows;
+    for (const name of ['FGTToken', 'FGTrToken']) {
+      const token = await ethers.getContractAt(name, recovery[name].address);
+      if (await token.owner() !== deployer.address || await token.guardian() !== GUARDIAN) throw new Error('Recovered token configuration mismatch');
+    }
+  }
   const nftPoolAddress = await deployOrUseTreasuryVault(
     ethers,
     provider,
@@ -239,7 +263,7 @@ async function main() {
   // =========================
   console.log("1. Deploying FGTToken proxy...");
   const FGT = await ethers.getContractFactory("FGTToken");
-  const fgt = await upgrades.deployProxy(
+  const fgt = recovery.FGTToken ? FGT.attach(recovery.FGTToken.address) : await upgrades.deployProxy(
     FGT,
     [deployer.address, GUARDIAN],
     {
@@ -253,7 +277,7 @@ async function main() {
 
   console.log("2. Deploying FGTrToken proxy...");
   const FGTr = await ethers.getContractFactory("FGTrToken");
-  const fgtr = await upgrades.deployProxy(
+  const fgtr = recovery.FGTrToken ? FGTr.attach(recovery.FGTrToken.address) : await upgrades.deployProxy(
     FGTr,
     [deployer.address, GUARDIAN],
     {
