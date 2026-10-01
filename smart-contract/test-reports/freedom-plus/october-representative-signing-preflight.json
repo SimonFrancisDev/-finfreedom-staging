@@ -1,0 +1,24 @@
+{
+  "chainId": 80002,
+  "at": "2026-10-01T18:17:24.254Z",
+  "result": [
+    {
+      "wallet": "0x3f6Bb1E6Bfeb9C52f763a197d27B580d7DE7f100",
+      "registered": false,
+      "estimatedGas": "1437353",
+      "pol": "11.409040766875702168"
+    },
+    {
+      "wallet": "0xDd78425335C0c698615845d94f9FeE7492266396",
+      "registered": false,
+      "estimatedGas": "1437353",
+      "pol": "45.272298349170345636"
+    },
+    {
+      "wallet": "0xf72873d6233B5e3dfbA6D1D8058BF90E990902f0",
+      "registered": false,
+      "estimatedGas": "1437353",
+      "pol": "0.0"
+    }
+  ]
+}

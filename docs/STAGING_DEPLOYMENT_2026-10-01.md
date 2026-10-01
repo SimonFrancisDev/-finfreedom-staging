@@ -15,11 +15,18 @@ and database remain unchanged pending representative signatures and Plus genesis
 - Existing fresh-deployment validator passed code, ownership and core graph links.
   Fresh baseline was registeredCount=0, totalParticipants=1 before owner signing.
 - Dedicated staging NFT reward operator generated in ignored private storage:
-  0x4e0b5aE304d657fF9E460161DaBD38E1566306a8. Not yet funded or authorized on
-  a new reward distributor; no private key is included in this record.
+  0x4e0b5aE304d657fF9E460161DaBD38E1566306a8, funded to 0.2 test POL by
+  0x54f1546c2281d68cb2301d6dc588bfad0d2cff8e4c66a3972ac951be3a320fbd.
+  Not yet authorized on a new reward distributor; no private key is included.
 - Render access verified for staging API srv-d8h37kj7uimc73cg3750 and worker
   srv-d8h3bptdt1ts73fuc7eg. Both were not_suspended; neither was reconfigured.
 - Vercel authentication and project finfreedom-staging verified.
+- Vercel deployment succeeded and aliased finfreedom-staging.vercel.app.
+  The /staging-representative-setup.html endpoint returned HTTP 200 with the exact
+  fresh contract and Amoy guard. Main application address variables are unchanged.
+- All three representative register(ID1) gas simulations passed without signing.
+  The third wallet had zero test POL and was funded to 0.2 test POL in transaction
+  0xa6d0f1ae9c3af0068c82d325a65b604f1ca2c944d22209548eed7bfc54293935.
 - Added temporary staging-representative-setup.html signing page. Seven mocked
   wallet tests pass: exact zero-USDT register(ID1), wrong network/wallet/host,
   wrong contract ID1, conflicting sponsor and already-registered handling.
@@ -63,3 +70,10 @@ address set until the coordinated cutover; the temporary page is independent.
 The signing-page publication alone is NOT general reopening or completed reset.
 Remove the temporary page after the representatives are initialized and cutover
 is validated. Never promote this Amoy-specific page to the production project.
+
+## Build observations
+
+Vercel build passed. npm reported 28 dependency vulnerabilities (3 critical,
+17 high, 7 moderate, 1 low) and large bundle warnings. These findings were not
+remediated in this deployment and must not be represented as a clean security
+audit. No browser visual test was performed; Playwright was unavailable locally.

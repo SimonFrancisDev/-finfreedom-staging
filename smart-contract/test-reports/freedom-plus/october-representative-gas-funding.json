@@ -1,0 +1,8 @@
+{
+  "chainId": 80002,
+  "wallet": "0xf72873d6233B5e3dfbA6D1D8058BF90E990902f0",
+  "amountWei": "200000000000000000",
+  "transactionHash": "0xa6d0f1ae9c3af0068c82d325a65b604f1ca2c944d22209548eed7bfc54293935",
+  "status": "CONFIRMED",
+  "block": 49056261
+}
