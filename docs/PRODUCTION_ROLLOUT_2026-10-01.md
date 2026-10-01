@@ -98,3 +98,8 @@ Production execution dependencies:
 The launch-access source is committed at fb3223d and its staging Vercel build
 passed. This is not evidence of a production deployment or financial-contract
 upgrade. Production users, balances and data have not been reset.
+
+The packaged candidate is now committed and pushed as 6cfd9b9.
+The live shared-vault incompatibility and proposed governance sequence are
+recorded in PRODUCTION_LAYER_GOVERNANCE_HANDOFF_2026-10-01.md. This is a remaining
+production integration dependency, not a completed deployment.

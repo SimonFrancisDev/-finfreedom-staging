@@ -57,5 +57,24 @@
     "requiredConfirmations": "3",
     "timelockSeconds": "120",
     "deployerCanSubmit": true
+  },
+  "sharedVaults": {
+    "nftPool": "0xf8F60Da42681b73DFeCa7731E78b29C8707C184b",
+    "operationsWallet": "0x3ee9B4913e175c15B2Ef76Ac352B6737210248Fb",
+    "settlementRouter": "0xC1F7d1E68A624B896DA2881AFfC7De5B18a75B44",
+    "nftPoolDetails": {
+      "hasCode": true,
+      "owner": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "distributorGetterError": "CALL_EXCEPTION",
+      "rewardToken": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      "balanceBaseUnits": "3306240000",
+      "unreservedBalanceError": "CALL_EXCEPTION"
+    },
+    "operationsWalletDetails": {
+      "hasCode": true,
+      "owner": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "distributorGetterError": "CALL_EXCEPTION"
+    },
+    "checkedAt": "2026-10-01T13:27:01.690Z"
   }
 }
