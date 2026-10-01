@@ -1,6 +1,12 @@
 const hre = require("hardhat");
 const fs = require("fs");
 const path = require("path");
+const progressFile = process.env.STAGING_DEPLOYMENT_PROGRESS_FILE;
+function checkpoint(manifest) {
+  if (!progressFile) return;
+  fs.mkdirSync(path.dirname(path.resolve(progressFile)), { recursive: true });
+  fs.writeFileSync(progressFile, JSON.stringify(manifest, null, 2));
+}
 
 const APPROVED_REPRESENTATIVES = [
   "0x3f6Bb1E6Bfeb9C52f763a197d27B580d7DE7f100",
@@ -23,6 +29,9 @@ async function requireContract(name, address) {
 async function deployProxy(name, args, manifest) {
   const Factory = await hre.ethers.getContractFactory(name);
   const contract = await hre.upgrades.deployProxy(Factory, args, { kind: "uups" });
+  manifest.pendingDeployment = { name, address: await contract.getAddress(),
+    tx: contract.deploymentTransaction()?.hash ?? null };
+  checkpoint(manifest);
   await contract.waitForDeployment();
   const address = await contract.getAddress();
   const implementation = await hre.upgrades.erc1967.getImplementationAddress(address);
@@ -34,14 +43,20 @@ async function deployProxy(name, args, manifest) {
     deploymentBlock: receipt?.blockNumber ?? null,
     deploymentTx: tx?.hash ?? null,
   };
+  delete manifest.pendingDeployment;
+  checkpoint(manifest);
   console.log(`${name}: ${address}`);
   return contract;
 }
 
 async function send(label, txPromise, manifest) {
   const tx = await txPromise;
+  manifest.pendingConfiguration = { label, tx: tx.hash };
+  checkpoint(manifest);
   const receipt = await tx.wait();
   manifest.configuration.push({ label, tx: tx.hash, block: receipt.blockNumber });
+  delete manifest.pendingConfiguration;
+  checkpoint(manifest);
   console.log(`${label}: ${tx.hash}`);
 }
 
@@ -62,6 +77,9 @@ async function main() {
   const rewardOperator = requiredAddress("NFT_REWARD_OPERATOR_ADDRESS");
   if ([ethers.ZeroAddress, deployer.address, multisig, id1].includes(rewardOperator)) {
     throw new Error("NFT_REWARD_OPERATOR_ADDRESS must be a dedicated approved reward signer");
+  }
+  if (progressFile && fs.existsSync(progressFile)) {
+    throw new Error("Deployment progress already exists. Reconcile its receipts before continuing; do not redeploy.");
   }
   const founderWallets = String(process.env.FREEDOM_PLUS_FOUNDER_WALLETS || '')
     .split(',').filter(Boolean).map((value) => ethers.getAddress(value.trim()));
@@ -123,6 +141,7 @@ async function main() {
     pendingGovernanceActions: [],
   };
 
+  checkpoint(manifest);
   const fpt = await deployProxy("FPTToken", [deployer.address, guardian], manifest);
   const fptr = await deployProxy("FPTrToken", [deployer.address, guardian], manifest);
   const controller = await deployProxy(
@@ -267,6 +286,7 @@ async function main() {
   }
 
   manifest.finalBlock = await ethers.provider.getBlockNumber();
+  checkpoint(manifest);
   const outputDir = path.join(__dirname, "..", "deployments-freedom-plus-staging");
   fs.mkdirSync(outputDir, { recursive: true });
   const output = path.join(outputDir, `deployment-${Date.now()}.json`);

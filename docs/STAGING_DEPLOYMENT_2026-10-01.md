@@ -96,6 +96,45 @@ is validated. Never promote this Amoy-specific page to the production project.
 
 ## Build observations
 
+## Completed cutover preparation (supersedes earlier pending items)
+
+All three representatives registered under ID1. Fresh Plus/NFT deployment is
+recorded in deployment-1790884982975.json. Genesis activated seven Plus levels
+for ID1 and the three representatives, issued 54,650 FPT each, and moved no USDT.
+All sixteen new contracts were handed to the staging multisig.
+
+october-nft-permissions.json records completed multisig execution authorizing
+the fresh NFT membership in FGT and routing F-Freedom charges to the shared
+NFT pool. F-Freedom's operations recipient was preserved. The deployment
+manifest's pendingGovernanceActions field is historical, resolved by this report.
+
+Both staging services were suspended before the database backup/reset.
+The verified backup contains 41 collections and 10,039 documents. The reset
+used the guarded deletion fallback and verified every collection empty.
+Private backup archives and credentials remain ignored and are not committed.
+october-database-backup.json records the archive checksum.
+
+Render API and worker each have 51 verified configuration updates. Vercel has
+36 verified public settings in staging Production and Preview; stale duplicate
+Production-only variables were removed only after replacement readback.
+The actual production/mainnet project and database were not changed.
+
+Monthly automation remains DISABLED pending explicit approval to upload the
+dedicated staging operator private key to the worker only. Its contract role
+is configured. The first configured monthly period is 202611 (November 1,
+2026 at 00:00 UTC); this is not evidence that a monthly payout has executed.
+
+Recovery uses recoverOctoberStaging.js and fresh deployment start blocks.
+Recovery completed successfully: F-Freedom reported zero lag at its sampled
+confirmed head; all sixteen Plus/NFT streams reached block 49064428.
+The historical StagingRepresentativeReplaced event was added to the decoder
+after it blocked strict replay. Unknown events still fail rather than being
+silently skipped. october-recovery.json records actual completion or failure.
+
+Hosted service resumption, deployment verification and new live transaction
+checks must be recorded separately; configuration readback alone is not a
+claim that general testing or production rollout is ready.
+
 Vercel build passed. npm reported 28 dependency vulnerabilities (3 critical,
 17 high, 7 moderate, 1 low) and large bundle warnings. These findings were not
 remediated in this deployment and must not be represented as a clean security

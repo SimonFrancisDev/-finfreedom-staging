@@ -22,7 +22,7 @@ const expected = {
   FREEDOM_PLUS_LEVEL_MANAGER_ADDRESS: proxy('FreedomPlusLevelManager'),
   FREEDOM_PLUS_START_BLOCK: String(p.contracts.FPTToken.deploymentBlock),
   NFT_POOL_VAULT_ADDRESS: proxy('FreedomNFTPoolVault'),
-  OPERATIONS_VAULT_ADDRESS: proxy('FreedomPlusOperationsVault'),
+  OPERATIONS_VAULT_ADDRESS: f.addresses.operationsVault,
 }
 const files = [
   'backend/.env',

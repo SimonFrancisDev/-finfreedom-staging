@@ -1,0 +1,177 @@
+{
+  "chainId": 80002,
+  "startedAt": "2026-10-01T20:33:53.867Z",
+  "passes": [
+    {
+      "pass": 1,
+      "safeBlock": 49064414,
+      "targets": [
+        {
+          "key": "registration",
+          "status": "idle",
+          "processed": false,
+          "safeBlock": 49064414,
+          "lastProcessedBlock": 49064414,
+          "lagBlocks": 0
+        },
+        {
+          "key": "levelManager",
+          "status": "idle",
+          "processed": true,
+          "fromBlock": 49059643,
+          "toBlock": 49064414,
+          "lastProcessedBlock": 49064414,
+          "safeBlock": 49064414,
+          "lagBlocks": 0,
+          "logCount": 4
+        },
+        {
+          "key": "autoUpgradeEscrow",
+          "status": "idle",
+          "processed": false,
+          "safeBlock": 49064414,
+          "lastProcessedBlock": 49064414,
+          "lagBlocks": 0
+        },
+        {
+          "key": "p4Orbit",
+          "status": "idle",
+          "processed": false,
+          "safeBlock": 49064414,
+          "lastProcessedBlock": 49064414,
+          "lagBlocks": 0
+        },
+        {
+          "key": "p12Orbit",
+          "status": "idle",
+          "processed": false,
+          "safeBlock": 49064414,
+          "lastProcessedBlock": 49064414,
+          "lagBlocks": 0
+        },
+        {
+          "key": "p39Orbit",
+          "status": "idle",
+          "processed": false,
+          "safeBlock": 49064414,
+          "lastProcessedBlock": 49064414,
+          "lagBlocks": 0
+        },
+        {
+          "key": "fgtToken",
+          "status": "idle",
+          "processed": false,
+          "safeBlock": 49064414,
+          "lastProcessedBlock": 49064414,
+          "lagBlocks": 0
+        },
+        {
+          "key": "fgtrToken",
+          "status": "idle",
+          "processed": false,
+          "safeBlock": 49064414,
+          "lastProcessedBlock": 49064414,
+          "lagBlocks": 0
+        },
+        {
+          "key": "freedomTokenController",
+          "status": "idle",
+          "processed": false,
+          "safeBlock": 49064414,
+          "lastProcessedBlock": 49064414,
+          "lagBlocks": 0
+        }
+      ]
+    }
+  ],
+  "freedomPlus": {
+    "enabled": true,
+    "head": 49064430,
+    "confirmedBlock": 49064428,
+    "targets": [
+      {
+        "contractKey": "registration",
+        "processed": 37,
+        "toBlock": 49064428
+      },
+      {
+        "contractKey": "levelManager",
+        "processed": 34,
+        "toBlock": 49064428
+      },
+      {
+        "contractKey": "settlementRouter",
+        "processed": 33,
+        "toBlock": 49064428
+      },
+      {
+        "contractKey": "p39Orbit",
+        "processed": 11,
+        "toBlock": 49064428
+      },
+      {
+        "contractKey": "p14Orbit",
+        "processed": 11,
+        "toBlock": 49064428
+      },
+      {
+        "contractKey": "p12Orbit",
+        "processed": 11,
+        "toBlock": 49064428
+      },
+      {
+        "contractKey": "p6Orbit",
+        "processed": 11,
+        "toBlock": 49064428
+      },
+      {
+        "contractKey": "p4Orbit",
+        "processed": 17,
+        "toBlock": 49064428
+      },
+      {
+        "contractKey": "p3Orbit",
+        "processed": 12,
+        "toBlock": 49064428
+      },
+      {
+        "contractKey": "fpt",
+        "processed": 63,
+        "toBlock": 49064428
+      },
+      {
+        "contractKey": "fptr",
+        "processed": 6,
+        "toBlock": 49064428
+      },
+      {
+        "contractKey": "tokenController",
+        "processed": 33,
+        "toBlock": 49064428
+      },
+      {
+        "contractKey": "nftMembership",
+        "processed": 4,
+        "toBlock": 49064428
+      },
+      {
+        "contractKey": "nftRewardDistributor",
+        "processed": 5,
+        "toBlock": 49064428
+      },
+      {
+        "contractKey": "nftPoolVault",
+        "processed": 5,
+        "toBlock": 49064428
+      },
+      {
+        "contractKey": "operationsVault",
+        "processed": 4,
+        "toBlock": 49064428
+      }
+    ],
+    "reconciledLedgerWallets": 0
+  },
+  "completedAt": "2026-10-01T20:36:21.331Z",
+  "verdict": "PASS"
+}

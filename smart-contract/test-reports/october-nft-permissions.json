@@ -1,0 +1,42 @@
+{
+  "chainId": 80002,
+  "transactions": {
+    "authorize-nft-fgt-submit": {
+      "hash": "0xa7b9e822e4c3036ceff93593c0d2a251da328ca85654acf4780ba4a6de29118e",
+      "block": 49062767
+    },
+    "authorize-nft-fgt-approve1": {
+      "hash": "0xc656523d519f3dd55f3f7b3c5d22a661ca67f1b9e4ab311616fa751742d5ae0b",
+      "block": 49062771
+    },
+    "authorize-nft-fgt-approve2": {
+      "hash": "0x2dd7aff1185b1425783a998ad70c6c60b1b0565f2fff7848c48568f9ac41bc53",
+      "block": 49062776
+    },
+    "share-nft-pool-submit": {
+      "hash": "0x922fc07a6a0f5e044d77a12a36097031edafa74709f2b1a5836995f3b021f6ef",
+      "block": 49062779
+    },
+    "share-nft-pool-approve1": {
+      "hash": "0xd893783132b30a7be19172e099761fa2fd92cdd81f57e21b972b3ef8ec688af3",
+      "block": 49062981
+    },
+    "share-nft-pool-approve2": {
+      "hash": "0xabc8cbc25d8fac4b66841038aef0f1065f913f6483d7815dd0bf2e3d4f74e408",
+      "block": 49062986
+    },
+    "authorize-nft-fgt-execute": {
+      "hash": "0xfbf6e3ff4f5b76bc228eec7e3f3c7cb88484f0a638e537096acf9b73f17fd36d",
+      "block": 49062989
+    },
+    "share-nft-pool-execute": {
+      "hash": "0x7a06c0b8c5bc51cf43d2f89d1cd25e1e4d7792787e60732c30394d75f4862417",
+      "block": 49062993
+    }
+  },
+  "verdict": "PASS",
+  "completedAt": "2026-10-01T20:10:19.054Z",
+  "membership": "0xAEFf32683a23b61650761423Bc0B2a997D45aCB5",
+  "sharedNftPool": "0xA41CF55d22C3685d5F4e512130ED1110307Cf496",
+  "preservedOperations": "0x483e6795b5BFbF1F4d757226Ba5e28633Bcc3b27"
+}

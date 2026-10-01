@@ -1,0 +1,174 @@
+{
+  "database": "finfreedom-staging",
+  "at": "2026-10-01T20:05:58.803Z",
+  "archive": "backups\\finfreedom-staging-2026-10-01T20-05-14-734Z.archive.gz",
+  "bytes": 729758,
+  "sha256": "2023b1c610fd3adf28ac5b21c14dd94ba0b4cb5403356727e40d2342bc04f7c9",
+  "restoreDryRun": true,
+  "collections": [
+    {
+      "name": "freedompluspayments",
+      "documents": 286
+    },
+    {
+      "name": "indexedtokenevents",
+      "documents": 364
+    },
+    {
+      "name": "notifications",
+      "documents": 0
+    },
+    {
+      "name": "notificationdeliveryattempts",
+      "documents": 0
+    },
+    {
+      "name": "orbitpositionsnapshots",
+      "documents": 0
+    },
+    {
+      "name": "notificationMedia.files",
+      "documents": 0
+    },
+    {
+      "name": "communityannouncements",
+      "documents": 0
+    },
+    {
+      "name": "freedomplusevents",
+      "documents": 1966
+    },
+    {
+      "name": "syncstates",
+      "documents": 0
+    },
+    {
+      "name": "communityevents",
+      "documents": 0
+    },
+    {
+      "name": "taskreactions",
+      "documents": 0
+    },
+    {
+      "name": "taskcomments",
+      "documents": 0
+    },
+    {
+      "name": "notificationMedia.chunks",
+      "documents": 0
+    },
+    {
+      "name": "tasksubmissions",
+      "documents": 0
+    },
+    {
+      "name": "freedompluspositions",
+      "documents": 300
+    },
+    {
+      "name": "freedomplusledgerentries",
+      "documents": 342
+    },
+    {
+      "name": "orbitlevelsnapshots",
+      "documents": 7
+    },
+    {
+      "name": "freedomplusparticipants",
+      "documents": 51
+    },
+    {
+      "name": "supportfaqs",
+      "documents": 0
+    },
+    {
+      "name": "communityresources",
+      "documents": 0
+    },
+    {
+      "name": "taskrewards",
+      "documents": 0
+    },
+    {
+      "name": "notificationpreferences",
+      "documents": 0
+    },
+    {
+      "name": "freedompluslevelstates",
+      "documents": 142
+    },
+    {
+      "name": "indexedescrowevents",
+      "documents": 182
+    },
+    {
+      "name": "taskparticipations",
+      "documents": 0
+    },
+    {
+      "name": "freedomplussyncstates",
+      "documents": 16
+    },
+    {
+      "name": "communitysociallinks",
+      "documents": 0
+    },
+    {
+      "name": "officialvideos",
+      "documents": 0
+    },
+    {
+      "name": "referralcodes",
+      "documents": 110
+    },
+    {
+      "name": "engagementtasks",
+      "documents": 0
+    },
+    {
+      "name": "indexedreceipts",
+      "documents": 660
+    },
+    {
+      "name": "indexedfinancialevents",
+      "documents": 1640
+    },
+    {
+      "name": "telegramsubscriptions",
+      "documents": 0
+    },
+    {
+      "name": "orbitcyclesnapshots",
+      "documents": 0
+    },
+    {
+      "name": "indexergaps",
+      "documents": 0
+    },
+    {
+      "name": "supporttickets",
+      "documents": 0
+    },
+    {
+      "name": "indexedactivationsummaries",
+      "documents": 327
+    },
+    {
+      "name": "profileprivacies",
+      "documents": 0
+    },
+    {
+      "name": "indexedorbitevents",
+      "documents": 3209
+    },
+    {
+      "name": "freedomplusrewardsnapshots",
+      "documents": 0
+    },
+    {
+      "name": "indexedregistrationevents",
+      "documents": 437
+    }
+  ]
+}

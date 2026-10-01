@@ -16,6 +16,7 @@ import freedomTokenControllerAbi from './abis/freedomTokenController.abi.json' w
 let contractsInstance = null;
 
 const group3LevelManagerEventAbi = [
+  'event StagingRepresentativeReplaced(address indexed previous,address indexed replacement)',
   'event PayoutNotDelivered(address indexed affectedUser,address indexed sourceUser,uint8 indexed level,uint8 orbitType,uint8 sourcePosition,uint32 sourceCycle,uint256 expectedAmount,address actualReceiver,uint256 actualAmount,uint8 receiptType,bytes32 routedRole,bytes32 reasonCode,bytes32 actionCode,uint256 activationId)',
   'event RecycleCompletedDetailed(uint256 indexed activationId,address indexed orbitOwner,uint8 indexed level,address sourceUser,uint8 sourcePosition,uint32 sourceCycle,address recycleReceiver,uint256 recycleGross,uint256 recycleLiquidPaid,uint256 recycleEscrowLocked,uint8 mirrorPosition,uint32 mirrorCycle,bool triggeredOrbitReset)',
   'event AutoUpgradeCompleted(uint256 indexed activationId,address indexed user,uint8 indexed fromLevel,uint8 toLevel,uint256 requiredAmount,uint256 usedAmount,uint256 escrowBefore,uint256 escrowAfter)',
