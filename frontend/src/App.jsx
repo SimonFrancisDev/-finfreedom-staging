@@ -33,6 +33,7 @@ import { SessionProvider } from './context/SessionContext'
 import { OverlayProvider } from './components/overlay'
 import { ToastProvider, useToast } from './components/feedback'
 import ProgramErrorBoundary from './components/feedback/ProgramErrorBoundary'
+import LaunchAccess from './components/LaunchAccess'
 import { NotificationProvider } from './components/notifications'
 import { useCompleteUserData } from './hooks/useUserData'
 import { LANGUAGES } from './constants/languages'
@@ -513,7 +514,6 @@ function App() {
   const [adminCheckComplete, setAdminCheckComplete] = useState(false)
   const [internalUserId, setInternalUserId] = useState('')
   const [modalNotification, setModalNotification] = useState(null)
-  const [launchNowMs, setLaunchNowMs] = useState(Date.now())
 
   const {
     account: walletAccount,
@@ -530,7 +530,6 @@ function App() {
   } = useWallet()
 
   const { contracts, loadContracts } = useContracts()
-  const launchGateOpen = isLaunchGateOpen(launchNowMs)
 
   const {
     summary: userSummary,
@@ -588,11 +587,6 @@ function App() {
     media?.addEventListener?.('change', applyResolvedTheme)
     return () => media?.removeEventListener?.('change', applyResolvedTheme)
   }, [theme])
-
-  useEffect(() => {
-    const interval = window.setInterval(() => setLaunchNowMs(Date.now()), 73)
-    return () => window.clearInterval(interval)
-  }, [])
 
   const fetchCommunityNotifications = useCallback(async () => {
     try {
@@ -1112,10 +1106,6 @@ function App() {
     return <AdminPanel canPerformOnchainAdmin={isMultisigOwner} />
   }, [adminCheckComplete, hasAdminPanelAccess, hasInternalRouteAccess, isMultisigOwner])
 
-  if (!launchGateOpen) {
-    return <LaunchGate nowMs={launchNowMs} />
-  }
-
   return (
     <SessionProvider>
       <SpaceProvider walletAddress={walletAccount}>
@@ -1169,7 +1159,7 @@ function App() {
               />
             }
           >
-            <Routes>
+            <LaunchAccess><Routes>
               <Route path="/" element={<LandingPage onNavigate={handleNavigate} />} />
               <Route path="/home" element={<LandingPage onNavigate={handleNavigate} />} />
 
@@ -1260,7 +1250,7 @@ function App() {
               <Route path="/admin" element={renderAdminPage()} />
 
               <Route path="*" element={<Navigate to="/home" replace />} />
-            </Routes>
+            </Routes></LaunchAccess>
             <Footer
               onNavigate={handleNavigate}
               onOpenProgram={(program) => console.log(program)}

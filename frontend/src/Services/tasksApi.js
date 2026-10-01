@@ -1,11 +1,12 @@
 import { getApiUrl } from './apiConfig'
+import { earlyAccessHeaders } from './earlyAccess'
 import { getProfileSessionAuth } from './profilePrivacyApi'
 
 async function request(path, account, options = {}) {
   const auth = await getProfileSessionAuth(account, { interactive: options.interactive !== false })
   const response = await fetch(getApiUrl(`/api/tasks${path}`), {
     ...options,
-    headers: { ...(options.body instanceof Blob ? {} : { 'Content-Type': 'application/json' }), ...auth, ...(options.headers || {}) },
+    headers: { ...(options.body instanceof Blob ? {} : { 'Content-Type': 'application/json' }), ...earlyAccessHeaders(), ...auth, ...(options.headers || {}) },
   })
   const payload = await response.json().catch(() => null)
   if (!response.ok) throw new Error(payload?.message || `Tasks request failed: ${response.status}`)
@@ -20,7 +21,7 @@ export const reactToTaskItem = (account, id, body) => request(`/${id}/reactions`
 export const fetchTaskRewards = (account, options) => request('/rewards', account, options)
 export async function uploadTaskProof(account, file) {
   const auth = await getProfileSessionAuth(account)
-  const response = await fetch(getApiUrl('/api/tasks/media'), { method: 'POST', headers: { ...auth, 'Content-Type': file.type, 'X-File-Name': file.name }, body: file })
+  const response = await fetch(getApiUrl('/api/tasks/media'), { method: 'POST', headers: { ...earlyAccessHeaders(), ...auth, 'Content-Type': file.type, 'X-File-Name': file.name }, body: file })
   const payload = await response.json().catch(() => null)
   if (!response.ok) throw new Error(payload?.message || `Proof upload failed: ${response.status}`)
   return payload?.data
@@ -28,7 +29,7 @@ export async function uploadTaskProof(account, file) {
 export async function subscribeTaskEvents(account, onEvent, signal) {
   const auth = await getProfileSessionAuth(account, { interactive: false })
   if (!auth.Authorization) return
-  const response = await fetch(getApiUrl('/api/tasks/events'), { headers: auth, signal })
+  const response = await fetch(getApiUrl('/api/tasks/events'), { headers: { ...earlyAccessHeaders(), ...auth }, signal })
   if (!response.ok || !response.body) return
   const reader = response.body.getReader(); const decoder = new TextDecoder(); let pending = ''
   while (!signal.aborted) {

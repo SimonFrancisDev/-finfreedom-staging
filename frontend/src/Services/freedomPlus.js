@@ -1,5 +1,6 @@
 import { ethers } from 'ethers'
 import { getApiUrl } from './apiConfig'
+import { earlyAccessHeaders } from './earlyAccess'
 import { web3Service } from './web3'
 import USDT_ABI from '../abis/USDT.json'
 
@@ -133,7 +134,7 @@ export function getFreedomPlusWriteContracts({ includeNft = false } = {}) {
 async function fetchJson(path, options = {}) {
   const response = await fetch(getApiUrl(path), {
     ...options,
-    headers: { Accept: 'application/json', ...(options.headers || {}) },
+    headers: { Accept: 'application/json', ...earlyAccessHeaders(), ...(options.headers || {}) },
   })
   const payload = await response.json().catch(() => null)
   if (!response.ok) throw new Error(payload?.message || `Freedom-Plus API request failed (${response.status}).`)
