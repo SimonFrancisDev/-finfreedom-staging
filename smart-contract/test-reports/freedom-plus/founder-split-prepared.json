@@ -1,0 +1,10 @@
+{
+  "preparedAt": "2026-10-01T16:26:15.862Z",
+  "chainId": "80002",
+  "proxy": "0xcA20D9F04bbF8a99c6f332ebD05829F95B50C9cb",
+  "implementation": "0x24beB4798483CEcb1c70ACA4b4aC2BCAcb30a2fe",
+  "multisig": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+  "guardian": "0x52F22c1e396dF20c2078B4a86b4A0ac3b51a9911",
+  "status": "PREPARED_NOT_EXECUTED",
+  "migration": "configureFounderWallets from staging F-Freedom; no reserve repair"
+}

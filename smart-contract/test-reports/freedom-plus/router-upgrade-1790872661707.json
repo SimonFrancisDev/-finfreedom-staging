@@ -1,0 +1,36 @@
+{
+  "verdict": "PASS",
+  "completedAt": "2026-10-01T16:37:41.706Z",
+  "chainId": "80002",
+  "multisig": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+  "guardian": "0x52F22c1e396dF20c2078B4a86b4A0ac3b51a9911",
+  "proxy": "0xcA20D9F04bbF8a99c6f332ebD05829F95B50C9cb",
+  "implementation": "0x24beB4798483CEcb1c70ACA4b4aC2BCAcb30a2fe",
+  "stagingReserveRepair": false,
+  "founderWallets": [
+    "0x21f9eDB0CE6b79afA98dE14b03678CB29bc4859C",
+    "0xA32332B104aa9Fc5E5415a227D58d6914f3D7478",
+    "0x8B051978893087DE7e7Ca6BeF63206Cc35Bd732D",
+    "0xAE8012334a9c2aF7fb14cD6bF99978B177e6B28C",
+    "0x53B04033ABFe56C72cA0595dcAE26c5287619a97",
+    "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+    "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+    "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF"
+  ],
+  "actions": [
+    {
+      "label": "guardian-approve-implementation",
+      "multisigTxId": "22",
+      "submitTx": null,
+      "executeTx": "0x7e5792a5304e3d0be13fd9e1859defec23e2a219489521066e3a226532e4f7ca",
+      "blockNumber": 49050102
+    },
+    {
+      "label": "upgrade-router-proxy",
+      "multisigTxId": "23",
+      "submitTx": "0x4ec136cd0153997f311e2149b5d1040d7f56d6d6a0f1fe32796da6b14f65d346",
+      "executeTx": "0x8c2f5a45c07380ae6e1748fd0ee4d8f3c5beae3b363efe20a6c83aa88dac73bf",
+      "blockNumber": 49050232
+    }
+  ]
+}

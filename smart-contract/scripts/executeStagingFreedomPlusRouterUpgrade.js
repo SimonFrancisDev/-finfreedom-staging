@@ -31,23 +31,57 @@ async function waitForTimelock(multisig, txId) {
 async function submitApproveExecute(multisigAddress, owner1, owner2, target, data, label) {
   const multisig1 = await ethers.getContractAt("SimpleMultiSig", multisigAddress, owner1);
   const multisig2 = multisig1.connect(owner2);
+  const journalDir = path.resolve(__dirname, '../test-reports/freedom-plus');
+  fs.mkdirSync(journalDir, { recursive: true });
+  async function confirmed(tx, step) {
+    fs.appendFileSync(path.join(journalDir, 'founder-upgrade-transactions.jsonl'),
+      JSON.stringify({ at: new Date().toISOString(), label, step, hash: tx.hash }) + '\n');
+    console.log('[SUBMITTED]', step, tx.hash);
+    for (let attempt = 0; attempt < 90; attempt++) {
+      let receipt;
+      try { receipt = await ethers.provider.getTransactionReceipt(tx.hash); }
+      catch (error) {
+        if (attempt === 89) throw error;
+      }
+      if (receipt) {
+        assert(receipt.status === 1, step + ' reverted: ' + tx.hash);
+        return receipt;
+      }
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
+    throw new Error('Receipt unresolved; inspect journal before retry: ' + tx.hash);
+  }
+  let txId;
+  let submitHash = null;
+  const resume = process.env.STAGING_RESUME_IMPLEMENTATION_PROPOSAL;
+  if (label === 'guardian-approve-implementation' && resume) {
+    txId = BigInt(resume);
+    const existing = await multisig1.transactions(txId);
+    assert(existing.to.toLowerCase() === target.toLowerCase() && existing.value === 0n
+      && existing.data === data && !existing.cancelled && !existing.executed,
+      'resume proposal does not exactly match intended action');
+  } else {
   const submit = await multisig1.submitTransaction(target, 0, data, { gasPrice: GAS_PRICE });
-  const submitReceipt = await submit.wait();
+  submitHash = submit.hash;
+  const submitReceipt = await confirmed(submit, 'submit');
   const parsed = submitReceipt.logs
     .map((log) => { try { return multisig1.interface.parseLog(log); } catch { return null; } })
     .find((event) => event && event.name === "Submit");
   assert(parsed, label + " missing Submit event");
-  const txId = parsed.args.txId;
-  await (await multisig1.approveTransaction(txId, { gasPrice: GAS_PRICE })).wait();
-  await (await multisig2.approveTransaction(txId, { gasPrice: GAS_PRICE })).wait();
+  txId = parsed.args.txId;
+  }
+  if (!(await multisig1.approved(txId, owner1.address)))
+    await confirmed(await multisig1.approveTransaction(txId, { gasPrice: GAS_PRICE }), 'approve-owner1');
+  if (!(await multisig1.approved(txId, owner2.address)))
+    await confirmed(await multisig2.approveTransaction(txId, { gasPrice: GAS_PRICE }), 'approve-owner2');
   await waitForTimelock(multisig1, txId);
   const execute = await multisig1.executeTransaction(txId, { gasPrice: GAS_PRICE });
-  const executeReceipt = await execute.wait();
+  const executeReceipt = await confirmed(execute, 'execute');
   console.log("[EXECUTED] " + label + " multisigTx=" + txId + " chainTx=" + execute.hash);
   return {
     label,
     multisigTxId: txId.toString(),
-    submitTx: submit.hash,
+    submitTx: submitHash,
     executeTx: execute.hash,
     blockNumber: executeReceipt.blockNumber,
   };
@@ -61,6 +95,26 @@ async function main() {
   const guardianAddress = requiredAddress("GUARDIAN_ADDRESS");
   const proxyAddress = requiredAddress("FREEDOM_PLUS_SETTLEMENT_ROUTER_ADDRESS");
   const implementationAddress = requiredAddress("UPGRADE_IMPLEMENTATION_ADDRESS");
+  const configureFounders = process.env.STAGING_CONFIGURE_FOUNDERS === 'true';
+  const repairRequested = process.env.STAGING_REPAIR_P39_RESERVE === 'true';
+  assert(!(configureFounders && repairRequested), 'founder migration must not repeat reserve repair');
+  let founderWallets = [];
+  if (configureFounders) {
+    const deployment = require('../deployments-freedom-plus-staging/deployment-1790706637561.json');
+    assert(proxyAddress === ethers.getAddress(deployment.contracts.FreedomPlusSettlementRouter.proxy), 'unexpected staging proxy');
+    assert(multisigAddress === ethers.getAddress(deployment.multisig), 'unexpected staging multisig');
+    assert(guardianAddress === ethers.getAddress(deployment.guardian), 'unexpected staging guardian');
+    const manager = new ethers.Contract('0xb49130f8a48e358c867c8abee5381f6138f7b6b2',
+      ['function getFounderWallets() view returns(address[],uint256[])'], ethers.provider);
+    const [wallets, ratios] = await manager.getFounderWallets();
+    founderWallets = Array.from(wallets, ethers.getAddress);
+    assert(founderWallets.length === 8 && new Set(founderWallets).size === 8, 'eight distinct founders required');
+    assert(ratios.length === 8 && ratios.every(value => value === 1250n), 'founder ratios must be equal');
+    assert(!founderWallets.includes(ethers.ZeroAddress) && !founderWallets.includes(multisigAddress)
+      && !founderWallets.includes(proxyAddress), 'invalid founder recipient');
+    const Router = await ethers.getContractFactory('FreedomPlusSettlementRouter');
+    await upgrades.validateUpgrade(proxyAddress, Router, { kind: 'uups' });
+  }
   const keyFile = path.resolve(
     __dirname,
     process.env.STAGING_MULTISIG_KEYS_FILE || "../../env-files/staging-multisig.private.json"
@@ -88,14 +142,22 @@ async function main() {
   }
 
   const uups = new ethers.Interface(["function upgradeToAndCall(address newImplementation,bytes data)"]);
-  const repairRequested = process.env.STAGING_REPAIR_P39_RESERVE === 'true';
   const repairInterface = new ethers.Interface(['function repairStagingP39Reserve()']);
-  const migrationData = repairRequested ? repairInterface.encodeFunctionData('repairStagingP39Reserve') : '0x';
+  const founderInterface = new ethers.Interface(['function configureFounderWallets(address[8])']);
+  const migrationData = configureFounders
+    ? founderInterface.encodeFunctionData('configureFounderWallets', [founderWallets])
+    : repairRequested ? repairInterface.encodeFunctionData('repairStagingP39Reserve') : '0x';
   const upgradeData = uups.encodeFunctionData('upgradeToAndCall', [implementationAddress, migrationData]);
   actions.push(await submitApproveExecute(multisigAddress, owner1, owner2, proxyAddress, upgradeData, "upgrade-router-proxy"));
 
   const activeImplementation = ethers.getAddress(await upgrades.erc1967.getImplementationAddress(proxyAddress));
   assert(activeImplementation === implementationAddress, "active implementation mismatch");
+  if (configureFounders) {
+    const router = await ethers.getContractAt('FreedomPlusSettlementRouter', proxyAddress);
+    for (let index = 0; index < 8; index++) {
+      assert(await router.founderWallets(index) === founderWallets[index], 'founder configuration mismatch');
+    }
+  }
   const report = {
     verdict: "PASS",
     completedAt: new Date().toISOString(),
@@ -105,6 +167,7 @@ async function main() {
     proxy: proxyAddress,
     implementation: implementationAddress,
     stagingReserveRepair: repairRequested,
+    founderWallets,
     actions,
   };
   const reportDir = path.resolve(__dirname, "../test-reports/freedom-plus");

@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-01T16:45:28.954Z",
+  "chainId": 80002,
+  "membership": [
+    "0",
+    "0",
+    "0",
+    "0",
+    false
+  ],
+  "vault": "0xF8a4F62fd253Aa2A036209F948Eec53810576fE7",
+  "owner": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+  "rewardOperatorReadError": "execution reverted (no data present; likely require(false) occurred"
+}

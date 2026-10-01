@@ -1,0 +1,40 @@
+{
+  "chainId": 80002,
+  "transactionHash": "0x8b4717fd4c2d934e72193394d37999f32140ddd163463b5c68aa6513708ebb6e",
+  "status": 1,
+  "blockNumber": 49050374,
+  "activation": "PASS",
+  "founderSplit": "NOT_EXERCISED: all earning components routed to eligible members",
+  "transfers": [
+    {
+      "from": "0x15C21633a9231f6DACc0eBFf6a790Bf0c20ad171",
+      "to": "0xcA20D9F04bbF8a99c6f332ebD05829F95B50C9cb",
+      "amountRaw": "50000000"
+    },
+    {
+      "from": "0xcA20D9F04bbF8a99c6f332ebD05829F95B50C9cb",
+      "to": "0x1aBcE5B912B4452D9FB09DBA4175275Aa8Fb3558",
+      "amountRaw": "10000000"
+    },
+    {
+      "from": "0xcA20D9F04bbF8a99c6f332ebD05829F95B50C9cb",
+      "to": "0x998be76968Fe24fFf8f59D93EeE3fE49653781BB",
+      "amountRaw": "10000000"
+    },
+    {
+      "from": "0xcA20D9F04bbF8a99c6f332ebD05829F95B50C9cb",
+      "to": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+      "amountRaw": "25000000"
+    },
+    {
+      "from": "0xcA20D9F04bbF8a99c6f332ebD05829F95B50C9cb",
+      "to": "0xF8a4F62fd253Aa2A036209F948Eec53810576fE7",
+      "amountRaw": "4000000"
+    },
+    {
+      "from": "0xcA20D9F04bbF8a99c6f332ebD05829F95B50C9cb",
+      "to": "0xB41B0C9593fbAcbBCb1Cb525c20F5A2332D02f12",
+      "amountRaw": "1000000"
+    }
+  ]
+}
