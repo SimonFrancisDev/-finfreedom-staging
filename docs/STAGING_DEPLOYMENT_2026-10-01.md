@@ -135,6 +135,32 @@ Hosted service resumption, deployment verification and new live transaction
 checks must be recorded separately; configuration readback alone is not a
 claim that general testing or production rollout is ready.
 
+### Hosted verification completed
+
+Commit 0ef2f2d was pushed to staging main. Both Render deployments reached live:
+worker dep-davcb96k1f9s739ouc1g; API dep-davcb9ugekts73dglt6g.
+Vercel deployment finfreedom-staging-2b038bpcc-chukwuemeka-francis-s-projects.vercel.app
+was aliased to https://finfreedom-staging.vercel.app.
+Both health endpoints returned HTTP 200, connected MongoDB, and the correct
+indexer roles (API false, worker true). The served frontend bundle contains
+the fresh Plus manager and NFT membership addresses.
+
+Database verification passed: four genesis participants, twenty-eight active
+level records, and twenty-one representative placements. The live API reports
+the third representative registered under ID1, F-Freedom Level 1 active,
+and all seven Plus levels active. Plus sync advanced to block 49065047.
+Evidence: october-genesis-projection.json and october-hosted-deployments.json.
+
+An initial verification incorrectly checked Participant.levels, an unused
+embedded field. The actual API reads FreedomPlusLevelState; validation against
+that collection passed. No database patch was made to conceal that difference.
+
+These are deployment, recovery and readback checks, not a new end-to-end
+certification of activation payments or NFT mint/unlock/monthly payouts.
+Monthly signing automation remains disabled pending approval. Dependency
+audit warnings and the absence of a fresh browser/wallet transaction test
+remain limitations; production readiness is not certified by this cutover.
+
 Vercel build passed. npm reported 28 dependency vulnerabilities (3 critical,
 17 high, 7 moderate, 1 low) and large bundle warnings. These findings were not
 remediated in this deployment and must not be represented as a clean security

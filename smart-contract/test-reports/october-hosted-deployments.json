@@ -1,0 +1,24 @@
+{
+  "commit": "0ef2f2d",
+  "services": [
+    {
+      "role": "worker",
+      "id": "srv-d8h3bptdt1ts73fuc7eg",
+      "deployId": "dep-davcb96k1f9s739ouc1g",
+      "status": "live",
+      "checkedAt": "2026-10-01T20:46:05.622Z"
+    },
+    {
+      "role": "api",
+      "id": "srv-d8h37kj7uimc73cg3750",
+      "deployId": "dep-davcb9ugekts73dglt6g",
+      "status": "live",
+      "checkedAt": "2026-10-01T20:46:06.026Z"
+    }
+  ],
+  "frontend": {
+    "url": "https://finfreedom-staging.vercel.app",
+    "deployment": "finfreedom-staging-2b038bpcc-chukwuemeka-francis-s-projects.vercel.app",
+    "status": "READY"
+  }
+}

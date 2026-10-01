@@ -1,0 +1,207 @@
+{
+  "at": "2026-10-01T20:47:24.210Z",
+  "verdict": "PASS",
+  "participants": [
+    {
+      "wallet": "0x3f6bb1e6bfeb9c52f763a197d27b580d7de7f100",
+      "sponsor": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "activeLevels": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "wallet": "0xdd78425335c0c698615845d94f9fee7492266396",
+      "sponsor": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "activeLevels": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "wallet": "0x0de1b6f15fe8e5cf7fbba2cd4c576357ececa962",
+      "sponsor": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "activeLevels": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "wallet": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "sponsor": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "activeLevels": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    }
+  ],
+  "positions": [
+    {
+      "participant": "0x3f6bb1e6bfeb9c52f763a197d27b580d7de7f100",
+      "orbitOwner": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "level": 1,
+      "position": 1,
+      "financial": false
+    },
+    {
+      "participant": "0x3f6bb1e6bfeb9c52f763a197d27b580d7de7f100",
+      "orbitOwner": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "level": 2,
+      "position": 1,
+      "financial": false
+    },
+    {
+      "participant": "0x3f6bb1e6bfeb9c52f763a197d27b580d7de7f100",
+      "orbitOwner": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "level": 3,
+      "position": 1,
+      "financial": false
+    },
+    {
+      "participant": "0x3f6bb1e6bfeb9c52f763a197d27b580d7de7f100",
+      "orbitOwner": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "level": 4,
+      "position": 1,
+      "financial": false
+    },
+    {
+      "participant": "0x3f6bb1e6bfeb9c52f763a197d27b580d7de7f100",
+      "orbitOwner": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "level": 5,
+      "position": 1,
+      "financial": false
+    },
+    {
+      "participant": "0x3f6bb1e6bfeb9c52f763a197d27b580d7de7f100",
+      "orbitOwner": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "level": 6,
+      "position": 1,
+      "financial": false
+    },
+    {
+      "participant": "0x3f6bb1e6bfeb9c52f763a197d27b580d7de7f100",
+      "orbitOwner": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "level": 7,
+      "position": 1,
+      "financial": false
+    },
+    {
+      "participant": "0xdd78425335c0c698615845d94f9fee7492266396",
+      "orbitOwner": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "level": 1,
+      "position": 2,
+      "financial": false
+    },
+    {
+      "participant": "0xdd78425335c0c698615845d94f9fee7492266396",
+      "orbitOwner": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "level": 2,
+      "position": 2,
+      "financial": false
+    },
+    {
+      "participant": "0xdd78425335c0c698615845d94f9fee7492266396",
+      "orbitOwner": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "level": 3,
+      "position": 2,
+      "financial": false
+    },
+    {
+      "participant": "0xdd78425335c0c698615845d94f9fee7492266396",
+      "orbitOwner": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "level": 4,
+      "position": 2,
+      "financial": false
+    },
+    {
+      "participant": "0xdd78425335c0c698615845d94f9fee7492266396",
+      "orbitOwner": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "level": 5,
+      "position": 2,
+      "financial": false
+    },
+    {
+      "participant": "0xdd78425335c0c698615845d94f9fee7492266396",
+      "orbitOwner": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "level": 6,
+      "position": 2,
+      "financial": false
+    },
+    {
+      "participant": "0xdd78425335c0c698615845d94f9fee7492266396",
+      "orbitOwner": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "level": 7,
+      "position": 2,
+      "financial": false
+    },
+    {
+      "participant": "0x0de1b6f15fe8e5cf7fbba2cd4c576357ececa962",
+      "orbitOwner": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "level": 1,
+      "position": 3,
+      "financial": false
+    },
+    {
+      "participant": "0x0de1b6f15fe8e5cf7fbba2cd4c576357ececa962",
+      "orbitOwner": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "level": 2,
+      "position": 3,
+      "financial": false
+    },
+    {
+      "participant": "0x0de1b6f15fe8e5cf7fbba2cd4c576357ececa962",
+      "orbitOwner": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "level": 3,
+      "position": 3,
+      "financial": false
+    },
+    {
+      "participant": "0x0de1b6f15fe8e5cf7fbba2cd4c576357ececa962",
+      "orbitOwner": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "level": 4,
+      "position": 3,
+      "financial": false
+    },
+    {
+      "participant": "0x0de1b6f15fe8e5cf7fbba2cd4c576357ececa962",
+      "orbitOwner": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "level": 5,
+      "position": 3,
+      "financial": false
+    },
+    {
+      "participant": "0x0de1b6f15fe8e5cf7fbba2cd4c576357ececa962",
+      "orbitOwner": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "level": 6,
+      "position": 3,
+      "financial": false
+    },
+    {
+      "participant": "0x0de1b6f15fe8e5cf7fbba2cd4c576357ececa962",
+      "orbitOwner": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "level": 7,
+      "position": 3,
+      "financial": false
+    }
+  ]
+}
