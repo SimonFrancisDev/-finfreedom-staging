@@ -5,4 +5,5 @@ interface IFreedomPlusRegistrationView {
     function isRegistered(address participant) external view returns (bool);
     function sponsorOf(address participant) external view returns (address);
     function isLevelActive(address participant, uint8 level) external view returns (bool);
+    function fFreedomRegistration() external view returns (address);
 }

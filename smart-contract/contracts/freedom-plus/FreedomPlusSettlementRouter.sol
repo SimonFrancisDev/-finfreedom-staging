@@ -18,6 +18,10 @@ interface IFreedomPlusRouterGuardian {
     function validateUpgrade(address proxy, address implementation) external view returns (bool);
 }
 
+interface IFFreedomPermanentSponsorView {
+    function getReferrer(address participant) external view returns (address);
+}
+
 contract FreedomPlusSettlementRouter is
     Initializable,
     OwnableUpgradeable,
@@ -429,7 +433,7 @@ contract FreedomPlusSettlementRouter is
 
         address sponsor = orbitOwner == id1Wallet
             ? id1Wallet
-            : registration.sponsorOf(orbitOwner);
+            : _permanentSponsorOf(orbitOwner);
         if (sponsor == address(0)) sponsor = id1Wallet;
         bytes32 recycleActivationId = keccak256(
             abi.encode("FREEDOM_PLUS_RECYCLE", orbitOwner, level, closedCycle)
@@ -596,10 +600,19 @@ contract FreedomPlusSettlementRouter is
             if (registration.isRegistered(cursor) && registration.isLevelActive(cursor, level)) {
                 return cursor;
             }
-            cursor = registration.sponsorOf(cursor);
+            cursor = _permanentSponsorOf(cursor);
             if (cursor == address(0)) return id1Wallet;
         }
         revert UplineSearchLimitReached(candidate, level);
+    }
+
+    function _permanentSponsorOf(address participant) internal view returns (address sponsor) {
+        sponsor = registration.sponsorOf(participant);
+        if (sponsor != address(0)) return sponsor;
+
+        address gateway = registration.fFreedomRegistration();
+        if (gateway == address(0)) return address(0);
+        return IFFreedomPermanentSponsorView(gateway).getReferrer(participant);
     }
 
     function _settleSystemCharge(bytes32 activationId, uint8 level, uint256 charge) internal {
