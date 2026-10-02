@@ -1,0 +1,947 @@
+{
+  "receipts": 180,
+  "failed": [],
+  "indexedEventChecks": 1655,
+  "eventMismatches": [],
+  "unknownEventSignatures": [
+    "Transfer"
+  ],
+  "componentTransferChecks": 283,
+  "componentTransferMismatches": [],
+  "id1Transfers": [
+    {
+      "hash": "0x071221863bef11829ccae9a716144042b404f4ae2c2dcd85794d0f48d4f5d579",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "25000000"
+    },
+    {
+      "hash": "0x0e5d6238b90b29b06e61147f5cba8da2fe3276feff9243ffcdf1d1907e8928aa",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "10935000000"
+    },
+    {
+      "hash": "0x1adfed6254f6ff91cf6b4cc316889b9d85e092980fa08f68ee70e1baefba3408",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "225000000"
+    },
+    {
+      "hash": "0x23cc1f3a00d2f072eee4632d1e0077fd2cabf1fbb0336412b8f2ebbb59f15cd2",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "25000000"
+    },
+    {
+      "hash": "0x26c5b51e32326a5a4efe944bf162c33d42c7535d7ed10089936ac56aa2e7d874",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "75000000"
+    },
+    {
+      "hash": "0x31ea701afbb3726c3e93e9aca90ca32b5b9f49686206ee5ec1b8041df99287b5",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "10935000000"
+    },
+    {
+      "hash": "0x32bc841130ebfa436d82b88364fa8e4004332eadf3d082800f750e1e764217b6",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "10000000"
+    },
+    {
+      "hash": "0x32bc841130ebfa436d82b88364fa8e4004332eadf3d082800f750e1e764217b6",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "25000000"
+    },
+    {
+      "hash": "0x397418a6b69d7ada058ec00313bfa23f5fe36487f763cfc50004f6b4b99ff462",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "75000000"
+    },
+    {
+      "hash": "0x4a4b999835b05e0828f3e736eb3eef18fc48a73b28cd419cd71a2cfa0e38e26e",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "25000000"
+    },
+    {
+      "hash": "0x4a6cd4733719f8f66242ced8c0065d6deea519f7e32fb667c2826b5b93cbc56f",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "37500000"
+    },
+    {
+      "hash": "0x4a6cd4733719f8f66242ced8c0065d6deea519f7e32fb667c2826b5b93cbc56f",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "75000000"
+    },
+    {
+      "hash": "0x582921aa904f05af7e8bf74db0a9b8b112def93100a377b4cac3cace230bb479",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "75000000"
+    },
+    {
+      "hash": "0x5b732b18857afc1d29fe48635c40b5577fa4de3711a7a81609a2090bebba00b3",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "675000000"
+    },
+    {
+      "hash": "0x5c47cbe519243c082a284f29a456c06d9ced212ec1042348bc836b674cf9ca3d",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "32805000000"
+    },
+    {
+      "hash": "0x5f17ee1aaabdb19b39a83439634b02cbdee4c045bffef075854cf16035bae700",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "25000000"
+    },
+    {
+      "hash": "0x5fd1bb0b1f8ca155ec0d73d3571209799ceccd40beffffdf280b5223d2f9f2bf",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "10000000"
+    },
+    {
+      "hash": "0x5fd1bb0b1f8ca155ec0d73d3571209799ceccd40beffffdf280b5223d2f9f2bf",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "25000000"
+    },
+    {
+      "hash": "0x6aa0449bb15c4164ae08e94f4366d4c1ec686b90cc4c4f45bd4c253f0ac9dc17",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "37500000"
+    },
+    {
+      "hash": "0x6aa0449bb15c4164ae08e94f4366d4c1ec686b90cc4c4f45bd4c253f0ac9dc17",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "75000000"
+    },
+    {
+      "hash": "0x704de360bfd1a0db6e59ec84535f19a29acfe1b365ef0aed97edece2de46b6b3",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "540000000"
+    },
+    {
+      "hash": "0x704de360bfd1a0db6e59ec84535f19a29acfe1b365ef0aed97edece2de46b6b3",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "675000000"
+    },
+    {
+      "hash": "0x75915eedacbfabb9231c9ad553fd3e874fe9d0624056576002b68dc3f6c40de5",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "225000000"
+    },
+    {
+      "hash": "0x8f867669c0117d671f4932a9db9d7e914c639a1da08cb4237d5698298ccc256e",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "3645000000"
+    },
+    {
+      "hash": "0x9645a9f4f932cd0b8a474fa0fc205d59d3217349f925615f55ff6d696f6c5ddc",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "75000000"
+    },
+    {
+      "hash": "0x99788244fc12815781e38c1eaea8b6b761acf36c55a7c5f399984d3d4a336ef0",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "75000000"
+    },
+    {
+      "hash": "0xa36adc6d53db0b6f5bf4fd17d758381d6cff98bf402fda7cee29d71eb08feea7",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "25000000"
+    },
+    {
+      "hash": "0xad5661ed831472409215be61d92dd23af6599a2dbd07838cce585799947064d1",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "37500000"
+    },
+    {
+      "hash": "0xad5661ed831472409215be61d92dd23af6599a2dbd07838cce585799947064d1",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "75000000"
+    },
+    {
+      "hash": "0xaf71f876911bc3b53dfb7b16c0c90d4b50ac9f32b35c4ecc03e53a2661d46af7",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "3645000000"
+    },
+    {
+      "hash": "0xb10e3814f48318ccc3f0317bcc7bc66550e6708e88c34e69b13e791c82535e55",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "32805000000"
+    },
+    {
+      "hash": "0xbe775a9748ad4519a52c6bda2d586ff391f4b722e652909ef34b48b3c25ed590",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "75000000"
+    },
+    {
+      "hash": "0xc3ba01f87ec91f6ff0ae436a435331c5b9034fa78c906678106f0d8fd00d30d5",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "32805000000"
+    },
+    {
+      "hash": "0xc4ad439eee54d04967887ce24b8c1f102704beb723b71c9ad5f9e557da6d49b0",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "3645000000"
+    },
+    {
+      "hash": "0xc82ac4c8b581ad4f0c73e6208ddd27ac1e0891d0ecaab32bb6c43680c9dd969d",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "10000000"
+    },
+    {
+      "hash": "0xc82ac4c8b581ad4f0c73e6208ddd27ac1e0891d0ecaab32bb6c43680c9dd969d",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "25000000"
+    },
+    {
+      "hash": "0xcfbc01c46ed7ca65ad0479cce50630a8985ea9b011a70bfd4adf5322c3aa5db9",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "10000000"
+    },
+    {
+      "hash": "0xcfbc01c46ed7ca65ad0479cce50630a8985ea9b011a70bfd4adf5322c3aa5db9",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "25000000"
+    },
+    {
+      "hash": "0xdf0db6644f396372f51faf280e9406895fe4d04685fe168005d2c36036d03356",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "225000000"
+    },
+    {
+      "hash": "0xf050b909195efb81902cb787cfb1f61a69eecd913a0c6298acb41919f3f58a15",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "25000000"
+    },
+    {
+      "hash": "0xfee7da77f2990fa8d91be10d4f1d9ed5e0af134056ebf003687397ed19637450",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "25000000"
+    },
+    {
+      "hash": "0xff438b72e4007d5306045d56f32d776b8c1d45ab087766c624316bd6a281b0a2",
+      "from": "0xca20d9f04bbf8a99c6f332ebd05829f95b50c9cb",
+      "to": "0xd3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a",
+      "amount": "10935000000"
+    }
+  ],
+  "ffReserveExamples": [
+    {
+      "hash": "0x198f6d1977bc8b90911aab6d6e1f28a06e0539239d61044dbabfdc26268885f0",
+      "summary": {
+        "logIndex": 34,
+        "txHash": "0x198f6d1977bc8b90911aab6d6e1f28a06e0539239d61044dbabfdc26268885f0",
+        "activationAmount": "40000000",
+        "activationId": "280",
+        "blockHash": "0xda68b2f8149db6ad5c0be81bd84b51afe85a12a087c3e6c439290eda184743f2",
+        "blockNumber": 48990392,
+        "chainId": 80002,
+        "createdAt": "2026-10-01T00:00:14.548Z",
+        "isAutoUpgrade": false,
+        "isFounderRepFreeActivation": false,
+        "level": 3,
+        "nftPoolAmount": "3200000",
+        "operationsAmount": "800000",
+        "raw": {
+          "0": "280",
+          "1": "0x0c7B9e0b194375B68069c70C94464b2A0F76c88E",
+          "2": "3",
+          "3": "40000000",
+          "4": "4000000",
+          "5": "3200000",
+          "6": "800000",
+          "7": "8000000",
+          "8": "8000000",
+          "9": "20000000",
+          "10": false,
+          "11": false
+        },
+        "systemCharge": "4000000",
+        "timestamp": "2026-10-01T00:00:13.000Z",
+        "totalEscrowLocked": "8000000",
+        "totalLiquidPaid": "8000000",
+        "totalRecycleAllocated": "20000000",
+        "updatedAt": "2026-10-01T00:00:14.548Z",
+        "user": "0x0c7b9e0b194375b68069c70c94464b2a0f76c88e"
+      },
+      "transfers": [
+        {
+          "from": "0x0c7b9e0b194375b68069c70c94464b2a0f76c88e",
+          "to": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "amount": "40000000"
+        },
+        {
+          "from": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "to": "0x5b4f8ffd24de4401ddf060c78d3b254605b15086",
+          "amount": "8000000"
+        },
+        {
+          "from": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "to": "0x9dfa0839ec4843db035d60141b2168a718cc2b74",
+          "amount": "8000000"
+        },
+        {
+          "from": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "to": "0x42819c37a22e5d9432b33fc8378e1b489d246cc2",
+          "amount": "3200000"
+        },
+        {
+          "from": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "to": "0xb5810c98c8077cc587c9248f709ecaff531ebd22",
+          "amount": "800000"
+        }
+      ],
+      "events": [
+        {
+          "logIndex": 29,
+          "txHash": "0x198f6d1977bc8b90911aab6d6e1f28a06e0539239d61044dbabfdc26268885f0",
+          "actionCode": "",
+          "activationId": "0",
+          "actualAmount": "0",
+          "actualReceiver": "",
+          "affectedUser": "",
+          "blockHash": "0xda68b2f8149db6ad5c0be81bd84b51afe85a12a087c3e6c439290eda184743f2",
+          "blockNumber": 48990392,
+          "chainId": 80002,
+          "contractAddress": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "createdAt": "2026-10-01T00:00:14.258Z",
+          "eligible": null,
+          "escrowAfter": "0",
+          "escrowBefore": "0",
+          "eventName": "RecycleReserveUpdated",
+          "expectedAmount": "0",
+          "founderAmount": "0",
+          "founderWallet": "",
+          "fromLevel": 0,
+          "level": 0,
+          "mirrorCycle": 0,
+          "mirrorPosition": 0,
+          "nftPoolAmount": "0",
+          "operationsAmount": "0",
+          "orbitOwner": "",
+          "orbitType": 0,
+          "raw": {
+            "0": "280",
+            "1": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+            "2": "3",
+            "3": "0x0c7B9e0b194375B68069c70C94464b2A0F76c88E",
+            "4": "38",
+            "5": "1",
+            "6": "20000000",
+            "7": "1",
+            "8": "2",
+            "9": false
+          },
+          "reasonCode": "",
+          "receiptType": 0,
+          "recycleEscrowLocked": "0",
+          "recycleGross": "0",
+          "recycleLiquidPaid": "0",
+          "recycleReceiver": "",
+          "requiredAmount": "0",
+          "rewardType": "",
+          "routedRole": "",
+          "sourceCycle": 0,
+          "sourcePosition": 0,
+          "sourceUser": "",
+          "systemChargeTotal": "0",
+          "timestamp": "2026-10-01T00:00:13.000Z",
+          "toLevel": 0,
+          "tokenAmount": "0",
+          "triggeredOrbitReset": false,
+          "updatedAt": "2026-10-01T00:00:14.258Z",
+          "usedAmount": "0",
+          "user": ""
+        }
+      ]
+    },
+    {
+      "hash": "0xb5d1fb70e139bfe16ccfd3fc1ebb28c36ea006d5cca95f199515bc4e1992e84c",
+      "summary": {
+        "txHash": "0xb5d1fb70e139bfe16ccfd3fc1ebb28c36ea006d5cca95f199515bc4e1992e84c",
+        "logIndex": 22,
+        "activationAmount": "20000000",
+        "activationId": "282",
+        "blockHash": "0xd6bc42f79de7309647655fd76fadade828f8c15820c4456c94131d22cbb59e4f",
+        "blockNumber": 48990403,
+        "chainId": 80002,
+        "createdAt": "2026-10-01T00:00:24.711Z",
+        "isAutoUpgrade": false,
+        "isFounderRepFreeActivation": false,
+        "level": 2,
+        "nftPoolAmount": "1600000",
+        "operationsAmount": "400000",
+        "raw": {
+          "0": "282",
+          "1": "0xC3af789c71CaC9CD43D6F51Ec6B3CFd83a373411",
+          "2": "2",
+          "3": "20000000",
+          "4": "2000000",
+          "5": "1600000",
+          "6": "400000",
+          "7": "8000000",
+          "8": "0",
+          "9": "10000000",
+          "10": false,
+          "11": false
+        },
+        "systemCharge": "2000000",
+        "timestamp": "2026-10-01T00:00:24.000Z",
+        "totalEscrowLocked": "0",
+        "totalLiquidPaid": "8000000",
+        "totalRecycleAllocated": "10000000",
+        "updatedAt": "2026-10-01T00:00:24.711Z",
+        "user": "0xc3af789c71cac9cd43d6f51ec6b3cfd83a373411"
+      },
+      "transfers": [
+        {
+          "from": "0xc3af789c71cac9cd43d6f51ec6b3cfd83a373411",
+          "to": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "amount": "20000000"
+        },
+        {
+          "from": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "to": "0x693ab7f95327501cb8bb48df799076fe16222d26",
+          "amount": "8000000"
+        },
+        {
+          "from": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "to": "0x42819c37a22e5d9432b33fc8378e1b489d246cc2",
+          "amount": "1600000"
+        },
+        {
+          "from": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "to": "0xb5810c98c8077cc587c9248f709ecaff531ebd22",
+          "amount": "400000"
+        }
+      ],
+      "events": [
+        {
+          "logIndex": 17,
+          "txHash": "0xb5d1fb70e139bfe16ccfd3fc1ebb28c36ea006d5cca95f199515bc4e1992e84c",
+          "actionCode": "",
+          "activationId": "0",
+          "actualAmount": "0",
+          "actualReceiver": "",
+          "affectedUser": "",
+          "blockHash": "0xd6bc42f79de7309647655fd76fadade828f8c15820c4456c94131d22cbb59e4f",
+          "blockNumber": 48990403,
+          "chainId": 80002,
+          "contractAddress": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "createdAt": "2026-10-01T00:00:25.020Z",
+          "eligible": null,
+          "escrowAfter": "0",
+          "escrowBefore": "0",
+          "eventName": "RecycleReserveUpdated",
+          "expectedAmount": "0",
+          "founderAmount": "0",
+          "founderWallet": "",
+          "fromLevel": 0,
+          "level": 0,
+          "mirrorCycle": 0,
+          "mirrorPosition": 0,
+          "nftPoolAmount": "0",
+          "operationsAmount": "0",
+          "orbitOwner": "",
+          "orbitType": 0,
+          "raw": {
+            "0": "282",
+            "1": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+            "2": "2",
+            "3": "0xC3af789c71CaC9CD43D6F51Ec6B3CFd83a373411",
+            "4": "11",
+            "5": "3",
+            "6": "10000000",
+            "7": "1",
+            "8": "2",
+            "9": false
+          },
+          "reasonCode": "",
+          "receiptType": 0,
+          "recycleEscrowLocked": "0",
+          "recycleGross": "0",
+          "recycleLiquidPaid": "0",
+          "recycleReceiver": "",
+          "requiredAmount": "0",
+          "rewardType": "",
+          "routedRole": "",
+          "sourceCycle": 0,
+          "sourcePosition": 0,
+          "sourceUser": "",
+          "systemChargeTotal": "0",
+          "timestamp": "2026-10-01T00:00:24.000Z",
+          "toLevel": 0,
+          "tokenAmount": "0",
+          "triggeredOrbitReset": false,
+          "updatedAt": "2026-10-01T00:00:25.020Z",
+          "usedAmount": "0",
+          "user": ""
+        }
+      ]
+    },
+    {
+      "hash": "0x029c59b82a2a533415fc402642ede3c4ac7b815741b0e3a0f8a92828afef039a",
+      "summary": {
+        "logIndex": 67,
+        "txHash": "0x029c59b82a2a533415fc402642ede3c4ac7b815741b0e3a0f8a92828afef039a",
+        "activationAmount": "40000000",
+        "activationId": "283",
+        "blockHash": "0x18eb5e9bcaa9654752674d6b258c364e1bf63dcab2fccd719c1656a97848e3f9",
+        "blockNumber": 48991114,
+        "chainId": 80002,
+        "createdAt": "2026-10-01T00:12:17.397Z",
+        "isAutoUpgrade": false,
+        "isFounderRepFreeActivation": false,
+        "level": 3,
+        "nftPoolAmount": "3200000",
+        "operationsAmount": "800000",
+        "raw": {
+          "0": "283",
+          "1": "0xC3af789c71CaC9CD43D6F51Ec6B3CFd83a373411",
+          "2": "3",
+          "3": "40000000",
+          "4": "4000000",
+          "5": "3200000",
+          "6": "800000",
+          "7": "44000000",
+          "8": "8000000",
+          "9": "20000000",
+          "10": false,
+          "11": false
+        },
+        "systemCharge": "4000000",
+        "timestamp": "2026-10-01T00:12:15.000Z",
+        "totalEscrowLocked": "8000000",
+        "totalLiquidPaid": "44000000",
+        "totalRecycleAllocated": "20000000",
+        "updatedAt": "2026-10-01T00:12:17.397Z",
+        "user": "0xc3af789c71cac9cd43d6f51ec6b3cfd83a373411"
+      },
+      "transfers": [
+        {
+          "from": "0xc3af789c71cac9cd43d6f51ec6b3cfd83a373411",
+          "to": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "amount": "40000000"
+        },
+        {
+          "from": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "to": "0x5b4f8ffd24de4401ddf060c78d3b254605b15086",
+          "amount": "8000000"
+        },
+        {
+          "from": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "to": "0xa6af0d0ac4cbe9f5bba569e8a560bb67129a990e",
+          "amount": "8000000"
+        },
+        {
+          "from": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "to": "0x42819c37a22e5d9432b33fc8378e1b489d246cc2",
+          "amount": "3200000"
+        },
+        {
+          "from": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "to": "0xb5810c98c8077cc587c9248f709ecaff531ebd22",
+          "amount": "800000"
+        },
+        {
+          "from": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "to": "0x8844a10391801d5b1a4273588f8c6bf1dfe06e36",
+          "amount": "20000000"
+        },
+        {
+          "from": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "to": "0xc00831fa1a30b9876ed0c36aa4c3ce72d99853b5",
+          "amount": "8000000"
+        },
+        {
+          "from": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "to": "0x52e5f4434fc989057c5037a4d1e87eb6ce0d91ea",
+          "amount": "8000000"
+        },
+        {
+          "from": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "to": "0x42819c37a22e5d9432b33fc8378e1b489d246cc2",
+          "amount": "3200000"
+        },
+        {
+          "from": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "to": "0xb5810c98c8077cc587c9248f709ecaff531ebd22",
+          "amount": "800000"
+        }
+      ],
+      "events": [
+        {
+          "txHash": "0x029c59b82a2a533415fc402642ede3c4ac7b815741b0e3a0f8a92828afef039a",
+          "logIndex": 34,
+          "actionCode": "",
+          "activationId": "0",
+          "actualAmount": "0",
+          "actualReceiver": "",
+          "affectedUser": "",
+          "blockHash": "0x18eb5e9bcaa9654752674d6b258c364e1bf63dcab2fccd719c1656a97848e3f9",
+          "blockNumber": 48991114,
+          "chainId": 80002,
+          "contractAddress": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "createdAt": "2026-10-01T00:12:16.236Z",
+          "eligible": null,
+          "escrowAfter": "0",
+          "escrowBefore": "0",
+          "eventName": "RecycleReserveUpdated",
+          "expectedAmount": "0",
+          "founderAmount": "0",
+          "founderWallet": "",
+          "fromLevel": 0,
+          "level": 0,
+          "mirrorCycle": 0,
+          "mirrorPosition": 0,
+          "nftPoolAmount": "0",
+          "operationsAmount": "0",
+          "orbitOwner": "",
+          "orbitType": 0,
+          "raw": {
+            "0": "283",
+            "1": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+            "2": "3",
+            "3": "0xC3af789c71CaC9CD43D6F51Ec6B3CFd83a373411",
+            "4": "39",
+            "5": "1",
+            "6": "40000000",
+            "7": "2",
+            "8": "2",
+            "9": true
+          },
+          "reasonCode": "",
+          "receiptType": 0,
+          "recycleEscrowLocked": "0",
+          "recycleGross": "0",
+          "recycleLiquidPaid": "0",
+          "recycleReceiver": "",
+          "requiredAmount": "0",
+          "rewardType": "",
+          "routedRole": "",
+          "sourceCycle": 0,
+          "sourcePosition": 0,
+          "sourceUser": "",
+          "systemChargeTotal": "0",
+          "timestamp": "2026-10-01T00:12:15.000Z",
+          "toLevel": 0,
+          "tokenAmount": "0",
+          "triggeredOrbitReset": false,
+          "updatedAt": "2026-10-01T00:12:16.236Z",
+          "usedAmount": "0",
+          "user": ""
+        },
+        {
+          "txHash": "0x029c59b82a2a533415fc402642ede3c4ac7b815741b0e3a0f8a92828afef039a",
+          "logIndex": 61,
+          "actionCode": "",
+          "activationId": "283",
+          "actualAmount": "0",
+          "actualReceiver": "",
+          "affectedUser": "",
+          "blockHash": "0x18eb5e9bcaa9654752674d6b258c364e1bf63dcab2fccd719c1656a97848e3f9",
+          "blockNumber": 48991114,
+          "chainId": 80002,
+          "contractAddress": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "createdAt": "2026-10-01T00:12:16.827Z",
+          "eligible": null,
+          "escrowAfter": "0",
+          "escrowBefore": "0",
+          "eventName": "RecycleCompletedDetailed",
+          "expectedAmount": "0",
+          "founderAmount": "0",
+          "founderWallet": "",
+          "fromLevel": 0,
+          "level": 3,
+          "mirrorCycle": 2,
+          "mirrorPosition": 19,
+          "nftPoolAmount": "0",
+          "operationsAmount": "0",
+          "orbitOwner": "0x3b7651df08915f740a7eb079690327c4e8ccd3f0",
+          "orbitType": 0,
+          "raw": {
+            "0": "283",
+            "1": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+            "2": "3",
+            "3": "0xC3af789c71CaC9CD43D6F51Ec6B3CFd83a373411",
+            "4": "39",
+            "5": "1",
+            "6": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+            "7": "40000000",
+            "8": "36000000",
+            "9": "0",
+            "10": "19",
+            "11": "2",
+            "12": false
+          },
+          "reasonCode": "",
+          "receiptType": 0,
+          "recycleEscrowLocked": "0",
+          "recycleGross": "40000000",
+          "recycleLiquidPaid": "36000000",
+          "recycleReceiver": "0x8844a10391801d5b1a4273588f8c6bf1dfe06e36",
+          "requiredAmount": "0",
+          "rewardType": "",
+          "routedRole": "",
+          "sourceCycle": 1,
+          "sourcePosition": 39,
+          "sourceUser": "0xc3af789c71cac9cd43d6f51ec6b3cfd83a373411",
+          "systemChargeTotal": "0",
+          "timestamp": "2026-10-01T00:12:15.000Z",
+          "toLevel": 0,
+          "tokenAmount": "0",
+          "triggeredOrbitReset": false,
+          "updatedAt": "2026-10-01T00:12:16.827Z",
+          "usedAmount": "0",
+          "user": ""
+        }
+      ]
+    },
+    {
+      "hash": "0xbebabd4dd4c9c75cdf1b8a5f7a44d88b376b664735b35ccf66f9f92a1a54af83",
+      "summary": {
+        "txHash": "0xbebabd4dd4c9c75cdf1b8a5f7a44d88b376b664735b35ccf66f9f92a1a54af83",
+        "logIndex": 47,
+        "activationAmount": "20000000",
+        "activationId": "285",
+        "blockHash": "0x8d6bebc50f40cc68a9f2f4aa8d4fa5a27e18a420cf2ad3c35a157fcff8d365a6",
+        "blockNumber": 48991126,
+        "chainId": 80002,
+        "createdAt": "2026-10-01T00:12:27.866Z",
+        "isAutoUpgrade": false,
+        "isFounderRepFreeActivation": false,
+        "level": 2,
+        "nftPoolAmount": "1600000",
+        "operationsAmount": "400000",
+        "raw": {
+          "0": "285",
+          "1": "0xb33213348FF6806295e89A5CD3ee520f14d4ca07",
+          "2": "2",
+          "3": "20000000",
+          "4": "2000000",
+          "5": "1600000",
+          "6": "400000",
+          "7": "26000000",
+          "8": "0",
+          "9": "10000000",
+          "10": false,
+          "11": false
+        },
+        "systemCharge": "2000000",
+        "timestamp": "2026-10-01T00:12:27.000Z",
+        "totalEscrowLocked": "0",
+        "totalLiquidPaid": "26000000",
+        "totalRecycleAllocated": "10000000",
+        "updatedAt": "2026-10-01T00:12:27.866Z",
+        "user": "0xb33213348ff6806295e89a5cd3ee520f14d4ca07"
+      },
+      "transfers": [
+        {
+          "from": "0xb33213348ff6806295e89a5cd3ee520f14d4ca07",
+          "to": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "amount": "20000000"
+        },
+        {
+          "from": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "to": "0x20b7055b189a97db61d467e7132cf7b724b7894d",
+          "amount": "8000000"
+        },
+        {
+          "from": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "to": "0x42819c37a22e5d9432b33fc8378e1b489d246cc2",
+          "amount": "1600000"
+        },
+        {
+          "from": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "to": "0xb5810c98c8077cc587c9248f709ecaff531ebd22",
+          "amount": "400000"
+        },
+        {
+          "from": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "to": "0x8844a10391801d5b1a4273588f8c6bf1dfe06e36",
+          "amount": "10000000"
+        },
+        {
+          "from": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "to": "0xa282b5c66a4afbdbf5b3b87de85497dc6f481fb6",
+          "amount": "8000000"
+        },
+        {
+          "from": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "to": "0x42819c37a22e5d9432b33fc8378e1b489d246cc2",
+          "amount": "1600000"
+        },
+        {
+          "from": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "to": "0xb5810c98c8077cc587c9248f709ecaff531ebd22",
+          "amount": "400000"
+        }
+      ],
+      "events": [
+        {
+          "txHash": "0xbebabd4dd4c9c75cdf1b8a5f7a44d88b376b664735b35ccf66f9f92a1a54af83",
+          "logIndex": 41,
+          "actionCode": "",
+          "activationId": "285",
+          "actualAmount": "0",
+          "actualReceiver": "",
+          "affectedUser": "",
+          "blockHash": "0x8d6bebc50f40cc68a9f2f4aa8d4fa5a27e18a420cf2ad3c35a157fcff8d365a6",
+          "blockNumber": 48991126,
+          "chainId": 80002,
+          "contractAddress": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "createdAt": "2026-10-01T00:12:28.597Z",
+          "eligible": null,
+          "escrowAfter": "0",
+          "escrowBefore": "0",
+          "eventName": "RecycleCompletedDetailed",
+          "expectedAmount": "0",
+          "founderAmount": "0",
+          "founderWallet": "",
+          "fromLevel": 0,
+          "level": 2,
+          "mirrorCycle": 3,
+          "mirrorPosition": 10,
+          "nftPoolAmount": "0",
+          "operationsAmount": "0",
+          "orbitOwner": "0x3b7651df08915f740a7eb079690327c4e8ccd3f0",
+          "orbitType": 0,
+          "raw": {
+            "0": "285",
+            "1": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+            "2": "2",
+            "3": "0xb33213348FF6806295e89A5CD3ee520f14d4ca07",
+            "4": "12",
+            "5": "3",
+            "6": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+            "7": "20000000",
+            "8": "18000000",
+            "9": "0",
+            "10": "10",
+            "11": "3",
+            "12": false
+          },
+          "reasonCode": "",
+          "receiptType": 0,
+          "recycleEscrowLocked": "0",
+          "recycleGross": "20000000",
+          "recycleLiquidPaid": "18000000",
+          "recycleReceiver": "0x8844a10391801d5b1a4273588f8c6bf1dfe06e36",
+          "requiredAmount": "0",
+          "rewardType": "",
+          "routedRole": "",
+          "sourceCycle": 3,
+          "sourcePosition": 12,
+          "sourceUser": "0xb33213348ff6806295e89a5cd3ee520f14d4ca07",
+          "systemChargeTotal": "0",
+          "timestamp": "2026-10-01T00:12:27.000Z",
+          "toLevel": 0,
+          "tokenAmount": "0",
+          "triggeredOrbitReset": false,
+          "updatedAt": "2026-10-01T00:12:28.597Z",
+          "usedAmount": "0",
+          "user": ""
+        },
+        {
+          "txHash": "0xbebabd4dd4c9c75cdf1b8a5f7a44d88b376b664735b35ccf66f9f92a1a54af83",
+          "logIndex": 22,
+          "actionCode": "",
+          "activationId": "0",
+          "actualAmount": "0",
+          "actualReceiver": "",
+          "affectedUser": "",
+          "blockHash": "0x8d6bebc50f40cc68a9f2f4aa8d4fa5a27e18a420cf2ad3c35a157fcff8d365a6",
+          "blockNumber": 48991126,
+          "chainId": 80002,
+          "contractAddress": "0xb49130f8a48e358c867c8abee5381f6138f7b6b2",
+          "createdAt": "2026-10-01T00:12:28.643Z",
+          "eligible": null,
+          "escrowAfter": "0",
+          "escrowBefore": "0",
+          "eventName": "RecycleReserveUpdated",
+          "expectedAmount": "0",
+          "founderAmount": "0",
+          "founderWallet": "",
+          "fromLevel": 0,
+          "level": 0,
+          "mirrorCycle": 0,
+          "mirrorPosition": 0,
+          "nftPoolAmount": "0",
+          "operationsAmount": "0",
+          "orbitOwner": "",
+          "orbitType": 0,
+          "raw": {
+            "0": "285",
+            "1": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+            "2": "2",
+            "3": "0xb33213348FF6806295e89A5CD3ee520f14d4ca07",
+            "4": "12",
+            "5": "3",
+            "6": "20000000",
+            "7": "2",
+            "8": "2",
+            "9": true
+          },
+          "reasonCode": "",
+          "receiptType": 0,
+          "recycleEscrowLocked": "0",
+          "recycleGross": "0",
+          "recycleLiquidPaid": "0",
+          "recycleReceiver": "",
+          "requiredAmount": "0",
+          "rewardType": "",
+          "routedRole": "",
+          "sourceCycle": 0,
+          "sourcePosition": 0,
+          "sourceUser": "",
+          "systemChargeTotal": "0",
+          "timestamp": "2026-10-01T00:12:27.000Z",
+          "toLevel": 0,
+          "tokenAmount": "0",
+          "triggeredOrbitReset": false,
+          "updatedAt": "2026-10-01T00:12:28.643Z",
+          "usedAmount": "0",
+          "user": ""
+        }
+      ]
+    }
+  ],
+  "id1Total": "145822500000"
+}

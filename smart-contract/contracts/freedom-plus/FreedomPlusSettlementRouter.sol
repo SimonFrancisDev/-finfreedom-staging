@@ -326,7 +326,7 @@ contract FreedomPlusSettlementRouter is
         }
 
         Component[3] memory components;
-        uint8 componentCount = _buildComponents(source, sponsor, level, components);
+        uint8 componentCount = _buildComponents(source, source.orbitOwner, level, components);
         uint256 componentTotal;
         uint256 reservedTotal;
         for (uint8 index = 0; index < componentCount; index++) {
@@ -377,13 +377,13 @@ contract FreedomPlusSettlementRouter is
         IFreedomPlusOrbit.PlacementKind placementKind
     ) internal returns (SourcePlacement memory source) {
         source.orbitType = orbitType_;
-        source.orbitOwner = sponsor;
+        source.orbitOwner = _resolveRecipient(sponsor, participant, level);
         source.orbit = orbitByType[uint8(orbitType_)];
         bytes32 placementId = keccak256(abi.encode(activationId, "SOURCE"));
         (source.cycle, source.position, source.ring, source.parent) = source.orbit.recordPosition(
-            sponsor,
+            source.orbitOwner,
             participant,
-            sponsor,
+            source.orbitOwner,
             level,
             activationId,
             placementId,

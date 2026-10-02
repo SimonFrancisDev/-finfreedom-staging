@@ -1,0 +1,7 @@
+{
+    "status":  "UNVERIFIED",
+    "fromBlock":  49044355,
+    "toBlock":  49046003,
+    "error":  "HTTP 400 from eth_getLogs; no log result obtained",
+    "note":  "Not evidence of zero events"
+}

@@ -19,8 +19,14 @@ async function main() {
   const nftPoolVault = requiredAddress("NFT_POOL_VAULT_ADDRESS");
   const operationsVault = requiredAddress("OPERATIONS_VAULT_ADDRESS");
   const network = await ethers.provider.getNetwork();
-  if (hre.network.name !== "amoy" || network.chainId !== 80002n) {
-    throw new Error(`Amoy only; received ${hre.network.name}/${network.chainId}`);
+  const supportedNetworks = new Map([
+    ["amoy", 80002n],
+    ["polygon", 137n],
+  ]);
+  if (supportedNetworks.get(hre.network.name) !== network.chainId) {
+    throw new Error(
+      `Amoy or Polygon only; received ${hre.network.name}/${network.chainId}`
+    );
   }
 
   for (const [name, address] of Object.entries({ proxyAddress, nftPoolVault, operationsVault })) {

@@ -1,6 +1,29 @@
 # Production Layer Execution
 
+## 2026-10-02 safety hold
+
+The paused mainnet deployment is complete, but its Freedom-Plus settlement
+router contains the inactive-orbit prefill defect documented in
+`FREEDOM_PLUS_INACTIVE_ORBIT_INCIDENT_2026-10-02.md`. Do not open production
+Freedom-Plus or early access until the corrected router implementation has been
+storage-validated, approved by the Guardian, executed through governance and
+verified on chain. Existing production F-Freedom remains unchanged.
+
+Polygon storage validation has passed and corrected implementation
+`0x668536AE74B229a3f33A2f46fbFc91BbC67aC799` is deployed but not active.
+Governance submission and execution remain required.
+
 ## Current result
+
+Superseding checkpoint: mainnet deployment started from commit 29cac9a using
+the approved Polygon RPC, at 220 gwei with a cumulative 15-POL guard.
+The real transaction journal is production-layer-deployment.json; its status
+is authoritative. At this checkpoint deployment is incomplete and one
+transaction is pending following a base-fee increase above 220 gwei.
+Do not restart deployment or use partial addresses to open new features.
+The refreshed passing rehearsal used 39,897,538 gas and binds script/artifacts.
+The older funding and rehearsal observations below are retained as history,
+not current deployment status. Existing production data has not been reset.
 
 The deployment and five target governance calls passed on a local Polygon fork.
 Evidence: smart-contract/deployments-production-migration/production-layer-fork-rehearsal.json.
@@ -12,8 +35,8 @@ The rehearsal verified:
 - Fifteen new proxies deployed and configured; the existing operations vault reused.
 - ID1 and exactly three representatives initialized, all seven Plus levels active,
   54,650 FPT each and zero FPTr.
-- New public registration remained unavailable during initialization because the
-  F-Freedom gateway was unset until genesis completed.
+- New public registration remained paused during initialization; the gateway
+  was configured before owner-only genesis to validate permanent sponsors.
 - New registration, manager and membership paused before ownership handoff.
 - All new contract owners set to the existing production multisig.
 - FGT authorization and existing LevelManager recipient update callable by governance.
@@ -71,6 +94,8 @@ Review target, zero native value, decoded arguments and new deployment addresses
 These proposals do not move the historical pool's funds. Do not execute opening
 actions until integration, hosted configuration and feature readiness are verified.
 
-Still outstanding: real deployment, proposal submission/owner execution,
-dedicated monthly reward operator approval, production API/worker/UI promotion,
-hosted launch configuration and production early-access invitation.
+Superseding status: the paused mainnet layer was deployed and integration
+proposals 115 and 116 were approved and executed. Production backend code was
+promoted in commit `05c84ec`; production frontend code was promoted in commit
+`da73cca`. Hosted backend wiring, reward-operator readiness, the corrected
+router upgrade and early-access opening remain outstanding.

@@ -1,0 +1,26 @@
+{
+  "chainId": 137,
+  "governance": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+  "submitter": "0x884e48f9897E8633238747b608DD49dE12bF94df",
+  "requiredConfirmations": "3",
+  "timelockSeconds": "120",
+  "actions": [
+    {
+      "label": "Authorize new NFT membership for FGT",
+      "target": "0x615201edaddB5CFD839Cc4eE693Dc464F6E2B5E4",
+      "data": "0x788f737d000000000000000000000000ef54b5b9038a282c651e2992b885d074fb43dcdb0000000000000000000000000000000000000000000000000000000000000001",
+      "complete": false,
+      "submissionHash": "0x70fa989f2c0c961f63cfa50c84aa1c396c142840cab0669b8f49c5ae7bc19c19",
+      "proposalId": 115
+    },
+    {
+      "label": "Connect both programs to the new shared NFT pool",
+      "target": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "data": "0x2ee5000b000000000000000000000000bb2cf7ef867f46a93ae1f9ded564927874b79b520000000000000000000000003ee9b4913e175c15b2ef76ac352b6737210248fb",
+      "complete": false,
+      "submissionHash": "0xd11d5632a69a438b735b666066226a2d29f1ddf61371e3aa71dea33a8c2b5786",
+      "proposalId": 116
+    }
+  ],
+  "scope": "Integration only; no unpause, historical fund transfer or reset"
+}

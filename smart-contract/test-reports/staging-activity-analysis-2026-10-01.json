@@ -1,0 +1,307 @@
+{
+  "scope": "2026-10-01T00:00:00Z",
+  "counts": {
+    "plusComponentMath": 283,
+    "plusChargeMath": 118,
+    "plusFpt": 113,
+    "plusPrice": 113,
+    "nftThreshold": 9,
+    "ffChargeMath": 50
+  },
+  "issues": [],
+  "ffActivations": 50,
+  "missingIndexedPositions": [],
+  "id1Components": 42,
+  "id1AmountBaseUnits": "145822500000",
+  "lastEvents": [
+    {
+      "chainId": 80002,
+      "txHash": "0xfee7da77f2990fa8d91be10d4f1d9ed5e0af134056ebf003687397ed19637450",
+      "logIndex": 21,
+      "contractAddress": "0x30067ce1974bbd92b4ae29cbf5827ef5ee7a4cd4",
+      "activationId": "0x080bb875ff39acb8d283b6986590005f0421dec5c4c5e8dc54641d4956f4b5cf",
+      "addresses": [
+        "0xdcb1dd031bdcbd18d55b8da513015cc94dd04af4"
+      ],
+      "args": {
+        "participant": "0xdCB1dd031BdcBD18d55b8Da513015CC94dD04af4",
+        "level": "1",
+        "activationId": "0x080bb875ff39acb8d283b6986590005f0421dec5c4c5e8dc54641d4956f4b5cf"
+      },
+      "blockHash": "0xc534c90bfefca8e416526a221b2daa044b079cfba1dfab64dd4ceca1f9d016b1",
+      "blockNumber": 49044343,
+      "contractKey": "registration",
+      "createdAt": "2026-10-01T14:59:46.154Z",
+      "eventName": "LevelActivated",
+      "timestamp": "2026-10-01T14:59:28.000Z",
+      "updatedAt": "2026-10-01T14:59:46.154Z"
+    }
+  ],
+  "nftEvents": [
+    {
+      "tx": "0xc08915323939c78c11aec67e9a212fc452c502924c8e14313e721b8a12ea0e83",
+      "event": "MembershipMinted",
+      "args": {
+        "member": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+        "tokenId": "1",
+        "tier": "1",
+        "lockedFGT": "0",
+        "lockedFPT": "5700000000"
+      }
+    },
+    {
+      "tx": "0xb5598a44cf5d14528ccbce6ffb697fde45bd533ebf0bb85047f874e0f05b4279",
+      "event": "QualificationUnlocked",
+      "args": {
+        "member": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+        "unlockedFGT": "0",
+        "unlockedFPT": "700000000",
+        "remainingLocked": "5000000000",
+        "rewardEligible": false
+      }
+    },
+    {
+      "tx": "0x382f8b2333cf5a12c26281c80d3ade5776bf43036e26fa57c24d974fd8d6e1c9",
+      "event": "MembershipTierChanged",
+      "args": {
+        "member": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+        "previousTokenId": "1",
+        "newTokenId": "2",
+        "previousTier": "1",
+        "newTier": "2",
+        "lockedFGT": "0",
+        "lockedFPT": "18700000000"
+      }
+    },
+    {
+      "tx": "0x3520565c9fc83f47f3c454b9ebd97fd25d2d996ccda932a3486af86715099bf3",
+      "event": "MembershipTierChanged",
+      "args": {
+        "member": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+        "previousTokenId": "2",
+        "newTokenId": "3",
+        "previousTier": "2",
+        "newTier": "1",
+        "lockedFGT": "0",
+        "lockedFPT": "5700000000"
+      }
+    },
+    {
+      "tx": "0xfd357f927320ca686782f8a13df5c8ff431b13596b711e1187ce31cfc56fede3",
+      "event": "QualificationUnlocked",
+      "args": {
+        "member": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+        "unlockedFGT": "0",
+        "unlockedFPT": "5700000000",
+        "remainingLocked": "0",
+        "rewardEligible": false
+      }
+    },
+    {
+      "tx": "0x6fa2c5c1d37df05ae2ffa137d7eaa35d14d17dc9310bf3147758ce19f8b8b990",
+      "event": "QualificationUnlocked",
+      "args": {
+        "member": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+        "unlockedFGT": "5000000000",
+        "unlockedFPT": "0",
+        "remainingLocked": "700000000",
+        "rewardEligible": false
+      }
+    },
+    {
+      "tx": "0x25d39c8a392b196318afbb62adce4193221e972dd4e729c02165f4593cf3d7dd",
+      "event": "QualificationUnlocked",
+      "args": {
+        "member": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+        "unlockedFGT": "5100000000",
+        "unlockedFPT": "600000000",
+        "remainingLocked": "0",
+        "rewardEligible": false
+      }
+    },
+    {
+      "tx": "0x69dfaf1cf5fd2073190ff1a5904e9e5c593e2f89f6523f7cb82ecd6e770412f5",
+      "event": "MembershipTierChanged",
+      "args": {
+        "member": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+        "previousTokenId": "3",
+        "newTokenId": "4",
+        "previousTier": "1",
+        "newTier": "3",
+        "lockedFGT": "8000000000",
+        "lockedFPT": "54000000000"
+      }
+    },
+    {
+      "tx": "0x506c93cd8def7b2db37bb8af6ab50f411eba093db43aabd9bb379a1522d75d17",
+      "event": "MembershipTierChanged",
+      "args": {
+        "member": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+        "previousTokenId": "4",
+        "newTokenId": "5",
+        "previousTier": "3",
+        "newTier": "1",
+        "lockedFGT": "0",
+        "lockedFPT": "5700000000"
+      }
+    },
+    {
+      "tx": "0x0de4dadda58dfeb0149351a1e84f1395eaa8110f3e3b44e8d101aa7d018a6cc5",
+      "event": "MembershipMinted",
+      "args": {
+        "member": "0x3a596f67585F27cfD7F449FeC0a92b7bf34B1df5",
+        "tokenId": "6",
+        "tier": "1",
+        "lockedFGT": "0",
+        "lockedFPT": "5700000000"
+      }
+    },
+    {
+      "tx": "0x268e1730eb900d2e16bc0c7d12bfa13a2211e51d6f12787fd1d9226571f2a28e",
+      "event": "MembershipTierChanged",
+      "args": {
+        "member": "0x3a596f67585F27cfD7F449FeC0a92b7bf34B1df5",
+        "previousTokenId": "6",
+        "newTokenId": "7",
+        "previousTier": "1",
+        "newTier": "2",
+        "lockedFGT": "0",
+        "lockedFPT": "18700000000"
+      }
+    },
+    {
+      "tx": "0x92c0af8cd56996788d3456cdbe015d8bf0f6a3ca8ee666d99a6d9801cc0b3970",
+      "event": "MembershipMinted",
+      "args": {
+        "member": "0xDd78425335C0c698615845d94f9FeE7492266396",
+        "tokenId": "8",
+        "tier": "1",
+        "lockedFGT": "0",
+        "lockedFPT": "5700000000"
+      }
+    },
+    {
+      "tx": "0xeff945390e1a56acebcea855c0a5927af4a9fcc0f45bd29e300abc46b85bcf34",
+      "event": "MembershipTierChanged",
+      "args": {
+        "member": "0xDd78425335C0c698615845d94f9FeE7492266396",
+        "previousTokenId": "8",
+        "newTokenId": "9",
+        "previousTier": "1",
+        "newTier": "2",
+        "lockedFGT": "0",
+        "lockedFPT": "18700000000"
+      }
+    }
+  ],
+  "ffSamples": [
+    {
+      "logIndex": 21,
+      "txHash": "0xac0f376db8c04cc7af78102e46eb5acfbed4e04102100279798913cd8828f033",
+      "activationAmount": "10000000",
+      "activationId": "325",
+      "blockHash": "0x2bab80d6583782a7e40aa9d7a409a536fbea51f2129952d09d04478c6562c881",
+      "blockNumber": 49042198,
+      "chainId": 80002,
+      "createdAt": "2026-10-01T14:23:43.779Z",
+      "isAutoUpgrade": false,
+      "isFounderRepFreeActivation": false,
+      "level": 1,
+      "nftPoolAmount": "800000",
+      "operationsAmount": "200000",
+      "raw": {
+        "0": "325",
+        "1": "0x31f9a0B00E75456571f77f2fD806479433494e9B",
+        "2": "1",
+        "3": "10000000",
+        "4": "1000000",
+        "5": "800000",
+        "6": "200000",
+        "7": "0",
+        "8": "9000000",
+        "9": "0",
+        "10": false,
+        "11": false
+      },
+      "systemCharge": "1000000",
+      "timestamp": "2026-10-01T14:23:43.000Z",
+      "totalEscrowLocked": "9000000",
+      "totalLiquidPaid": "0",
+      "totalRecycleAllocated": "0",
+      "updatedAt": "2026-10-01T14:23:43.779Z",
+      "user": "0x31f9a0b00e75456571f77f2fd806479433494e9b"
+    },
+    {
+      "logIndex": 54,
+      "txHash": "0xac0f376db8c04cc7af78102e46eb5acfbed4e04102100279798913cd8828f033",
+      "activationAmount": "20000000",
+      "activationId": "326",
+      "blockHash": "0x2bab80d6583782a7e40aa9d7a409a536fbea51f2129952d09d04478c6562c881",
+      "blockNumber": 49042198,
+      "chainId": 80002,
+      "createdAt": "2026-10-01T14:23:43.931Z",
+      "isAutoUpgrade": true,
+      "isFounderRepFreeActivation": false,
+      "level": 2,
+      "nftPoolAmount": "1600000",
+      "operationsAmount": "400000",
+      "raw": {
+        "0": "326",
+        "1": "0x3a596f67585F27cfD7F449FeC0a92b7bf34B1df5",
+        "2": "2",
+        "3": "20000000",
+        "4": "2000000",
+        "5": "1600000",
+        "6": "400000",
+        "7": "18000000",
+        "8": "0",
+        "9": "0",
+        "10": true,
+        "11": false
+      },
+      "systemCharge": "2000000",
+      "timestamp": "2026-10-01T14:23:43.000Z",
+      "totalEscrowLocked": "0",
+      "totalLiquidPaid": "18000000",
+      "totalRecycleAllocated": "0",
+      "updatedAt": "2026-10-01T14:23:43.931Z",
+      "user": "0x3a596f67585f27cfd7f449fec0a92b7bf34b1df5"
+    },
+    {
+      "txHash": "0x6c13f8b69326b972e7bc0948c23a24838bbfffda01323a375e4154b925030fb9",
+      "logIndex": 40,
+      "activationAmount": "10000000",
+      "activationId": "327",
+      "blockHash": "0x438d0cb4f23fe1593577ba890d458096447196fb3ba645545487afd1658fbb9d",
+      "blockNumber": 49044296,
+      "chainId": 80002,
+      "createdAt": "2026-10-01T14:58:41.927Z",
+      "isAutoUpgrade": false,
+      "isFounderRepFreeActivation": false,
+      "level": 1,
+      "nftPoolAmount": "800000",
+      "operationsAmount": "200000",
+      "raw": {
+        "0": "327",
+        "1": "0xdCB1dd031BdcBD18d55b8Da513015CC94dD04af4",
+        "2": "1",
+        "3": "10000000",
+        "4": "1000000",
+        "5": "800000",
+        "6": "200000",
+        "7": "9000000",
+        "8": "0",
+        "9": "9000000",
+        "10": false,
+        "11": false
+      },
+      "systemCharge": "1000000",
+      "timestamp": "2026-10-01T14:58:41.000Z",
+      "totalEscrowLocked": "0",
+      "totalLiquidPaid": "9000000",
+      "totalRecycleAllocated": "9000000",
+      "updatedAt": "2026-10-01T14:58:41.927Z",
+      "user": "0xdcb1dd031bdcbd18d55b8da513015cc94dd04af4"
+    }
+  ]
+}

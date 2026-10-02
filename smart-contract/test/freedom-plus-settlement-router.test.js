@@ -408,15 +408,49 @@ describe("Freedom-Plus ordinary settlement router", function () {
     await system.registration.connect(c).activateLevel(3);
     expect((await system.usdt.balanceOf(a.address)) - aBeforeSkipped).to.equal(180n * UNIT);
     expect((await system.usdt.balanceOf(b.address)) - bBeforeSkipped).to.equal(0);
+    expect((await system.orbits[2].cycleState(b.address, 3, 0)).filledPositions).to.equal(0);
+    expect((await system.orbits[2].positionAt(b.address, 3, 0, 1)).participant)
+      .to.equal(ethers.ZeroAddress);
 
     await system.registration.connect(b).activateLevel(2);
     await system.registration.connect(b).activateLevel(3);
+    expect((await system.orbits[2].cycleState(b.address, 3, 0)).filledPositions).to.equal(0);
     await register(system, d, b.address);
     await system.registration.connect(d).activateLevel(2);
 
     const bBeforeRecovery = await system.usdt.balanceOf(b.address);
     await system.registration.connect(d).activateLevel(3);
     expect((await system.usdt.balanceOf(b.address)) - bBeforeRecovery).to.equal(180n * UNIT);
+  });
+
+  it("never prefills an inactive sponsor orbit at any Freedom-Plus level", async function () {
+    const system = await deployGraph();
+    const fullCost = 54_650n * UNIT;
+    for (const signer of [a, b, c]) await fundAndApprove(system, signer, fullCost);
+
+    await register(system, a, id1.address);
+    await activateThrough(system, a, 7);
+
+    await system.gateway.setParticipant(b.address, a.address, true, true);
+    await register(system, c, b.address);
+    await activateThrough(system, c, 7);
+
+    const orbitByLevel = [0, 0, 1, 2, 3, 4, 4, 5];
+    for (let level = 1; level <= 7; level++) {
+      expect(
+        (await system.orbits[orbitByLevel[level]].cycleState(b.address, level, 0))
+          .filledPositions
+      ).to.equal(0);
+    }
+
+    await system.registration.connect(b).register(a.address);
+    await activateThrough(system, b, 7);
+    for (let level = 1; level <= 7; level++) {
+      expect(
+        (await system.orbits[orbitByLevel[level]].cycleState(b.address, level, 0))
+          .filledPositions
+      ).to.equal(0);
+    }
   });
 
   it("initializes ID1 and three representatives without financial side effects", async function () {

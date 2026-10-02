@@ -1,0 +1,15 @@
+{
+  "ffSummaryReceiptsChecked": 50,
+  "ffSummaryMismatches": [],
+  "id1OutgoingTransfersInAuditedReceipts": 0,
+  "ffAutoUpgrades": 2,
+  "ffNFTDestinations": [
+    "0x42819C37a22E5d9432B33fc8378e1B489D246cC2"
+  ],
+  "rewardEvents": [
+    "Upgraded",
+    "OwnershipTransferred",
+    "Initialized",
+    "OwnershipTransferred"
+  ]
+}

@@ -1,0 +1,967 @@
+{
+  "chainId": 137,
+  "rehearsal": false,
+  "status": "DEPLOYED_PAUSED_AWAITING_GOVERNANCE",
+  "sourceCommit": "29cac9a8bb460af2b78468f5326d9fc0baa6ae3a",
+  "createdAt": "2026-10-01T22:07:17.238Z",
+  "existing": {
+    "governance": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+    "guardian": "0x290c2300296379BD0048aFe9099Ed6Fc81BF75fC",
+    "registration": "0x02ECA97e944Ac66b0444fd5F61A716917E83CfF5",
+    "manager": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+    "fgt": "0x615201edaddB5CFD839Cc4eE693Dc464F6E2B5E4",
+    "usdt": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+    "oldPool": "0xf8F60Da42681b73DFeCa7731E78b29C8707C184b",
+    "operations": "0x3ee9B4913e175c15B2Ef76Ac352B6737210248Fb",
+    "id1": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+    "deployer": "0x884e48f9897E8633238747b608DD49dE12bF94df",
+    "representatives": [
+      "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+      "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "0x117C9258a95775Ecf448fd086D00cA22506Ea79d"
+    ]
+  },
+  "founderWallets": [
+    "0x88d350Bd016751B08Baf6508e1bdF186A1B1305B",
+    "0x5fd791B457aD32A8E2A2e81FC211238639824127",
+    "0xa2033515F0f35A5FA4803eDde306c293a81c2da9",
+    "0xf73d4Ae3a9EFeBAb76ab9053Cd055b4503929231",
+    "0xb850f836d0e3CfeD4A7DbDCAa7A4c78aFac0d911",
+    "0x435363daD972a7abb2A739525c461F06A45CE294",
+    "0xf4F83F8181cD9A8C96a33f4d9aF487b444353a15",
+    "0x120FBeeeb36c003CAEE1F4B37Ac9297C88d51D42"
+  ],
+  "oldPoolBalance": "3306240000",
+  "contracts": {
+    "FPTToken": {
+      "proxy": "0xc60FD9438725a040609333b05d0E3AD0C31f7012",
+      "transactionHash": "0x2cf918b532c66a7959c0ec68f3d10505961c13aa96b1ad6c785d1408b3a1c07e",
+      "deploymentBlock": 94791539,
+      "implementation": "0xB16cA8a208Bd7Ea1C215f0BAae68cE1b92988356"
+    },
+    "FPTrToken": {
+      "proxy": "0x2a8f8d47aFB903A9223A04EfcaE32422424E2363",
+      "transactionHash": "0xed4c32ef2ef40e2af5cbc88907d3ddf14f8f4d21f11d48fcfac664875b88be56",
+      "deploymentBlock": 94791546,
+      "implementation": "0x9CE36628974CcA9aE28ce03E47e54Ac5C70C7297"
+    },
+    "FreedomPlusTokenController": {
+      "proxy": "0x9a649Ef09874E2def7Ca78E19E118eF4021697bC",
+      "transactionHash": "0x98ae4539babc23e6937657acc21e998b135ac24eb2ab4798ce0da223d950f89d",
+      "deploymentBlock": 94791552,
+      "implementation": "0xaA5fb4ef90a2B14Ae30C5753c57bdc820f5c35bc"
+    },
+    "FreedomPlusLevelManager": {
+      "proxy": "0x6E59b6580826DCcC4c1c9E5497F6bE3BE9C77384",
+      "transactionHash": "0xaf780ee27e835eddd1ed1923a53f5903069490e852d4a68b6d9f68c6826695c5",
+      "deploymentBlock": 94791559,
+      "implementation": "0x636b55b22B045dCDBAe734F26B8221a32DFEb369"
+    },
+    "FreedomPlusRegistration": {
+      "proxy": "0x7eC9D69fD82B1e62E01d497d495fEdfFfC34a0B6",
+      "transactionHash": "0x548b2064316002fce2d811f1233725e0df8dc4dbc8038b854fe045cb0dc02b23",
+      "deploymentBlock": 94791566,
+      "implementation": "0x4D90763ca437abdA3E9FDBe1315f369324263AB2"
+    },
+    "FreedomNFTPoolVault": {
+      "proxy": "0xbb2cF7ef867F46A93ae1F9DEd564927874b79B52",
+      "transactionHash": "0x50768e1f34caa898bd96e5f2a6e61d646c442e5f0637d462f39333aa40638558",
+      "deploymentBlock": 94791785,
+      "implementation": "0xC62c0863DDeA0a2e189bEF86Be8E20f1F645569a"
+    },
+    "P39PlusOrbit": {
+      "proxy": "0x1DFC59c915163D56998b764E6536CF869550B233",
+      "transactionHash": "0x18aeeb900489a724cca994a174fa00fbace9ce2dcad3251788ba8f23b3d468b1",
+      "deploymentBlock": 94791794,
+      "implementation": "0xAF5789235Be05F5dA68932213666Dd29A0F35de8"
+    },
+    "P14PlusOrbit": {
+      "proxy": "0x81e21a812181404325818dc042676e93293e0751",
+      "transactionHash": "0x885d2f2a64f339eed1f35a9a181717bc97516b583ccb7e01f16bee0a24d080d8",
+      "deploymentBlock": 94791802,
+      "implementation": "0x5BbC9323471Db6Ee0F0E9D7FCb9A75B86CeB6753"
+    },
+    "P12PlusOrbit": {
+      "proxy": "0xf1C9A1AFa0534cEb1075726Fab6Ac364224BD45d",
+      "transactionHash": "0x01d4f8c4a8b9b7d4c62065a4ef052d800675ac8c3e03ceb127058e63c18c1f1a",
+      "deploymentBlock": 94791818,
+      "implementation": "0xBfAA5B5C4A170Fb753B6B89215352B00Cd303c69"
+    },
+    "P6PlusOrbit": {
+      "proxy": "0x4C2A8058f87E194e277BADB853C87E1a9f44BC0d",
+      "transactionHash": "0xabaa0629326706627cba6f1699e8f1bcb0540a25dc33152fc0c823473daa9ef4",
+      "deploymentBlock": 94791830,
+      "implementation": "0x3E57C6C167f47b83e1708349CB973c322E57DA32"
+    },
+    "P4PlusOrbit": {
+      "proxy": "0xfD57a9c35AD9d46C4899817915f1A9b6c843a608",
+      "transactionHash": "0x18a044b1bb4735aa0cc6ac4b51faea497dfa746714328074a9116b9c05a48343",
+      "deploymentBlock": 94791837,
+      "implementation": "0x4C90dFe7252df6a93aF2EDA19392eCe3a84c3848"
+    },
+    "P3PlusOrbit": {
+      "proxy": "0x8Ce32a2f23dEF2a31e46228758084724f9828C8d",
+      "transactionHash": "0x09148ee14725fee65bcce542ad9739757308053731b5c5b55600a6a298a2e9a4",
+      "deploymentBlock": 94791843,
+      "implementation": "0xF58a3a50AfF26eA46acaf0aB015AF4C9ACDA0aE4"
+    },
+    "FreedomPlusSettlementRouter": {
+      "proxy": "0x8C88262595cbEAA5FffB60a0689b3EAbe22B0498",
+      "transactionHash": "0xd23e8ca5273ee8d01e51c8a052e6c29ade69b7a2bd188f2ae6bd7f5c4ac19bf4",
+      "deploymentBlock": 94791852,
+      "implementation": "0x0820857424EFF93f0D3326DDea6caa7E872B0bB5"
+    },
+    "FreedomNFTMembership": {
+      "proxy": "0xef54b5B9038A282c651E2992B885D074fb43DcDb",
+      "transactionHash": "0x97074ccec25b929239b41dcba385cafad599d3f2f80f978ca41726e2c31f157f",
+      "deploymentBlock": 94791862,
+      "implementation": "0x603f48dE4c24bEAdd8C14cA60216C95A4257fc8c"
+    },
+    "FreedomNFTRewardDistributor": {
+      "proxy": "0xD3b9637281C41fc7575aF34d5e63C4dE2D86c838",
+      "transactionHash": "0xe74a98a537aa0e0da6f844c22af5c9d2506201f8b98128446c49582b224c03ab",
+      "deploymentBlock": 94791872,
+      "implementation": "0x1d1FF16D7EBac633094fd4405dba6A9B4B074B2b"
+    }
+  },
+  "transactions": [
+    {
+      "label": "registration.pause",
+      "hash": "0x3bcfcc4061fd3f705c78271360a82b551fffdae7734bf3d1a14244aa033a82e3",
+      "status": "CONFIRMED",
+      "block": 94791573
+    },
+    {
+      "label": "membership.pause",
+      "hash": "0xea0008312039263e32ab979e77b4e8bf86d6f6497e9824586735ac3566c6b685",
+      "status": "CONFIRMED",
+      "block": 94791865
+    },
+    {
+      "label": "router.orbit.0",
+      "hash": "0x9c0e28eebefab5ad7c07c48f020059f6a623907056ba5ac8ebee2298da688d56",
+      "status": "CONFIRMED",
+      "block": 94791874
+    },
+    {
+      "label": "orbit.manager.0",
+      "hash": "0xcf3926464c05b031d6d79d2cec7d134bea1ed40a11ad31716aa260bda0445a3c",
+      "status": "CONFIRMED",
+      "block": 94791877
+    },
+    {
+      "label": "router.orbit.1",
+      "hash": "0x75fef60df4068e54dbcbdbbd05f97512862c50caa8eb7be9219a0e797e4d592a",
+      "status": "CONFIRMED",
+      "block": 94791879
+    },
+    {
+      "label": "orbit.manager.1",
+      "hash": "0x877309584c0dd0aeff57687cfb5fb64e83056c11f8a8aac423b01d67e1ec1ce1",
+      "status": "CONFIRMED",
+      "block": 94791882
+    },
+    {
+      "label": "router.orbit.2",
+      "hash": "0xcc4f33e6a0d21d7533f8b90d4943da5b87e6f416a27d54d0dad69a92f970bd00",
+      "status": "CONFIRMED",
+      "block": 94791884
+    },
+    {
+      "label": "orbit.manager.2",
+      "hash": "0x0201954028ec55f93eb6602ad3f7d1914d4f4092b565cbead9eed298d84a325a",
+      "status": "CONFIRMED",
+      "block": 94791886
+    },
+    {
+      "label": "router.orbit.3",
+      "hash": "0xd3495b192a0fcb6a2d1d138d8761545634768b9ba51f26aac7033a0e989b28c4",
+      "status": "CONFIRMED",
+      "block": 94791888
+    },
+    {
+      "label": "orbit.manager.3",
+      "hash": "0xb69c518822a2c55c8770873e423f572c4c823c94000c78263a90b9e786bffdbe",
+      "status": "CONFIRMED",
+      "block": 94791890
+    },
+    {
+      "label": "router.orbit.4",
+      "hash": "0x57fe9c2d0a84eb8cb4cdd78720b8c484a3c64c91606e7277cde7a637305a03cc",
+      "status": "CONFIRMED",
+      "block": 94791892
+    },
+    {
+      "label": "orbit.manager.4",
+      "hash": "0x7bef95364afdcf7c3430c4ba1ee6dc16f1a2efc6349f816aedcc6768fbad4c75",
+      "status": "CONFIRMED",
+      "block": 94791894
+    },
+    {
+      "label": "router.orbit.5",
+      "hash": "0xe899e2d0f961917741969b0efed9ce096438a1569af313e74ee5b0cd4eeff2e7",
+      "status": "CONFIRMED",
+      "block": 94791897
+    },
+    {
+      "label": "orbit.manager.5",
+      "hash": "0x13e143b3d980979232a3aa116fbbb9ab5b556006095b3bd2cecfd51f2a4f13ca",
+      "status": "CONFIRMED",
+      "block": 94791899
+    },
+    {
+      "label": "router.founders",
+      "hash": "0x6cb0b47876012b02348518f7f36b0d88862a989f77dd7e295d960f1b75a34d54",
+      "status": "CONFIRMED",
+      "block": 94791901
+    },
+    {
+      "label": "router.lock",
+      "hash": "0x09ad447ccba537d04444cbe39de6715922aa3a55c34016c37030c115795af2f2",
+      "status": "CONFIRMED",
+      "block": 94791903
+    },
+    {
+      "label": "manager.registration",
+      "hash": "0x497af3ac9a262024949c9c63a983b4988f3be4f6741294bfd7ddca5e0cdc8bcb",
+      "status": "CONFIRMED",
+      "block": 94791905
+    },
+    {
+      "label": "manager.router",
+      "hash": "0x6731fa3e0b78335d15d57ac075dcf4a9e8e7e8ba005cc57d4433393563dce812",
+      "status": "CONFIRMED",
+      "block": 94791907
+    },
+    {
+      "label": "controller.manager",
+      "hash": "0x54a1b80ced7d5b2ac41bf4226743929c31eeda779888a65f045b668150e5c136",
+      "status": "CONFIRMED",
+      "block": 94791909
+    },
+    {
+      "label": "fpt.controller",
+      "hash": "0x918a7eaec29449e2c7eacf3cbe1f784d8d7e823af56caec8f60835b414292c46",
+      "status": "CONFIRMED",
+      "block": 94791911
+    },
+    {
+      "label": "fpt.membership",
+      "hash": "0x92116ab7c3bdbf0a128470080448cf7fb2591b7bafac1d98d12ffb9d4bd53bc0",
+      "status": "CONFIRMED",
+      "block": 94791914
+    },
+    {
+      "label": "fptr.controller",
+      "hash": "0xee8372adb3d481409d56cbd5131d4a8d13af2f167e92e854720f6e1d66cc8183",
+      "status": "CONFIRMED",
+      "block": 94791916
+    },
+    {
+      "label": "pool.distributor",
+      "hash": "0xa9e8c0940a38f4f65406d58aefbe2037820a17888dee59db8b17c9bbce910975",
+      "status": "CONFIRMED",
+      "block": 94791918
+    },
+    {
+      "label": "registration.gateway",
+      "hash": "0x58b62c85b353f0ee32ef2296d14a536d5b9de75651539484b42f649db18672c0",
+      "status": "CONFIRMED",
+      "block": 94791920
+    },
+    {
+      "label": "registration.genesis",
+      "hash": "0x5e8007ed8deee9891ab1c98b66bc83a28b2f45c865525d544836d66fbf08fd80",
+      "status": "CONFIRMED",
+      "block": 94791922
+    },
+    {
+      "label": "manager.pause",
+      "hash": "0x1f15ef6df6f28a1ea0944852eda9d0d0ca6b00df1b1150623fffe25b3dc93f30",
+      "status": "CONFIRMED",
+      "block": 94791930
+    },
+    {
+      "label": "fpt.lock",
+      "hash": "0x988f60aad4d34be706361ac1d53475f525e5a8c33e5e5e8f6bdbd4282db7eae2",
+      "status": "CONFIRMED",
+      "block": 94791932
+    },
+    {
+      "label": "fptr.lock",
+      "hash": "0xf987068833c6bf8082a86365156f10bc1c2eca798c6c73b4b33e98adba28a2f2",
+      "status": "CONFIRMED",
+      "block": 94791934
+    },
+    {
+      "label": "FPTToken.ownership",
+      "hash": "0x7f548a18ee1780bfe4da729d2f8762365c8e53dc7bb11b8c6a194cfe56fc0d50",
+      "status": "CONFIRMED",
+      "block": 94791936
+    },
+    {
+      "label": "FPTrToken.ownership",
+      "hash": "0x658a494416528b77971cd761f1dc56f2d3e40c3c12a07b7d327d58e2f24491be",
+      "status": "CONFIRMED",
+      "block": 94791938
+    },
+    {
+      "label": "FreedomPlusTokenController.ownership",
+      "hash": "0x7fd337744d0297e5b2e8a1e82a05a792448d26ca856df84bbe482274fa080520",
+      "status": "CONFIRMED",
+      "block": 94791940
+    },
+    {
+      "label": "FreedomPlusLevelManager.ownership",
+      "hash": "0x55edbead96d829550221ad087950846ce2bd665dc06feefefb2acc7d40b8a959",
+      "status": "CONFIRMED",
+      "block": 94791942
+    },
+    {
+      "label": "FreedomPlusRegistration.ownership",
+      "hash": "0x8023a1d0d701720709d6245150c80b42044402d78f25592006fbc7c013dfdac5",
+      "status": "CONFIRMED",
+      "block": 94791944
+    },
+    {
+      "label": "FreedomNFTPoolVault.ownership",
+      "hash": "0x15a263db41c8ce6192a12d59564bcc8bf4fe6cc1bb4b832aa0e1dbec16bd9299",
+      "status": "CONFIRMED",
+      "block": 94791946
+    },
+    {
+      "label": "P39PlusOrbit.ownership",
+      "hash": "0xb61e8b3accce1b39ec2893c995510bab13f259feb5ec7c4f202183c50ad25bd4",
+      "status": "CONFIRMED",
+      "block": 94791948
+    },
+    {
+      "label": "P14PlusOrbit.ownership",
+      "hash": "0xc407aff082c9a8d43a521ab59fa59988b9019fb7fe131464d3fd3ec68c8e24f1",
+      "status": "CONFIRMED",
+      "block": 94791950
+    },
+    {
+      "label": "P12PlusOrbit.ownership",
+      "hash": "0x70882459d1518fa3b8359c8340ca428770bfe7f8b9c5c5515a44eae73f6b614e",
+      "status": "CONFIRMED",
+      "block": 94791952
+    },
+    {
+      "label": "P6PlusOrbit.ownership",
+      "hash": "0xb443f930a1d435fdbdc464d97aa8f5b2c3eaea6ede3a332e55cc8b5ba172f6ff",
+      "status": "CONFIRMED",
+      "block": 94791954
+    },
+    {
+      "label": "P4PlusOrbit.ownership",
+      "hash": "0x05c68f9a6fc19d0080076f7b958355d6edbb47738c10c4b3409804301d439f81",
+      "status": "CONFIRMED",
+      "block": 94791956
+    },
+    {
+      "label": "P3PlusOrbit.ownership",
+      "hash": "0x652371bca89153a5af68957d36572d10f82b30ed16f838d3ab7fa50b6f5817dc",
+      "status": "CONFIRMED",
+      "block": 94791958
+    },
+    {
+      "label": "FreedomPlusSettlementRouter.ownership",
+      "hash": "0x71d69b4d110959dbc1b49a609b394529e19b4d71466bbb4501df16e073355328",
+      "status": "CONFIRMED",
+      "block": 94791960
+    },
+    {
+      "label": "FreedomNFTMembership.ownership",
+      "hash": "0xd6df5ca839f315c1b56d687ad5d9413c1b126b0d438de532ac7c8466e48d6fca",
+      "status": "CONFIRMED",
+      "block": 94791962
+    },
+    {
+      "label": "FreedomNFTRewardDistributor.ownership",
+      "hash": "0xc881b5b200b4c034c5efa1386837da5b9b4b2b025fd0698c3bbe237ad3897573",
+      "status": "CONFIRMED",
+      "block": 94791964
+    }
+  ],
+  "proposals": [
+    {
+      "label": "Authorize NFT membership for existing FGT",
+      "target": "0x615201edaddB5CFD839Cc4eE693Dc464F6E2B5E4",
+      "value": "0",
+      "data": "0x788f737d000000000000000000000000ef54b5b9038a282c651e2992b885d074fb43dcdb0000000000000000000000000000000000000000000000000000000000000001",
+      "phase": "INTEGRATION"
+    },
+    {
+      "label": "Connect F-Freedom to the shared NFT pool; preserve operations",
+      "target": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "value": "0",
+      "data": "0x2ee5000b000000000000000000000000bb2cf7ef867f46a93ae1f9ded564927874b79b520000000000000000000000003ee9b4913e175c15b2ef76ac352b6737210248fb",
+      "phase": "INTEGRATION"
+    },
+    {
+      "label": "Enable new manager after integration verification",
+      "target": "0x6E59b6580826DCcC4c1c9E5497F6bE3BE9C77384",
+      "value": "0",
+      "data": "0x3f4ba83a",
+      "phase": "OPEN"
+    },
+    {
+      "label": "Enable new registration after integration verification",
+      "target": "0x7eC9D69fD82B1e62E01d497d495fEdfFfC34a0B6",
+      "value": "0",
+      "data": "0x3f4ba83a",
+      "phase": "OPEN"
+    },
+    {
+      "label": "Enable NFT membership after integration verification",
+      "target": "0xef54b5B9038A282c651E2992B885D074fb43DcDb",
+      "value": "0",
+      "data": "0x3f4ba83a",
+      "phase": "OPEN"
+    }
+  ],
+  "existingFundsMoved": false,
+  "productionReset": false,
+  "sourceScriptSha256": "0d21d90be3bf34a5dbefb85e2124271307e20a5bf735de007b9586a845e9a134",
+  "artifactHashes": {
+    "FPTToken": "4677bc40200e97bc19d1ba46b5c5d107cebe9191bef556c548cee8165901e1cc",
+    "FPTrToken": "b7031ff1d7d47157abe0ec171659f5d0acb05d3bae6563fdcf5958f7d91460bc",
+    "FreedomPlusTokenController": "eb47143747957df1cf982e5b76ff518cd1a75ebb407ba49062c27a7fb6e8887c",
+    "FreedomPlusLevelManager": "31a2d442cfd4d134c980cf1d30d4c353b3f5f1c790ebd4f0c5e0ba6d6a5b781c",
+    "FreedomPlusRegistration": "fd9429331f27171eeb947484d25dc0415c51f3d5907c0f2ec84788f98440972b",
+    "FreedomNFTPoolVault": "a5d591d5c157cdf4ff85de6a64435f6b3172b9f8514c275690b977133629f6e2",
+    "P39PlusOrbit": "eac3f2fcd7dc5cb1267d0c932ed9ed8447c261eab8d634bb4c8d868dc4076b82",
+    "P14PlusOrbit": "1029751751b9b26e85f90e199ebffb80f8be6d38f63f6a46ec67bf2c8397a213",
+    "P12PlusOrbit": "e0b8737faecbca4caf0440f17037dc592428ecf5c25c36a2a4a1cebcee79554a",
+    "P6PlusOrbit": "c26ad6d7a78cfff2356f4e5eef99088d56b99c497060f277cfecb46b71c67ec6",
+    "P4PlusOrbit": "467bb2baf6ea5ee478afbca09012400171d7a623bf16c2de52892425a3dd1b1a",
+    "P3PlusOrbit": "0ab5c6ea2cb6a7948898e681984eb5e452c346060bd8aeb3d8c84a3c6f86d644",
+    "FreedomPlusSettlementRouter": "5dbcef9a6f91916094bc9aa887c5bac57c5a96825626986ead6befa437366bc9",
+    "FreedomNFTMembership": "01c4472a8f6b3bd46a58159f4f5b5364a5ca70879e271c6bca6fec1c9660818e",
+    "FreedomNFTRewardDistributor": "8b3a01fd38e1f2898c435bbb9a534194d95d064f85ac823d99bc010e98cb47ee"
+  },
+  "startBlock": 94791532,
+  "costLimitWei": "15000000000000000000",
+  "gasPriceWei": "220000000000",
+  "costTransactions": [
+    {
+      "hash": "0x0218ebed73c1f24470213e03a302fa0576023a6073d8842ab4468503337d2928",
+      "gasLimit": "1844038",
+      "status": "CONFIRMED",
+      "feeWei": "335157020000000000",
+      "block": 94791536
+    },
+    {
+      "hash": "0x2cf918b532c66a7959c0ec68f3d10505961c13aa96b1ad6c785d1408b3a1c07e",
+      "gasLimit": "337194",
+      "status": "CONFIRMED",
+      "feeWei": "61077280000000000",
+      "block": 94791539
+    },
+    {
+      "hash": "0xe60ba7420b14892dcb72beb05b136d21059f2dd67ff9fe724d443384da36fd2d",
+      "gasLimit": "1856331",
+      "status": "CONFIRMED",
+      "feeWei": "337392880000000000",
+      "block": 94791543
+    },
+    {
+      "hash": "0xed4c32ef2ef40e2af5cbc88907d3ddf14f8f4d21f11d48fcfac664875b88be56",
+      "gasLimit": "392923",
+      "status": "CONFIRMED",
+      "feeWei": "71214000000000000",
+      "block": 94791546
+    },
+    {
+      "hash": "0xfef793a193f05113fa7b38f7a9f3abcae2e9aaaa6674df714fca70c9a5ba21e7",
+      "gasLimit": "1454619",
+      "status": "CONFIRMED",
+      "feeWei": "264325600000000000",
+      "block": 94791550
+    },
+    {
+      "hash": "0x98ae4539babc23e6937657acc21e998b135ac24eb2ab4798ce0da223d950f89d",
+      "gasLimit": "372337",
+      "status": "CONFIRMED",
+      "feeWei": "67469600000000000",
+      "block": 94791552
+    },
+    {
+      "hash": "0x95b59edd1db5b10d04dc24be8f6348ba151bf499b7ada997d83676ed977472e7",
+      "gasLimit": "1838413",
+      "status": "CONFIRMED",
+      "feeWei": "334133800000000000",
+      "block": 94791556
+    },
+    {
+      "hash": "0xaf780ee27e835eddd1ed1923a53f5903069490e852d4a68b6d9f68c6826695c5",
+      "gasLimit": "372397",
+      "status": "CONFIRMED",
+      "feeWei": "67480380000000000",
+      "block": 94791559
+    },
+    {
+      "hash": "0x34a0990b052ca7bfea1de4618ceba6d2314fa306310cba986a26d3ff3d5d6ced",
+      "gasLimit": "1985358",
+      "status": "CONFIRMED",
+      "feeWei": "360861600000000000",
+      "block": 94791563
+    },
+    {
+      "hash": "0x548b2064316002fce2d811f1233725e0df8dc4dbc8038b854fe045cb0dc02b23",
+      "gasLimit": "455670",
+      "status": "CONFIRMED",
+      "feeWei": "82626940000000000",
+      "block": 94791566
+    },
+    {
+      "hash": "0x3bcfcc4061fd3f705c78271360a82b551fffdae7734bf3d1a14244aa033a82e3",
+      "gasLimit": "75409",
+      "status": "CONFIRMED",
+      "feeWei": "13642640000000000",
+      "block": 94791573
+    },
+    {
+      "hash": "0xc02947093530943c4c362847f076edb9acbd610cb23b3d52f8a3dc0baf68ff23",
+      "gasLimit": "1351120",
+      "status": "CONFIRMED",
+      "feeWei": "245500200000000000",
+      "block": 94791782
+    },
+    {
+      "hash": "0x50768e1f34caa898bd96e5f2a6e61d646c442e5f0637d462f39333aa40638558",
+      "gasLimit": "302492",
+      "status": "CONFIRMED",
+      "feeWei": "54765480000000000",
+      "block": 94791785
+    },
+    {
+      "hash": "0xe3b1e7a4185f69979a420f383c9bf94faf0d3fca7abbf3c7786dac876684a13c",
+      "gasLimit": "1959867",
+      "status": "CONFIRMED",
+      "feeWei": "356225100000000000",
+      "block": 94791791
+    },
+    {
+      "hash": "0x18aeeb900489a724cca994a174fa00fbace9ce2dcad3251788ba8f23b3d468b1",
+      "gasLimit": "309556",
+      "status": "CONFIRMED",
+      "feeWei": "56050500000000000",
+      "block": 94791794
+    },
+    {
+      "hash": "0x782cb33e095b4adb68863efc7eee409c4367725f672206ec3dda0ea1590aa55f",
+      "gasLimit": "1956535",
+      "status": "CONFIRMED",
+      "feeWei": "355619000000000000",
+      "block": 94791799
+    },
+    {
+      "hash": "0x885d2f2a64f339eed1f35a9a181717bc97516b583ccb7e01f16bee0a24d080d8",
+      "gasLimit": "309556",
+      "status": "CONFIRMED",
+      "feeWei": "56050500000000000",
+      "block": 94791802
+    },
+    {
+      "hash": "0x815ab3850070ca24988bba898754e97e4429b1d18fc6530b0d87f3d42b230061",
+      "gasLimit": "1927226",
+      "status": "CONFIRMED",
+      "feeWei": "350287960000000000",
+      "block": 94791816
+    },
+    {
+      "hash": "0x01d4f8c4a8b9b7d4c62065a4ef052d800675ac8c3e03ceb127058e63c18c1f1a",
+      "gasLimit": "309542",
+      "status": "CONFIRMED",
+      "feeWei": "56047860000000000",
+      "block": 94791818
+    },
+    {
+      "hash": "0x038365981082b316388c09a35fd68b0f1cba32b92f3684212877210c85cc0d92",
+      "gasLimit": "1926442",
+      "status": "CONFIRMED",
+      "feeWei": "350145400000000000",
+      "block": 94791827
+    },
+    {
+      "hash": "0xabaa0629326706627cba6f1699e8f1bcb0540a25dc33152fc0c823473daa9ef4",
+      "gasLimit": "309556",
+      "status": "CONFIRMED",
+      "feeWei": "56050500000000000",
+      "block": 94791830
+    },
+    {
+      "hash": "0xa6a4618e059f9c8e33c7af6f628baf1392f67d794f27cc5400865dcc10c6162b",
+      "gasLimit": "1923574",
+      "status": "CONFIRMED",
+      "feeWei": "349623780000000000",
+      "block": 94791834
+    },
+    {
+      "hash": "0x18a044b1bb4735aa0cc6ac4b51faea497dfa746714328074a9116b9c05a48343",
+      "gasLimit": "309556",
+      "status": "CONFIRMED",
+      "feeWei": "56050500000000000",
+      "block": 94791837
+    },
+    {
+      "hash": "0xcfaca78f78019b8082452d762d654cafe3ff13046e954254a5317323954b44a9",
+      "gasLimit": "1908669",
+      "status": "CONFIRMED",
+      "feeWei": "346912720000000000",
+      "block": 94791841
+    },
+    {
+      "hash": "0x09148ee14725fee65bcce542ad9739757308053731b5c5b55600a6a298a2e9a4",
+      "gasLimit": "309556",
+      "status": "CONFIRMED",
+      "feeWei": "56050500000000000",
+      "block": 94791843
+    },
+    {
+      "hash": "0x3e4bb9b712ae685fa10a95765147d8ab0d54912b89dc0abc284383ad991282ff",
+      "gasLimit": "3905472",
+      "status": "CONFIRMED",
+      "feeWei": "710110500000000000",
+      "block": 94791849
+    },
+    {
+      "hash": "0xd23e8ca5273ee8d01e51c8a052e6c29ade69b7a2bd188f2ae6bd7f5c4ac19bf4",
+      "gasLimit": "508560",
+      "status": "CONFIRMED",
+      "feeWei": "92247100000000000",
+      "block": 94791852
+    },
+    {
+      "hash": "0x6f176b2ac33e6d348f1947bdc2056d773fdfb642fe23e737ba2eb30d165893be",
+      "gasLimit": "3122455",
+      "status": "CONFIRMED",
+      "feeWei": "567687780000000000",
+      "block": 94791859
+    },
+    {
+      "hash": "0x97074ccec25b929239b41dcba385cafad599d3f2f80f978ca41726e2c31f157f",
+      "gasLimit": "464013",
+      "status": "CONFIRMED",
+      "feeWei": "84144500000000000",
+      "block": 94791862
+    },
+    {
+      "hash": "0xea0008312039263e32ab979e77b4e8bf86d6f6497e9824586735ac3566c6b685",
+      "gasLimit": "75528",
+      "status": "CONFIRMED",
+      "feeWei": "13664420000000000",
+      "block": 94791865
+    },
+    {
+      "hash": "0xe6d85f94902abede7e124d332ddf72a939be412255fb7fa7d396fbf8b5f4b55a",
+      "gasLimit": "2276648",
+      "status": "CONFIRMED",
+      "feeWei": "413844200000000000",
+      "block": 94791869
+    },
+    {
+      "hash": "0xe74a98a537aa0e0da6f844c22af5c9d2506201f8b98128446c49582b224c03ab",
+      "gasLimit": "400776",
+      "status": "CONFIRMED",
+      "feeWei": "72642240000000000",
+      "block": 94791872
+    },
+    {
+      "hash": "0x9c0e28eebefab5ad7c07c48f020059f6a623907056ba5ac8ebee2298da688d56",
+      "gasLimit": "98192",
+      "status": "CONFIRMED",
+      "feeWei": "17803060000000000",
+      "block": 94791874
+    },
+    {
+      "hash": "0xcf3926464c05b031d6d79d2cec7d134bea1ed40a11ad31716aa260bda0445a3c",
+      "gasLimit": "57730",
+      "status": "CONFIRMED",
+      "feeWei": "10499280000000000",
+      "block": 94791877
+    },
+    {
+      "hash": "0x75fef60df4068e54dbcbdbbd05f97512862c50caa8eb7be9219a0e797e4d592a",
+      "gasLimit": "98206",
+      "status": "CONFIRMED",
+      "feeWei": "17805700000000000",
+      "block": 94791879
+    },
+    {
+      "hash": "0x877309584c0dd0aeff57687cfb5fb64e83056c11f8a8aac423b01d67e1ec1ce1",
+      "gasLimit": "57730",
+      "status": "CONFIRMED",
+      "feeWei": "10499280000000000",
+      "block": 94791882
+    },
+    {
+      "hash": "0xcc4f33e6a0d21d7533f8b90d4943da5b87e6f416a27d54d0dad69a92f970bd00",
+      "gasLimit": "98206",
+      "status": "CONFIRMED",
+      "feeWei": "17805700000000000",
+      "block": 94791884
+    },
+    {
+      "hash": "0x0201954028ec55f93eb6602ad3f7d1914d4f4092b565cbead9eed298d84a325a",
+      "gasLimit": "57730",
+      "status": "CONFIRMED",
+      "feeWei": "10499280000000000",
+      "block": 94791886
+    },
+    {
+      "hash": "0xd3495b192a0fcb6a2d1d138d8761545634768b9ba51f26aac7033a0e989b28c4",
+      "gasLimit": "98206",
+      "status": "CONFIRMED",
+      "feeWei": "17805700000000000",
+      "block": 94791888
+    },
+    {
+      "hash": "0xb69c518822a2c55c8770873e423f572c4c823c94000c78263a90b9e786bffdbe",
+      "gasLimit": "57730",
+      "status": "CONFIRMED",
+      "feeWei": "10499280000000000",
+      "block": 94791890
+    },
+    {
+      "hash": "0x57fe9c2d0a84eb8cb4cdd78720b8c484a3c64c91606e7277cde7a637305a03cc",
+      "gasLimit": "98206",
+      "status": "CONFIRMED",
+      "feeWei": "17805700000000000",
+      "block": 94791892
+    },
+    {
+      "hash": "0x7bef95364afdcf7c3430c4ba1ee6dc16f1a2efc6349f816aedcc6768fbad4c75",
+      "gasLimit": "57730",
+      "status": "CONFIRMED",
+      "feeWei": "10499280000000000",
+      "block": 94791894
+    },
+    {
+      "hash": "0xe899e2d0f961917741969b0efed9ce096438a1569af313e74ee5b0cd4eeff2e7",
+      "gasLimit": "98206",
+      "status": "CONFIRMED",
+      "feeWei": "17805700000000000",
+      "block": 94791897
+    },
+    {
+      "hash": "0x13e143b3d980979232a3aa116fbbb9ab5b556006095b3bd2cecfd51f2a4f13ca",
+      "gasLimit": "57730",
+      "status": "CONFIRMED",
+      "feeWei": "10499280000000000",
+      "block": 94791899
+    },
+    {
+      "hash": "0x6cb0b47876012b02348518f7f36b0d88862a989f77dd7e295d960f1b75a34d54",
+      "gasLimit": "304820",
+      "status": "CONFIRMED",
+      "feeWei": "54504560000000000",
+      "block": 94791901
+    },
+    {
+      "hash": "0x09ad447ccba537d04444cbe39de6715922aa3a55c34016c37030c115795af2f2",
+      "gasLimit": "93604",
+      "status": "CONFIRMED",
+      "feeWei": "16965300000000000",
+      "block": 94791903
+    },
+    {
+      "hash": "0x497af3ac9a262024949c9c63a983b4988f3be4f6741294bfd7ddca5e0cdc8bcb",
+      "gasLimit": "79190",
+      "status": "CONFIRMED",
+      "feeWei": "14333220000000000",
+      "block": 94791905
+    },
+    {
+      "hash": "0x6731fa3e0b78335d15d57ac075dcf4a9e8e7e8ba005cc57d4433393563dce812",
+      "gasLimit": "78819",
+      "status": "CONFIRMED",
+      "feeWei": "14265460000000000",
+      "block": 94791907
+    },
+    {
+      "hash": "0x54a1b80ced7d5b2ac41bf4226743929c31eeda779888a65f045b668150e5c136",
+      "gasLimit": "79728",
+      "status": "CONFIRMED",
+      "feeWei": "14431340000000000",
+      "block": 94791909
+    },
+    {
+      "hash": "0x918a7eaec29449e2c7eacf3cbe1f784d8d7e823af56caec8f60835b414292c46",
+      "gasLimit": "83238",
+      "status": "CONFIRMED",
+      "feeWei": "15072200000000000",
+      "block": 94791911
+    },
+    {
+      "hash": "0x92116ab7c3bdbf0a128470080448cf7fb2591b7bafac1d98d12ffb9d4bd53bc0",
+      "gasLimit": "83238",
+      "status": "CONFIRMED",
+      "feeWei": "15072200000000000",
+      "block": 94791914
+    },
+    {
+      "hash": "0xee8372adb3d481409d56cbd5131d4a8d13af2f167e92e854720f6e1d66cc8183",
+      "gasLimit": "83238",
+      "status": "CONFIRMED",
+      "feeWei": "15072200000000000",
+      "block": 94791916
+    },
+    {
+      "hash": "0xa9e8c0940a38f4f65406d58aefbe2037820a17888dee59db8b17c9bbce910975",
+      "gasLimit": "79266",
+      "status": "CONFIRMED",
+      "feeWei": "14346860000000000",
+      "block": 94791918
+    },
+    {
+      "hash": "0x58b62c85b353f0ee32ef2296d14a536d5b9de75651539484b42f649db18672c0",
+      "gasLimit": "79918",
+      "status": "CONFIRMED",
+      "feeWei": "14466100000000000",
+      "block": 94791920
+    },
+    {
+      "hash": "0x5e8007ed8deee9891ab1c98b66bc83a28b2f45c865525d544836d66fbf08fd80",
+      "gasLimit": "10987492",
+      "status": "CONFIRMED",
+      "feeWei": "1945461980000000000",
+      "block": 94791922
+    },
+    {
+      "hash": "0x1f15ef6df6f28a1ea0944852eda9d0d0ca6b00df1b1150623fffe25b3dc93f30",
+      "gasLimit": "75356",
+      "status": "CONFIRMED",
+      "feeWei": "13632960000000000",
+      "block": 94791930
+    },
+    {
+      "hash": "0x988f60aad4d34be706361ac1d53475f525e5a8c33e5e5e8f6bdbd4282db7eae2",
+      "gasLimit": "53254",
+      "status": "CONFIRMED",
+      "feeWei": "9680220000000000",
+      "block": 94791932
+    },
+    {
+      "hash": "0xf987068833c6bf8082a86365156f10bc1c2eca798c6c73b4b33e98adba28a2f2",
+      "gasLimit": "53254",
+      "status": "CONFIRMED",
+      "feeWei": "9680220000000000",
+      "block": 94791934
+    },
+    {
+      "hash": "0x7f548a18ee1780bfe4da729d2f8762365c8e53dc7bb11b8c6a194cfe56fc0d50",
+      "gasLimit": "48355",
+      "status": "CONFIRMED",
+      "feeWei": "8783720000000000",
+      "block": 94791936
+    },
+    {
+      "hash": "0x658a494416528b77971cd761f1dc56f2d3e40c3c12a07b7d327d58e2f24491be",
+      "gasLimit": "48355",
+      "status": "CONFIRMED",
+      "feeWei": "8783720000000000",
+      "block": 94791938
+    },
+    {
+      "hash": "0x7fd337744d0297e5b2e8a1e82a05a792448d26ca856df84bbe482274fa080520",
+      "gasLimit": "48170",
+      "status": "CONFIRMED",
+      "feeWei": "8749840000000000",
+      "block": 94791940
+    },
+    {
+      "hash": "0x55edbead96d829550221ad087950846ce2bd665dc06feefefb2acc7d40b8a959",
+      "gasLimit": "48175",
+      "status": "CONFIRMED",
+      "feeWei": "8750720000000000",
+      "block": 94791942
+    },
+    {
+      "hash": "0x8023a1d0d701720709d6245150c80b42044402d78f25592006fbc7c013dfdac5",
+      "gasLimit": "48280",
+      "status": "CONFIRMED",
+      "feeWei": "8770080000000000",
+      "block": 94791944
+    },
+    {
+      "hash": "0x15a263db41c8ce6192a12d59564bcc8bf4fe6cc1bb4b832aa0e1dbec16bd9299",
+      "gasLimit": "48052",
+      "status": "CONFIRMED",
+      "feeWei": "8728500000000000",
+      "block": 94791946
+    },
+    {
+      "hash": "0xb61e8b3accce1b39ec2893c995510bab13f259feb5ec7c4f202183c50ad25bd4",
+      "gasLimit": "48171",
+      "status": "CONFIRMED",
+      "feeWei": "8750060000000000",
+      "block": 94791948
+    },
+    {
+      "hash": "0xc407aff082c9a8d43a521ab59fa59988b9019fb7fe131464d3fd3ec68c8e24f1",
+      "gasLimit": "48171",
+      "status": "CONFIRMED",
+      "feeWei": "8750060000000000",
+      "block": 94791950
+    },
+    {
+      "hash": "0x70882459d1518fa3b8359c8340ca428770bfe7f8b9c5c5515a44eae73f6b614e",
+      "gasLimit": "48171",
+      "status": "CONFIRMED",
+      "feeWei": "8750060000000000",
+      "block": 94791952
+    },
+    {
+      "hash": "0xb443f930a1d435fdbdc464d97aa8f5b2c3eaea6ede3a332e55cc8b5ba172f6ff",
+      "gasLimit": "48171",
+      "status": "CONFIRMED",
+      "feeWei": "8750060000000000",
+      "block": 94791954
+    },
+    {
+      "hash": "0x05c68f9a6fc19d0080076f7b958355d6edbb47738c10c4b3409804301d439f81",
+      "gasLimit": "48171",
+      "status": "CONFIRMED",
+      "feeWei": "8750060000000000",
+      "block": 94791956
+    },
+    {
+      "hash": "0x652371bca89153a5af68957d36572d10f82b30ed16f838d3ab7fa50b6f5817dc",
+      "gasLimit": "48171",
+      "status": "CONFIRMED",
+      "feeWei": "8750060000000000",
+      "block": 94791958
+    },
+    {
+      "hash": "0x71d69b4d110959dbc1b49a609b394529e19b4d71466bbb4501df16e073355328",
+      "gasLimit": "48354",
+      "status": "CONFIRMED",
+      "feeWei": "8783500000000000",
+      "block": 94791960
+    },
+    {
+      "hash": "0xd6df5ca839f315c1b56d687ad5d9413c1b126b0d438de532ac7c8466e48d6fca",
+      "gasLimit": "48505",
+      "status": "CONFIRMED",
+      "feeWei": "8811220000000000",
+      "block": 94791962
+    },
+    {
+      "hash": "0xc881b5b200b4c034c5efa1386837da5b9b4b2b025fd0698c3bbe237ad3897573",
+      "gasLimit": "48112",
+      "status": "CONFIRMED",
+      "feeWei": "8739280000000000",
+      "block": 94791964
+    }
+  ],
+  "totalCostWei": "9163315480000000000",
+  "rewardOperatorConfigured": false,
+  "executionWarnings": [
+    "A dedicated reward operator must be approved before enabling the monthly worker.",
+    "Historical pool funds and commitments are excluded from this package.",
+    "Do not enable the website countdown release until integration and genesis are verified."
+  ]
+}

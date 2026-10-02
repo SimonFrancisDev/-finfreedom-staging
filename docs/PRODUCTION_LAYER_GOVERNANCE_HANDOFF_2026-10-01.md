@@ -1,7 +1,18 @@
 # Production Layer Governance Handoff
 
-Status: proposal preparation only. No deployment, proposal submission, ownership
-change, pool transfer or production environment update has been executed.
+## 2026-10-02 correction required before opening
+
+The mainnet layer is deployed and still paused. Integration proposals 115 and
+116 were executed. A subsequently confirmed Freedom-Plus router defect allowed
+inactive-level orbit positions to be recorded even though payment recipients
+were skipped correctly. Governance must install the corrected router described
+in `FREEDOM_PLUS_INACTIVE_ORBIT_INCIDENT_2026-10-02.md` before any production
+Freedom-Plus access is opened.
+
+Status: mainnet deployment is in progress from commit 29cac9a. Read the real
+production-layer-deployment.json journal for confirmed addresses and receipts.
+Integration proposals have not yet been submitted at this checkpoint. No pool
+transfer, production database reset or hosted environment update has occurred.
 
 ## Verified existing system
 
@@ -52,7 +63,7 @@ This path requires the user's shared-pool migration decision before execution.
 7. Retain the historical pool and its accounting intact. A later funds movement
    requires a separate approved amount and settlement of any old obligations.
 
-Actual calldata cannot be finalized until new contract addresses exist.
+Actual calldata is generated from the completed real deployment manifest.
 This document is not an executable transaction package and grants no extra
 authority to move existing funds.
 
