@@ -119,6 +119,10 @@ staging recertification.
 - F-Freedom focused implication group: 8 passing.
 - Freedom NFT membership and rewards: 8 passing.
 - Frontend production build: passing, 3,347 modules transformed.
+- Combined F-Freedom, Freedom-Plus, and NFT regression run: 104 passing.
+- Read-only Amoy deployment preflight: passing on chain 80002 with three
+  representatives, eight founder wallets, ratios totaling 10000, shared-vault
+  mode, retained 6-decimal mock USDT, and sufficient deployer POL.
 - Historical staging Freedom-Plus positions remain contaminated by the prior
   inactive-sponsor placement defect; fresh staging deployment and index reset
   are therefore mandatory.
