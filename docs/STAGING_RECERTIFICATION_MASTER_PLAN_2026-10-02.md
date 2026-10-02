@@ -68,7 +68,12 @@ staging recertification.
 
 - [ ] Suspend staging API and worker.
 - [ ] Export current deployment and database audit records.
-- [ ] Deploy a fresh Amoy contract suite from the certified commit.
+- [ ] Deploy the shared NFT and operations vaults once.
+- [ ] Deploy fresh F-Freedom against those shared vault addresses.
+- [ ] Have each of the three representative wallets sign its free F-Freedom
+      registration and Levels 2-10 activation.
+- [ ] Deploy Freedom-Plus/NFT against the same ID1, representatives, and vaults.
+- [ ] Run the unified-topology verifier before changing hosted variables.
 - [ ] Configure shared ID1, representatives, founder wallets, NFT vault, and
       operations vault.
 - [ ] Verify every owner, guardian, router, manager, token operator, and vault.

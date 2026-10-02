@@ -8,12 +8,6 @@ function checkpoint(manifest) {
   fs.writeFileSync(progressFile, JSON.stringify(manifest, null, 2));
 }
 
-const APPROVED_REPRESENTATIVES = [
-  "0x3f6Bb1E6Bfeb9C52f763a197d27B580d7DE7f100",
-  "0xDd78425335C0c698615845d94f9FeE7492266396",
-  "0x0de1B6F15Fe8E5Cf7fbBA2cD4C576357Ececa962",
-];
-
 function requiredAddress(name) {
   const value = process.env[name];
   if (!value) throw new Error(`${name} is required`);
@@ -24,6 +18,18 @@ async function requireContract(name, address) {
   if ((await hre.ethers.provider.getCode(address)) === "0x") {
     throw new Error(`${name} has no contract code: ${address}`);
   }
+}
+
+function requiredAddressList(name, expectedLength) {
+  const values = String(process.env[name] || "")
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean)
+    .map((value) => hre.ethers.getAddress(value));
+  if (values.length !== expectedLength || new Set(values).size !== expectedLength) {
+    throw new Error(`${name} must contain exactly ${expectedLength} distinct addresses`);
+  }
+  return values;
 }
 
 async function deployProxy(name, args, manifest) {
@@ -75,6 +81,8 @@ async function main() {
   const fgt = requiredAddress("FGT_TOKEN_ADDRESS");
   const id1 = requiredAddress("ID1_WALLET");
   const rewardOperator = requiredAddress("NFT_REWARD_OPERATOR_ADDRESS");
+  const nftVaultAddress = requiredAddress("NFT_POOL_ADDRESS");
+  const operationsVaultAddress = requiredAddress("OPERATIONS_VAULT_ADDRESS");
   if ([ethers.ZeroAddress, deployer.address, multisig, id1].includes(rewardOperator)) {
     throw new Error("NFT_REWARD_OPERATOR_ADDRESS must be a dedicated approved reward signer");
   }
@@ -105,7 +113,24 @@ async function main() {
     );
   }
 
-  const representatives = APPROVED_REPRESENTATIVES.map(ethers.getAddress);
+  const representatives = requiredAddressList("FOUNDER_REPRESENTATIVES", 3);
+  if (representatives.includes(id1)) {
+    throw new Error("FOUNDER_REPRESENTATIVES must exclude ID1");
+  }
+  await requireContract("NFT_POOL_ADDRESS", nftVaultAddress);
+  await requireContract("OPERATIONS_VAULT_ADDRESS", operationsVaultAddress);
+  const nftVault = await ethers.getContractAt("FreedomNFTPoolVault", nftVaultAddress, deployer);
+  const operationsVault = await ethers.getContractAt(
+    "FreedomPlusOperationsVault",
+    operationsVaultAddress,
+    deployer
+  );
+  if ((await nftVault.owner()) !== deployer.address || (await operationsVault.owner()) !== deployer.address) {
+    throw new Error("Shared vaults must remain deployer-owned until Freedom-Plus configuration completes");
+  }
+  if (await nftVault.distributorLocked()) {
+    throw new Error("Shared NFT vault distributor is already configured");
+  }
   const fFreedomRegistration = requiredAddress("REGISTRATION_ADDRESS");
   await requireContract("REGISTRATION_ADDRESS", fFreedomRegistration);
   const gateway = new ethers.Contract(fFreedomRegistration, [
@@ -136,6 +161,10 @@ async function main() {
     id1,
     representatives,
     founderWallets,
+    sharedVaults: {
+      nftPool: nftVaultAddress,
+      operations: operationsVaultAddress,
+    },
     contracts: {},
     configuration: [],
     pendingGovernanceActions: [],
@@ -165,9 +194,6 @@ async function main() {
     manifest
   );
   manifest.fFreedomRegistration = fFreedomRegistration;
-  const nftVault = await deployProxy("FreedomNFTPoolVault", [deployer.address, guardian], manifest);
-  const operationsVault = await deployProxy("FreedomPlusOperationsVault", [deployer.address, guardian], manifest);
-
   const orbitNames = [
     "P39PlusOrbit", "P14PlusOrbit", "P12PlusOrbit",
     "P6PlusOrbit", "P4PlusOrbit", "P3PlusOrbit",

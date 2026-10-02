@@ -40,6 +40,7 @@ async function main() {
 
   const addresses = Object.fromEntries(REQUIRED_ADDRESSES.map((name) => [name, requiredAddress(name)]));
   const founders = addressList("FOUNDER_WALLETS", 8);
+  const representatives = addressList("FOUNDER_REPRESENTATIVES", 3);
   const ratios = String(process.env.FOUNDER_RATIOS || "")
     .split(",")
     .map((value) => value.trim())
@@ -54,6 +55,10 @@ async function main() {
   }
   if (deployer.address.toLowerCase() === addresses.MULTISIG_ADDRESS.toLowerCase()) {
     throw new Error("MULTISIG_ADDRESS must be distinct from the deployer");
+  }
+  if (representatives.some((representative) =>
+    representative.toLowerCase() === addresses.ID1_WALLET.toLowerCase())) {
+    throw new Error("FOUNDER_REPRESENTATIVES must exclude ID1");
   }
 
   for (const name of ["MULTISIG_ADDRESS", "GUARDIAN_ADDRESS", "USDT_ADDRESS"]) {
@@ -80,8 +85,8 @@ async function main() {
   if (outputDir !== "deployments-staging") {
     throw new Error("DEPLOYMENT_OUTPUT_DIR must be deployments-staging for this reset");
   }
-  if (String(process.env.DEPLOY_FRESH_TREASURY_VAULTS || "").toLowerCase() !== "true") {
-    throw new Error("DEPLOY_FRESH_TREASURY_VAULTS=true is required for a genuinely fresh suite");
+  if (String(process.env.DEPLOY_FRESH_TREASURY_VAULTS || "").toLowerCase() !== "false") {
+    throw new Error("DEPLOY_FRESH_TREASURY_VAULTS=false is required; shared vaults are deployed first");
   }
 
   console.log(JSON.stringify({
@@ -97,9 +102,10 @@ async function main() {
     usdtSymbol: await usdt.symbol(),
     usdtDecimals: decimals,
     founders: founders.length,
+    founderRepresentatives: representatives,
     founderRatiosTotal: ratios.reduce((sum, value) => sum + value, 0n).toString(),
     deploymentOutputDir: outputDir,
-    freshTreasuryVaults: true,
+    sharedTreasuryVaultMode: true,
   }, null, 2));
 }
 

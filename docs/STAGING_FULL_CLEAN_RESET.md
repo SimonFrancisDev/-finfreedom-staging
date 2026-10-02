@@ -39,22 +39,31 @@ The database operation sends no transaction and cannot alter mock USDT or any co
 6. Run complete contract tests.
    - Latest pre-deployment run: 156 passing in 9 minutes on 2026-08-29.
    - Run `npx hardhat run scripts/preflightCleanStagingDeployment.js --network amoy` before deployment; it sends no transaction.
-   - The preflight must confirm Amoy chain `80002`, retained mock USDT code/symbol/6 decimals, eight unique founders, ratios totaling `10000`, distinct deployer/multisig/ID1, fresh treasury vault mode, staging manifest output, and nonzero deployer POL.
+   - The preflight must confirm Amoy chain `80002`, retained mock USDT code/symbol/6 decimals, eight unique founders, three unique representatives, ratios totaling `10000`, distinct deployer/multisig/ID1, shared treasury-vault mode, staging manifest output, and sufficient deployer POL.
    - Use a healthy authenticated HTTPS RPC endpoint. The WebSocket endpoint remains for worker indexing and is not a Hardhat deployment transport.
-7. Deploy fresh F-Freedom contracts and save a new manifest.
-8. Verify ownership, guardian, ID1, founders, vault recipients, USDT wiring, token operators, orbit links, and blocks.
-9. Deploy fresh Freedom-Plus/NFT contracts against the new F-Freedom gateway and save a new manifest.
-10. Run both deployment validators and verify code at every address.
-11. Update API and worker addresses/start blocks. Keep API indexing disabled and WebSocket indexing enabled only on worker.
-12. Update frontend addresses while leaving `VITE_USDT_ADDRESS` unchanged.
-13. Run the reset command without confirmation and archive its inventory.
-14. Reconcile inventory against the backup manifest.
-15. Execute the guarded database drop.
-16. Start worker first and confirm listeners use only new contracts.
-17. Start API and confirm contract verification uses only new addresses and indexing is disabled.
-18. Deploy frontend and reconcile its contract directory with API and worker.
-19. Re-seed only explicitly approved baseline content. Never restore test users or projections.
-20. Complete clean-state certification.
+7. Deploy one fresh `FreedomNFTPoolVault` and one fresh
+   `FreedomPlusOperationsVault` with `deploySharedStagingVaults.js`. Keep
+   them deployer-owned temporarily so the NFT distributor can be configured.
+8. Deploy fresh F-Freedom with `DEPLOY_FRESH_TREASURY_VAULTS=false` and the
+   two shared vault addresses. Configure the same three
+   `FOUNDER_REPRESENTATIVES`.
+9. For each representative, load only that wallet's private key locally and
+   run `activateStagingFounderRepresentative.js`. Never commit or print keys.
+10. Deploy fresh Freedom-Plus/NFT against the new F-Freedom gateway, the same
+    ID1, the same representatives, and the same shared vaults. This step
+    configures the NFT distributor and transfers both vaults to multisig.
+11. Run `verifyUnifiedStagingTopology.js`, both deployment validators, and
+    verify code at every address.
+12. Update API and worker addresses/start blocks. Keep API indexing disabled and WebSocket indexing enabled only on worker.
+13. Update frontend addresses while leaving `VITE_USDT_ADDRESS` unchanged.
+14. Run the reset command without confirmation and archive its inventory.
+15. Reconcile inventory against the backup manifest.
+16. Execute the guarded database drop.
+17. Start worker first and confirm listeners use only new contracts.
+18. Start API and confirm contract verification uses only new addresses and indexing is disabled.
+19. Deploy frontend and reconcile its contract directory with API and worker.
+20. Re-seed only explicitly approved baseline content. Never restore test users or projections.
+21. Complete clean-state certification.
 
 ## Reset Command
 
@@ -178,16 +187,21 @@ The new FGT is multisig-owned, so the deployer correctly could not authorize NFT
 - Purpose: allow Freedom NFT Membership to lock and unlock qualifying FGT.
 
 Cutover remains blocked until `authorizedOperators(0x55186FF9369a5D6245e41276d4C892ED06a6e43d)` returns `true` on the new FGT.
-### Founder-representative scope clarification
+### Superseded founder-representative scope
 
-The user confirmed on 2026-08-29 that founder representatives are a Freedom-Plus-only genesis feature. F-Freedom intentionally configures no founder representatives. The fresh F-Freedom deployment reporting `Founder representatives: 0` is therefore correct and requires no repair or redeployment. Freedom-Plus correctly initialized these four approved representatives under ID1 with all seven levels active:
+The August 29 deployment used Freedom-Plus-only representatives. That rule is
+superseded for the October 2 recertification: the same three wallets must be
+configured in F-Freedom, complete all ten free F-Freedom levels by signed
+transactions, and then be initialized under ID1 in Freedom-Plus.
 
 - `0x3f6Bb1E6Bfeb9C52f763a197d27B580d7DE7f100`
 - `0xDd78425335C0c698615845d94f9FeE7492266396`
 - `0xf72873d6233B5e3dfbA6D1D8058BF90E990902f0`
 - `0xeE192BE4884B064281Fa426F3d855fb339445B83`
 
-Do not add these wallets to F-Freedom during staging cutover or production integration unless this business rule is explicitly changed through a later approved gate.
+The historical four-wallet list above is evidence only and must not be reused
+as the current representative source. The current three-wallet set comes only
+from the controlled `FOUNDER_REPRESENTATIVES` environment value.
 
 ### NFT FGT authorization governance evidence
 
