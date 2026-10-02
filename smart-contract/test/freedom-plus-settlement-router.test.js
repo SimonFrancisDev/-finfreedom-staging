@@ -423,6 +423,47 @@ describe("Freedom-Plus ordinary settlement router", function () {
     expect((await system.usdt.balanceOf(b.address)) - bBeforeRecovery).to.equal(180n * UNIT);
   });
 
+  it("returns a skipped participant to its permanent sponsor only when the participant recycles", async function () {
+    const system = await deployGraph();
+    const level = 5;
+    const orbitType = 4;
+    const fullCost = 6_050n * UNIT;
+    for (const signer of [a, b, c]) await fundAndApprove(system, signer, fullCost);
+
+    await register(system, a, id1.address);
+    await activateThrough(system, a, level);
+    await register(system, b, a.address);
+    await activateThrough(system, b, level - 1);
+    await register(system, c, b.address);
+    await activateThrough(system, c, level);
+
+    expect((await system.orbits[orbitType].cycleState(a.address, level, 0)).filledPositions)
+      .to.equal(1);
+    expect((await system.orbits[orbitType].cycleState(b.address, level, 0)).filledPositions)
+      .to.equal(0);
+    expect(await system.registration.sponsorOf(c.address)).to.equal(b.address);
+
+    await system.registration.connect(b).activateLevel(level);
+    expect((await system.orbits[orbitType].cycleState(b.address, level, 0)).filledPositions)
+      .to.equal(0);
+
+    for (let index = 0; index < 4; index++) {
+      const filler = ethers.Wallet.createRandom().connect(ethers.provider);
+      await owner.sendTransaction({ to: filler.address, value: ethers.parseEther("0.2") });
+      await fundAndApprove(system, filler, fullCost);
+      await register(system, filler, c.address);
+      await activateThrough(system, filler, level);
+    }
+
+    expect((await system.orbits[orbitType].cycleState(c.address, level, 0)).closed).to.equal(true);
+    expect((await system.orbits[orbitType].cycleState(b.address, level, 0)).filledPositions)
+      .to.equal(1);
+    expect((await system.orbits[orbitType].positionAt(b.address, level, 0, 1)).participant)
+      .to.equal(c.address);
+    expect(await system.orbits[orbitType].currentStructuralParentOf(c.address, level))
+      .to.equal(b.address);
+  });
+
   it("never prefills an inactive sponsor orbit at any Freedom-Plus level", async function () {
     const system = await deployGraph();
     const fullCost = 54_650n * UNIT;

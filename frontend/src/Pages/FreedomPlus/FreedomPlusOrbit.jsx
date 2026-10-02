@@ -1,4 +1,4 @@
-import { Check, LockKeyhole, User } from 'lucide-react'
+import { Check, User } from 'lucide-react'
 import { formatToken } from '../../Services/freedomPlus'
 
 const STRUCTURES = {
@@ -76,7 +76,7 @@ export default function FreedomPlusOrbit({ orbitType, positions = [], owner, onS
             onClick={() => onSelect?.(selectable)}
             title={record ? `Position ${position}, Ring ${ringIndex + 1}, ${record.participant}` : `Position ${position}, Ring ${ringIndex + 1}, empty`}
           >
-            {record ? (isFinancial ? <LockKeyhole /> : <Check />) : <span>{position}</span>}
+            {record ? <Check /> : <span>{position}</span>}
             <em>{position}</em>
             {record?.amount ? <small>{formatToken(record.amount)}</small> : null}
           </button>

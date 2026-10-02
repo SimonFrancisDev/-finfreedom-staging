@@ -979,6 +979,50 @@ describe("Audit readiness contract invariants", function () {
     expect(lockedAfterRecycle - lockedBeforeRecycle).to.equal(usdtUnits(9));
   });
 
+  it("returns a skipped P4 participant to its permanent sponsor only on recycle", async function () {
+    const {
+      users,
+      registration,
+      p4,
+      register,
+      activateToLevel,
+    } = await deployCoreSystem();
+    const eligibleUpline = users[8];
+    const skippedSponsor = users[9];
+    const participant = users[10];
+    const fillers = users.slice(11, 15);
+    const level = 4;
+
+    await register(eligibleUpline);
+    await activateToLevel(eligibleUpline, level);
+    await register(skippedSponsor, eligibleUpline.address);
+    await activateToLevel(skippedSponsor, level - 1);
+    await register(participant, skippedSponsor.address);
+    await activateToLevel(participant, level);
+
+    expect(await registration.getReferrer(participant.address)).to.equal(skippedSponsor.address);
+    expect(await registration.currentMatrixParentOf(participant.address, level))
+      .to.equal(eligibleUpline.address);
+    expect((await p4.getPosition(skippedSponsor.address, level, 1)).occupant)
+      .to.equal(ethers.ZeroAddress);
+
+    await registration.connect(skippedSponsor).activateLevel(level);
+    expect(await registration.currentMatrixParentOf(participant.address, level))
+      .to.equal(eligibleUpline.address);
+    expect((await p4.getPosition(skippedSponsor.address, level, 1)).occupant)
+      .to.equal(ethers.ZeroAddress);
+
+    for (const filler of fillers) {
+      await register(filler, participant.address);
+      await activateToLevel(filler, level);
+    }
+
+    expect((await p4.getPosition(skippedSponsor.address, level, 1)).occupant)
+      .to.equal(participant.address);
+    expect(await registration.currentMatrixParentOf(participant.address, level))
+      .to.equal(skippedSponsor.address);
+  });
+
   it("locks full P12 recycle re-entry mirror amounts in escrow windows", async function () {
     const { owner, users, levelManager, p12, register, activateToLevel } = await deployCoreSystem();
     const levelManagerSigner = await impersonateLevelManager(levelManager);

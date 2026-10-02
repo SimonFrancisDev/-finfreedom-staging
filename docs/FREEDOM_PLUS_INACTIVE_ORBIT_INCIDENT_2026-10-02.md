@@ -48,6 +48,36 @@ The required invariant is now:
 > orbit position at that level. Later activation starts that level with zero
 > historical positions.
 
+## Temporal skip and recycle invariant
+
+Skipping is a placement decision for the current activation event. It does not
+replace the participant's permanent sponsor.
+
+For a permanent chain `A -> B -> C`, where `A` is active and `B` is
+inactive at level `L`:
+
+1. `C` activating level `L` places `C` under `A`.
+2. `B` receives no position or payment from that activation.
+3. `B` activating level `L` later does not move `C`, recover the old
+   payment, or populate `B`'s orbit retroactively.
+4. When `C` later recycles at level `L`, sponsor resolution starts again
+   from `C`'s permanent sponsor.
+5. If `B` is then active, the recycle places `C` under `B`. If `B`
+   remains inactive, resolution continues to the next eligible permanent
+   upline.
+
+This behavior is now covered by executable chronology tests in both programs:
+
+- F-Freedom P4: permanent sponsor retained, initial placement skipped, later
+  activation caused no historical movement, and recycle re-entered under the
+  now-eligible sponsor.
+- Freedom-Plus P4: the same sequence passed using the corrected settlement
+  router.
+
+These tests prove the logical implication of permanent sponsorship,
+event-time exact-level eligibility, and recycle-as-a-new-placement. They also
+prevent a matrix parent from silently replacing the permanent sponsor chain.
+
 ## Validation completed
 
 - Freedom-Plus inactive exact-level skip and later activation: pass.
@@ -58,6 +88,8 @@ The required invariant is now:
 - F-Freedom inactive P12/P39 matrix-recipient normalization: pass.
 - F-Freedom inactive connected P12 and P39 parent skipping: pass.
 - F-Freedom deep inactive-chain bound: pass.
+- F-Freedom skipped-participant return on recycle chronology: pass.
+- Freedom-Plus skipped-participant return on recycle chronology: pass.
 - Frontend/backend ABI reconciliation: pass.
 - Proxy migration storage-preservation checks: pass.
 - NFT mint, lock/unlock, tier change, 50/30/20 monthly allocation, empty-tier
