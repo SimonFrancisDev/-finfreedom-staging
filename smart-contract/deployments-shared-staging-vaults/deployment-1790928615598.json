@@ -1,0 +1,24 @@
+{
+  "purpose": "Shared F-Freedom and Freedom-Plus charge vaults",
+  "network": "amoy",
+  "chainId": 80002,
+  "deployedAt": "2026-10-02T08:10:15.597Z",
+  "deployer": "0x296238e950ef0066D2119230Bf0eb3aDEBc94882",
+  "guardian": "0x52F22c1e396dF20c2078B4a86b4A0ac3b51a9911",
+  "eventualOwner": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+  "ownershipState": "deployer-owned pending Freedom-Plus distributor configuration",
+  "contracts": {
+    "FreedomNFTPoolVault": {
+      "proxy": "0xCC8b1a35e5C9B5a2BE7f3Cf96dc0f5a1f5F0faf4",
+      "implementation": "0x1B6ED819525d034537BA28aCEf26E29E5DA355cD",
+      "deploymentBlock": 49106173,
+      "deploymentTx": "0x9dcdad4edef32e5991aefaaf94108f7de02a8d5064af5e101d82ce51df5f4bf6"
+    },
+    "FreedomPlusOperationsVault": {
+      "proxy": "0x5Dda75Ca58a5fE4C6ad78E918F283Da8B3172610",
+      "implementation": "0x44d179b93C85Db3d0A7516BCc9880daD55D2B05C",
+      "deploymentBlock": 49106179,
+      "deploymentTx": "0xe763e1c7816c3973ab27d0a1c0be97b5908790761e6dd95921c1cd7de342f18f"
+    }
+  }
+}

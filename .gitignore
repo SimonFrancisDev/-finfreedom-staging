@@ -56,3 +56,6 @@ smart-contract/.openzeppelin/polygon.json
 
 # Local staging database backups
 backend/backups/
+.vercel
+
+frontend/tmp-*.env

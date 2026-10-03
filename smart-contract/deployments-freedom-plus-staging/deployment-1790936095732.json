@@ -1,0 +1,343 @@
+{
+  "program": "Freedom-Plus",
+  "network": "amoy",
+  "chainId": "80002",
+  "commit": "ec93e53d6e3ea641d62da6712be26db921c5df9c",
+  "deployedAt": "2026-10-02T10:10:25.915Z",
+  "deployer": "0x296238e950ef0066D2119230Bf0eb3aDEBc94882",
+  "multisig": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+  "guardian": "0x52F22c1e396dF20c2078B4a86b4A0ac3b51a9911",
+  "usdt": "0x7b7E39f3D177B3356368431C5C285bca58b43A60",
+  "fgt": "0xa50b4EAfb341588820A495E36088Ed45B040479F",
+  "id1": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+  "representatives": [
+    "0x3f6Bb1E6Bfeb9C52f763a197d27B580d7DE7f100",
+    "0xDd78425335C0c698615845d94f9FeE7492266396",
+    "0x0de1B6F15Fe8E5Cf7fbBA2cD4C576357Ececa962"
+  ],
+  "founderWallets": [
+    "0x21f9eDB0CE6b79afA98dE14b03678CB29bc4859C",
+    "0xA32332B104aa9Fc5E5415a227D58d6914f3D7478",
+    "0x8B051978893087DE7e7Ca6BeF63206Cc35Bd732D",
+    "0xAE8012334a9c2aF7fb14cD6bF99978B177e6B28C",
+    "0x53B04033ABFe56C72cA0595dcAE26c5287619a97",
+    "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+    "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+    "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF"
+  ],
+  "sharedVaults": {
+    "nftPool": "0xCC8b1a35e5C9B5a2BE7f3Cf96dc0f5a1f5F0faf4",
+    "operations": "0x5Dda75Ca58a5fE4C6ad78E918F283Da8B3172610"
+  },
+  "contracts": {
+    "FPTToken": {
+      "proxy": "0xF6996C5ff7098B1Ca52e7F3148e5B03B6924c809",
+      "implementation": "0x646663857B89Cc8cb044E2A03327C52767eB0FA6",
+      "deploymentBlock": 49113443,
+      "deploymentTx": "0x93a24d3f5ee37454bede3dbc80d117e3a5c076f0ea8995bfbf3e7f4ede0a4b29"
+    },
+    "FPTrToken": {
+      "proxy": "0x3699d2cd4e66167b97f6F1F0f4A9Ea62f404d343",
+      "implementation": "0x04382D5e63BCabD0F59F751518c2EEA5E2266a52",
+      "deploymentBlock": 49113449,
+      "deploymentTx": "0x3d42215ba405b5f29e4a6f55a7f7bddd96b37ea63edf2caa1833be295f04d4a9"
+    },
+    "FreedomPlusTokenController": {
+      "proxy": "0x29241676E1013512BeEc3D9Ee0B66e96cD41A733",
+      "implementation": "0x56387075fB48a206C5a4Ab5D38f8c4f7a22C5d15",
+      "deploymentBlock": 49113458,
+      "deploymentTx": "0xc72f49ce9e1386282a46488572f45cb16d68baf4b7021a52233b55ddac396a37"
+    },
+    "FreedomPlusLevelManager": {
+      "proxy": "0xf8156448eD97d60eddFb0A032Bf58226c9D44D83",
+      "implementation": "0x49215d27dd6Aa00c75A27ACcc82D1431d454c734",
+      "deploymentBlock": 49113465,
+      "deploymentTx": "0x3c0fc7af12ace76a201acd602f411167249857ec76d1ca95a8efefefa9e3233e"
+    },
+    "FreedomPlusRegistration": {
+      "proxy": "0xf665096AFB561dCE4076de30F6551eA57f6eAa31",
+      "implementation": "0xE8326329316bf2B232D2A0677EDd89D54e5d1ab4",
+      "deploymentBlock": 49113479,
+      "deploymentTx": "0x3398e0a0a509827a4e0ec8a73659630f392525c033b3b7d0ddf3ef12355abb82"
+    },
+    "P39PlusOrbit": {
+      "proxy": "0xDE8282A86BF9de421a81475fe6F425faAC19c69f",
+      "implementation": "0xB97278D44F7cc73AAaB3d06dEC0AADb454E92539",
+      "deploymentBlock": 49113487,
+      "deploymentTx": "0xea34bb4a8d20d72ebd0f00dfe2650fbb1c4fc215e1d7ada0cc1f74c931144abf"
+    },
+    "P14PlusOrbit": {
+      "proxy": "0x4Bd199714C1D8EFD631Cff1309826bA0cD4b411a",
+      "implementation": "0xCF53d8C24d97cE30d4b0f88bffDCF0218E9bD784",
+      "deploymentBlock": 49113492,
+      "deploymentTx": "0x13f446189291f5da91b7f8a9d3cb9fac987c8b17bcd7f3e25fb589668b7825f4"
+    },
+    "P12PlusOrbit": {
+      "proxy": "0x32DD9D865D33ff855AC2b43c5f8623141B63D1DB",
+      "implementation": "0x7e2c53668b190D4257797C88868383bDeE3D3Cb7",
+      "deploymentBlock": 49113498,
+      "deploymentTx": "0x9682ac00beb5d84ed2d435335458f1649bc1673765641b01c52cc91ac5995efb"
+    },
+    "P6PlusOrbit": {
+      "proxy": "0xD3D751f385482AdF210155728F11A4c0e3119b9C",
+      "implementation": "0x25350aE842F69B3F8eD2f4F72D62A2613C3d2395",
+      "deploymentBlock": 49113504,
+      "deploymentTx": "0x1b7fc7468c3d67bed92f10242bdef0764b81c80696d73e5f22bfa12cd31f13a2"
+    },
+    "P4PlusOrbit": {
+      "proxy": "0x863d39139B20925C1409baA28eE1DC22550AE01a",
+      "implementation": "0x7FF3F09e90d0FB78AA3fE16AE8ae15046839949c",
+      "deploymentBlock": 49113510,
+      "deploymentTx": "0x8c6f1ad9b29e6c2cd4d7e494115fe798beead71c91ab8fc60375b751febb4155"
+    },
+    "P3PlusOrbit": {
+      "proxy": "0xc4e8B132636dB451A0BDEfa55405637406af943B",
+      "implementation": "0x784645007e59D6A2b528Ba28b15Cf206e42ff906",
+      "deploymentBlock": 49113515,
+      "deploymentTx": "0x658f778570e8a688066befbc7b8d48a187d0ef52902104b8b1b1cf4d03e315fd"
+    },
+    "FreedomPlusSettlementRouter": {
+      "proxy": "0xe2C7c2c989A15123b25F6c6baF5BBd6a989d0D44",
+      "implementation": "0x7f4856C14D9F81b997487F90FD2B675Aa1da5BEc",
+      "deploymentBlock": 49113530,
+      "deploymentTx": "0x838be35dc5548cd4b3da80b55478b0df3f4ca52ef757bc30517d1340ecb2260e"
+    },
+    "FreedomNFTMembership": {
+      "proxy": "0x39805A592d4746bc92feA4F72dD4ee04D82B2745",
+      "implementation": "0xea63e6c21cF3E858d9f5ff3Be6e8f834c3D51374",
+      "deploymentBlock": 49113535,
+      "deploymentTx": "0xcc1baab90f0076b3e92c6f46927d60a28a3539f683589a5f80733b35ef46aaa0"
+    },
+    "FreedomNFTRewardDistributor": {
+      "proxy": "0x08fe011f42e69dB293bC45FCa881f9d0FDE3214c",
+      "implementation": "0x6323f63522b5807784A2b36532D91c1C3422F47E",
+      "deploymentBlock": 49113540,
+      "deploymentTx": "0xf6822af53e99296e1201b18c37bb2e8c7a0292da3a0fb678beae907cd24eb181"
+    }
+  },
+  "configuration": [
+    {
+      "label": "registration.setFFreedomRegistration",
+      "tx": "0x028eb642e0199159a05c9bace495df862d0be2e980758d87db36eb740f0442f1",
+      "block": 49113482
+    },
+    {
+      "label": "router.configureOrbit.0",
+      "tx": "0xedd7528be23773c3b4998e91fc8624bf01c7696dc06e03cc2106a8514225a1a4",
+      "block": 49113543
+    },
+    {
+      "label": "P39PlusOrbit.setManager",
+      "tx": "0x4921a36385dfb8fec5946afe2faa5fe70b2a13442e06add5ea29a00ec4db91d0",
+      "block": 49113546
+    },
+    {
+      "label": "router.configureOrbit.1",
+      "tx": "0x9153ceab6662852356d09bcce68cdb5f57448d3c716f2a779d391d9a8e9a626a",
+      "block": 49113549
+    },
+    {
+      "label": "P14PlusOrbit.setManager",
+      "tx": "0x1b2daeddfa59f2d3cad025b67c075fd885e4955616df8a34c323d2a1f986ee7e",
+      "block": 49113552
+    },
+    {
+      "label": "router.configureOrbit.2",
+      "tx": "0xa77a0a62855765ff15e84f4d3f6688ebee5eb31005c81fde74f7dca071334c9d",
+      "block": 49113555
+    },
+    {
+      "label": "P12PlusOrbit.setManager",
+      "tx": "0x664791b01128b5f3aaf780bdbe96fb66f0bad73345fdb1d73a164e09b3853571",
+      "block": 49113558
+    },
+    {
+      "label": "router.configureOrbit.3",
+      "tx": "0xa03a493cd5632668d9653d8f013b8d480de74416c0db279cf579c025a6b80c4d",
+      "block": 49113562
+    },
+    {
+      "label": "P6PlusOrbit.setManager",
+      "tx": "0xea3204849cc0050f92a7554593da2a6fa9f4d8dd48d687837227ee200c694643",
+      "block": 49113565
+    },
+    {
+      "label": "router.configureOrbit.4",
+      "tx": "0x9a304ec6c2136061bc8133afb2fec0e8022dc1b10847c2f7a514a8bd3a8c490e",
+      "block": 49113568
+    },
+    {
+      "label": "P4PlusOrbit.setManager",
+      "tx": "0x3aae9adc045953deff3abb736ca1baedffabf19070651fe00cc2283c2f4f1a21",
+      "block": 49113571
+    },
+    {
+      "label": "router.configureOrbit.5",
+      "tx": "0x6a38f3d3c1100c3ec829d70f56f953bbf83c4583f690c50c78cf985ce01b07fa",
+      "block": 49113574
+    },
+    {
+      "label": "P3PlusOrbit.setManager",
+      "tx": "0x9cce1a41308be2a241464a19eed859498528f8bb11168f6e67b5b9f4d9bd2654",
+      "block": 49113577
+    },
+    {
+      "label": "router.configureFounderWallets",
+      "tx": "0xe8e5279e696ff58f98d52525fb9881f9106216329bb14bc4c9366f74b611e819",
+      "block": 49113579
+    },
+    {
+      "label": "router.lockConfiguration",
+      "tx": "0x097f907d93a3a903fcaf5230ae93bf5705c6763eb9ca1f2a0c564b3e739308ed",
+      "block": 49113581
+    },
+    {
+      "label": "manager.configureRegistration",
+      "tx": "0x2b1d18c7ae0aa373e9727952ba90f017a03f7aee96866d4e7f7ea5c3d8713888",
+      "block": 49113583
+    },
+    {
+      "label": "manager.configureSettlementRouter",
+      "tx": "0x72a5a407cd30b361485b56a836527382158254c21198f9fde37ca2020bd3e107",
+      "block": 49113585
+    },
+    {
+      "label": "controller.setLevelManager",
+      "tx": "0x74d1a2c403f6bd55177c68803a3ceb7e6f138977615c4312add1c1a2c92d4627",
+      "block": 49113587
+    },
+    {
+      "label": "fpt.authorizeController",
+      "tx": "0x05909a518225c71d8463fd27f27d4caf39d29120c1cd5d4724b836b366d72590",
+      "block": 49113589
+    },
+    {
+      "label": "fpt.authorizeMembership",
+      "tx": "0x8eee866578f1f8ed2ea67a0ba357b28861535ca1748aa1a7dba3bae3357dd77d",
+      "block": 49113591
+    },
+    {
+      "label": "fptr.authorizeController",
+      "tx": "0xf500c9e1e813daf2bb5a89b8aeb15c4cd04e1c6945a50bdadec43cd2bb896b45",
+      "block": 49113593
+    },
+    {
+      "label": "nftVault.configureDistributor",
+      "tx": "0xce050f6d592018bc8f4284f85ff1e5d714e166b5d3e3bf15651915ec4d4c02e1",
+      "block": 49113595
+    },
+    {
+      "label": "rewards.setRewardOperator",
+      "tx": "0x02be3088819ba09e44c8946aa1ee63f26e1ee05d4930c8e113f12c1a3a78f55c",
+      "block": 49113597
+    },
+    {
+      "label": "registration.initializeGenesis",
+      "tx": "0x229ef8641aa31e7d754c13055836177b2b0a8a196a789619d5884fe872cc3cd2",
+      "block": 49113601
+    },
+    {
+      "label": "fpt.lockOperatorConfig",
+      "tx": "0x28edea5e85430a3da48e0051f6f3a457d369de249a737b2ec6fd8a273dee7baa",
+      "block": 49113613
+    },
+    {
+      "label": "fptr.lockOperatorConfig",
+      "tx": "0xc56a526649f63621d89c1aab2f877ee8ac4a4355cd0705d2b1a7cd02b9236520",
+      "block": 49113615
+    },
+    {
+      "label": "FPTToken.transferOwnership",
+      "tx": "0x6bb458571107e74cb21072551310300fef880906b7323f0df5101579033c5dc3",
+      "block": 49113618
+    },
+    {
+      "label": "FPTrToken.transferOwnership",
+      "tx": "0x3476586300fb5108047a9f64ed93da070b657d543e1e4fe7f16e4b2f46c8205c",
+      "block": 49113621
+    },
+    {
+      "label": "FreedomPlusTokenController.transferOwnership",
+      "tx": "0xe4d0dae9bc3c27b8666d82f38cba79227851a17f6736fcab6613932f4ce7af6d",
+      "block": 49113624
+    },
+    {
+      "label": "FreedomPlusLevelManager.transferOwnership",
+      "tx": "0xaf2276896c2baec9a7b1477fb63b56619054128eaeb7b9a5492eecce0be8f489",
+      "block": 49113626
+    },
+    {
+      "label": "FreedomPlusRegistration.transferOwnership",
+      "tx": "0xbd3f65ebd87a3c109c5f4af941cde52a0b28fd3f1702081d97a60d44dae30187",
+      "block": 49113628
+    },
+    {
+      "label": "0xCC8b1a35e5C9B5a2BE7f3Cf96dc0f5a1f5F0faf4.transferOwnership",
+      "tx": "0x02b04af02af31cf80d9e039031c25fd2673333349770c359fbfa64887f99a975",
+      "block": 49113630
+    },
+    {
+      "label": "0x5Dda75Ca58a5fE4C6ad78E918F283Da8B3172610.transferOwnership",
+      "tx": "0x11d587f5d66b01dc9177481abde061da4a2e061b41d77b12dba451e0b39fea31",
+      "block": 49113632
+    },
+    {
+      "label": "P39PlusOrbit.transferOwnership",
+      "tx": "0xea32189b53b6b65b661ca2dbbfea936870275063e96c176579b18e846f28d438",
+      "block": 49113634
+    },
+    {
+      "label": "P14PlusOrbit.transferOwnership",
+      "tx": "0x2c5a77663af31b6fd26e11b25fca1a28a97435c7e3c25f135a591f4089443431",
+      "block": 49113637
+    },
+    {
+      "label": "P12PlusOrbit.transferOwnership",
+      "tx": "0x4cb0b97a730ba511ac6282849fa50a2b8cd0c20719c8bffd67cd28296bc2dc89",
+      "block": 49113640
+    },
+    {
+      "label": "P6PlusOrbit.transferOwnership",
+      "tx": "0x4596afa9ede70a8738c2e69b07c24f9f21f1aa56fbad4fa59528e2cfdc5f77bb",
+      "block": 49113643
+    },
+    {
+      "label": "P4PlusOrbit.transferOwnership",
+      "tx": "0x5a312afa4192247edbe5da66157bccb173419e9cc1d1bc16573bd3c4508e9a15",
+      "block": 49113646
+    },
+    {
+      "label": "P3PlusOrbit.transferOwnership",
+      "tx": "0x4a5d4af5a5380818ea631ea44dd175e800f97fe3145c597c046e595e0f02790d",
+      "block": 49113649
+    },
+    {
+      "label": "FreedomPlusSettlementRouter.transferOwnership",
+      "tx": "0xc26b75741b167467f780001a963bbfa6b8f5b2b08cdacc09f4610e9dbc4f8ebe",
+      "block": 49113662
+    },
+    {
+      "label": "FreedomNFTMembership.transferOwnership",
+      "tx": "0x1aea6bd2880f05557c73e965d05c89b8773538145360abdbf47f0086b5eb1468",
+      "block": 49113664
+    },
+    {
+      "label": "FreedomNFTRewardDistributor.transferOwnership",
+      "tx": "0xc1dc3c5daa572d4a3fee3c8631978fcdb8c6983cdb25fb77ca684efcd2bedeeb",
+      "block": 49113666
+    }
+  ],
+  "pendingGovernanceActions": [
+    {
+      "target": "0xa50b4EAfb341588820A495E36088Ed45B040479F",
+      "action": "setAuthorizedOperator(address,bool)",
+      "args": [
+        "0x39805A592d4746bc92feA4F72dD4ee04D82B2745",
+        true
+      ],
+      "reason": "Allow Freedom NFT to lock and unlock qualifying FGT"
+    }
+  ],
+  "fFreedomRegistration": "0x1a3722037070e3EE741f29388ecDd362cA7c7157",
+  "finalBlock": 49113666
+}

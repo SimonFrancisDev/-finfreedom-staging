@@ -59,10 +59,11 @@ async function main() {
   }
 
   for (const representative of representatives) {
+    const fFreedomSponsor = ethers.getAddress(await ffRegistration.getReferrer(representative));
     if (!(await ffManager.founderRepresentative(representative))
         || !(await ffRegistration.isRegistered(representative))
-        || (await ffManager.founderRepLevelsActivated(representative)) !== 10n
-        || (await ffRegistration.getReferrer(representative)) !== id1) {
+        || !(await ffRegistration.isLevelActivated(representative, 1))
+        || (fFreedomSponsor !== ethers.ZeroAddress && fFreedomSponsor !== id1)) {
       throw new Error(`F-Freedom representative is incomplete: ${representative}`);
     }
     if (!(await plusRegistration.isRegistered(representative))

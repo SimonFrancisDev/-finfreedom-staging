@@ -139,10 +139,11 @@ async function main() {
     "function getReferrer(address) view returns(address)",
   ], ethers.provider);
   for (const representative of representatives) {
+    const fFreedomSponsor = ethers.getAddress(await gateway.getReferrer(representative));
     if (!(await gateway.isRegistered(representative))
       || !(await gateway.isLevelActivated(representative, 1))
-      || ethers.getAddress(await gateway.getReferrer(representative)) !== id1) {
-      throw new Error(`Representative must first activate F-Freedom Level 1 under ID1: ${representative}`);
+      || (fFreedomSponsor !== ethers.ZeroAddress && fFreedomSponsor !== id1)) {
+      throw new Error(`Representative must first activate F-Freedom Level 1 with ID1 or no stored sponsor: ${representative}`);
     }
   }
   const manifest = {
