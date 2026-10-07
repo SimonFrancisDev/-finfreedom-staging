@@ -53,6 +53,26 @@ const ACTIVATION_GAS_BUFFER_BPS = 12500n
 const GAS_BUFFER_DENOMINATOR = 10000n
 const PENDING_REFERRAL_STORAGE_KEY = 'ffn_pending_registration_referral'
 
+const waitForConfirmedLevelActivation = async (tx, registration, participant, level) => {
+  const receipt = await tx.wait()
+
+  if (!receipt || Number(receipt.status) !== 1) {
+    throw new Error(`Level ${level} activation was not confirmed on-chain.`)
+  }
+
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    if (await registration.isLevelActivated(participant, level)) {
+      return receipt
+    }
+
+    if (attempt < 2) {
+      await new Promise((resolve) => window.setTimeout(resolve, 1200))
+    }
+  }
+
+  throw new Error(`Level ${level} transaction was mined, but the level is not active on-chain. Please contact support with transaction ${tx.hash}.`)
+}
+
 const estimateActivationGas = async (registrationWithSigner, signer, level) => {
   try {
     return await registrationWithSigner.activateLevel.estimateGas(level)
@@ -1635,7 +1655,7 @@ const ActivationCenterPage = () => {
           )
           setTxStatus({ loading: true, hash: activateTx.hash, error: null })
           toast.info(activationT('toast.activationSubmitted', 'Level activation transaction submitted.'), { dedupeKey: 'activation-level-submitted' })
-          await activateTx.wait()
+          await waitForConfirmedLevelActivation(activateTx, contracts.registration, account, 1)
           setTxStatus({ loading: false, hash: activateTx.hash, error: null })
           toast.success(activationT('toast.levelOneConfirmed', 'Registration and Level 1 activation confirmed.'), { dedupeKey: 'activation-level-one-confirmed' })
         } else {
@@ -1720,7 +1740,7 @@ const ActivationCenterPage = () => {
       )
       setTxStatus({ loading: true, hash: tx.hash, error: null })
       toast.info(activationT('toast.transferSubmitted', 'Transfer transaction submitted.'), { dedupeKey: 'activation-transfer-submitted' })
-      await tx.wait()
+      await waitForConfirmedLevelActivation(tx, contracts.registration, account, level)
 
       const newBalance = await contracts.usdt.balanceOf(account)
       const newBalanceFormatted = formatUsdt(newBalance).toString()
