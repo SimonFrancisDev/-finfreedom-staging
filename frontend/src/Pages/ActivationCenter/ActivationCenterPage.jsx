@@ -27,7 +27,7 @@ import {
   fetchOrbitLevelSnapshotApi,
 } from '../../Services/orbitsApi'
 import { getProfileReadAuthIfLocked } from '../../Services/profilePrivacyApi'
-import { ProgressionLineChart } from '../../components/charts/InstitutionalCharts'
+import { LevelProgressionTrack } from '../../components/charts/InstitutionalCharts'
 
 import {
   FaCoins,
@@ -2149,7 +2149,6 @@ const ActivationCenterPage = () => {
     [activeLevels]
   )
 
-  const maxCumulative = Math.max(...lineChartData.map((d) => d.cumulative), 1)
 
   const getRoleBadge = (role) => {
     switch (role) {
@@ -2346,13 +2345,11 @@ const ActivationCenterPage = () => {
           </div>
 
           <div className="line-chart-container line-chart-container--institutional">
-            <ProgressionLineChart
+            <LevelProgressionTrack
               data={lineChartData}
-              valueKey="cumulative"
               activeKey="activated"
               labelKey="level"
-              maxValue={maxCumulative}
-              ariaLabel={activationT('progress.chartAriaLabel', 'Level activation progression chart')}
+              ariaLabel={activationT('progress.chartAriaLabel', 'Level activation progression')}
             />
           </div>
 
