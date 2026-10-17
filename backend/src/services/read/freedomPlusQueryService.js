@@ -18,6 +18,7 @@ import {
 } from '../../blockchain/freedomPlusContracts.js';
 import {
   freedomPlusRewardProof,
+  freedomPlusRewardCycleStatus,
   listFreedomPlusRewardPeriods,
 } from '../freedomPlusRewardSnapshotService.js';
 
@@ -327,7 +328,7 @@ export async function freedomPlusEvents(address, query = {}) {
   return { page, limit, total, items };
 }
 
-export { freedomPlusRewardProof, listFreedomPlusRewardPeriods };
+export { freedomPlusRewardProof, freedomPlusRewardCycleStatus, listFreedomPlusRewardPeriods };
 
 export async function freedomPlusDashboard(address) {
   if (!env.FREEDOM_PLUS_ENABLED) return { enabled: false };

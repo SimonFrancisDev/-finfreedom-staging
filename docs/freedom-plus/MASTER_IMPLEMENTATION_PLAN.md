@@ -335,7 +335,7 @@ All later paid activity uses that state and follows ordinary financial rules.
 
 ### 13.1 Tiers
 
-| Tier | Required combined locked FGT/FPT | Monthly pool allocation |
+| Tier | Required combined locked FGT/FPT | 30-day cycle allocation |
 | --- | ---: | ---: |
 | Foundational | 5,700 | 50% |
 | Intermediate | 18,700 | 30% |
@@ -381,22 +381,23 @@ All later paid activity uses that state and follows ordinary financial rules.
 4. Release any qualifying tokens above the lower threshold as requested.
 5. Eligibility resumes only in the lower tier.
 
-### 13.7 Monthly distribution
+### 13.7 Fixed 30-day distribution
 
-1. The monthly eligibility cutoff is the first day of every month at 00:00 UTC.
-2. Use the UTC year and month as the deterministic on-chain period identifier.
-3. Count only wallets active and sufficiently locked for their highest tier at that cutoff.
-4. Allocate the available pool 50/30/20.
-5. Prevent a wallet from participating in more than one tier.
-6. Finalized monthly entitlements do not expire.
-7. A later freeze, unlock, upgrade, or downgrade cannot remove an entitlement already earned at a previous cutoff.
-8. On claim, transfer the entitlement directly from the NFT Pool Vault to the eligible wallet.
-9. Prevent duplicate claims for one period.
-10. Keep zero-member tier allocations unreserved in the vault.
-11. Keep integer rounding dust unreserved in the vault.
-12. Reserved unclaimed entitlements cannot be withdrawn or allocated to a later period.
-13. Use a scalable Merkle-claim model rather than an unbounded push loop.
-14. The multisig-published eligibility root must be generated from chain state at the exact cutoff and remain independently reproducible by the indexer and audit tooling.
+1. Cycle 1 distributes at `2026-11-02 00:00:00 UTC`; each later distribution is exactly 30 days later.
+2. Freeze eligibility exactly 24 hours before distribution and use the sequential cycle number as the on-chain period identifier.
+3. Mint, upgrade, unlock, downgrade, and restore remain available during the final 24 hours, but those changes apply to the following cycle.
+4. Count only wallets active and sufficiently locked for their highest tier at the cutoff.
+5. Exclude ID 1 until governance explicitly removes the exclusion.
+6. Allocate the available cutoff pool 50/30/20.
+7. Prevent a wallet from participating in more than one tier.
+8. Finalized cycle entitlements do not expire.
+9. A later freeze, unlock, upgrade, or downgrade cannot remove an entitlement already earned at a previous cutoff.
+10. Transfer each entitlement directly from the NFT Pool Vault to the eligible wallet and prevent duplicate payment for one cycle.
+11. Keep zero-member tier allocations and integer rounding dust unreserved in the vault.
+12. Reserved unpaid entitlements cannot be withdrawn or allocated to a later cycle.
+13. Use a scalable Merkle snapshot and bounded automated payment batches rather than an unbounded push loop.
+14. The published eligibility root must be generated from indexed chain state at the exact cutoff and remain independently reproducible by audit tooling.
+15. The worker must fail closed if the chain, schedule, operator, ID 1 exclusion, cutoff, roots, counts, or index completeness do not match.
 
 ## 14. Contract Architecture
 
@@ -478,7 +479,7 @@ Required user surfaces:
 - FPT and FPTr balances and histories.
 - NFT qualification progress.
 - NFT mint, upgrade, unlock, restore, and downgrade controls.
-- Monthly reward eligibility and claims.
+- Fixed 30-day reward eligibility, automatic payments, history, and receipts.
 - Explorer links for every financial operation.
 
 Frontend safety:

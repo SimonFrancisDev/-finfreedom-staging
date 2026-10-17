@@ -37,6 +37,7 @@ contract FreedomNFTRewardDistributor is
         uint256[3] eligibleCounts;
         uint256[3] rewardPerMember;
         bool created;
+        uint64 distributionAt;
     }
 
     address public rewardToken;
@@ -61,6 +62,8 @@ contract FreedomNFTRewardDistributor is
         uint256 amount
     );
     event GuardianUpdated(address indexed previousGuardian, address indexed newGuardian);
+    event CycleScheduleConfigured(uint64 indexed firstDistributionAt);
+    event RewardExclusionUpdated(address indexed member, bool excluded);
 
     error InvalidAddress();
     error InvalidContract(address target);
@@ -74,11 +77,22 @@ contract FreedomNFTRewardDistributor is
     error AlreadyClaimed(uint32 periodId, address member);
     error InvalidProof();
     error NoTierMembers(uint8 tier);
+    error InvalidCycle(uint32 cycleId);
+    error InvalidCycleSchedule(uint64 firstDistributionAt);
+    error CycleScheduleAlreadyConfigured();
+    error CycleScheduleNotConfigured();
+    error DistributionNotReached(uint64 distributionAt);
+    error LegacyPeriodCreationDisabled();
+    error RewardRecipientExcluded(address member);
 
     uint256 private constant BPS = 10_000;
+    uint64 public constant CYCLE_DURATION = 30 days;
+    uint64 public constant ELIGIBILITY_FREEZE = 1 days;
     uint16[3] private TIER_BPS;
     address public rewardOperator;
     uint256 public constant MAX_DISTRIBUTION_BATCH = 50;
+    uint64 public firstDistributionAt;
+    mapping(address => bool) public rewardExcluded;
 
     event RewardOperatorUpdated(address indexed previousOperator, address indexed newOperator);
     error UnauthorizedRewardOperator();
@@ -92,6 +106,37 @@ contract FreedomNFTRewardDistributor is
     function setRewardOperator(address operator) external onlyOwner {
         emit RewardOperatorUpdated(rewardOperator, operator);
         rewardOperator = operator;
+    }
+
+    function configureCycleSchedule(
+        uint64 firstDistributionAt_,
+        address excludedId1,
+        address rewardOperator_
+    )
+        external onlyOwner
+    {
+        if (firstDistributionAt != 0) revert CycleScheduleAlreadyConfigured();
+        if (
+            firstDistributionAt_ <= block.timestamp + ELIGIBILITY_FREEZE
+                || firstDistributionAt_ % 1 days != 0
+        ) {
+            revert InvalidCycleSchedule(firstDistributionAt_);
+        }
+        if (excludedId1 == address(0) || rewardOperator_ == address(0)) revert InvalidAddress();
+
+        address previousOperator = rewardOperator;
+        firstDistributionAt = firstDistributionAt_;
+        rewardExcluded[excludedId1] = true;
+        rewardOperator = rewardOperator_;
+        emit CycleScheduleConfigured(firstDistributionAt_);
+        emit RewardExclusionUpdated(excludedId1, true);
+        emit RewardOperatorUpdated(previousOperator, rewardOperator_);
+    }
+
+    function setRewardExclusion(address member, bool excluded) external onlyOwner {
+        if (member == address(0)) revert InvalidAddress();
+        rewardExcluded[member] = excluded;
+        emit RewardExclusionUpdated(member, excluded);
     }
 
     /// @custom:oz-upgrades-unsafe-allow constructor
@@ -130,12 +175,36 @@ contract FreedomNFTRewardDistributor is
         uint256 poolAmount,
         bytes32[3] calldata eligibleRoots,
         uint256[3] calldata eligibleCounts
+    ) external pure returns (uint32) {
+        year;
+        month;
+        poolAmount;
+        eligibleRoots;
+        eligibleCounts;
+        revert LegacyPeriodCreationDisabled();
+    }
+
+    function cycleTimes(uint32 cycleId)
+        public view returns (uint64 distributionAt, uint64 eligibilityCutoff)
+    {
+        if (firstDistributionAt == 0) revert CycleScheduleNotConfigured();
+        if (cycleId == 0) revert InvalidCycle(cycleId);
+        uint256 scheduled = uint256(firstDistributionAt) + uint256(cycleId - 1) * CYCLE_DURATION;
+        if (scheduled > type(uint64).max) revert InvalidCycle(cycleId);
+        distributionAt = uint64(scheduled);
+        eligibilityCutoff = distributionAt - ELIGIBILITY_FREEZE;
+    }
+
+    function createCycle(
+        uint32 cycleId,
+        uint256 poolAmount,
+        bytes32[3] calldata eligibleRoots,
+        uint256[3] calldata eligibleCounts
     ) external onlyRewardPublisher whenNotPaused nonReentrant returns (uint32 periodId) {
-        if (year < 1970 || month == 0 || month > 12) revert InvalidDate(year, month);
         if (poolAmount == 0) revert InvalidPoolAmount();
-        uint64 cutoff = uint64(_timestampFromDate(year, month, 1));
-        if (block.timestamp < cutoff) revert CutoffNotReached(cutoff);
-        periodId = uint32(year) * 100 + month;
+        (uint64 distributionAt, uint64 cutoff) = cycleTimes(cycleId);
+        if (block.timestamp < distributionAt) revert DistributionNotReached(distributionAt);
+        periodId = cycleId;
         if (_periods[periodId].created) revert PeriodAlreadyExists(periodId);
 
         uint256[3] memory rewards;
@@ -152,7 +221,7 @@ contract FreedomNFTRewardDistributor is
             reserved += rewards[index] * count;
         }
         bytes32 distributionId = keccak256(abi.encode("FREEDOM_NFT_PERIOD", periodId));
-        vault.reserveRewards(rewardToken, reserved, distributionId);
+        if (reserved > 0) vault.reserveRewards(rewardToken, reserved, distributionId);
 
         Period storage period = _periods[periodId];
         period.cutoff = cutoff;
@@ -162,6 +231,7 @@ contract FreedomNFTRewardDistributor is
         period.eligibleCounts = eligibleCounts;
         period.rewardPerMember = rewards;
         period.created = true;
+        period.distributionAt = distributionAt;
         emit PeriodCreated(
             periodId,
             cutoff,
@@ -202,6 +272,7 @@ contract FreedomNFTRewardDistributor is
         if (!period.created) revert PeriodNotFound(periodId);
         if (tier < 1 || tier > 3) revert InvalidTier(tier);
         if (member == address(0)) revert InvalidAddress();
+        if (rewardExcluded[member]) revert RewardRecipientExcluded(member);
         if (claimed[periodId][member]) {
             if (skipPaid) return;
             revert AlreadyClaimed(periodId, member);
@@ -239,23 +310,9 @@ contract FreedomNFTRewardDistributor is
     function pause() external onlyOwner { _pause(); }
     function unpause() external onlyOwner { _unpause(); }
 
-    function _timestampFromDate(uint16 year, uint8 month, uint8 day)
-        internal pure returns (uint256 timestamp)
-    {
-        int256 y = int256(uint256(year));
-        int256 m = int256(uint256(month));
-        int256 d = int256(uint256(day));
-        int256 daysSinceEpoch = d - 32075
-            + 1461 * (y + 4800 + (m - 14) / 12) / 4
-            + 367 * (m - 2 - (m - 14) / 12 * 12) / 12
-            - 3 * ((y + 4900 + (m - 14) / 12) / 100) / 4
-            - 2440588;
-        timestamp = uint256(daysSinceEpoch) * 1 days;
-    }
-
     function _requireContract(address target) internal view {
         if (target == address(0) || target.code.length == 0) revert InvalidContract(target);
     }
 
-    uint256[42] private __gap;
+    uint256[41] private __gap;
 }

@@ -71,7 +71,7 @@ Before implementation or deployment, freeze a versioned rule matrix containing:
 | Recycle | qualifying arrivals, reserve accumulation, cycle closure, sponsor-based re-entry, self-payment fallback |
 | Upgrade | sequential activation, F-Freedom auto-upgrade, Freedom-Plus manual-only progression |
 | Tokens | FGT, FGTr, FPT, FPTr issuance, locking, burning, and permissions |
-| NFT | qualification, mint, upgrade, immediate freeze, restore, downgrade, monthly reward execution |
+| NFT | qualification, mint, upgrade, immediate freeze, restore, downgrade, fixed 30-day reward execution |
 | Genesis | ID1 and representative placement, activated levels, token grants, and zero-income initialization |
 
 Every row must be marked `APPROVED`, linked to evidence, and translated into tests. An unresolved row blocks deployment.
@@ -115,7 +115,7 @@ Every row must be marked `APPROVED`, linked to evidence, and translated into tes
 - Upgrade burns the lower NFT and mints the higher NFT.
 - Voluntary downgrade burns the higher NFT and mints the qualified lower NFT.
 - A wallet earns from only its highest active tier.
-- Monthly rewards use a UTC cutoff, immutable snapshot evidence, and direct distribution according to the approved pool ratios.
+- Rewards use exact 30-day cycles, a 24-hour UTC eligibility cutoff, immutable snapshot evidence, and direct distribution according to the approved pool ratios. Cycle 1 distributes at `2026-11-02 00:00:00 UTC`; ID 1 remains excluded until governance changes the rule.
 
 ## 6. Current Work-State Gate
 
@@ -218,7 +218,7 @@ Use `smart-contract/test-plans/fresh-priority-wallet-roles.json` as the public r
 9. Eligibility, long skipped-upline chains, first-eligible stop, and terminal ID1 fallback.
 10. Repeated recipient and self-payment fallback cases.
 11. F-Freedom regression suite covering registration, all levels, escrow, auto-upgrade, and recycle.
-12. NFT mint, immediate freeze, restore, upgrade, downgrade, and monthly reward snapshot/distribution.
+12. NFT mint, immediate freeze, restore, upgrade, downgrade, and fixed 30-day reward snapshot/distribution.
 13. Backend replay and chain/database reconciliation.
 14. Complete frontend journey using real browser wallets.
 15. Founder-visible testing from a documented clean state.

@@ -118,16 +118,16 @@ Current qualification thresholds:
 
 ## Freedom NFT Rewards
 
-Current contract behavior:
+Approved fixed-cycle behavior:
 
-1. Reward periods are monthly.
-2. The owner creates a period after its cutoff.
-3. Eligibility and amounts are committed through a Merkle root.
-4. Each wallet can claim once per period with a valid proof.
+1. Cycle 1 distributes at `2026-11-02 00:00:00 UTC`; every later cycle is exactly 30 days after the previous cycle.
+2. Eligibility is frozen exactly 24 hours before each distribution. Membership actions remain open during the freeze, but changes apply to the following cycle.
+3. Eligibility and amounts are committed through a reproducible Merkle snapshot.
+4. Each eligible wallet is paid once per cycle; ID 1 is excluded until governance explicitly changes that rule.
 5. The shared NFT Pool Vault reserves and disburses the configured reward token.
-6. The vault permits one configured reward distributor.
-
-Current tier allocation is 50% Foundational, 30% Intermediate, and 20% Advanced.
+6. Foundational, Intermediate, and Advanced receive 50%, 30%, and 20% respectively.
+7. A tier with no eligible members remains unreserved in the NFT pool. Integer rounding dust also remains unreserved.
+8. The automated worker may publish and pay only after its schedule, chain, operator, ID 1 exclusion, cutoff block, roots, and counts match the on-chain configuration.
 
 ## ID 1 And Genesis
 
