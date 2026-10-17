@@ -1,0 +1,53 @@
+{
+  "verdict": "PASS",
+  "completedAt": "2026-10-17T21:06:23.896Z",
+  "fork": {
+    "sourceChainId": "80002",
+    "sourceBlock": 50448475
+  },
+  "distributor": "0x901C08a34aA81CeF881b7A419158705599FBE43a",
+  "implementation": "0x5B8174d1549B395e94cD2152c9A7Da312209539c",
+  "token": "0x7b7E39f3D177B3356368431C5C285bca58b43A60",
+  "vault": "0xA41CF55d22C3685d5F4e512130ED1110307Cf496",
+  "firstDistributionAt": "1793577600",
+  "eligibilityCutoff": "1793491200",
+  "id1Excluded": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+  "operator": "0x4e0b5aE304d657fF9E460161DaBD38E1566306a8",
+  "canonicalWallets": [
+    {
+      "label": "Account 9",
+      "address": "0x3B7651dF08915f740a7eB079690327c4E8cCD3F0",
+      "tier": 1,
+      "payout": "500.0"
+    },
+    {
+      "label": "Account 10",
+      "address": "0x48F0356220E2220d5aB9ba9de83EA993A510e7CF",
+      "tier": 2,
+      "payout": "300.0"
+    },
+    {
+      "label": "Account 8",
+      "address": "0x8844a10391801d5b1a4273588F8c6bF1DFE06E36",
+      "tier": 3,
+      "payout": "200.0"
+    }
+  ],
+  "assertions": {
+    "activeImplementation": true,
+    "exactThirtyDayCycles": true,
+    "twentyFourHourCutoff": true,
+    "earlyPublicationRejected": true,
+    "legacyPublicationRejected": true,
+    "fixedTierShares": "50/30/20",
+    "id1Rejected": true,
+    "canonicalPayoutsExact": true,
+    "duplicatePayoutPrevented": true,
+    "emptyTierFundsRetained": true
+  },
+  "localForkTransactions": {
+    "createCycle1": "0x002b83a185497e7cd198aff821feb11e9c55517d3f730853e09445aacaf31dbd",
+    "distributeCycle1": "0x43a8d2cf00c74f12eaa0c89fae29583d4e6e019c64962ade0dfa91f2e253c78d",
+    "createEmptyCycle2": "0x2248403fa196aebdba5093f9145ac7e80482d5d708f26248a566b1d962fb1c16"
+  }
+}

@@ -82,6 +82,8 @@ As of 2026-10-17:
 - Amoy upgrade execution transaction: `0x92a874e8204f9d4c287f0f9794b38cf8c5f440d91240118aa0d20aac3fc8141b`.
 - Post-upgrade and idempotent verification: passing. The proxy uses the expected implementation, Cycle 1 is scheduled for `2026-11-02 00:00:00 UTC`, the cutoff is `2026-11-01 00:00:00 UTC`, ID 1 is excluded, and the dedicated Amoy operator is configured.
 - Evidence: `smart-contract/test-reports/nft-fixed-cycle/amoy-fixed-cycle-upgrade.json`.
+- Post-upgrade canonical-wallet fork certification: passing against the upgraded Amoy proxy. Account 9 received the Foundational 50% share, Account 10 received the Intermediate 30% share, and Account 8 received the Advanced 20% share. Early publication, legacy publication, and ID 1 payment were rejected; duplicate execution paid nothing twice; an empty Cycle 2 retained its funds unreserved in the NFT pool.
+- Canonical fork evidence: `smart-contract/test-reports/nft-fixed-cycle/amoy-post-upgrade-canonical-fork.json`.
 - No production environment change, production proposal, Polygon mainnet transaction, database reset, or historical fund movement has been executed by this change set.
 
 ## Rollback
