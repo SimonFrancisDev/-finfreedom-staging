@@ -1,0 +1,79 @@
+{
+  "network": "amoy",
+  "chainId": "80002",
+  "transactions": {
+    "approve-reward-proxy-submit": {
+      "hash": "0x7bb45c6055617009fe55a48f7dd547129bc178c3305e1dc1d711b0b1767914d6",
+      "blockNumber": 50447874
+    },
+    "approve-reward-proxy": {
+      "transactionId": "38",
+      "target": "0x52F22c1e396dF20c2078B4a86b4A0ac3b51a9911",
+      "data": "0x9edec5a9000000000000000000000000901c08a34aa81cef881b7a419158705599fbe43a0000000000000000000000000000000000000000000000000000000000000001"
+    },
+    "approve-reward-proxy-approve-owner1": {
+      "hash": "0xf3b9dc43e8217ba7972a7cc2a066295cb94365d79777ea990570a05e6b00ebe2",
+      "blockNumber": 50447877
+    },
+    "approve-reward-proxy-approve-owner2": {
+      "hash": "0x2bfde6ab806261b9d666e1bc6a34642510c42233133a8c60033163198d27a2f7",
+      "blockNumber": 50447881
+    },
+    "approve-reward-implementation-submit": {
+      "hash": "0x22ab07a693df7282c210495fc8db8f45df94c81cbb659ca49246cc716c6c2786",
+      "blockNumber": 50447884
+    },
+    "approve-reward-implementation": {
+      "transactionId": "39",
+      "target": "0x52F22c1e396dF20c2078B4a86b4A0ac3b51a9911",
+      "data": "0x8492e671000000000000000000000000901c08a34aa81cef881b7a419158705599fbe43a0000000000000000000000005b8174d1549b395e94cd2152c9a7da312209539c0000000000000000000000000000000000000000000000000000000000000001"
+    },
+    "approve-reward-implementation-approve-owner1": {
+      "hash": "0x710f3dff63ebfc65fc46f0f24e7cf6107192dc3480ee9de6a488addad714340d",
+      "blockNumber": 50447888
+    },
+    "approve-reward-implementation-approve-owner2": {
+      "hash": "0xbb08b8cf53e19f573215dfba2f634197bb4505e399c9a0ef1f1bad4eb1de80de",
+      "blockNumber": 50447891
+    },
+    "upgrade-and-configure-rewards-submit": {
+      "hash": "0x4b88704236492fe8b43692f1364bb471c57567a68bda9ae46391132f6e5e5b64",
+      "blockNumber": 50447895
+    },
+    "upgrade-and-configure-rewards": {
+      "transactionId": "40",
+      "target": "0x901C08a34aA81CeF881b7A419158705599FBE43a",
+      "data": "0x4f1ef2860000000000000000000000005b8174d1549b395e94cd2152c9a7da312209539c00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000064c2fbb4ce000000000000000000000000000000000000000000000000000000006ae7d280000000000000000000000000d3f460af3c6c9fab8053ebf5ecdc1edfc5de5f6a0000000000000000000000004e0b5ae304d657ff9e460161dabd38e1566306a800000000000000000000000000000000000000000000000000000000"
+    },
+    "upgrade-and-configure-rewards-approve-owner1": {
+      "hash": "0x0d534d923872d75d505af10cd651535b10449a77d6d4ab3f5b42c1330da2acde",
+      "blockNumber": 50447900
+    },
+    "upgrade-and-configure-rewards-approve-owner2": {
+      "hash": "0x828a90a9b04c8badf9d0b3b61952bec8b749790e569e8b8023654fdb2f8a1d45",
+      "blockNumber": 50447905
+    },
+    "approve-reward-proxy-execute": {
+      "hash": "0xba7b04ae3a9537902040d98ea8d13220b93ab5269a22a35b8a119bd311f09961",
+      "blockNumber": 50447997
+    },
+    "approve-reward-implementation-execute": {
+      "hash": "0x08a92277812b3bb6c6050e5449298534146cc8c429c3ed9f379e4151bd77ed18",
+      "blockNumber": 50448008
+    },
+    "upgrade-and-configure-rewards-execute": {
+      "hash": "0x92a874e8204f9d4c287f0f9794b38cf8c5f440d91240118aa0d20aac3fc8141b",
+      "blockNumber": 50448019
+    }
+  },
+  "verdict": "PASS",
+  "completedAt": "2026-10-17T20:57:16.406Z",
+  "multisig": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+  "guardian": "0x52F22c1e396dF20c2078B4a86b4A0ac3b51a9911",
+  "proxy": "0x901C08a34aA81CeF881b7A419158705599FBE43a",
+  "implementation": "0x5B8174d1549B395e94cD2152c9A7Da312209539c",
+  "firstDistributionAt": "1793577600",
+  "eligibilityCutoff": "1793491200",
+  "excludedId1": "0xD3f460AF3c6C9FAB8053ebF5eCdC1EdfC5de5f6A",
+  "rewardOperator": "0x4e0b5aE304d657fF9E460161DaBD38E1566306a8"
+}

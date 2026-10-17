@@ -77,7 +77,12 @@ As of 2026-10-17:
 - Frontend production build: passing.
 - Polygon production proxy storage layout: valid.
 - Amoy staging proxy storage layout: valid.
-- No upgrade, proposal, environment change, or production deployment has been executed by this change set yet.
+- Amoy implementation deployed at `0x5B8174d1549B395e94cD2152c9A7Da312209539c` in transaction `0x3cb004ecaf9cb67d82a05772e73e7b77e8544d9a66d130f23dd235ff5e3eb57c`.
+- Amoy multisig proposals `38`, `39`, and `40` approved the proxy, approved the implementation, and atomically upgraded/configured the reward distributor.
+- Amoy upgrade execution transaction: `0x92a874e8204f9d4c287f0f9794b38cf8c5f440d91240118aa0d20aac3fc8141b`.
+- Post-upgrade and idempotent verification: passing. The proxy uses the expected implementation, Cycle 1 is scheduled for `2026-11-02 00:00:00 UTC`, the cutoff is `2026-11-01 00:00:00 UTC`, ID 1 is excluded, and the dedicated Amoy operator is configured.
+- Evidence: `smart-contract/test-reports/nft-fixed-cycle/amoy-fixed-cycle-upgrade.json`.
+- No production environment change, production proposal, Polygon mainnet transaction, database reset, or historical fund movement has been executed by this change set.
 
 ## Rollback
 

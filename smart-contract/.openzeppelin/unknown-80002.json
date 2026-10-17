@@ -62434,7 +62434,7 @@
             "label": "vault",
             "offset": 0,
             "slot": "1",
-            "type": "t_contract(IFreedomNFTRewardVault)2637",
+            "type": "t_contract(IFreedomNFTRewardVault)26935",
             "contract": "FreedomNFTRewardDistributor",
             "src": "contracts\\freedom-plus\\FreedomNFTRewardDistributor.sol:43"
           },
@@ -62450,7 +62450,7 @@
             "label": "_periods",
             "offset": 0,
             "slot": "3",
-            "type": "t_mapping(t_uint32,t_struct(Period)2678_storage)",
+            "type": "t_mapping(t_uint32,t_struct(Period)26976_storage)",
             "contract": "FreedomNFTRewardDistributor",
             "src": "contracts\\freedom-plus\\FreedomNFTRewardDistributor.sol:45"
           },
@@ -62526,7 +62526,7 @@
             ],
             "numberOfBytes": "32"
           },
-          "t_struct(PausableStorage)219_storage": {
+          "t_struct(PausableStorage)566_storage": {
             "label": "struct PausableUpgradeable.PausableStorage",
             "members": [
               {
@@ -62538,7 +62538,7 @@
             ],
             "numberOfBytes": "32"
           },
-          "t_struct(ReentrancyGuardStorage)283_storage": {
+          "t_struct(ReentrancyGuardStorage)630_storage": {
             "label": "struct ReentrancyGuardUpgradeable.ReentrancyGuardStorage",
             "members": [
               {
@@ -62578,7 +62578,7 @@
             "label": "bytes32",
             "numberOfBytes": "32"
           },
-          "t_contract(IFreedomNFTRewardVault)2637": {
+          "t_contract(IFreedomNFTRewardVault)26935": {
             "label": "contract IFreedomNFTRewardVault",
             "numberOfBytes": "20"
           },
@@ -62590,11 +62590,11 @@
             "label": "mapping(uint32 => mapping(address => bool))",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_uint32,t_struct(Period)2678_storage)": {
+          "t_mapping(t_uint32,t_struct(Period)26976_storage)": {
             "label": "mapping(uint32 => struct FreedomNFTRewardDistributor.Period)",
             "numberOfBytes": "32"
           },
-          "t_struct(Period)2678_storage": {
+          "t_struct(Period)26976_storage": {
             "label": "struct FreedomNFTRewardDistributor.Period",
             "members": [
               {
@@ -63506,6 +63506,315 @@
           "t_uint8": {
             "label": "uint8",
             "numberOfBytes": "1"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.ReentrancyGuard": [
+            {
+              "contract": "ReentrancyGuardUpgradeable",
+              "label": "_status",
+              "type": "t_uint256",
+              "src": "@openzeppelin\\contracts-upgradeable\\utils\\ReentrancyGuardUpgradeable.sol:40",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Pausable": [
+            {
+              "contract": "PausableUpgradeable",
+              "label": "_paused",
+              "type": "t_bool",
+              "src": "@openzeppelin\\contracts-upgradeable\\utils\\PausableUpgradeable.sol:21",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "44222fa79afe9b01310e0da102035724471b3d36bd58cab1046a90ac1b3a1f63": {
+      "address": "0x5B8174d1549B395e94cD2152c9A7Da312209539c",
+      "txHash": "0x3cb004ecaf9cb67d82a05772e73e7b77e8544d9a66d130f23dd235ff5e3eb57c",
+      "layout": {
+        "solcVersion": "0.8.24",
+        "storage": [
+          {
+            "label": "rewardToken",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "FreedomNFTRewardDistributor",
+            "src": "contracts\\freedom-plus\\FreedomNFTRewardDistributor.sol:43"
+          },
+          {
+            "label": "vault",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_contract(IFreedomNFTRewardVault)2233",
+            "contract": "FreedomNFTRewardDistributor",
+            "src": "contracts\\freedom-plus\\FreedomNFTRewardDistributor.sol:44"
+          },
+          {
+            "label": "guardian",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_address",
+            "contract": "FreedomNFTRewardDistributor",
+            "src": "contracts\\freedom-plus\\FreedomNFTRewardDistributor.sol:45"
+          },
+          {
+            "label": "_periods",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_mapping(t_uint32,t_struct(Period)2276_storage)",
+            "contract": "FreedomNFTRewardDistributor",
+            "src": "contracts\\freedom-plus\\FreedomNFTRewardDistributor.sol:46"
+          },
+          {
+            "label": "claimed",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_mapping(t_uint32,t_mapping(t_address,t_bool))",
+            "contract": "FreedomNFTRewardDistributor",
+            "src": "contracts\\freedom-plus\\FreedomNFTRewardDistributor.sol:47"
+          },
+          {
+            "label": "TIER_BPS",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_array(t_uint16)3_storage",
+            "contract": "FreedomNFTRewardDistributor",
+            "src": "contracts\\freedom-plus\\FreedomNFTRewardDistributor.sol:91"
+          },
+          {
+            "label": "rewardOperator",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_address",
+            "contract": "FreedomNFTRewardDistributor",
+            "src": "contracts\\freedom-plus\\FreedomNFTRewardDistributor.sol:92"
+          },
+          {
+            "label": "firstDistributionAt",
+            "offset": 20,
+            "slot": "6",
+            "type": "t_uint64",
+            "contract": "FreedomNFTRewardDistributor",
+            "src": "contracts\\freedom-plus\\FreedomNFTRewardDistributor.sol:94"
+          },
+          {
+            "label": "rewardExcluded",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "FreedomNFTRewardDistributor",
+            "src": "contracts\\freedom-plus\\FreedomNFTRewardDistributor.sol:95"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_array(t_uint256)41_storage",
+            "contract": "FreedomNFTRewardDistributor",
+            "src": "contracts\\freedom-plus\\FreedomNFTRewardDistributor.sol:317"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_struct(InitializableStorage)73_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)13_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(PausableStorage)219_storage": {
+            "label": "struct PausableUpgradeable.PausableStorage",
+            "members": [
+              {
+                "label": "_paused",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(ReentrancyGuardStorage)283_storage": {
+            "label": "struct ReentrancyGuardUpgradeable.ReentrancyGuardStorage",
+            "members": [
+              {
+                "label": "_status",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_array(t_bytes32)3_storage": {
+            "label": "bytes32[3]",
+            "numberOfBytes": "96"
+          },
+          "t_array(t_uint16)3_storage": {
+            "label": "uint16[3]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)3_storage": {
+            "label": "uint256[3]",
+            "numberOfBytes": "96"
+          },
+          "t_array(t_uint256)41_storage": {
+            "label": "uint256[41]",
+            "numberOfBytes": "1312"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_contract(IFreedomNFTRewardVault)2233": {
+            "label": "contract IFreedomNFTRewardVault",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint32,t_mapping(t_address,t_bool))": {
+            "label": "mapping(uint32 => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint32,t_struct(Period)2276_storage)": {
+            "label": "mapping(uint32 => struct FreedomNFTRewardDistributor.Period)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Period)2276_storage": {
+            "label": "struct FreedomNFTRewardDistributor.Period",
+            "members": [
+              {
+                "label": "cutoff",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "poolAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "reservedAmount",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "eligibleRoots",
+                "type": "t_array(t_bytes32)3_storage",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "eligibleCounts",
+                "type": "t_array(t_uint256)3_storage",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "rewardPerMember",
+                "type": "t_array(t_uint256)3_storage",
+                "offset": 0,
+                "slot": "9"
+              },
+              {
+                "label": "created",
+                "type": "t_bool",
+                "offset": 0,
+                "slot": "12"
+              },
+              {
+                "label": "distributionAt",
+                "type": "t_uint64",
+                "offset": 1,
+                "slot": "12"
+              }
+            ],
+            "numberOfBytes": "416"
+          },
+          "t_uint16": {
+            "label": "uint16",
+            "numberOfBytes": "2"
+          },
+          "t_uint32": {
+            "label": "uint32",
+            "numberOfBytes": "4"
           }
         },
         "namespaces": {
