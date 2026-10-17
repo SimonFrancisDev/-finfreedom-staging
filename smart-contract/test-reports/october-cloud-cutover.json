@@ -44,7 +44,7 @@
       "FREEDOM_NFT_REWARD_DISTRIBUTOR_ADDRESS",
       "FREEDOM_NFT_POOL_VAULT_ADDRESS",
       "FREEDOM_PLUS_OPERATIONS_VAULT_ADDRESS",
-      "NFT_REWARD_FIRST_PERIOD",
+      "NFT_REWARD_FIRST_DISTRIBUTION_AT",
       "RPC_MAX_RPS",
       "FREEDOM_PLUS_P39_ORBIT_ADDRESS",
       "FREEDOM_PLUS_P14_ORBIT_ADDRESS",
@@ -55,7 +55,10 @@
       "RUN_INDEXER",
       "NFT_AUTO_DISTRIBUTION_ENABLED"
     ],
-    "at": "2026-10-01T20:15:14.927Z"
+    "suspended": true,
+    "deployed": false,
+    "automationEnabled": false,
+    "at": "2026-10-17T21:19:03.329Z"
   },
   "worker": {
     "id": "srv-d8h3bptdt1ts73fuc7eg",
@@ -101,7 +104,7 @@
       "FREEDOM_NFT_REWARD_DISTRIBUTOR_ADDRESS",
       "FREEDOM_NFT_POOL_VAULT_ADDRESS",
       "FREEDOM_PLUS_OPERATIONS_VAULT_ADDRESS",
-      "NFT_REWARD_FIRST_PERIOD",
+      "NFT_REWARD_FIRST_DISTRIBUTION_AT",
       "RPC_MAX_RPS",
       "FREEDOM_PLUS_P39_ORBIT_ADDRESS",
       "FREEDOM_PLUS_P14_ORBIT_ADDRESS",
@@ -112,7 +115,10 @@
       "RUN_INDEXER",
       "NFT_AUTO_DISTRIBUTION_ENABLED"
     ],
-    "at": "2026-10-01T20:15:37.347Z"
+    "suspended": true,
+    "deployed": false,
+    "automationEnabled": false,
+    "at": "2026-10-17T21:19:03.329Z"
   },
   "vercel": {
     "project": "prj_82BQtIqkebJdub7s650N2m7QWn3A",
@@ -158,6 +164,6 @@
       "production",
       "preview"
     ],
-    "at": "2026-10-01T20:23:35.489Z"
+    "at": "2026-10-17T21:17:50.983Z"
   }
 }
