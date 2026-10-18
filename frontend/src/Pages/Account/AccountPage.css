@@ -963,6 +963,51 @@
   overflow: hidden;
 }
 
+.ecosystem-earnings-summary {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.2fr) minmax(280px, 1fr);
+  gap: 16px;
+  margin: 18px 0;
+  padding: 18px;
+  border: 1px solid color-mix(in srgb, var(--glow-teal) 30%, var(--border-premium));
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--surface-inner) 92%, var(--glow-teal));
+}
+
+.ecosystem-earnings-summary__total,
+.ecosystem-earnings-summary__programs div {
+  display: grid;
+  gap: 6px;
+}
+
+.ecosystem-earnings-summary span,
+.ecosystem-earnings-summary small {
+  color: var(--text-secondary);
+}
+
+.ecosystem-earnings-summary__total > strong {
+  color: var(--glow-teal);
+  font-size: 42px;
+  line-height: 1;
+}
+
+.ecosystem-earnings-summary__programs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.ecosystem-earnings-summary__programs div {
+  align-content: center;
+  min-width: 0;
+  padding: 10px;
+  border-left: 2px solid color-mix(in srgb, var(--glow-blue) 42%, transparent);
+}
+
+.ecosystem-earnings-summary__programs strong {
+  overflow-wrap: anywhere;
+}
+
 .earnings-highlight::before,
 .referral-engine::before,
 .level-financial-breakdown::before {
@@ -1099,6 +1144,15 @@
   .reward-grid,
   .social-share-row {
     grid-template-columns: 1fr;
+  }
+
+  .ecosystem-earnings-summary,
+  .ecosystem-earnings-summary__programs {
+    grid-template-columns: 1fr;
+  }
+
+  .ecosystem-earnings-summary__total > strong {
+    font-size: 28px;
   }
 
   .switcher-header {

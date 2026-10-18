@@ -427,6 +427,7 @@ const AccountPage = ({ program = 'f-freedom' }) => {
   }
 
   const baseEarnings = summary?.earnings || {}
+  const ecosystemEarnings = summary?.ecosystemEarnings || {}
   const earnings = isFreedomPlus ? {
     highestLevel: freedomPlusLevels.length
       ? Math.max(...freedomPlusLevels.map((item) => Number(item.level)))
@@ -722,6 +723,28 @@ const AccountPage = ({ program = 'f-freedom' }) => {
             <div className="section-title-group">
               <FaShieldAlt />
               <h2>{accountT('financial.title', 'Financial Position')}</h2>
+            </div>
+
+            <div className="ecosystem-earnings-summary" aria-label="Total ecosystem earnings">
+              <div className="ecosystem-earnings-summary__total">
+                <span>Total earned across Fin Freedom</span>
+                <strong>${getMoney(ecosystemEarnings.totalEarned)}</strong>
+                <small>Gross earnings attributed to this account, including auto-upgrade reserves.</small>
+              </div>
+              <div className="ecosystem-earnings-summary__programs">
+                <div>
+                  <span>F-Freedom</span>
+                  <strong>${getMoney(ecosystemEarnings.byProgram?.fFreedom?.totalEarned)}</strong>
+                </div>
+                <div>
+                  <span>Freedom-Plus</span>
+                  <strong>${getMoney(ecosystemEarnings.byProgram?.freedomPlus?.totalEarned)}</strong>
+                </div>
+                <div>
+                  <span>Freedom NFT</span>
+                  <strong>${getMoney(ecosystemEarnings.byProgram?.freedomNft?.totalEarned)}</strong>
+                </div>
+              </div>
             </div>
 
             <div className="earnings-hero">
