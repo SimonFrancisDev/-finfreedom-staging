@@ -1,5 +1,13 @@
 # F-Freedom correction and certification ledger
 
+## Current decision
+
+The unapproved 512-USDT compensation has been removed from the candidate:
+no repair transfer, funding requirement or earnings increase. Historical actual
+payments remain unchanged. The new structural-only rehearsal must supersede,
+not inherit certification from, the older compensated draft. No live proposal
+or production transaction has been sent during this revision.
+
 ## Authority and boundary
 
 The approved business rule is Lady Sabina's placement specification, together
@@ -52,7 +60,7 @@ guardian permissions and storage layouts before any upgrade proposal.
 | F06 | Cascade returned aggregate escrow with only outer beneficiary | Lock each amount for its own beneficiary; queue their upgrade checks | Local correction; synthetic and registration-driven P4 cascades passed |
 | F07 | ID1 and nested re-entries omitted canonical-parent updates | Every primary re-entry records its actual parent; mirrors do not overwrite it | Local correction; focused parent regressions passed |
 | F08 | Recycle owner earnings added twice; routed reserves counted as earnings | Earnings count liquid plus own upgrade escrow exactly once, exclude own recycle | Local correction; focused 18-vs-26 counter regression passed |
-| F09 | Historical omitted/extra positions and inconsistent counters persist | Dependency-aware, funded and separately journaled historical repair | Open; paused manifest is not final |
+| F09 | Historical omitted/extra positions and inconsistent counters persist | Dependency-aware, structural-only and separately journaled historical repair | Open; manifest is not final; compensation excluded |
 | F10 | Tests/documentation encode conflicting old behavior | Correct the oracle, preserve negative cases, reconcile receipts and transfers | Old liquid/extra-position assertions corrected and rerun; wider certification open |
 | F11 | P4 cascade input aliased the outer memory object before copying its source user | Separate nested input; prove the receipt identifies the preceding recycler | Local correction; source-user/receiver regression passed |
 
@@ -66,10 +74,10 @@ guardian permissions and storage layouts before any upgrade proposal.
 - [x] Validate artifact ABI changes, runtime size and old-to-new storage layouts; paired upgrade required.
 - [x] Verify escrow/controller executable code, immutable self addresses and protocol bindings; record metadata-only differences.
 - [ ] Reconcile legacy reserves, counter gaps, duplicate branches and descendants.
-- [x] Complete the bounded Sofia/Sabina historical repair and subsequent-activation fork rehearsal (not the separate duplicate-branch repair).
+- [x] Complete the bounded structural-only Sofia/Sabina repair and subsequent-activation direct-call fork rehearsal (not the separate duplicate-branch repair).
 - [ ] Verify source and derived event accounting in backend/UI projections.
 - [ ] Run independent adversarial certification described below.
-- [ ] Review exact mainnet governance payload, funding and rollback boundaries.
+- [ ] Review exact mainnet governance payload, gas and rollback boundaries; no compensation funding.
 - [ ] Obtain authorization for the exact live upgrade/repair package.
 - [ ] Execute authorized package and verify chain/API/UI at one pinned checkpoint.
 
@@ -102,13 +110,58 @@ reproducible sequence. Do not derive the expected answer from contract output.
    137 and local execution chain 31337; label synthetic balances explicitly.
 10. Use the saved canonical test-wallet identities only in a controlled local
     fork/test environment. Their possession does not authorize mainnet signing.
-11. Verify historical repair rejection for changed state, insufficient funding,
+11. Verify historical repair rejection for changed state, invalid zero-amount ancestry,
     replayed execution, wrong chain/proxy, unauthorized executor and collisions.
 12. Validate actual desktop/mobile orbit visuals against chain snapshots and API
     responses, including history, earnings, copyable identities and reserve state.
 
 Certification requires recorded outcomes for every gate. Existing green tests,
 a successful compile or a local repair simulation are not production approval.
+
+## Structural-only revision progress
+
+The revised local repair succeeded without any transfer or earnings credit;
+all three subsequent-activation probes passed. Seven revised plan-builder tests
+passed. The earlier 195-test full contract suite belongs to the unchanged core
+candidate; it is not being relabeled as a new live certification.
+
+The backend now has a local repair-event adapter and level/position/cycle
+projection integration. Its full suite passed **73 tests**, including eight
+repair-specific cases. The offline emitted-log integration validator passed all
+**149 reviewed slots**. Hosted API/browser verification remains a release gate.
+No polling was enabled.
+
+A bounded read-only reserve inventory at block 97175651 found zero reserve
+amounts and zero pending fills for all ten reviewed P12/P39 wallet-level pairs.
+See `evidence/id1-repair-reserves-2026-11-12.json`. This closes the question of
+existing reserves in those reviewed pairs, not global reserve solvency or the
+unresolved duplicate-branch transition.
+
+The first multisig-wrapper rehearsal encountered a source-RPC DNS failure during
+local proposal storage. Its failed evidence is retained separately. This is
+not a contract success, a live submitted proposal, or a reason to bypass the
+multisig test. One bounded retry was stopped during proposal storage. The
+102,884-byte payload's real wrapper execution/gas remains unverified. Evidence:
+`id1-structural-repair-multisig-dns-failure-2026-11-12.json` and
+`id1-structural-repair-multisig-incomplete-2026-11-12.json`.
+The successful direct-call/projection evidence is separate and explicitly does
+not certify governance execution.
+
+## Remaining release work
+
+1. Resolve the two older duplicate ID1 level-6 occurrences, including activation
+   1107's attached descendant; do not delete its parent alone. Finalize the
+   intended branch/counter transition without compensation or changed receipts.
+2. Complete the independent adversarial matrix for that final transition and
+   verify account/orbit displays against chain and backend, including the repair
+   audit trail. Existing suites are evidence, not a substitute for missing cases.
+3. Complete the exact governance-wrapper rehearsal, then refresh guarded mainnet
+   state and review the paired manager/router upgrade and historical repair.
+4. Submit only the authorized exact package, have the founders approve/execute,
+   and reconcile chain/API/UI before declaring production repaired.
+
+No funding request for 512 USDT belongs in any of these steps. Neither hosted
+environment nor database was changed, and staging services remain suspended.
 
 ## Regression evidence and integration boundary
 
@@ -208,15 +261,19 @@ supply conservation, or a complete backend accounting audit from ABI tests.
 ## Immediate continuation
 
 1. Reconcile legacy reserves/counter gaps and descendants of duplicate entries.
-2. Use the completed bounded rehearsal as evidence, not as an approved live
-   manifest. Review the actual governance-wrapper gas cost and external funding;
-   refresh the guarded snapshot only when preparing the live package. No
-   historical move or 512-USDT adjustment has been executed on mainnet.
+2. Use the revised structural-only rehearsal as evidence, not as an approved live
+   manifest. Review the actual governance-wrapper gas cost; refresh the guarded
+   snapshot only when preparing the live package. There is no compensation in
+   the candidate, and no historical move or adjustment was executed on mainnet.
 3. Complete the adversarial certification and backend/UI projection checks,
-   then review a separately authorized, funded governance package. Production
+   then review a separately authorized structural governance package. Production
    and the two suspended staging services remain unchanged in this pass.
 
 ## Historical repair diagnostic, November 12
+
+This section preserves the OLD, superseded compensated-draft test history. Its
+funding-related assertions are not requirements of the revised structural-only
+repair. See the current decision above and the current rehearsal document.
 
 The first three negative guards passed on the local fork: unauthorized executor,
 altered plan and direct migrator bypass. The unfunded-payment guard did NOT pass:

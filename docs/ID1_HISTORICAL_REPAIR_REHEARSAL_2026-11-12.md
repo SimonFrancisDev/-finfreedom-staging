@@ -1,5 +1,13 @@
 # Sofia/Sabina historical repair rehearsal
 
+## Current scope: structural only
+
+The user rejected the proposed 512-USDT adjustment. It was an unapproved scope
+expansion, not an instruction from Lady Sabina. The revised candidate removes
+the transfer, funding requirement and earnings credit entirely. No such payment
+was executed on mainnet. Older compensated-fork evidence is retained only as a
+superseded test record, not as the current production proposal.
+
 ## Boundary
 
 This is preparation and local validation, not an executed production repair.
@@ -31,7 +39,7 @@ Wallets:
 - ID1: `0xCE38722a72c9099D9237897E18B0cfb6D51c4470`
 - Sofia: `0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528`
 - Sabina: `0xb673c9D14Da920f187d25Cc793f1955a43284622`
-- Level-8 parent/adjustment recipient: `0xE8b1ac47231651cCc38326a59645a8D976D0Eabf`
+- Level-8 structural parent: `0xE8b1ac47231651cCc38326a59645a8D976D0Eabf`
 
 Permanent sponsors are NOT rewritten. Sofia's permanent sponsor remains Sabina.
 Only the per-level placement parent changes: Sofia 8/9 to ID1, Sabina 8 to the
@@ -39,17 +47,19 @@ slot-1 parent; Sabina 9 remains under ID1.
 
 ## Money and historical truth
 
-The proposed correction pays **512 USDT** to the level-8 parent, representing
-the 40% component of Sabina's 1,280-USDT activation under the clarified rule.
-The live funding source has not been selected or approved. The rehearsal funds
-a disposable local signer with synthetic USDT and labels this explicitly.
+The structural repair pays **zero USDT**. The executor has no token address,
+allowance, funding-sponsor or transfer function. The previously proposed 512
+USDT was the counterfactual 40% component of Sabina's 1,280-USDT activation;
+that calculation is not authorization to pay it or to increase anyone's earnings.
 
 - No second charge to Sofia/Sabina, no NFT/OPS withdrawal, no founder clawback.
 - No FGT/FGTr mint, no new activation, no registration or referral changes.
-- The parent's level-8 cumulative earnings increase by the funded adjustment.
+- Every affected orbit's cumulative earnings remain unchanged.
+- The parent's restored Sabina mirror has zero amount and zero payment-rule
+  amounts. It preserves the original activation ID and timestamp, and emits
+  `HistoricalAncestryRestored`. It is a structural link, not a payment receipt.
 - ID1's actual historical cumulative earnings are not reduced: those original
-  transfers happened. The adjustment is separately journaled, not disguised as
-  a reversal or an original activation payment.
+  transfers happened. The repair does not reverse or pretend to repeat them.
 - Existing payment snapshots remain evidence of their original payouts, even
   when a position moves. They must not be presented as new transfers.
 - Original receipts and completed-cycle archives are unchanged. The open-cycle
@@ -68,10 +78,11 @@ current slots and current-cycle archive. It aborts when any fingerprint changes.
 Registration edits separately require the reviewed sponsor, old placement parent,
 active level and eligible replacement parent. All repair targets must be paused.
 
-One governance-only executor applies all four target plans and transfers the
-512 USDT in a single transaction. An unfunded transfer, changed state, changed
-manifest or other failed step reverts all changes. It checks the exact sender
-debit and beneficiary credit. It cannot silently complete an orbit during repair.
+One governance-only executor applies all four target plans in a single
+transaction, without token operations. Changed state, changed manifest or any
+failed step reverts all structural changes. It cannot silently complete an orbit
+during repair. The rehearsal asserts identical balances, token supplies and
+earnings before/after, and rejects any Transfer or Approval log in the repair.
 
 Actual mainnet implementation bytecode must match the saved compiler baseline.
 Old-to-temporary and temporary-to-corrected storage layouts must pass comparison.
@@ -168,7 +179,11 @@ Decoded mainnet evidence is saved as
 The second receipt and transfer reconciliation are in
 `evidence/id1-level6-activation1036-receipt-2026-11-12.json`.
 
-## Validation status
+## Superseded compensated-draft validation
+
+The following records what the OLD draft tested. The revised payment-free
+candidate is covered separately below. Do not use the old funding test or gas
+result as certification of the new candidate.
 
 - Six plan-builder tests passed: exact position changes, untouched neighboring
   slots, preserved historical payouts, destination collision rejection, exact
@@ -214,8 +229,8 @@ node node_modules/hardhat/internal/cli/cli.js compile
 node node_modules/hardhat/internal/cli/cli.js run --network hardhat --no-compile scripts/rehearseId1HistoricalRepair.js
 ```
 
-The generated checkpoint is `tmp/id1-repair-prestate.json`; detailed rehearsal
-output is `tmp/id1-historical-repair-rehearsal.json`, relative to the workspace.
+The generated checkpoint is `tmp/id1-repair-prestate.json`; current rehearsal
+output is `tmp/id1-structural-repair-rehearsal.json`, relative to the workspace.
 The latter records explicit pass/fail status, plan hashes, original states,
 synthetic funding, local logs and local future-activation probes.
 The completed result is preserved in
@@ -223,12 +238,38 @@ The completed result is preserved in
 staging source repository, including SHA-256 hashes of the executed candidate
 source, rehearsal script and plan builder.
 
+## Revised structural-only validation
+
+- Seven revised plan tests passed, including absent/mismatched activation
+  evidence rejection and a zero-amount ancestry link.
+- Revised Solidity compilation passed.
+- A direct-call local fork rehearsal passed: zero transfers, unchanged balances,
+  earnings, token supplies, sponsors and activation state; corrected positions
+  and archive consistency; all three subsequent-activation probes passed.
+- Direct-call repair gas used: 25,382,253. The subsequent multisig-wrapper
+  rehearsal is recorded separately; a direct call is not its substitute.
+- Synthetic funds are used ONLY for local subsequent activations. Their ordinary
+  512/640-USDT payouts are not compensation and are not part of the repair.
+- Saved current evidence:
+  `evidence/id1-structural-repair-direct-rehearsal-2026-11-12.json`.
+- Backend reconstruction of the emitted journal passed for all 149 manifest
+  slots. There were 44 journaled slot updates (including normalized counters),
+  not 44 wallet relocations. No database was written by this offline validator.
+- The real multisig path remains **unverified**. The first run failed on RPC
+  DNS resolution while storing the local proposal; one bounded retry was
+  stopped during proposal storage. The payload is 102,884 bytes. Neither run
+  reached confirmed wrapper execution, so no wrapper gas success is claimed.
+  Both records are retained as `id1-structural-repair-multisig-*-2026-11-12.json`.
+- Set `ID1_REHEARSAL_GOVERNANCE=direct` for the bounded structural/projection
+  test. Unset it for the multisig path. These are distinct certification gates;
+  direct mode must never be used as evidence of a multisig pass.
+
 ## Before production
 
 1. Review the completed bounded rehearsal and finish legacy reserve/cycle
    reconciliation and wider adversarial certification. Rehearse the exact live
    governance wrapper against current gas limits; the current batch is costly.
-2. Decide the external compensation funding source and approve the exact ledger.
+2. Confirm the reviewed manifest contains no compensation or earnings credit.
 3. Resolve transition handling for other legacy ID1 positions, without silently
    expanding this case-specific correction into a system-wide rewrite.
 4. Refresh state and construct the exact mainnet-bound governance package. Never

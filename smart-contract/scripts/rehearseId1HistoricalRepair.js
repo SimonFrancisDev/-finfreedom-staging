@@ -9,12 +9,14 @@ const { plain, buildOrbitEdit, encodeOrbitPlan, encodeParentPlan } = require("./
 const { ethers: E, network: N, artifacts } = hre;
 const IMPL = "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc";
 const MIGRATION = "contracts/migration/Id1HistoricalRepair.sol";
-const ADJUSTMENT = 512000000n;
 const ROOT = path.resolve(__dirname, "../../..");
 const json = (x) => JSON.stringify(x, (_, v) => typeof v === "bigint" ? v.toString() : v, 2);
 const same = (a, b) => assert.equal(a.toLowerCase(), b.toLowerCase());
 const evidence = { sourceChainId: 137, executionChainId: 31337, liveTransactionsSent: 0, status: "in-progress", phases: [], checks: [] };
-const output = path.join(ROOT, "tmp/id1-historical-repair-rehearsal.json");
+const directOnly = process.env.ID1_REHEARSAL_GOVERNANCE === "direct";
+const output = path.join(ROOT, directOnly
+  ? "tmp/id1-structural-repair-direct-rehearsal.json" : "tmp/id1-structural-repair-rehearsal.json");
+evidence.governanceMode = directOnly ? "direct-local-call-not-governance-certification" : "multisig";
 function record(phase, data = {}) {
   evidence.phases.push({ phase, ...data });
   fs.writeFileSync(output, json(evidence) + "\n");
@@ -68,7 +70,7 @@ async function main() {
   same(governanceAddress, snapshot.managerOwner);
   same(await registration.owner(), governanceAddress);
   const governance = await impersonate(governanceAddress);
-  const [sponsor, stranger, child] = await E.getSigners();
+  const [deployer, stranger, child] = await E.getSigners();
   const definitions = [
     ["p4", "P4Orbit", "Id1P4RepairMigrator", [[A.id1, 1], [A.id1, 7]]],
     ["p12", "P12Orbit", "Id1MultiRingRepairMigrator", [[A.id1, 8], [A.parent, 8]]],
@@ -114,7 +116,8 @@ async function main() {
         }
       }
       await setImplementation(A[key], originalImplementation);
-      const edits = entry.before.map((r) => buildOrbitEdit(r.wallet, r.level, r.hash, r.slots, A));
+      const context = { sabinaLevel8Source: entry.before.find(r => r.wallet === A.id1 && r.level === 8)?.slots[2] };
+      const edits = entry.before.map((r) => buildOrbitEdit(r.wallet, r.level, r.hash, r.slots, A, context));
       plans.push(encodeOrbitPlan(edits));
       entry.edits = edits;
     } else if (key === "registration") plans.push(encodeParentPlan(A));
@@ -123,10 +126,10 @@ async function main() {
     record("storage-and-bytecode-verified", { key, originalImplementation, affectedOrbits: keys.length });
   }
   const hashes = plans.map(E.keccak256);
-  const executor = await deploy("Id1HistoricalRepairExecutor", [governanceAddress, token.target, sponsor.address,
-    A.parent, records.slice(0, 4).map((r) => r.proxy), hashes, 31337]);
-  evidence.manifest = { funding: "Synthetic USDT on local fork only; live funding source NOT approved",
-    sponsor: sponsor.address, beneficiary: A.parent, amountRaw: ADJUSTMENT, targets: records.slice(0, 4).map((r) => r.proxy),
+  const executor = await deploy("Id1HistoricalRepairExecutor", [governanceAddress,
+    records.slice(0, 4).map((r) => r.proxy), hashes, 31337]);
+  evidence.manifest = { funding: "None: structural repair has no transfer or earnings-credit capability",
+    repairTransferRaw: 0n, targets: records.slice(0, 4).map((r) => r.proxy),
     hashes, plans, edits: records.filter((r) => r.edits).map((r) => ({ key: r.key, before: r.before, edits: r.edits })) };
 
   async function upgrade(entry, implementation) {
@@ -152,13 +155,14 @@ async function main() {
   const founders = (await manager.getFounderWallets())[0];
   const participants = [...new Set([A.id1, A.sofia, A.sabina, A.parent, ...founders])];
   const balancesToWatch = [...new Set([...participants, A.manager, A.registration, await manager.escrow(),
-    await manager.nftPool(), await manager.operationsWallet(), sponsor.address, executor.target])];
+    await manager.nftPool(), await manager.operationsWallet(), deployer.address, executor.target])];
   const controller = await E.getContractAt("FreedomTokenController", await manager.tokenController());
   const fgt = await E.getContractAt("IERC20", await controller.fgt());
   const fgtr = await E.getContractAt("IERC20", await controller.fgtr());
   async function invariants() {
     const result = { registeredCount: await registration.registeredCount(), nextActivation: await manager.nextActivationId(),
-      fgtSupply: await fgt.totalSupply(), fgtrSupply: await fgtr.totalSupply(), participants: [], usdt: [] };
+      usdtSupply: await token.totalSupply(), fgtSupply: await fgt.totalSupply(), fgtrSupply: await fgtr.totalSupply(),
+      participants: [], usdt: [], earnings: [] };
     for (const wallet of participants) {
       const active = [];
       for (let level = 1; level <= 10; level += 1) active.push(await registration.isLevelActivated(wallet, level));
@@ -166,6 +170,8 @@ async function main() {
         fgt: await fgt.balanceOf(wallet), fgtr: await fgtr.balanceOf(wallet) });
     }
     for (const wallet of balancesToWatch) result.usdt.push([wallet, await token.balanceOf(wallet)]);
+    for (const row of summaries) result.earnings.push([row.key, row.wallet, row.level,
+      (await engines[row.key].userOrbits(row.wallet, row.level)).totalEarned]);
     return result;
   }
   const before = await invariants();
@@ -195,20 +201,6 @@ async function main() {
       data: data || null, code: caught.code || null };
     if (!decoded || !reason.test(diagnostic.reason)) {
       record("unexpected-revert", diagnostic);
-      if (label === "unfunded compensation rolls back every repair") {
-        const trace = await N.provider.send("debug_traceCall", [{
-          from: governanceAddress, to: executor.target,
-          data: executor.interface.encodeFunctionData("execute", [plans]), gas: E.toBeHex(30000000),
-        }, "latest", { disableMemory: true, disableStorage: true, disableStack: true }]);
-        record("repair-failure-trace", { failed: trace.failed, gas: trace.gas,
-          returnValue: trace.returnValue,
-          errors: trace.structLogs.filter(step => step.error).map(({ pc, op, depth, gas, error }) => ({ pc, op, depth, gas, error })),
-          frameEnds: trace.structLogs.flatMap((step, index, steps) =>
-            index + 1 === steps.length || steps[index + 1].depth < step.depth
-              ? [{ index, tail: steps.slice(Math.max(0, index - 5), index + 1)
-                .map(({ pc, op, depth, gas, gasCost }) => ({ pc, op, depth, gas, gasCost })) }] : []),
-          lastSteps: trace.structLogs.slice(-12).map(({ pc, op, depth, gas, gasCost }) => ({ pc, op, depth, gas, gasCost })) });
-      }
       assert.fail(`${label}: expected ${reason}, received ${diagnostic.reason}; raw=${data || "none"}`);
     }
     return diagnostic;
@@ -232,7 +224,6 @@ async function main() {
     await rejected(label, /RepairUnauthorized/, () => executor.connect(governance).execute(plans));
     await upgrade(guarded, guarded.bound.target);
   }
-  await rejected("unfunded compensation rolls back every repair", /allowance|transfer amount|SafeERC20FailedOperation/i, () => executor.connect(governance).execute(plans));
   await (await registration.connect(governance).unpause()).wait();
   await rejected("unpaused registration rolls back earlier orbit repairs", /ExpectedPause/, () => executor.connect(governance).execute(plans));
   await (await registration.connect(governance).pause()).wait();
@@ -249,29 +240,66 @@ async function main() {
   await assertNotRepaired();
   evidence.checks.push({ label: "stale orbit prestate rejected", passed: true });
   assert.deepEqual(await invariants(), before, "Failed attempts must not change money, tokens or activations");
-  evidence.syntheticFundingRaw = await fundLocalReplayBalance(token, sponsor.address, ADJUSTMENT);
-  await (await token.connect(sponsor).approve(executor.target, ADJUSTMENT)).wait();
-  const fundedBefore = await invariants();
-  const estimate = await executor.connect(governance).execute.estimateGas(plans);
+  assert.equal(await token.balanceOf(executor.target), 0n);
+  assert.equal(await token.allowance(deployer.address, executor.target), 0n);
+  let receipt;
+  if (directOnly) {
+    const estimate = await executor.connect(governance).execute.estimateGas(plans);
+    const gasLimit = (estimate * 110n + 99n) / 100n;
+    assert(gasLimit < (await E.provider.getBlock("latest")).gasLimit);
+    receipt = await (await executor.connect(governance).execute(plans, { gasLimit })).wait();
+    evidence.governance = { localWrapperPassed: false, liveExecution: false,
+      scope: "Direct local call only; multisig certification remains separate" };
+  } else {
+  const multisig = await E.getContractAt("SimpleMultiSig", governanceAddress);
+  const owners = await multisig.getOwners();
+  const required = await multisig.requiredConfirmations();
+  assert(required > 0n && required <= BigInt(owners.length));
+  const proposer = await impersonate(owners[0]);
+  const proposalId = await multisig.getTransactionCount();
+  const callData = executor.interface.encodeFunctionData("execute", [plans]);
+  record("local-multisig-proposal-started", { proposalId, calldataBytes: (callData.length - 2) / 2 });
+  await (await multisig.connect(proposer).submitTransaction(executor.target, 0n, callData)).wait();
+  record("local-multisig-proposal-stored", { proposalId });
+  await assertExpectedRevert("multisig insufficient approvals", /Not enough confirmations/,
+    () => multisig.connect(proposer).executeTransaction.staticCall(proposalId));
+  for (const owner of owners.slice(0, Number(required))) {
+    await (await multisig.connect(await impersonate(owner)).approveTransaction(proposalId)).wait();
+  }
+  const proposal = await multisig.transactions(proposalId);
+  same(proposal.to, executor.target);
+  assert.equal(proposal.value, 0n);
+  assert.equal(proposal.data, callData);
+  const now = BigInt((await E.provider.getBlock("latest")).timestamp);
+  if (proposal.executeAfter > now) {
+    await assertExpectedRevert("multisig timelock", /Timelock not expired/,
+      () => multisig.connect(proposer).executeTransaction.staticCall(proposalId));
+    await N.provider.send("evm_setNextBlockTimestamp", [Number(proposal.executeAfter)]);
+    await N.provider.send("evm_mine");
+  }
+  const estimate = await multisig.connect(proposer).executeTransaction.estimateGas(proposalId);
   const gasLimit = (estimate * 110n + 99n) / 100n;
   const blockGasLimit = (await E.provider.getBlock("latest")).gasLimit;
   record("repair-gas-estimated", { estimate, gasLimit, blockGasLimit,
     exceedsInitialConservativeBudget: gasLimit > 25000000n,
-    liveGovernanceGasValidated: false });
+    executionPath: "Pinned mainnet multisig on local fork; no live proposal" });
   assert(gasLimit <= 30000000n && gasLimit < blockGasLimit, "Atomic repair exceeds the local block gas budget");
-  const receipt = await (await executor.connect(governance).execute(plans, { gasLimit })).wait();
+  receipt = await (await multisig.connect(proposer).executeTransaction(proposalId, { gasLimit })).wait();
+  assert.equal((await multisig.transactions(proposalId)).executed, true);
+  evidence.governance = { address: governanceAddress, owners, requiredConfirmations: required,
+    timelockDelay: await multisig.timelockDelay(), localProposalId: proposalId,
+    runtimeHash: E.keccak256(await E.provider.getCode(governanceAddress)),
+    gasEstimate: estimate, gasLimit, blockGasLimit, localWrapperPassed: true, liveExecution: false };
+  }
   assert.equal(receipt.status, 1);
   evidence.repairTransaction = { hash: receipt.hash, gasUsed: receipt.gasUsed, logs: receipt.logs.map((l) => ({ address: l.address, topics: l.topics, data: l.data })) };
+  const tokenActions = [E.id("Transfer(address,address,uint256)"), E.id("Approval(address,address,uint256)")];
+  assert(receipt.logs.every(log => !tokenActions.includes(log.topics[0])), "Structural repair must not emit token transfers or approvals");
   assert.equal(await executor.executed(), true);
   await assertExpectedRevert("completed repair replay", /Already executed/,
     () => executor.connect(governance).execute.staticCall(plans));
   const after = await invariants();
-  assert.deepEqual({ ...after, usdt: [] }, { ...fundedBefore, usdt: [] });
-  for (let i = 0; i < after.usdt.length; i += 1) {
-    const [wallet, balance] = after.usdt[i];
-    const expected = wallet.toLowerCase() === A.parent.toLowerCase() ? ADJUSTMENT : wallet === sponsor.address ? -ADJUSTMENT : 0n;
-    assert.equal(balance - fundedBefore.usdt[i][1], expected, `Unexpected USDT change at ${wallet}`);
-  }
+  assert.deepEqual(after, before, "Structural repair must preserve balances, earnings, supplies, sponsors and activations");
   for (const entry of records.filter((r) => r.repair)) {
     assert.equal(await entry.repair.repairExecuted(), true);
     for (const archived of entry.completed || []) {
@@ -281,7 +309,6 @@ async function main() {
       const [, slots] = await entry.repair.repairState(edit[0], edit[1]);
       const actual = plain(slots);
       const expected = plain(edit[3]);
-      if (edit[4]) expected[0][0][2] = BigInt((await E.provider.getBlock(receipt.blockNumber)).timestamp);
       assert.deepEqual(actual, expected);
       const summary = snapshot.orbits.find(row => row.wallet.toLowerCase() === edit[0].toLowerCase() && row.level === edit[1]);
       const cycle = BigInt(summary.state.totalCycles) + 1n;
@@ -329,14 +356,15 @@ async function main() {
   same(await registration.currentMatrixParentOf(A.sofia, 9), A.id1);
   same(await registration.currentMatrixParentOf(A.sabina, 8), A.parent);
   same(await registration.currentMatrixParentOf(A.sabina, 9), A.id1);
-  evidence.checks.push({ label: "single funded adjustment, immutable sponsors/activations/tokens/completed cycles, exact positions, no replay", passed: true });
-  record("historical-repair-passed", { gasUsed: receipt.gasUsed, amountRaw: ADJUSTMENT });
+  evidence.checks.push({ label: "zero transfers and earnings credits; immutable sponsors/activations/tokens/completed cycles; exact positions; no replay", passed: true });
+  record("historical-repair-passed", { gasUsed: receipt.gasUsed, repairTransferRaw: 0n });
 
   const previousRouter = await manager.settlementRouter();
   for (const entry of records) {
     const implementation = entry.key === "registration" ? entry.originalImplementation : (await deploy(entry.name)).target;
     await upgrade(entry, implementation);
     entry.correctedImplementation = implementation;
+    record("local-corrected-implementation-installed", { key: entry.key, implementation });
   }
   for (const entry of records) assert.equal(await engines[entry.key].paused(), true);
   const router = await deploy("LevelSettlementRouter", [A.manager, token.target]);
@@ -357,10 +385,9 @@ async function main() {
     // getUserOrbit: currentPosition, escrowBalance, autoUpgradeCompleted,
     // three line counts, totalCycles, totalEarned.
     for (const index of [1, 2, 6]) assert.equal(afterSummary[index], beforeSummary[index]);
-    const funded = row.wallet.toLowerCase() === A.parent.toLowerCase() && row.level === 8;
-    assert.equal(afterSummary[7], beforeSummary[7] + (funded ? ADJUSTMENT : 0n));
+    assert.equal(afterSummary[7], beforeSummary[7]);
   }
-  evidence.before = fundedBefore;
+  evidence.before = before;
   evidence.after = after;
   evidence.probes = [];
   for (const [upline, level, rootSlot, recipient, recipientAmount] of [
@@ -368,6 +395,7 @@ async function main() {
     [A.sabina, 8, 0, A.parent, 640000000n],
     [A.sofia, 9, 5, A.sofia, 512000000n],
   ]) {
+    record("post-repair-activation-started", { upline, level });
     const checkpoint = await N.provider.send("evm_snapshot");
     const synthetic = await fundLocalReplayBalance(token, child.address, E.parseUnits("15000", 6));
     await (await token.connect(child).approve(A.manager, E.MaxUint256)).wait();
@@ -392,7 +420,7 @@ async function main() {
   }
   evidence.status = "passed";
   evidence.liveExecutionAuthorized = false;
-  evidence.remaining = ["Approve external 512-USDT funding source and exact governance manifest",
+  evidence.remaining = ["Review the exact mainnet-bound governance manifest and current gas budget",
     "Refresh guarded prestate before any mainnet proposal", "Integrate repair events into backend projections before live execution",
     "Review unrelated legacy duplicated ID1 mirrors separately; they are preserved by this repair"];
   record("rehearsal-complete");

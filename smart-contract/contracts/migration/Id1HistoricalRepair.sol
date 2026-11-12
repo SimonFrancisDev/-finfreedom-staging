@@ -3,7 +3,6 @@ pragma solidity ^0.8.24;
 
 import "./OrbitWalletReplacementMigrators.sol";
 import "../RegistrationFixed.sol";
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 interface IId1RepairTarget {
     function repair(bytes calldata plan) external;
@@ -11,7 +10,6 @@ interface IId1RepairTarget {
 
 interface IId1RepairExecutor {
     function governance() external view returns (address);
-    function beneficiary() external view returns (address);
 }
 
 abstract contract Id1RepairGuard {
@@ -71,13 +69,15 @@ abstract contract Id1OrbitRepairBase is OrbitWalletReplacementStorage, Id1Repair
         uint8 level;
         bytes32 beforeHash;
         SlotState[] slots;
-        uint256 fundedEarningsIncrease;
+        uint8 ancestryOnlyPosition;
     }
 
     event HistoricalOrbitSlotRepaired(address indexed account, uint8 indexed level, uint256 indexed cycle,
         uint8 position, bytes previousState, bytes correctedState, bytes previousArchive);
     event HistoricalOrbitRepaired(address indexed account, uint8 indexed level, bytes32 indexed planHash,
-        bytes32 beforeHash, uint256 fundedEarningsIncrease);
+        bytes32 beforeHash);
+    event HistoricalAncestryRestored(address indexed account, uint8 indexed level, address indexed user,
+        uint8 position, uint256 activationId);
 
     constructor(address proxy, address executor, bytes32 planHash, uint256 chain)
         Id1RepairGuard(proxy, executor, planHash, chain) { _disableInitializers(); }
@@ -129,17 +129,13 @@ abstract contract Id1OrbitRepairBase is OrbitWalletReplacementStorage, Id1Repair
         _beginRepair(plan, owner());
         OrbitEdit[] memory edits = abi.decode(plan, (OrbitEdit[]));
         if (edits.length == 0 || edits.length > 10) revert RepairInvalidState();
-        uint256 fundedCredit;
         for (uint256 row; row < edits.length; ++row) {
             OrbitEdit memory edit = edits[row];
-            fundedCredit += edit.fundedEarningsIncrease;
-            if (fundedCredit > 512 * 10 ** 6) revert RepairInvalidState();
             // Separate read frames bound temporary hashing memory across large P39 batches.
             bytes32 beforeHash = this.repairStateHash(edit.account, edit.level);
             if (beforeHash != edit.beforeHash) revert RepairStateChanged();
             _applyEdit(edit);
-            emit HistoricalOrbitRepaired(edit.account, edit.level, repairPlanHash,
-                beforeHash, edit.fundedEarningsIncrease);
+            emit HistoricalOrbitRepaired(edit.account, edit.level, repairPlanHash, beforeHash);
         }
     }
 
@@ -148,14 +144,25 @@ abstract contract Id1OrbitRepairBase is OrbitWalletReplacementStorage, Id1Repair
         uint8 capacity = levelConfig[edit.level].totalPositions;
         uint256 cycle = orbit.totalCycles + 1;
         if (edit.slots.length != capacity || historicalCycleStored[edit.account][edit.level][cycle]) revert RepairInvalidState();
-        if (edit.fundedEarningsIncrease != 0 && (edit.level != 8 || edit.fundedEarningsIncrease != 512 * 10 ** 6 ||
-            edit.account != IId1RepairExecutor(repairExecutor).beneficiary())) revert RepairInvalidState();
+        if (edit.ancestryOnlyPosition > capacity) revert RepairInvalidState();
         uint8[3] memory counts;
         uint256[3] memory seen;
         uint8 firstEmpty;
         uint256 archiveMask;
         for (uint8 i = 1; i <= capacity; ++i) {
             SlotState memory s = edit.slots[i - 1];
+            bool ancestryOnly = edit.ancestryOnlyPosition == i;
+            if (ancestryOnly) {
+                // Restore ancestry, not a payment receipt or an earnings credit.
+                if (edit.level != 8 || i != 1 || orbit.positions[i].user != address(0) ||
+                    s.position.user == address(0) || s.position.amount != 0 || s.activationId == 0 ||
+                    !s.isMirror || s.arrival != 1 || s.rule.line != 1 || s.rule.linePaymentNumber != 1 ||
+                    s.rule.autoUpgradeEnabled || s.rule.isFounderNoReferrerPath ||
+                    s.rule.toOwner != 0 || s.rule.toSpillover1 != 0 || s.rule.toSpillover2 != 0 ||
+                    s.rule.toEscrow != 0 || s.rule.toRecycle != 0 ||
+                    s.rule.spillover1Recipient != address(0) || s.rule.spillover2Recipient != address(0)) revert RepairInvalidState();
+                emit HistoricalAncestryRestored(edit.account, edit.level, s.position.user, i, s.activationId);
+            }
             if (s.position.user == address(0)) {
                 if (keccak256(abi.encode(s)) != keccak256(abi.encode(SlotState(
                     IOrbitState.Position(address(0), 0, 0, address(0), false), address(0), 0, 0, false,
@@ -164,11 +171,8 @@ abstract contract Id1OrbitRepairBase is OrbitWalletReplacementStorage, Id1Repair
                 if (firstEmpty == 0) firstEmpty = i;
             } else {
                 if (!s.position.isActive || !s.rule.exists || s.arrival == 0 || s.arrival > capacity ||
-                    (s.position.amount == 0 && !founderRepActivated[s.position.user])) revert RepairInvalidState();
-                if (s.position.timestamp == 0) {
-                    if (edit.fundedEarningsIncrease == 0 || !s.isMirror) revert RepairInvalidState();
-                    s.position.timestamp = block.timestamp;
-                }
+                    s.position.timestamp == 0 ||
+                    (s.position.amount == 0 && !ancestryOnly && !founderRepActivated[s.position.user])) revert RepairInvalidState();
                 uint8 line = capacity == 4 || i <= 3 ? 0 : i <= 12 ? 1 : 2;
                 uint256 bit = uint256(1) << (s.arrival - 1);
                 if ((seen[line] & bit) != 0) revert RepairInvalidState();
@@ -214,7 +218,6 @@ abstract contract Id1OrbitRepairBase is OrbitWalletReplacementStorage, Id1Repair
         orbit.positionsInLine2 = counts[1];
         orbit.positionsInLine3 = counts[2];
         if (archiveMask != 0) orbit.isActive = true;
-        orbit.totalEarned += edit.fundedEarningsIncrease;
         historicalCycleArchiveMask[edit.account][edit.level][cycle] = archiveMask;
     }
 
@@ -262,28 +265,19 @@ contract Id1RegistrationRepairMigrator is RegistrationFixed, Id1RepairGuard {
     }
 }
 
-/** One governance call applies all manifest-bound edits and the funded payment atomically. */
+/** One governance call applies the manifest-bound structural edits atomically. No token operations. */
 contract Id1HistoricalRepairExecutor {
-    using SafeERC20 for IERC20;
     address public immutable governance;
-    IERC20 public immutable token;
-    address public immutable fundingSponsor;
-    address public immutable beneficiary;
     uint256 public immutable executionChain;
-    uint256 public constant ADJUSTMENT = 512 * 10 ** 6;
     address[4] public targets;
     bytes32[4] public planHashes;
     bool public executed;
 
-    event HistoricalPaymentAdjusted(address indexed fundingSponsor, address indexed beneficiary,
-        uint256 amount, bytes32 indexed manifestHash);
+    event HistoricalRepairExecuted(bytes32 indexed manifestHash);
 
-    constructor(address owner_, address token_, address sponsor_, address beneficiary_,
-        address[4] memory targets_, bytes32[4] memory hashes_, uint256 chain_) {
-        require(owner_ != address(0) && token_.code.length > 0 && sponsor_ != address(0) &&
-            beneficiary_ != address(0) && sponsor_ != beneficiary_ && chain_ != 0, "Invalid configuration");
-        governance = owner_; token = IERC20(token_); fundingSponsor = sponsor_;
-        beneficiary = beneficiary_; targets = targets_; planHashes = hashes_; executionChain = chain_;
+    constructor(address owner_, address[4] memory targets_, bytes32[4] memory hashes_, uint256 chain_) {
+        require(owner_ != address(0) && chain_ != 0, "Invalid configuration");
+        governance = owner_; targets = targets_; planHashes = hashes_; executionChain = chain_;
         for (uint256 i; i < 4; ++i) {
             require(targets_[i].code.length > 0 && hashes_[i] != bytes32(0), "Invalid target");
             for (uint256 j; j < i; ++j) require(targets_[i] != targets_[j], "Duplicate target");
@@ -294,15 +288,10 @@ contract Id1HistoricalRepairExecutor {
         require(msg.sender == governance && block.chainid == executionChain, "Not authorized");
         require(!executed, "Already executed");
         executed = true;
-        uint256 beneficiaryBefore = token.balanceOf(beneficiary);
-        uint256 sponsorBefore = token.balanceOf(fundingSponsor);
         for (uint256 i; i < 4; ++i) {
             require(keccak256(plans[i]) == planHashes[i], "Plan mismatch");
             IId1RepairTarget(targets[i]).repair(plans[i]);
         }
-        token.safeTransferFrom(fundingSponsor, beneficiary, ADJUSTMENT);
-        require(token.balanceOf(beneficiary) == beneficiaryBefore + ADJUSTMENT &&
-            token.balanceOf(fundingSponsor) + ADJUSTMENT == sponsorBefore, "Payment mismatch");
-        emit HistoricalPaymentAdjusted(fundingSponsor, beneficiary, ADJUSTMENT, keccak256(abi.encode(planHashes)));
+        emit HistoricalRepairExecuted(keccak256(abi.encode(planHashes)));
     }
 }

@@ -27,7 +27,7 @@ test("L8 inserts Sofia, moves Sabina, preserves unrelated slot and historical pa
   assert.deepEqual(plan[3][3][5], original[2][5]);
   assert.deepEqual(plan[3][4][0], original[4][0]);
   assert.deepEqual(plan[3][4][5], original[4][5]);
-  assert.equal(plan[4], 0n, "No retrospective debit from ID1");
+  assert.equal(plan[4], 0, "No ancestry-only slot in ID1's orbit");
   assert.equal(E.AbiCoder.defaultAbiCoder().decode([ORBIT_PLAN], encodeOrbitPlan([plan]))[0][0].slots[2].position.user, A.sofia);
 });
 
@@ -50,13 +50,34 @@ test("Rejects changed destination occupancy and nonempty beneficiary orbit", () 
   assert.throws(() => buildOrbitEdit(A.parent, 8, E.ZeroHash, slots, A), /no longer empty/);
 });
 
-test("Exactly 512 USDT funded credit, explicitly a new mirror, timestamp assigned at execution", () => {
-  const plan = buildOrbitEdit(A.parent, 8, E.ZeroHash, Array.from({ length: 12 }, empty), A);
-  assert.equal(plan[4], 512000000n);
-  assert.equal(plan[3][0][0][1], plan[4]);
-  assert.equal(plan[3][0][0][2], 0n);
-  assert.equal(plan[3][0][4], true);
-  assert.equal(plan[3][0][5][5], plan[4]);
+test("Restored ancestry preserves activation identity without claiming a payment or earnings", () => {
+  const source = filled(A.sabina, 123n);
+  source[3] = 1132n;
+  const original = plain(source);
+  const plan = buildOrbitEdit(A.parent, 8, E.ZeroHash, Array.from({ length: 12 }, empty), A,
+    { sabinaLevel8Source: source });
+  assert.deepEqual(source, original);
+  assert.equal(plan[4], 1);
+  const restored = plan[3][0];
+  assert.deepEqual(restored[0], [A.sabina, 0n, 123n, A.id1, true]);
+  assert.equal(restored[3], 1132n);
+  assert.equal(restored[4], true);
+  assert.deepEqual(restored[5], [true, 1n, 1n, false, false, 0n, 0n, 0n, 0n, 0n, E.ZeroAddress, E.ZeroAddress]);
+  const decoded = E.AbiCoder.defaultAbiCoder().decode([ORBIT_PLAN], encodeOrbitPlan([plan]))[0][0];
+  assert.equal(decoded.ancestryOnlyPosition, 1n);
+  assert.equal(decoded.slots[0].position.amount, 0n);
+  assert.equal(decoded.slots[0].rule.toOwner, 0n);
+});
+
+test("Ancestry repair rejects absent or mismatched historical activation evidence", () => {
+  for (const source of [undefined, filled(A.sofia), filled(A.sabina, 0n)]) {
+    assert.throws(() => buildOrbitEdit(A.parent, 8, E.ZeroHash, Array.from({ length: 12 }, empty), A,
+      { sabinaLevel8Source: source }), /verified original level-8 placement/);
+  }
+  const source = filled(A.sabina);
+  source[3] = 0n;
+  assert.throws(() => buildOrbitEdit(A.parent, 8, E.ZeroHash, Array.from({ length: 12 }, empty), A,
+    { sabinaLevel8Source: source }), /verified original level-8 placement/);
 });
 
 test("Arrival normalization is per ring, deterministic, leaves historical rules unchanged", () => {

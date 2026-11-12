@@ -4,7 +4,7 @@ const { ethers } = require("ethers");
 const POSITION = "tuple(address user,uint256 amount,uint256 timestamp,address referrer,bool isActive)";
 const RULE = "tuple(bool exists,uint8 line,uint8 linePaymentNumber,bool autoUpgradeEnabled,bool isFounderNoReferrerPath,uint256 toOwner,uint256 toSpillover1,uint256 toSpillover2,uint256 toEscrow,uint256 toRecycle,address spillover1Recipient,address spillover2Recipient)";
 const SLOT = `tuple(${POSITION} position,address above,uint8 arrival,uint256 activationId,bool isMirror,${RULE} rule)`;
-const ORBIT_PLAN = `tuple(address account,uint8 level,bytes32 beforeHash,${SLOT}[] slots,uint256 fundedEarningsIncrease)[]`;
+const ORBIT_PLAN = `tuple(address account,uint8 level,bytes32 beforeHash,${SLOT}[] slots,uint8 ancestryOnlyPosition)[]`;
 const PARENT_PLAN = "tuple(address account,uint8 level,address previousParent,address correctedParent,address sponsor)[]";
 const ZERO = ethers.ZeroAddress;
 const plain = (value) => Array.isArray(value) ? value.map(plain) : value;
@@ -25,9 +25,9 @@ function primary(wallet, price, timestamp, id, root) {
     [true, 1n, 0n, false, false, price * 9n / 10n, 0n, 0n, 0n, 0n, ZERO, ZERO]];
 }
 
-function buildOrbitEdit(account, level, beforeHash, originalSlots, addresses) {
+function buildOrbitEdit(account, level, beforeHash, originalSlots, addresses, context = {}) {
   const slots = plain(originalSlots);
-  let increase = 0n;
+  let ancestryOnlyPosition = 0;
   if (same(account, addresses.id1) && level === 8) {
     assert(same(slots[0][0][0], addresses.parent));
     assert(same(slots[2][0][0], addresses.sabina));
@@ -41,13 +41,15 @@ function buildOrbitEdit(account, level, beforeHash, originalSlots, addresses) {
     slots[1] = primary(addresses.sofia, 2560000000n, 1793510334, 1127, addresses.id1);
   } else if (same(account, addresses.parent) && level === 8) {
     assert(slots.every((slot) => slot[0][0] === ZERO), "Recipient orbit is no longer empty");
-    increase = 512000000n;
-    // Timestamp zero is replaced with execution time only for the funded repair mirror.
-    slots[0] = [[addresses.sabina, increase, 0n, addresses.id1, true], ZERO, 1n, 1132n, true,
-      [true, 1n, 1n, false, false, increase, 0n, 0n, 0n, 0n, ZERO, ZERO]];
+    const source = context.sabinaLevel8Source;
+    assert(source && same(source[0][0], addresses.sabina) && source[0][2] > 0n && source[3] > 0n,
+      "Ancestry repair requires Sabina's verified original level-8 placement");
+    ancestryOnlyPosition = 1;
+    slots[0] = [[addresses.sabina, 0n, source[0][2], addresses.id1, true], ZERO, 1n, source[3], true,
+      [true, 1n, 1n, false, false, 0n, 0n, 0n, 0n, 0n, ZERO, ZERO]];
   }
   normalizeArrivals(slots, slots.length);
-  return [account, level, beforeHash, slots, increase];
+  return [account, level, beforeHash, slots, ancestryOnlyPosition];
 }
 
 function encodeOrbitPlan(edits) {

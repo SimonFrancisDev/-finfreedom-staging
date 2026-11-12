@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "sourceChainId": 137,
+  "executionChainId": 31337,
+  "forkBlock": 97175651,
+  "checkedSlots": 149,
+  "correctedSlots": 44,
+  "indexedRepairEvents": 52,
+  "repairTransferRaw": "0",
+  "databaseWrites": 0,
+  "scope": "Offline projection of fork-emitted logs; not a hosted API or browser certification"
+}
