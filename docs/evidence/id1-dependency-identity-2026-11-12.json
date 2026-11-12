@@ -1,0 +1,121 @@
+{
+  "sourceChainId": 137,
+  "block": 97175651,
+  "blockHash": "0x3baa97701b08dab847fc8acc2ef14eae17e279c9590df979fc6228a1adcd802b",
+  "writes": 0,
+  "manager": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+  "dependencies": [
+    {
+      "name": "AutoUpgradeEscrow",
+      "proxy": "0x8b3db2AC7e30749479f2dbad14105C8eD4a377d4",
+      "implementation": "0x48c512362E047288d83Fe949614a571401aDA075",
+      "runtimeKeccak256": "0x3decc642a764cd34879948ba1f5dfa8253be0ba0196c3274b47f61d6951df288",
+      "runtimeBytes": 7483,
+      "metadata": {
+        "ipfs": "122037ad871517e1fd91aefece8bebfbadce10005c7bc713008e41124fd98a2f72d4",
+        "solc": "000818"
+      },
+      "exactMatches": [],
+      "executableOnlyMatches": [
+        {
+          "file": "tmp\\id1-pre-change-build-info\\79e7162fe8fd8dc0532033e3a06c2647.json",
+          "source": "contracts/AutoUpgradeEscrow.sol",
+          "compiler": "0.8.24+commit.e11b9ed9",
+          "sourceSha256": "0x65f52a917629a718dc910ab35f77240002cbd21dadd864fab314d370ae65852b",
+          "immutableBindingsVerified": true,
+          "compiledMetadata": {
+            "ipfs": "12207894b16021d47d62e97fbc66428afb42f6da17ee00594d505254928d53848dd4",
+            "solc": "000818"
+          }
+        },
+        {
+          "file": "Smart-Contract\\artifacts\\build-info\\53bed07f46c5c757d4761a370dcea55d.json",
+          "source": "contracts/AutoUpgradeEscrow.sol",
+          "compiler": "0.8.24+commit.e11b9ed9",
+          "sourceSha256": "0x65f52a917629a718dc910ab35f77240002cbd21dadd864fab314d370ae65852b",
+          "immutableBindingsVerified": true,
+          "compiledMetadata": {
+            "ipfs": "12207894b16021d47d62e97fbc66428afb42f6da17ee00594d505254928d53848dd4",
+            "solc": "000818"
+          }
+        },
+        {
+          "file": "staging-environment\\smart-contract\\artifacts\\build-info\\79e7162fe8fd8dc0532033e3a06c2647.json",
+          "source": "contracts/AutoUpgradeEscrow.sol",
+          "compiler": "0.8.24+commit.e11b9ed9",
+          "sourceSha256": "0x65f52a917629a718dc910ab35f77240002cbd21dadd864fab314d370ae65852b",
+          "immutableBindingsVerified": true,
+          "compiledMetadata": {
+            "ipfs": "12207894b16021d47d62e97fbc66428afb42f6da17ee00594d505254928d53848dd4",
+            "solc": "000818"
+          }
+        }
+      ],
+      "status": "executable-match-metadata-diff",
+      "bindings": {
+        "owner": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+        "guardian": "0x290c2300296379BD0048aFe9099Ed6Fc81BF75fC",
+        "levelManager": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+        "usdt": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F"
+      },
+      "protocolBindingsVerified": true
+    },
+    {
+      "name": "FreedomTokenController",
+      "proxy": "0x2Ee32EDfE1990408FE70bcADBDBDA8c2f9AdBb62",
+      "implementation": "0xc1849FAAb6b28657A52542fb077547b2003E625f",
+      "runtimeKeccak256": "0xc2c7a7de1335e25e2b6d1f9aecf37477ae3af766a4f09934ef5ab9f3f74676f9",
+      "runtimeBytes": 14120,
+      "metadata": {
+        "ipfs": "1220b1eb68c0061240ffb27af1caca2b4035940f051c186c0cc03531fe0425eadb9e",
+        "solc": "000818"
+      },
+      "exactMatches": [],
+      "executableOnlyMatches": [
+        {
+          "file": "tmp\\id1-pre-change-build-info\\79e7162fe8fd8dc0532033e3a06c2647.json",
+          "source": "contracts/FreedomTokenController.sol",
+          "compiler": "0.8.24+commit.e11b9ed9",
+          "sourceSha256": "0xaef11e1637cb5982fbdc18a848fd5bdf92209027513e80fb96134bc8843dc75b",
+          "immutableBindingsVerified": true,
+          "compiledMetadata": {
+            "ipfs": "122067828ecccd9e69f692704a559a515a45c937a5d077a1a62607edf93a82019275",
+            "solc": "000818"
+          }
+        },
+        {
+          "file": "Smart-Contract\\artifacts\\build-info\\53bed07f46c5c757d4761a370dcea55d.json",
+          "source": "contracts/FreedomTokenController.sol",
+          "compiler": "0.8.24+commit.e11b9ed9",
+          "sourceSha256": "0xaef11e1637cb5982fbdc18a848fd5bdf92209027513e80fb96134bc8843dc75b",
+          "immutableBindingsVerified": true,
+          "compiledMetadata": {
+            "ipfs": "122067828ecccd9e69f692704a559a515a45c937a5d077a1a62607edf93a82019275",
+            "solc": "000818"
+          }
+        },
+        {
+          "file": "staging-environment\\smart-contract\\artifacts\\build-info\\79e7162fe8fd8dc0532033e3a06c2647.json",
+          "source": "contracts/FreedomTokenController.sol",
+          "compiler": "0.8.24+commit.e11b9ed9",
+          "sourceSha256": "0xaef11e1637cb5982fbdc18a848fd5bdf92209027513e80fb96134bc8843dc75b",
+          "immutableBindingsVerified": true,
+          "compiledMetadata": {
+            "ipfs": "122067828ecccd9e69f692704a559a515a45c937a5d077a1a62607edf93a82019275",
+            "solc": "000818"
+          }
+        }
+      ],
+      "status": "executable-match-metadata-diff",
+      "bindings": {
+        "owner": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+        "guardian": "0x290c2300296379BD0048aFe9099Ed6Fc81BF75fC",
+        "levelManager": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+        "fgt": "0x615201edaddB5CFD839Cc4eE693Dc464F6E2B5E4",
+        "fgtr": "0xAaD41296b6Ec358b9C16dD7161C555fD3a464Bc3"
+      },
+      "protocolBindingsVerified": true
+    }
+  ],
+  "status": "executable-and-bindings-matched"
+}

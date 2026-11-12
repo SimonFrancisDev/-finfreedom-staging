@@ -1,0 +1,847 @@
+{
+  "chainId": 137,
+  "status": 1,
+  "block": 96532390,
+  "blockHash": "0x431eb2858f2cc60af02f3e22c5253420cd4e30c715e296cb83af5c048b724f08",
+  "utc": "2026-11-01T03:34:01.000Z",
+  "transaction": "0xa22e95b1b2f2413b0a7bb912762b9f13b4fe453941917e37b5ca0d382db707d8",
+  "from": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+  "to": "0x02ECA97e944Ac66b0444fd5F61A716917E83CfF5",
+  "input": "0x7fb872d30000000000000000000000000000000000000000000000000000000000000006",
+  "events": [
+    {
+      "index": 853,
+      "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      "event": "Transfer",
+      "args": {
+        "from": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "to": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+        "value": "320000000"
+      }
+    },
+    {
+      "index": 855,
+      "address": "0xEaD39819B8C4DBb0669320542B6B847D4c31b8Fb",
+      "event": "PositionActivationLinked",
+      "args": {
+        "orbitOwner": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+        "level": "6",
+        "position": "2",
+        "cycleNumber": "1",
+        "activationId": "1124",
+        "isMirror": false
+      }
+    },
+    {
+      "index": 856,
+      "address": "0xEaD39819B8C4DBb0669320542B6B847D4c31b8Fb",
+      "event": "LinePaymentTracked",
+      "args": {
+        "orbitOwner": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+        "level": "6",
+        "line": "1",
+        "position": "2",
+        "linePaymentNumber": "2"
+      }
+    },
+    {
+      "index": 857,
+      "address": "0xEaD39819B8C4DBb0669320542B6B847D4c31b8Fb",
+      "event": "PaymentRuleApplied",
+      "args": {
+        "orbitOwner": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+        "level": "6",
+        "position": "2",
+        "line": "1",
+        "linePaymentNumber": "2",
+        "toOwner": "64000000",
+        "toSpillover1": "64000000",
+        "toSpillover2": "160000000",
+        "toEscrow": "0",
+        "toRecycle": "0"
+      }
+    },
+    {
+      "index": 858,
+      "address": "0xEaD39819B8C4DBb0669320542B6B847D4c31b8Fb",
+      "event": "PositionFilled",
+      "args": {
+        "orbitOwner": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+        "user": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "level": "6",
+        "position": "2",
+        "amount": "320000000",
+        "timestamp": "1793504041"
+      }
+    },
+    {
+      "index": 859,
+      "address": "0xEaD39819B8C4DBb0669320542B6B847D4c31b8Fb",
+      "event": "SpilloverPaid",
+      "args": {
+        "from": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "to": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+        "level": "6",
+        "amount": "64000000"
+      }
+    },
+    {
+      "index": 860,
+      "address": "0xEaD39819B8C4DBb0669320542B6B847D4c31b8Fb",
+      "event": "SpilloverPaid",
+      "args": {
+        "from": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "to": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+        "level": "6",
+        "amount": "160000000"
+      }
+    },
+    {
+      "index": 861,
+      "address": "0x02ECA97e944Ac66b0444fd5F61A716917E83CfF5",
+      "event": "CurrentMatrixParentRecorded",
+      "args": {
+        "user": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "level": "6",
+        "parent": "0xb673c9D14Da920f187d25Cc793f1955a43284622"
+      }
+    },
+    {
+      "index": 862,
+      "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      "event": "Transfer",
+      "args": {
+        "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+        "to": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+        "value": "64000000"
+      }
+    },
+    {
+      "index": 863,
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "event": "PayoutReceiptRecorded",
+      "args": {
+        "receiver": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+        "level": "6",
+        "receiptType": "2",
+        "fromUser": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "orbitOwner": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+        "grossAmount": "64000000",
+        "escrowLocked": "0",
+        "liquidPaid": "64000000"
+      }
+    },
+    {
+      "index": 864,
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "event": "DetailedPayoutReceiptRecorded",
+      "args": {
+        "receiver": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+        "activationId": "1124",
+        "level": "6",
+        "receiptType": "2",
+        "fromUser": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "orbitOwner": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+        "sourcePosition": "2",
+        "sourceCycle": "1",
+        "mirroredPosition": "0",
+        "mirroredCycle": "0",
+        "routedRole": "1",
+        "grossAmount": "64000000",
+        "escrowLocked": "0",
+        "liquidPaid": "64000000"
+      }
+    },
+    {
+      "index": 865,
+      "address": "0xEaD39819B8C4DBb0669320542B6B847D4c31b8Fb",
+      "event": "PositionActivationLinked",
+      "args": {
+        "orbitOwner": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+        "level": "6",
+        "position": "7",
+        "cycleNumber": "1",
+        "activationId": "1124",
+        "isMirror": true
+      }
+    },
+    {
+      "index": 866,
+      "address": "0xEaD39819B8C4DBb0669320542B6B847D4c31b8Fb",
+      "event": "LinePaymentTracked",
+      "args": {
+        "orbitOwner": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+        "level": "6",
+        "line": "2",
+        "position": "7",
+        "linePaymentNumber": "5"
+      }
+    },
+    {
+      "index": 867,
+      "address": "0xEaD39819B8C4DBb0669320542B6B847D4c31b8Fb",
+      "event": "PositionFilled",
+      "args": {
+        "orbitOwner": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+        "user": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "level": "6",
+        "position": "7",
+        "amount": "64000000",
+        "timestamp": "1793504041"
+      }
+    },
+    {
+      "index": 868,
+      "address": "0xEaD39819B8C4DBb0669320542B6B847D4c31b8Fb",
+      "event": "PaymentRuleApplied",
+      "args": {
+        "orbitOwner": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+        "level": "6",
+        "position": "7",
+        "line": "2",
+        "linePaymentNumber": "5",
+        "toOwner": "64000000",
+        "toSpillover1": "0",
+        "toSpillover2": "0",
+        "toEscrow": "0",
+        "toRecycle": "0"
+      }
+    },
+    {
+      "index": 869,
+      "address": "0xEaD39819B8C4DBb0669320542B6B847D4c31b8Fb",
+      "event": "PositionActivationLinked",
+      "args": {
+        "orbitOwner": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+        "level": "6",
+        "position": "10",
+        "cycleNumber": "1",
+        "activationId": "1124",
+        "isMirror": true
+      }
+    },
+    {
+      "index": 870,
+      "address": "0xEaD39819B8C4DBb0669320542B6B847D4c31b8Fb",
+      "event": "LinePaymentTracked",
+      "args": {
+        "orbitOwner": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+        "level": "6",
+        "line": "2",
+        "position": "10",
+        "linePaymentNumber": "6"
+      }
+    },
+    {
+      "index": 871,
+      "address": "0xEaD39819B8C4DBb0669320542B6B847D4c31b8Fb",
+      "event": "PositionFilled",
+      "args": {
+        "orbitOwner": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+        "user": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "level": "6",
+        "position": "10",
+        "amount": "160000000",
+        "timestamp": "1793504041"
+      }
+    },
+    {
+      "index": 872,
+      "address": "0xEaD39819B8C4DBb0669320542B6B847D4c31b8Fb",
+      "event": "PaymentRuleApplied",
+      "args": {
+        "orbitOwner": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+        "level": "6",
+        "position": "10",
+        "line": "2",
+        "linePaymentNumber": "6",
+        "toOwner": "160000000",
+        "toSpillover1": "0",
+        "toSpillover2": "0",
+        "toEscrow": "0",
+        "toRecycle": "0"
+      }
+    },
+    {
+      "index": 873,
+      "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      "event": "Transfer",
+      "args": {
+        "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+        "to": "0x88d350Bd016751B08Baf6508e1bdF186A1B1305B",
+        "value": "8000000"
+      }
+    },
+    {
+      "index": 874,
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "event": "FounderDistributionDetailed",
+      "args": {
+        "activationId": "1124",
+        "sourceUser": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "level": "6",
+        "founderWallet": "0x88d350Bd016751B08Baf6508e1bdF186A1B1305B",
+        "amount": "8000000",
+        "ratioBps": "1250",
+        "reasonCode": "0x464f554e4445525f524f55544500000000000000000000000000000000000000"
+      }
+    },
+    {
+      "index": 875,
+      "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      "event": "Transfer",
+      "args": {
+        "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+        "to": "0x5fd791B457aD32A8E2A2e81FC211238639824127",
+        "value": "8000000"
+      }
+    },
+    {
+      "index": 876,
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "event": "FounderDistributionDetailed",
+      "args": {
+        "activationId": "1124",
+        "sourceUser": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "level": "6",
+        "founderWallet": "0x5fd791B457aD32A8E2A2e81FC211238639824127",
+        "amount": "8000000",
+        "ratioBps": "1250",
+        "reasonCode": "0x464f554e4445525f524f55544500000000000000000000000000000000000000"
+      }
+    },
+    {
+      "index": 877,
+      "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      "event": "Transfer",
+      "args": {
+        "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+        "to": "0xa2033515F0f35A5FA4803eDde306c293a81c2da9",
+        "value": "8000000"
+      }
+    },
+    {
+      "index": 878,
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "event": "FounderDistributionDetailed",
+      "args": {
+        "activationId": "1124",
+        "sourceUser": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "level": "6",
+        "founderWallet": "0xa2033515F0f35A5FA4803eDde306c293a81c2da9",
+        "amount": "8000000",
+        "ratioBps": "1250",
+        "reasonCode": "0x464f554e4445525f524f55544500000000000000000000000000000000000000"
+      }
+    },
+    {
+      "index": 879,
+      "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      "event": "Transfer",
+      "args": {
+        "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+        "to": "0xf73d4Ae3a9EFeBAb76ab9053Cd055b4503929231",
+        "value": "8000000"
+      }
+    },
+    {
+      "index": 880,
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "event": "FounderDistributionDetailed",
+      "args": {
+        "activationId": "1124",
+        "sourceUser": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "level": "6",
+        "founderWallet": "0xf73d4Ae3a9EFeBAb76ab9053Cd055b4503929231",
+        "amount": "8000000",
+        "ratioBps": "1250",
+        "reasonCode": "0x464f554e4445525f524f55544500000000000000000000000000000000000000"
+      }
+    },
+    {
+      "index": 881,
+      "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      "event": "Transfer",
+      "args": {
+        "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+        "to": "0xb850f836d0e3CfeD4A7DbDCAa7A4c78aFac0d911",
+        "value": "8000000"
+      }
+    },
+    {
+      "index": 882,
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "event": "FounderDistributionDetailed",
+      "args": {
+        "activationId": "1124",
+        "sourceUser": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "level": "6",
+        "founderWallet": "0xb850f836d0e3CfeD4A7DbDCAa7A4c78aFac0d911",
+        "amount": "8000000",
+        "ratioBps": "1250",
+        "reasonCode": "0x464f554e4445525f524f55544500000000000000000000000000000000000000"
+      }
+    },
+    {
+      "index": 883,
+      "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      "event": "Transfer",
+      "args": {
+        "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+        "to": "0x435363daD972a7abb2A739525c461F06A45CE294",
+        "value": "8000000"
+      }
+    },
+    {
+      "index": 884,
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "event": "FounderDistributionDetailed",
+      "args": {
+        "activationId": "1124",
+        "sourceUser": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "level": "6",
+        "founderWallet": "0x435363daD972a7abb2A739525c461F06A45CE294",
+        "amount": "8000000",
+        "ratioBps": "1250",
+        "reasonCode": "0x464f554e4445525f524f55544500000000000000000000000000000000000000"
+      }
+    },
+    {
+      "index": 885,
+      "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      "event": "Transfer",
+      "args": {
+        "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+        "to": "0xf4F83F8181cD9A8C96a33f4d9aF487b444353a15",
+        "value": "8000000"
+      }
+    },
+    {
+      "index": 886,
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "event": "FounderDistributionDetailed",
+      "args": {
+        "activationId": "1124",
+        "sourceUser": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "level": "6",
+        "founderWallet": "0xf4F83F8181cD9A8C96a33f4d9aF487b444353a15",
+        "amount": "8000000",
+        "ratioBps": "1250",
+        "reasonCode": "0x464f554e4445525f524f55544500000000000000000000000000000000000000"
+      }
+    },
+    {
+      "index": 887,
+      "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      "event": "Transfer",
+      "args": {
+        "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+        "to": "0x120FBeeeb36c003CAEE1F4B37Ac9297C88d51D42",
+        "value": "8000000"
+      }
+    },
+    {
+      "index": 888,
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "event": "FounderDistributionDetailed",
+      "args": {
+        "activationId": "1124",
+        "sourceUser": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "level": "6",
+        "founderWallet": "0x120FBeeeb36c003CAEE1F4B37Ac9297C88d51D42",
+        "amount": "8000000",
+        "ratioBps": "1250",
+        "reasonCode": "0x464f554e4445525f524f55544500000000000000000000000000000000000000"
+      }
+    },
+    {
+      "index": 889,
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "event": "FounderIncomeDistributed",
+      "args": {
+        "totalAmount": "64000000"
+      }
+    },
+    {
+      "index": 890,
+      "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      "event": "Transfer",
+      "args": {
+        "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+        "to": "0x88d350Bd016751B08Baf6508e1bdF186A1B1305B",
+        "value": "20000000"
+      }
+    },
+    {
+      "index": 891,
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "event": "FounderDistributionDetailed",
+      "args": {
+        "activationId": "1124",
+        "sourceUser": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "level": "6",
+        "founderWallet": "0x88d350Bd016751B08Baf6508e1bdF186A1B1305B",
+        "amount": "20000000",
+        "ratioBps": "1250",
+        "reasonCode": "0x464f554e4445525f524f55544500000000000000000000000000000000000000"
+      }
+    },
+    {
+      "index": 892,
+      "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      "event": "Transfer",
+      "args": {
+        "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+        "to": "0x5fd791B457aD32A8E2A2e81FC211238639824127",
+        "value": "20000000"
+      }
+    },
+    {
+      "index": 893,
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "event": "FounderDistributionDetailed",
+      "args": {
+        "activationId": "1124",
+        "sourceUser": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "level": "6",
+        "founderWallet": "0x5fd791B457aD32A8E2A2e81FC211238639824127",
+        "amount": "20000000",
+        "ratioBps": "1250",
+        "reasonCode": "0x464f554e4445525f524f55544500000000000000000000000000000000000000"
+      }
+    },
+    {
+      "index": 894,
+      "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      "event": "Transfer",
+      "args": {
+        "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+        "to": "0xa2033515F0f35A5FA4803eDde306c293a81c2da9",
+        "value": "20000000"
+      }
+    },
+    {
+      "index": 895,
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "event": "FounderDistributionDetailed",
+      "args": {
+        "activationId": "1124",
+        "sourceUser": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "level": "6",
+        "founderWallet": "0xa2033515F0f35A5FA4803eDde306c293a81c2da9",
+        "amount": "20000000",
+        "ratioBps": "1250",
+        "reasonCode": "0x464f554e4445525f524f55544500000000000000000000000000000000000000"
+      }
+    },
+    {
+      "index": 896,
+      "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      "event": "Transfer",
+      "args": {
+        "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+        "to": "0xf73d4Ae3a9EFeBAb76ab9053Cd055b4503929231",
+        "value": "20000000"
+      }
+    },
+    {
+      "index": 897,
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "event": "FounderDistributionDetailed",
+      "args": {
+        "activationId": "1124",
+        "sourceUser": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "level": "6",
+        "founderWallet": "0xf73d4Ae3a9EFeBAb76ab9053Cd055b4503929231",
+        "amount": "20000000",
+        "ratioBps": "1250",
+        "reasonCode": "0x464f554e4445525f524f55544500000000000000000000000000000000000000"
+      }
+    },
+    {
+      "index": 898,
+      "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      "event": "Transfer",
+      "args": {
+        "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+        "to": "0xb850f836d0e3CfeD4A7DbDCAa7A4c78aFac0d911",
+        "value": "20000000"
+      }
+    },
+    {
+      "index": 899,
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "event": "FounderDistributionDetailed",
+      "args": {
+        "activationId": "1124",
+        "sourceUser": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "level": "6",
+        "founderWallet": "0xb850f836d0e3CfeD4A7DbDCAa7A4c78aFac0d911",
+        "amount": "20000000",
+        "ratioBps": "1250",
+        "reasonCode": "0x464f554e4445525f524f55544500000000000000000000000000000000000000"
+      }
+    },
+    {
+      "index": 900,
+      "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      "event": "Transfer",
+      "args": {
+        "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+        "to": "0x435363daD972a7abb2A739525c461F06A45CE294",
+        "value": "20000000"
+      }
+    },
+    {
+      "index": 901,
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "event": "FounderDistributionDetailed",
+      "args": {
+        "activationId": "1124",
+        "sourceUser": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "level": "6",
+        "founderWallet": "0x435363daD972a7abb2A739525c461F06A45CE294",
+        "amount": "20000000",
+        "ratioBps": "1250",
+        "reasonCode": "0x464f554e4445525f524f55544500000000000000000000000000000000000000"
+      }
+    },
+    {
+      "index": 902,
+      "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      "event": "Transfer",
+      "args": {
+        "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+        "to": "0xf4F83F8181cD9A8C96a33f4d9aF487b444353a15",
+        "value": "20000000"
+      }
+    },
+    {
+      "index": 903,
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "event": "FounderDistributionDetailed",
+      "args": {
+        "activationId": "1124",
+        "sourceUser": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "level": "6",
+        "founderWallet": "0xf4F83F8181cD9A8C96a33f4d9aF487b444353a15",
+        "amount": "20000000",
+        "ratioBps": "1250",
+        "reasonCode": "0x464f554e4445525f524f55544500000000000000000000000000000000000000"
+      }
+    },
+    {
+      "index": 904,
+      "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      "event": "Transfer",
+      "args": {
+        "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+        "to": "0x120FBeeeb36c003CAEE1F4B37Ac9297C88d51D42",
+        "value": "20000000"
+      }
+    },
+    {
+      "index": 905,
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "event": "FounderDistributionDetailed",
+      "args": {
+        "activationId": "1124",
+        "sourceUser": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "level": "6",
+        "founderWallet": "0x120FBeeeb36c003CAEE1F4B37Ac9297C88d51D42",
+        "amount": "20000000",
+        "ratioBps": "1250",
+        "reasonCode": "0x464f554e4445525f524f55544500000000000000000000000000000000000000"
+      }
+    },
+    {
+      "index": 906,
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "event": "FounderIncomeDistributed",
+      "args": {
+        "totalAmount": "160000000"
+      }
+    },
+    {
+      "index": 907,
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "event": "PayoutReceiptRecorded",
+      "args": {
+        "receiver": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+        "level": "6",
+        "receiptType": "3",
+        "fromUser": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "orbitOwner": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+        "grossAmount": "64000000",
+        "escrowLocked": "0",
+        "liquidPaid": "64000000"
+      }
+    },
+    {
+      "index": 908,
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "event": "DetailedPayoutReceiptRecorded",
+      "args": {
+        "receiver": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+        "activationId": "1124",
+        "level": "6",
+        "receiptType": "3",
+        "fromUser": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "orbitOwner": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+        "sourcePosition": "2",
+        "sourceCycle": "1",
+        "mirroredPosition": "7",
+        "mirroredCycle": "1",
+        "routedRole": "2",
+        "grossAmount": "64000000",
+        "escrowLocked": "0",
+        "liquidPaid": "64000000"
+      }
+    },
+    {
+      "index": 909,
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "event": "PayoutReceiptRecorded",
+      "args": {
+        "receiver": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+        "level": "6",
+        "receiptType": "3",
+        "fromUser": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "orbitOwner": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+        "grossAmount": "160000000",
+        "escrowLocked": "0",
+        "liquidPaid": "160000000"
+      }
+    },
+    {
+      "index": 910,
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "event": "DetailedPayoutReceiptRecorded",
+      "args": {
+        "receiver": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+        "activationId": "1124",
+        "level": "6",
+        "receiptType": "3",
+        "fromUser": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "orbitOwner": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+        "sourcePosition": "2",
+        "sourceCycle": "1",
+        "mirroredPosition": "10",
+        "mirroredCycle": "1",
+        "routedRole": "3",
+        "grossAmount": "160000000",
+        "escrowLocked": "0",
+        "liquidPaid": "160000000"
+      }
+    },
+    {
+      "index": 911,
+      "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      "event": "Transfer",
+      "args": {
+        "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+        "to": "0xbb2cF7ef867F46A93ae1F9DEd564927874b79B52",
+        "value": "25600000"
+      }
+    },
+    {
+      "index": 912,
+      "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      "event": "Transfer",
+      "args": {
+        "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+        "to": "0x3ee9B4913e175c15B2Ef76Ac352B6737210248Fb",
+        "value": "6400000"
+      }
+    },
+    {
+      "index": 913,
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "event": "SystemChargeDistributed",
+      "args": {
+        "nftPoolAmount": "25600000",
+        "operationsAmount": "6400000"
+      }
+    },
+    {
+      "index": 914,
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "event": "SystemChargeDistributedDetailed",
+      "args": {
+        "activationId": "1124",
+        "user": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "level": "6",
+        "systemChargeTotal": "32000000",
+        "nftPoolAmount": "25600000",
+        "operationsAmount": "6400000",
+        "nftPool": "0xbb2cF7ef867F46A93ae1F9DEd564927874b79B52",
+        "operationsWallet": "0x3ee9B4913e175c15B2Ef76Ac352B6737210248Fb"
+      }
+    },
+    {
+      "index": 915,
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "event": "ActivationFinancialSummaryRecorded",
+      "args": {
+        "activationId": "1124",
+        "user": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "level": "6",
+        "activationAmount": "320000000",
+        "systemCharge": "32000000",
+        "nftPoolAmount": "25600000",
+        "operationsAmount": "6400000",
+        "totalLiquidPaid": "288000000",
+        "totalEscrowLocked": "0",
+        "totalRecycleAllocated": "0",
+        "isAutoUpgrade": false,
+        "isFounderRepFreeActivation": false
+      }
+    },
+    {
+      "index": 916,
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "event": "LevelActivated",
+      "args": {
+        "user": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "level": "6",
+        "amount": "320000000"
+      }
+    },
+    {
+      "index": 917,
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "event": "LevelActivatedInOrbit",
+      "args": {
+        "user": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "level": "6",
+        "orbit": "0xEaD39819B8C4DBb0669320542B6B847D4c31b8Fb",
+        "netAmount": "320000000"
+      }
+    },
+    {
+      "index": 922,
+      "address": "0x02ECA97e944Ac66b0444fd5F61A716917E83CfF5",
+      "event": "LevelActivated",
+      "args": {
+        "user": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+        "level": "6",
+        "price": "320000000"
+      }
+    }
+  ],
+  "reconciliation": {
+    "userDebitedRaw": "320000000",
+    "managerOutgoingRaw": "320000000",
+    "founderTotals": {
+      "0x88d350Bd016751B08Baf6508e1bdF186A1B1305B": "28000000",
+      "0x5fd791B457aD32A8E2A2e81FC211238639824127": "28000000",
+      "0xa2033515F0f35A5FA4803eDde306c293a81c2da9": "28000000",
+      "0xf73d4Ae3a9EFeBAb76ab9053Cd055b4503929231": "28000000",
+      "0xb850f836d0e3CfeD4A7DbDCAa7A4c78aFac0d911": "28000000",
+      "0x435363daD972a7abb2A739525c461F06A45CE294": "28000000",
+      "0xf4F83F8181cD9A8C96a33f4d9aF487b444353a15": "28000000",
+      "0x120FBeeeb36c003CAEE1F4B37Ac9297C88d51D42": "28000000"
+    },
+    "verdict": "One charge and full 320-USDT transfer conservation verified; extra ID1 mirror positions remain a separate structural issue."
+  }
+}

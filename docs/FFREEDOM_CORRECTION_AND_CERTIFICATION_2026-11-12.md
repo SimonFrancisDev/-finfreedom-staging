@@ -30,9 +30,13 @@ Read-only audit checkpoint: Polygon mainnet block 97182036.
 | Settlement router | 0xC1F7d1E68A624B896DA2881AFfC7De5B18a75B44 | Non-proxy |
 
 These six runtimes matched compiler artifacts, normalizing constructor immutable
-values where applicable. The escrow and token-controller artifacts checked did
-not match their live implementations: identity verification for those dependencies
-is OPEN, not passed. Founder ratios were eight equal shares of 1250/10000.
+values where applicable. The initial escrow/controller full-runtime comparison
+was inconclusive. The subsequent check at block 97175651 establishes matching
+executable bytecode, valid UUPS self-address immutables, compiler version 0.8.24,
+and the configured manager/token bindings. Only the decoded CBOR metadata IPFS
+hashes differ. This is not an exact full-artifact provenance match; that distinction
+is retained in `evidence/id1-dependency-identity-2026-11-12.json`.
+Founder ratios were eight equal shares of 1250/10000.
 Reverify the complete bindings, runtime hashes, dependency pointers, owners,
 guardian permissions and storage layouts before any upgrade proposal.
 
@@ -60,9 +64,9 @@ guardian permissions and storage layouts before any upgrade proposal.
 - [x] Implement local settlement corrections; existing proxy storage layouts pass comparison.
 - [x] Run focused regressions and the existing suite; investigate both failing old assertions and rerun them.
 - [x] Validate artifact ABI changes, runtime size and old-to-new storage layouts; paired upgrade required.
-- [ ] Complete escrow/controller identity and dependency verification.
+- [x] Verify escrow/controller executable code, immutable self addresses and protocol bindings; record metadata-only differences.
 - [ ] Reconcile legacy reserves, counter gaps, duplicate branches and descendants.
-- [ ] Rebuild and complete the current-state historical repair rehearsal.
+- [x] Complete the bounded Sofia/Sabina historical repair and subsequent-activation fork rehearsal (not the separate duplicate-branch repair).
 - [ ] Verify source and derived event accounting in backend/UI projections.
 - [ ] Run independent adversarial certification described below.
 - [ ] Review exact mainnet governance payload, funding and rollback boundaries.
@@ -142,8 +146,8 @@ A reviewed atomic governance batch, or a paused upgrade with both pointers
 verified before reopening, is required. The router is not a proxy; a matching new
 router would be deployed and configured only after authorization. Existing
 historical-repair rehearsal now keeps all affected contracts paused until both
-revisions and the new router binding are verified. That revised rehearsal has
-not yet been executed end to end.
+revisions and the new router binding are verified. The revised bounded rehearsal
+passed end to end on November 12; this was local execution, not a live upgrade.
 
 Focused reproduction command, from `staging-environment/smart-contract`:
 
@@ -173,8 +177,12 @@ Test sequence:
    rejection. Machine-readable evidence is
    `docs/evidence/id1-settlement-regressions-2026-11-12.json`.
 
-The final combined suite was not rerun in a single invocation after the test-only
-strengthening. Report the outcomes above, not a fabricated full-suite green run.
+5. Final combined existing suite on November 12: **195 passing, 0 failing**,
+   exit code 0, approximately ten minutes. The six historical-plan Node cases
+   also passed in this invocation. This suite does not execute the new
+   mainnet-fork historical repair and does not close that separate gate.
+
+Command: `node node_modules/hardhat/internal/cli/cli.js test --network hardhat --no-compile`.
 The full run regenerated the canonical trace under `smart-contract/test-reports`;
 those named wallets and receipts belong to disposable local tests, not mainnet.
 
@@ -192,17 +200,58 @@ application-facing function or event signature was removed.
 node scripts/validateId1CandidateArtifacts.js ../../tmp/id1-pre-change-build-info ../docs/evidence/id1-candidate-artifacts-2026-11-12.json
 ```
 
-Legacy reserve amounts/cycles and the compatibility of live escrow/controller
-implementations remain open. Do not infer live reserve solvency from mock-token
+Legacy reserve amounts/cycles remain open. Live escrow/controller executable
+code and configured manager/token bindings now match; full metadata provenance
+is not asserted. Do not infer live reserve solvency from mock-token
 supply conservation, or a complete backend accounting audit from ABI tests.
 
 ## Immediate continuation
 
-1. Finish identifying the exact live escrow/controller implementations and
-   reconcile legacy reserves/counter gaps and descendants of duplicate entries.
-2. Refresh and run the pinned mainnet-fork historical-repair rehearsal with the
-   compatible manager/router pair. No historical move or 512-USDT adjustment is
-   executed on mainnet by this local work.
+1. Reconcile legacy reserves/counter gaps and descendants of duplicate entries.
+2. Use the completed bounded rehearsal as evidence, not as an approved live
+   manifest. Review the actual governance-wrapper gas cost and external funding;
+   refresh the guarded snapshot only when preparing the live package. No
+   historical move or 512-USDT adjustment has been executed on mainnet.
 3. Complete the adversarial certification and backend/UI projection checks,
    then review a separately authorized, funded governance package. Production
    and the two suspended staging services remain unchanged in this pass.
+
+## Historical repair diagnostic, November 12
+
+The first three negative guards passed on the local fork: unauthorized executor,
+altered plan and direct migrator bypass. The unfunded-payment guard did NOT pass:
+the transaction exhausted gas inside the P39 migrator before reaching the token
+transfer. A 30-million-gas trace ended at a storage write with insufficient gas;
+the original result is preserved in
+`evidence/id1-historical-repair-preoptimization-failure-2026-11-12.json`.
+No part of that reverted local transaction changed mainnet.
+
+Skipping identical current-slot/archive writes alone was insufficient, as was
+isolating full before/after fingerprint reads. The validated candidate retains
+every precondition fingerprint in a separate read frame returning only its hash,
+and removes the redundant full post-write fingerprint from the summary event.
+Detailed old/new slot and prior archive events remain intact. Expected-state,
+authorization, pause, replay and funding checks have not been weakened.
+
+The final rehearsal passed: seven explicit negative caller/binding/funding/pause
+cases, stale-prestate rejection, replay rejection, exact funded correction,
+unchanged permanent sponsors/activations/token supply/completed cycles, exact
+current positions, and raw-storage comparison of open-cycle positions, rules
+and activation links. The compatible manager/router pair was installed while
+paused, then three isolated subsequent-activation probes passed:
+
+| Probe | Checked placement | Checked recipient delta |
+| --- | --- | --- |
+| New L8 participant under Sofia | ID1 slot 6; Sofia slot 1 | Sofia +512 USDT |
+| New L8 participant under Sabina | Parent's slot 4; Sabina slot 1 | L8 parent +640 USDT |
+| New L9 participant under Sofia | ID1 slot 5; Sofia slot 1 | Sofia +512 USDT |
+
+Each probe also reconciled the complete activation financial summary. Funding
+was synthetic on Hardhat 31337 only; no production funds moved. Execution used
+25,507,580 gas, above the initial conservative budget. A successful local call
+does not establish that the real multisig wrapper is within the live gas budget.
+
+Full evidence: `evidence/id1-historical-repair-rehearsal-2026-11-12.json`.
+Source block: 97175651 (2026-11-12 07:35:33 UTC). Older duplicate ID1 positions
+remain preserved and unresolved. Backend/UI event integration, wider adversarial
+certification and the authorized live package remain open.

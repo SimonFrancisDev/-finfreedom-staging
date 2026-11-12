@@ -45,6 +45,8 @@ function baselineContract(folder, source, name, runtime) {
 }
 
 async function fundLocalReplayBalance(token, wallet, required) {
+  assert.equal(network.name, "hardhat");
+  assert.equal((await ethers.provider.getNetwork()).chainId, 31337n);
   const balance = await token.balanceOf(wallet);
   if (balance >= required) return 0n;
   assert.equal(process.env.ID1_ALLOW_SYNTHETIC_FUNDING, "1",
@@ -166,7 +168,11 @@ async function main() {
     liveTransactionsSent: 0, results }, null, 2));
 }
 
-main().catch((error) => {
-  console.error(error.shortMessage || error.message);
-  process.exitCode = 1;
-});
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(error.shortMessage || error.message);
+    process.exitCode = 1;
+  });
+}
+
+module.exports = { addresses, baselineContract, fundLocalReplayBalance };

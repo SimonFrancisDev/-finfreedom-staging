@@ -1,0 +1,19 @@
+{
+  "date": "2026-11-12",
+  "executionNetwork": "hardhat",
+  "chainId": 31337,
+  "command": "node node_modules/hardhat/internal/cli/cli.js test --network hardhat --no-compile",
+  "exitCode": 0,
+  "mochaPassing": 195,
+  "mochaFailing": 0,
+  "nodePlanPassing": 6,
+  "nodePlanFailing": 0,
+  "durationReported": "10m",
+  "behaviorCorrectionCommit": "eef846b",
+  "limitations": [
+    "Disposable local fixtures, not live mainnet transactions",
+    "Historical mainnet-fork repair rehearsal is a separate pending gate",
+    "Does not certify backend projections or production user interfaces",
+    "No live upgrade or funding authorization follows from this result"
+  ]
+}
