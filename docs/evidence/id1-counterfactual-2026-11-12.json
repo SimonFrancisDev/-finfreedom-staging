@@ -1,0 +1,61 @@
+{
+  "sourceChainId": 137,
+  "executionChainId": 31337,
+  "forkBlock": 96536530,
+  "scope": "Four selected counterfactual activations, not a historical repair or full intervening-chain replay",
+  "liveTransactionsSent": 0,
+  "results": [
+    {
+      "wallet": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+      "level": 8,
+      "id1Position": 3,
+      "originalTimestamp": "2026-11-01T05:17:33Z",
+      "replayTimestamp": 1793510259,
+      "syntheticLocalUsdtRaw": "0",
+      "parentPaymentRaw": "0",
+      "activationAmountRaw": "1280000000",
+      "liquidPaidRaw": "1152000000",
+      "systemChargeRaw": "128000000",
+      "localTransaction": "0x6bcfc18b534d01692f211aaacb5858b707f6ffa8ec1e74734b65908b9838213f"
+    },
+    {
+      "wallet": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+      "level": 9,
+      "id1Position": 2,
+      "originalTimestamp": "2026-11-01T05:18:54Z",
+      "replayTimestamp": 1793510334,
+      "syntheticLocalUsdtRaw": "2009336578",
+      "parentPaymentRaw": "0",
+      "activationAmountRaw": "2560000000",
+      "liquidPaidRaw": "2304000000",
+      "systemChargeRaw": "256000000",
+      "localTransaction": "0xa981de7e2438639c9efdc99356eb16a9899ee5c5c6d38d06b6489a678761a531"
+    },
+    {
+      "wallet": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "level": 8,
+      "id1Position": 4,
+      "originalTimestamp": "2026-11-03T11:26:10Z",
+      "replayTimestamp": 1793705170,
+      "syntheticLocalUsdtRaw": "739032798",
+      "parentPaymentRaw": "512000000",
+      "activationAmountRaw": "1280000000",
+      "liquidPaidRaw": "1152000000",
+      "systemChargeRaw": "128000000",
+      "localTransaction": "0x5fbce11174a699c4a881a5d10fd27950a4612107463d7dc1ca62543a6f668d35"
+    },
+    {
+      "wallet": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "level": 9,
+      "id1Position": 3,
+      "originalTimestamp": "2026-11-11T08:15:55Z",
+      "replayTimestamp": 1794384955,
+      "syntheticLocalUsdtRaw": "1856000000",
+      "parentPaymentRaw": "0",
+      "activationAmountRaw": "2560000000",
+      "liquidPaidRaw": "2304000000",
+      "systemChargeRaw": "256000000",
+      "localTransaction": "0xbf84b2d240426ff4dc2f7b0a5ff09e41187cd06284fae0300f9df8b6100f7ad8"
+    }
+  ]
+}

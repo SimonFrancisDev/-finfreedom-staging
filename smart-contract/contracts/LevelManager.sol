@@ -625,26 +625,8 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
             !a.isTrueNoReferrer &&
             registration.getReferrer(user) != id1Wallet
         );
-        if (a.isId1Fallback) {
-            _emitPayoutNotDelivered(
-                user,
-                user,
-                level,
-                a.orbitType,
-                0,
-                0,
-                amount,
-                id1Wallet,
-                amount,
-                RECEIPT_DIRECT_OWNER,
-                ROLE_OWNER_CODE,
-                REASON_ID1_FALLBACK,
-                ACTION_ACTIVATE_LEVEL,
-                a.activationId
-            );
-        }
-
-        if (!a.isId1Fallback) {
+        // Exhausting the sponsor chain still creates one primary placement.
+        {
             (
                 a.sourcePosition,
                 a.sourceCycle,
@@ -668,55 +650,30 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
             _consumeLegacyRecycleTransition(a, level, amount);
         }
 
+        if (a.isId1Fallback) {
+            _emitPayoutNotDelivered(
+                registration.getReferrer(user),
+                user,
+                level,
+                a.orbitType,
+                a.sourcePosition,
+                a.sourceCycle,
+                a.toOwner + a.toEscrow + a.toRecycle,
+                id1Wallet,
+                a.toOwner,
+                RECEIPT_DIRECT_OWNER,
+                ROLE_OWNER_CODE,
+                REASON_ID1_FALLBACK,
+                ACTION_ACTIVATE_LEVEL,
+                a.activationId
+            );
+        }
+
         uint256 summaryLiquidPaid;
         uint256 summaryEscrowLocked;
         uint256 summaryRecycleAllocated;
 
-        if (a.isTrueNoReferrer || a.isId1Fallback) {
-            uint256 founderPathNetAmount = amount - a.systemCharge;
-
-            _sendPayoutWithContext(
-                a.sponsor,
-                founderPathNetAmount,
-                a.activationId,
-                user,
-                level,
-                REASON_FOUNDER_ROUTE
-            );
-            _recordRoutedEarning(a.orbitType, a.sponsor, level, founderPathNetAmount);
-
-            _recordPayoutReceipt(
-                a.sponsor,
-                RECEIPT_FOUNDER_PATH,
-                level,
-                user,
-                a.sponsor,
-                founderPathNetAmount,
-                0,
-                founderPathNetAmount
-            );
-
-            _recordDetailedPayoutReceipt(
-                a.sponsor,
-                a.activationId,
-                RECEIPT_FOUNDER_PATH,
-                level,
-                user,
-                a.sponsor,
-                a.sourcePosition,
-                a.sourceCycle,
-                0,
-                0,
-                ROUTED_ROLE_FOUNDER_PATH,
-                founderPathNetAmount,
-                0,
-                founderPathNetAmount
-            );
-
-            summaryLiquidPaid = founderPathNetAmount;
-            summaryEscrowLocked = 0;
-            summaryRecycleAllocated = 0;
-        } else {
+        {
             uint256 directOwnerGross = a.toOwner + a.toEscrow;
             _sendPayoutWithContext(a.sponsor, a.toOwner, a.activationId, user, level, REASON_FOUNDER_ROUTE);
 
@@ -928,17 +885,24 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
             ? activationAmount
             : routedAmountB;
 
-        MirrorSplitResult memory splitB = _applyMirrorEscrowSplit(
-            orbitType,
-            level,
-            user,
-            routedParent,
-            sponsor,
-            routedRecipientB,
-            routedAmountB,
-            mirrorRuleBaseAmountB,
-            activationId
-        );
+        MirrorSplitResult memory splitB;
+        if (routedRecipientB == id1Wallet && routedRecipientA == id1Wallet) {
+            // The first component already represents the ID1 ancestry position.
+            // The terminal component is payment-only, not another matrix arrival.
+            splitB.liquidAmount = routedAmountB;
+        } else {
+            splitB = _applyMirrorEscrowSplit(
+                orbitType,
+                level,
+                user,
+                routedParent,
+                sponsor,
+                routedRecipientB,
+                routedAmountB,
+                mirrorRuleBaseAmountB,
+                activationId
+            );
+        }
 
         _sendPayoutWithContext(
             routedRecipientA,

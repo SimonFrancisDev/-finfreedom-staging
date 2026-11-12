@@ -529,7 +529,7 @@ describe("Audit readiness contract invariants", function () {
     ).to.be.revertedWith("Insufficient locked balance");
   });
 
-  it("stores true no-referrer founder-path snapshots at the net amount after system charge", async function () {
+  it("uses position-based snapshots for a no-referrer primary placement", async function () {
     const { users, registration, levelManager, p4, fundAndApprove } = await deployCoreSystem();
     const noReferrerUser = users[0];
 
@@ -544,7 +544,7 @@ describe("Audit readiness contract invariants", function () {
     expect(summaryEvent.args.totalLiquidPaid).to.equal(usdtUnits(9));
 
     const rule = await p4.getPositionRuleView(await levelManager.id1Wallet(), 1, 1);
-    expect(rule.isFounderNoReferrerPath).to.equal(true);
+    expect(rule.isFounderNoReferrerPath).to.equal(false);
     expect(rule.toOwner).to.equal(usdtUnits(9));
     expect(rule.toSpillover1).to.equal(0);
     expect(rule.toSpillover2).to.equal(0);
@@ -552,7 +552,7 @@ describe("Audit readiness contract invariants", function () {
     expect(rule.toRecycle).to.equal(0);
   });
 
-  it("pays exhausted-upline ID1 fallbacks to founders without creating P12, P39, or P4 positions", async function () {
+  it("creates one primary ID1 position for exhausted uplines in P12, P39 and P4", async function () {
     const { owner, users, usdt, registration, levelManager, p4, p12, p39, register } =
       await deployCoreSystem();
     const founderWallets = users.slice(0, 8);
@@ -579,17 +579,159 @@ describe("Audit readiness contract invariants", function () {
       const netAmount = usdtUnits(testCase.amount * 0.9);
 
       expect(await registration.isLevelActivated(fallbackUser.address, testCase.level)).to.equal(true);
-      expect(position.occupant).to.equal(ethers.ZeroAddress);
+      expect(position.occupant).to.equal(fallbackUser.address);
+      expect(await registration.currentMatrixParentOf(fallbackUser.address, testCase.level))
+        .to.equal(owner.address);
       expect(deltas.reduce((sum, delta) => sum + delta, 0n)).to.equal(netAmount);
       expect(summary.args.systemCharge).to.equal(usdtUnits(testCase.amount * 0.1));
       expect(summary.args.totalLiquidPaid).to.equal(netAmount);
       expect(summary.args.totalEscrowLocked).to.equal(0);
       expect(summary.args.totalRecycleAllocated).to.equal(0);
       expect(fallback.args.reasonCode).to.equal(ethers.encodeBytes32String("ID1_FALLBACK"));
-      expect(founderReceipt.args.sourcePosition).to.equal(0);
+      expect(fallback.args.affectedUser).to.equal(inactiveSponsor.address);
+      expect(fallback.args.sourcePosition).to.equal(1);
+      expect(fallback.args.actualAmount)
+        .to.equal((await testCase.orbit.getPositionRuleView(owner.address, testCase.level, 1)).toOwner);
+      expect(founderReceipt.args.sourcePosition).to.equal(1);
       expect(founderReceipt.args.mirroredPosition).to.equal(0);
-      expect(parseEvents(receipt, testCase.orbit, "PositionFilled")).to.have.length(0);
+      expect(parseEvents(receipt, testCase.orbit, "PositionFilled")).to.have.length(1);
     }
+  });
+
+  for (const withoutReferrer of [false, true]) {
+    it(`places a ${withoutReferrer ? "no-referrer" : "skipped-upline"} P12 arrival under its actual first-ring parent`, async function () {
+      const { owner, users, usdt, registration, levelManager, p12, register, activateToLevel } =
+        await deployCoreSystem();
+      const [antonio, giulia, amedea, inactive, marco] = users.slice(8, 13);
+      for (const user of [antonio, giulia, amedea]) {
+        await register(user);
+        await activateToLevel(user, 3);
+      }
+      await register(inactive);
+      await register(marco, withoutReferrer ? ethers.ZeroAddress : inactive.address);
+
+      const { receipt, deltas } = await balanceDeltas(usdt, [...users.slice(0, 8), antonio], () =>
+        registration.connect(marco).activateLevel(2)
+      );
+      expect((await p12.getPosition(owner.address, 2, 4)).occupant).to.equal(marco.address);
+      expect((await p12.getPosition(antonio.address, 2, 1)).occupant).to.equal(marco.address);
+      expect(await registration.currentMatrixParentOf(marco.address, 2)).to.equal(antonio.address);
+      expect(await registration.getReferrer(marco.address))
+        .to.equal(withoutReferrer ? ethers.ZeroAddress : inactive.address);
+      expect(deltas.slice(0, 8).reduce((sum, value) => sum + value, 0n)).to.equal(usdtUnits(10));
+      expect(deltas[8]).to.equal(usdtUnits(8));
+      const rule = await p12.getPositionRuleView(owner.address, 2, 4);
+      expect(rule.isFounderNoReferrerPath).to.equal(false);
+      expect(rule.toOwner).to.equal(usdtUnits(10));
+      expect(rule.toSpillover1).to.equal(usdtUnits(8));
+      expect(rule.spillover1Recipient).to.equal(antonio.address);
+      const summary = findEvent(receipt, levelManager, "ActivationFinancialSummaryRecorded");
+      expect(summary.args.totalLiquidPaid + summary.args.systemCharge).to.equal(usdtUnits(20));
+      expect(parseEvents(receipt, p12, "PositionFilled")).to.have.length(2);
+    });
+  }
+
+  it("preserves P39 family placements but gives terminal ID1 payment fragments no extra slots", async function () {
+    const { owner, users, usdt, registration, p39, register, activateToLevel } = await deployCoreSystem();
+    const [inactive, marco, simone, nunzio, otherInactive, angelica, harry] = users.slice(8, 15);
+    await register(inactive);
+    await register(marco, inactive.address);
+    await activateToLevel(marco, 4);
+    expect((await p39.getPosition(owner.address, 3, 1)).occupant).to.equal(marco.address);
+    expect((await p39.getPosition(owner.address, 3, 2)).occupant).to.equal(ethers.ZeroAddress);
+
+    await register(simone, marco.address);
+    await activateToLevel(simone, 2);
+    let observed = await balanceDeltas(usdt, [...users.slice(0, 8), marco], () =>
+      registration.connect(simone).activateLevel(3)
+    );
+    expect(observed.deltas.slice(0, 8).reduce((sum, value) => sum + value, 0n)).to.equal(usdtUnits(28));
+    expect(observed.deltas[8]).to.equal(usdtUnits(8));
+    expect((await p39.getPosition(marco.address, 3, 1)).occupant).to.equal(simone.address);
+    expect((await p39.getPosition(owner.address, 3, 4)).occupant).to.equal(simone.address);
+    expect(parseEvents(observed.receipt, p39, "PositionFilled")
+      .filter((event) => event.args.orbitOwner === owner.address)).to.have.length(1);
+    await activateToLevel(simone, 4);
+
+    await register(nunzio, simone.address);
+    await activateToLevel(nunzio, 2);
+    observed = await balanceDeltas(usdt, [...users.slice(0, 8), marco, simone], () =>
+      registration.connect(nunzio).activateLevel(3)
+    );
+    expect(observed.deltas.slice(0, 8).reduce((sum, value) => sum + value, 0n)).to.equal(usdtUnits(20));
+    expect(observed.deltas[8]).to.equal(usdtUnits(8));
+    expect(observed.deltas[9]).to.equal(usdtUnits(8));
+    expect((await p39.getPosition(simone.address, 3, 1)).occupant).to.equal(nunzio.address);
+    expect((await p39.getPosition(marco.address, 3, 4)).occupant).to.equal(nunzio.address);
+    expect((await p39.getPosition(owner.address, 3, 13)).occupant).to.equal(nunzio.address);
+
+    await register(otherInactive);
+    await register(angelica, otherInactive.address);
+    await activateToLevel(angelica, 4);
+    expect((await p39.getPosition(owner.address, 3, 2)).occupant).to.equal(angelica.address);
+    await register(harry, angelica.address);
+    await activateToLevel(harry, 2);
+    observed = await balanceDeltas(usdt, [...users.slice(0, 8), angelica], () =>
+      registration.connect(harry).activateLevel(3)
+    );
+    expect(observed.deltas.slice(0, 8).reduce((sum, value) => sum + value, 0n)).to.equal(usdtUnits(28));
+    expect(observed.deltas[8]).to.equal(usdtUnits(8));
+    expect((await p39.getPosition(owner.address, 3, 5)).occupant).to.equal(harry.address);
+    expect((await p39.getPosition(angelica.address, 3, 1)).occupant).to.equal(harry.address);
+    expect((await p39.getPosition(owner.address, 3, 3)).occupant).to.equal(ethers.ZeroAddress);
+  });
+
+  it("does not redirect an established ID1 branch when the skipped sponsor activates later", async function () {
+    const { owner, users, usdt, registration, p12, register, activateToLevel } = await deployCoreSystem();
+    const [skipped, participant, downline] = users.slice(8, 11);
+    await register(skipped);
+    await register(participant, skipped.address);
+    await activateToLevel(participant, 3);
+    await activateToLevel(skipped, 3);
+    expect(await registration.currentMatrixParentOf(participant.address, 2)).to.equal(owner.address);
+    await register(downline, participant.address);
+    const { deltas } = await balanceDeltas(usdt, [skipped, participant, ...users.slice(0, 8)], () =>
+      registration.connect(downline).activateLevel(2)
+    );
+    expect(deltas[0]).to.equal(0);
+    expect(deltas[1]).to.equal(usdtUnits(8));
+    expect(deltas.slice(2).reduce((sum, amount) => sum + amount, 0n)).to.equal(usdtUnits(10));
+    expect((await p12.getPosition(skipped.address, 2, 1)).occupant).to.equal(ethers.ZeroAddress);
+    expect((await p12.getPosition(owner.address, 2, 4)).occupant).to.equal(downline.address);
+  });
+
+  it("archives ID1's fourth no-referrer P4 arrival and pays its recycle only once", async function () {
+    const { owner, users, usdt, registration, p4, register } = await deployCoreSystem();
+    const participants = users.slice(8, 12);
+    const founders = users.slice(0, 8);
+    const before = await Promise.all(founders.map((user) => usdt.balanceOf(user.address)));
+    for (const user of participants) await register(user, ethers.ZeroAddress);
+    expect((await p4.getUserOrbit(owner.address, 1)).totalCycles).to.equal(1);
+    for (let index = 0; index < participants.length; index += 1) {
+      const position = await p4.getHistoricalPosition(owner.address, 1, 1, index + 1);
+      expect(position.occupant).to.equal(participants[index].address);
+      expect(await registration.currentMatrixParentOf(participants[index].address, 1)).to.equal(owner.address);
+    }
+    expect((await p4.getPosition(owner.address, 1, 1)).occupant).to.equal(ethers.ZeroAddress);
+    const after = await Promise.all(founders.map((user) => usdt.balanceOf(user.address)));
+    expect(after.reduce((sum, amount, index) => sum + amount - before[index], 0n)).to.equal(usdtUnits(36));
+  });
+
+  it("places the primary arrival at ID1 after more than five inactive sponsors", async function () {
+    const { owner, users, registration, p12, p39, register, activateToLevel } = await deployCoreSystem();
+    let sponsor = owner;
+    for (const user of users.slice(8, 15)) {
+      await register(user, sponsor.address);
+      sponsor = user;
+    }
+    const participant = users[15];
+    await register(participant, sponsor.address);
+    await activateToLevel(participant, 3);
+    for (const [level, orbit] of [[2, p12], [3, p39]]) {
+      expect((await orbit.getPosition(owner.address, level, 1)).occupant).to.equal(participant.address);
+      expect(await registration.currentMatrixParentOf(participant.address, level)).to.equal(owner.address);
+    }
+    expect(await registration.getReferrer(participant.address)).to.equal(sponsor.address);
   });
 
   it("applies the P39 line-3 escrow rule from stored on-chain rule snapshots", async function () {

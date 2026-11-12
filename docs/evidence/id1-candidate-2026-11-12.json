@@ -1,0 +1,49 @@
+{
+  "generatedAt": "2026-11-12T07:09:22.737Z",
+  "purpose": "Local tested candidate templates, not deployed mainnet bytecode",
+  "solidity": "0.8.24",
+  "optimizerRuns": 1,
+  "viaIR": true,
+  "contracts": [
+    {
+      "name": "LevelManager",
+      "creationBytecodeKeccak256": "0xce8d87e9cdb1223041df378c87bd65e08519aa99158b4516be3d1838f9fe0246",
+      "runtimeTemplateKeccak256": "0x8666263a5a1a073f4c806ed647b55488e2a7b8d241c48bdf0fdd917c3b47dacf",
+      "runtimeBytes": 23515
+    },
+    {
+      "name": "P4Orbit",
+      "creationBytecodeKeccak256": "0xd0313dade992fe7f2cebe993a562caee5c345c9b33f752f0b1b041f17b49e372",
+      "runtimeTemplateKeccak256": "0x5fdd6f70ba8926e0f451e8ab929f90f5bc55c177da7d88c0f27f5d6bc33a4d85",
+      "runtimeBytes": 22938
+    },
+    {
+      "name": "P12Orbit",
+      "creationBytecodeKeccak256": "0x8235da82bb88fa20eac64ebca445c1a7735dbb2a6fe08c72142feceb4819e83e",
+      "runtimeTemplateKeccak256": "0xd75d7fb443bc44e2427bf22ffb45e066080bbd94f1ea5ff3541d28c85a80aa9c",
+      "runtimeBytes": 23358
+    },
+    {
+      "name": "P39Orbit",
+      "creationBytecodeKeccak256": "0x856f2de6310e97044c0bf3454fbda98292ddd755e50bb9bfb387bacb66dd9a54",
+      "runtimeTemplateKeccak256": "0xdaeeb3d44156b3b167fa11d74325480073844d12ca24e34d5fe3ec54d5233c84",
+      "runtimeBytes": 23124
+    },
+    {
+      "name": "LevelSettlementRouter",
+      "creationBytecodeKeccak256": "0x7947f56b4a8fb97e2dca29347f17d91e09de97a04b57c77186bfaf1e3c9db668",
+      "runtimeTemplateKeccak256": "0xe841ab677e90594fca0c58ca004881a2a0c9db7c59029b25cb696a57d38083c5",
+      "runtimeBytes": 15520
+    }
+  ],
+  "sources": [
+    {
+      "path": "smart-contract/contracts/LevelManager.sol",
+      "sha256": "c7ab392c7b19e0f48b982b1d07629aeeb1066f739cf4c2a2956935cc70ff45b5"
+    },
+    {
+      "path": "smart-contract/contracts/BaseOrbit.sol",
+      "sha256": "8e2dd7c25c0343007e25727f4b57deeead8f0d3fa47aaeda399e175b6d6816c1"
+    }
+  ]
+}

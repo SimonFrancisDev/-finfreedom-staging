@@ -1258,13 +1258,7 @@ abstract contract BaseOrbit is Initializable, OwnableUpgradeable, UUPSUpgradeabl
         if (orbitOwner == address(0) || newUser == address(0)) revert InvalidAddress();
 
         OrbitConfig memory config = levelConfig[level];
-        address id1Wallet = ILevelManagerReader(levelManager).id1Wallet();
         bool isFounderRepFreePlacement = founderRepActivated[newUser] && amount == 0;
-        bool isTrueNoReferrer = (
-            orbitOwner == id1Wallet &&
-            IRegistration(registration).hadNoReferrer(newUser) &&
-            !isFounderRepFreePlacement
-        );
 
         if (_findUserPosition(orbitOwner, level, newUser) != 0) {
             revert DuplicateOrbitPosition(orbitOwner, level, newUser);
@@ -1289,35 +1283,10 @@ abstract contract BaseOrbit is Initializable, OwnableUpgradeable, UUPSUpgradeabl
             level,
             result.sourcePosition,
             line,
-            !isTrueNoReferrer && (amount > 0 || isFounderRepFreePlacement)
+            amount > 0 || isFounderRepFreePlacement
         );
 
-        if (isTrueNoReferrer) {
-            result.toOwner = amount - ((amount * 10) / 100);
-            result.toSpillover1 = 0;
-            result.spillover1Recipient = address(0);
-            result.toSpillover2 = 0;
-            result.spillover2Recipient = address(0);
-            result.toEscrow = 0;
-            result.toRecycle = 0;
-
-            _storeRuleSnapshot(RuleSnapshotData({
-                orbitOwner: orbitOwner,
-                level: level,
-                position: result.sourcePosition,
-                line: line,
-                linePaymentNumber: linePaymentNumber,
-                autoUpgradeEnabled: false,
-                isFounderNoReferrerPath: true,
-                toOwner: result.toOwner,
-                toSpillover1: result.toSpillover1,
-                toSpillover2: result.toSpillover2,
-                toEscrow: result.toEscrow,
-                toRecycle: result.toRecycle,
-                spillover1Recipient: result.spillover1Recipient,
-                spillover2Recipient: result.spillover2Recipient
-            }));
-        } else {
+        {
             bool autoUpgradeEnabled = _isAutoUpgradeEnabled(orbitOwner, level);
 
             PayoutPercentages memory pct = _calculatePayoutPercentages(
@@ -1406,14 +1375,7 @@ returns (MirrorPositionDetailedResult memory result)
     if (orbitOwner == address(0) || newUser == address(0)) revert InvalidAddress();
 
     OrbitConfig memory config = levelConfig[level];
-    address id1Wallet = ILevelManagerReader(levelManager).id1Wallet();
-
     bool isRecycleReentry = (referrer == newUser);
-    bool isTrueNoReferrer = (
-        !isRecycleReentry &&
-        orbitOwner == id1Wallet &&
-        IRegistration(registration).hadNoReferrer(newUser)
-    );
 
     bool placedFreshPosition;
 
@@ -1458,7 +1420,7 @@ returns (MirrorPositionDetailedResult memory result)
         level,
         result.position,
         line,
-        !isTrueNoReferrer && amount > 0
+        amount > 0
     );
 
     bool autoUpgradeEnabled = _isAutoUpgradeEnabled(orbitOwner, level);
@@ -1510,7 +1472,7 @@ returns (MirrorPositionDetailedResult memory result)
         line: line,
         linePaymentNumber: linePaymentNumber,
         autoUpgradeEnabled: autoUpgradeEnabled,
-        isFounderNoReferrerPath: isTrueNoReferrer,
+        isFounderNoReferrerPath: false,
         toOwner: mirrorOwnerLiquidAmount,
         toSpillover1: 0,
         toSpillover2: 0,
