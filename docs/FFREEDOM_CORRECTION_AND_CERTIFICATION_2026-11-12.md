@@ -149,16 +149,21 @@ not certify governance execution.
 
 ## Remaining release work
 
-1. Resolve the two older duplicate ID1 level-6 occurrences, including activation
-   1107's attached descendant; do not delete its parent alone. Finalize the
-   intended branch/counter transition without compensation or changed receipts.
-2. Complete the independent adversarial matrix for that final transition and
-   verify account/orbit displays against chain and backend, including the repair
-   audit trail. Existing suites are evidence, not a substitute for missing cases.
-3. Complete the exact governance-wrapper rehearsal, then refresh guarded mainnet
-   state and review the paired manager/router upgrade and historical repair.
-4. Submit only the authorized exact package, have the founders approve/execute,
-   and reconcile chain/API/UI before declaring production repaired.
+The owner subsequently deferred historical level-6 repair. The superseding
+scope and successful reduced-manifest governance rehearsal are recorded in
+`ID1_LEVEL6_DEFERRAL_AND_PROPOSAL_2026-11-12.md`. Level 6 is excluded completely,
+including counter changes; its old ancestry and earnings are not certified as
+corrected. The scoped local cycle-completion probe passed.
+
+1. Fund the authorized mainnet deployer/submitter, then deploy the inert,
+   bytecode-bound implementation set and submit the reviewed governance actions.
+2. Before execution, make the already-tested backend repair projections available
+   in production; keep both suspended staging services suspended.
+3. Founders approve and execute the paused repair/paired-upgrade sequence in order.
+   Fail closed if guarded state has changed; do not bypass the manifest checks.
+4. Verify executed chain state, financial invariants, projections and account/orbit
+   displays. Only then submit the withheld reopening actions and certify the
+   production repair. Local tests are not live browser/API certification.
 
 No funding request for 512 USDT belongs in any of these steps. Neither hosted
 environment nor database was changed, and staging services remain suspended.

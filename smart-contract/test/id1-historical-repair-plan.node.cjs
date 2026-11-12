@@ -13,6 +13,11 @@ const empty = () => [[E.ZeroAddress, 0n, 0n, E.ZeroAddress, false], E.ZeroAddres
 const filled = (wallet, time = 1n) => [[wallet, 1280000000n, time, A.id1, true], E.ZeroAddress, 0n, time, false,
   [true, 1n, 0n, false, true, 1152000000n, 0n, 0n, 0n, 0n, E.ZeroAddress, E.ZeroAddress]];
 
+test("Level 6 and unrelated orbit edits are rejected, including counter-only edits", () => {
+  assert.throws(() => buildOrbitEdit(A.id1, 6, E.ZeroHash, Array.from({ length: 39 }, empty), A), /deferred/);
+  assert.throws(() => buildOrbitEdit(A.sofia, 3, E.ZeroHash, Array.from({ length: 39 }, empty), A), /outside/);
+});
+
 test("L8 inserts Sofia, moves Sabina, preserves unrelated slot and historical payment", () => {
   const slots = Array.from({ length: 12 }, empty);
   slots[0] = filled(A.parent);

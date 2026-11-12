@@ -26,6 +26,9 @@ function primary(wallet, price, timestamp, id, root) {
 }
 
 function buildOrbitEdit(account, level, beforeHash, originalSlots, addresses, context = {}) {
+  assert(level !== 6, "Level 6 historical edits are deferred by the owner");
+  assert((same(account, addresses.id1) && [1, 3, 7, 8, 9].includes(level)) ||
+    (same(account, addresses.parent) && level === 8), "Orbit is outside the authorized repair scope");
   const slots = plain(originalSlots);
   let ancestryOnlyPosition = 0;
   if (same(account, addresses.id1) && level === 8) {

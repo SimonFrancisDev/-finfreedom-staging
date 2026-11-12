@@ -74,7 +74,7 @@ async function main() {
   const definitions = [
     ["p4", "P4Orbit", "Id1P4RepairMigrator", [[A.id1, 1], [A.id1, 7]]],
     ["p12", "P12Orbit", "Id1MultiRingRepairMigrator", [[A.id1, 8], [A.parent, 8]]],
-    ["p39", "P39Orbit", "Id1MultiRingRepairMigrator", [[A.id1, 3], [A.id1, 6], [A.id1, 9]]],
+    ["p39", "P39Orbit", "Id1MultiRingRepairMigrator", [[A.id1, 3], [A.id1, 9]]],
     ["registration", "RegistrationFixed", "Id1RegistrationRepairMigrator", []],
     ["manager", "LevelManager", null, []],
   ];
@@ -126,6 +126,11 @@ async function main() {
     record("storage-and-bytecode-verified", { key, originalImplementation, affectedOrbits: keys.length });
   }
   const hashes = plans.map(E.keccak256);
+  const p39Entry = records.find(r => r.key === "p39");
+  await setImplementation(A.p39, p39Entry.inspector.target);
+  const deferredBefore = await (await E.getContractAt("Id1MultiRingRepairMigrator", A.p39)).repairState(A.id1, 6);
+  await setImplementation(A.p39, p39Entry.originalImplementation);
+  evidence.deferredLevel6 = { policy: "No historical slot, counter, archive, earnings or reserve repair", beforeHash: deferredBefore[0] };
   const executor = await deploy("Id1HistoricalRepairExecutor", [governanceAddress,
     records.slice(0, 4).map((r) => r.proxy), hashes, 31337]);
   evidence.manifest = { funding: "None: structural repair has no transfer or earnings-credit capability",
@@ -258,6 +263,43 @@ async function main() {
   const proposer = await impersonate(owners[0]);
   const proposalId = await multisig.getTransactionCount();
   const callData = executor.interface.encodeFunctionData("execute", [plans]);
+  // Verify unused storage against the pinned source in bounded batches, then
+  // cache those exact values locally. No live storage or existing proposal is changed.
+  const multisigLayout = await layout("contracts/governance/SimpleMultiSig.sol", "SimpleMultiSig");
+  const txField = multisigLayout.storage.find(field => field.label === "transactions");
+  const txType = multisigLayout.types[multisigLayout.types[txField.type].base];
+  const txWidth = BigInt(txType.numberOfBytes) / 32n;
+  const txSlot = BigInt(E.keccak256(E.toBeHex(BigInt(txField.slot), 32))) + proposalId * txWidth;
+  const dataMember = txType.members.find(member => member.label === "data");
+  const dataSlot = BigInt(E.keccak256(E.toBeHex(txSlot + BigInt(dataMember.slot), 32)));
+  const unusedSlots = [];
+  for (let offset = 0n; offset < txWidth; offset += 1n) unusedSlots.push(E.toBeHex(txSlot + offset, 32));
+  const words = Math.ceil((callData.length - 2) / 64);
+  for (let offset = 0; offset < words; offset += 1) unusedSlots.push(E.toBeHex(dataSlot + BigInt(offset), 32));
+  for (let start = 0; start < unusedSlots.length; start += 20) {
+    const batch = unusedSlots.slice(start, start + 20);
+    let rows;
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      await new Promise(resolve => setTimeout(resolve, 650 * (attempt + 1)));
+      const response = await fetch(rpc, { method: "POST", headers: { "content-type": "application/json" },
+        signal: AbortSignal.timeout(20000), body: JSON.stringify(batch.map((slot, index) => ({
+          jsonrpc: "2.0", id: index, method: "eth_getStorageAt", params: [governanceAddress, slot, E.toQuantity(snapshot.block)],
+        }))) });
+      assert(response.ok, `Storage batch HTTP ${response.status}`);
+      rows = await response.json();
+      if (Array.isArray(rows) && !rows.some(row => row.error?.code === -32007)) break;
+    }
+    assert(Array.isArray(rows) && rows.length === batch.length, "Incomplete storage batch");
+    const values = new Map(rows.map(row => [row.id, row]));
+    for (let index = 0; index < batch.length; index += 1) {
+      const row = values.get(index);
+      assert(!row?.error, `Read-only storage batch rejected: ${JSON.stringify(row?.error)}`);
+      assert.equal(row?.result, E.ZeroHash, "Next proposal storage is not proven empty");
+      await N.provider.send("hardhat_setStorageAt", [governanceAddress, batch[index], E.ZeroHash]);
+    }
+    if (start % 400 === 0) record("proposal-storage-read-progress", { checked: start + batch.length, total: unusedSlots.length });
+  }
+  record("virgin-proposal-storage-primed-locally", { proposalId, words, existingProposalsChanged: false });
   record("local-multisig-proposal-started", { proposalId, calldataBytes: (callData.length - 2) / 2 });
   await (await multisig.connect(proposer).submitTransaction(executor.target, 0n, callData)).wait();
   record("local-multisig-proposal-stored", { proposalId });
@@ -352,6 +394,8 @@ async function main() {
       }
     }
   }
+  assert.equal((await records.find(r => r.key === "p39").repair.repairState(A.id1, 6))[0], deferredBefore[0]);
+  evidence.deferredLevel6.unchangedByRepair = true;
   same(await registration.currentMatrixParentOf(A.sofia, 8), A.id1);
   same(await registration.currentMatrixParentOf(A.sofia, 9), A.id1);
   same(await registration.currentMatrixParentOf(A.sabina, 8), A.parent);
@@ -390,6 +434,30 @@ async function main() {
   evidence.before = before;
   evidence.after = after;
   evidence.probes = [];
+  {
+    record("deferred-level6-cycle-probe-started");
+    const checkpoint = await N.provider.send("evm_snapshot");
+    const managerSigner = await impersonate(A.manager);
+    const originalCycle = (await engines.p39.getUserOrbit(A.id1, 6))[6];
+    const occupied = plain(deferredBefore[1]).filter(slot => slot[0][0] !== E.ZeroAddress).length;
+    const fills = [];
+    for (let index = 0; index < 39 - occupied; index += 1) {
+      const user = E.getAddress(E.toBeHex(0x1234000000000000000000000000000000000000n + BigInt(index), 20));
+      const args = [A.id1, 6, user, A.id1, 320000000n, 1000000n + BigInt(index)];
+      const result = await engines.p39.connect(managerSigner).fillPositionDetailed.staticCall(...args);
+      await (await engines.p39.connect(managerSigner).fillPositionDetailed(...args)).wait();
+      fills.push({ position: result.sourcePosition, reserveRaw: result.toRecycle });
+    }
+    const reserveFills = fills.filter(fill => fill.reserveRaw > 0n);
+    assert.equal(reserveFills.length, 2);
+    assert.equal(reserveFills.reduce((sum, fill) => sum + fill.reserveRaw, 0n), 320000000n);
+    assert.equal((await engines.p39.getUserOrbit(A.id1, 6))[6], originalCycle + 1n);
+    evidence.deferredLevel6.cycleProbe = { passed: true, occupiedBefore: occupied, fills,
+      scope: "Real forked orbit completion and reserve calculation; manager-only calls with synthetic arrivals, not a wallet settlement test",
+      caveat: "Historical duplicate ancestry remains until this cycle closes; no historical earnings are corrected" };
+    await N.provider.send("evm_revert", [checkpoint]);
+    record("deferred-level6-cycle-probe-passed", { arrivals: fills.length, reserveFills: reserveFills.length, reserveRaw: 320000000n });
+  }
   for (const [upline, level, rootSlot, recipient, recipientAmount] of [
     [A.sofia, 8, 6, A.sofia, 512000000n],
     [A.sabina, 8, 0, A.parent, 640000000n],

@@ -1,0 +1,52 @@
+{
+  "chainId": 137,
+  "block": 97199033,
+  "submitter": "0x884e48f9897E8633238747b608DD49dE12bF94df",
+  "balancePOL": "0.688419349610044568",
+  "deploymentEstimates": [
+    {
+      "name": "P4Orbit",
+      "gas": "5078220"
+    },
+    {
+      "name": "P12Orbit",
+      "gas": "5169887"
+    },
+    {
+      "name": "P39Orbit",
+      "gas": "5119143"
+    },
+    {
+      "name": "LevelManager",
+      "gas": "5323182"
+    },
+    {
+      "name": "LevelSettlementRouter",
+      "gas": "4136808"
+    },
+    {
+      "name": "Id1HistoricalRepairExecutor",
+      "gas": "547520"
+    },
+    {
+      "name": "Id1P4RepairMigrator",
+      "gas": "2696619"
+    },
+    {
+      "name": "Id1MultiRingRepairMigrator",
+      "gas": "2696619"
+    },
+    {
+      "name": "Id1MultiRingRepairMigrator",
+      "gas": "2696619"
+    },
+    {
+      "name": "Id1RegistrationRepairMigrator",
+      "gas": "2802863"
+    }
+  ],
+  "deploymentGas": "36267480",
+  "feeCapWei": "394475693468",
+  "deploymentCappedPOL": "17.167967188004184768",
+  "note": "Deployment only; proposal-storage and submission gas additional. No broadcast."
+}

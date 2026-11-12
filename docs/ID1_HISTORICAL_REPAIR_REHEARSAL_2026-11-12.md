@@ -18,9 +18,12 @@ the repair and synthetic funding execute exclusively on Hardhat chain 31337.
 The related future-behavior correction is recorded in
 `ID1_PRIMARY_PLACEMENT_CORRECTION_2026-11-12.md` and commit `f861453`.
 
-**This is not a final production manifest.** The level-6 extra-position finding
-below must be dispositioned before a live repair is approved. Passing a bounded
-level-8/9 rehearsal does not close that separate historical case.
+**Scope update:** the owner has explicitly deferred historical level-6 repair.
+The reduced manifest excludes its slots, counters and archives. Its local
+cycle-completion probe passed, but its historical ancestry and earnings are not
+being corrected or certified. See `ID1_LEVEL6_DEFERRAL_AND_PROPOSAL_2026-11-12.md`
+for the superseding multisig rehearsal and unsigned production package. Older
+rehearsals below remain historical evidence, not the current release manifest.
 
 ## Reviewed snapshot and correction
 

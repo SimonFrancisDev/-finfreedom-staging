@@ -1,0 +1,110 @@
+{
+  "scope": "offline candidate artifacts, not live deployment certification",
+  "checks": [
+    {
+      "name": "RegistrationFixed",
+      "compiler": "0.8.24+commit.e11b9ed9",
+      "runtimeBytes": 10555,
+      "runtimeLimit": 24576,
+      "bytecodeTemplateSha256": "eb7a32c04cb5b8b8fd10cc9e04de581490571909d43536f5c7a88e9fac78333b",
+      "compilerInputSha256": "a8dc45da53df3e30a79a0809fcb67a1a94c8d9af7672c9ad6a3bd50af08f00b8",
+      "checks": [
+        {
+          "baseline": "79e7162fe8fd8dc0532033e3a06c2647.json",
+          "storageCompatible": true,
+          "removed": [],
+          "added": []
+        }
+      ]
+    },
+    {
+      "name": "LevelManager",
+      "compiler": "0.8.24+commit.e11b9ed9",
+      "runtimeBytes": 24043,
+      "runtimeLimit": 24576,
+      "bytecodeTemplateSha256": "2fbaf69382782bbf5f5c3dda1dcb49d2a0d05ae2ff6810986535a9269e2274cc",
+      "compilerInputSha256": "b95ee76dc59e93ba068a7014af50c95b53b535ec96d4bd862e15363bab362f2a",
+      "checks": [
+        {
+          "baseline": "79e7162fe8fd8dc0532033e3a06c2647.json",
+          "storageCompatible": true,
+          "removed": [],
+          "added": [
+            "function:lockRecycleEscrow(address,uint8,uint256)",
+            "function:settlementRevision()"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "P4Orbit",
+      "compiler": "0.8.24+commit.e11b9ed9",
+      "runtimeBytes": 22938,
+      "runtimeLimit": 24576,
+      "bytecodeTemplateSha256": "c11e5e180d83fef233d4fe7136bc03afb4df2509934368401644e0a1ed1ab487",
+      "compilerInputSha256": "1aa69f6e464151df51c23412a46e420816559aece5c3e011fc19b2efee07afdc",
+      "checks": [
+        {
+          "baseline": "79e7162fe8fd8dc0532033e3a06c2647.json",
+          "storageCompatible": true,
+          "removed": [],
+          "added": []
+        }
+      ]
+    },
+    {
+      "name": "P12Orbit",
+      "compiler": "0.8.24+commit.e11b9ed9",
+      "runtimeBytes": 23358,
+      "runtimeLimit": 24576,
+      "bytecodeTemplateSha256": "b430aa5ddce126cf37e4686ec7152a855d31a8a6247d0bfa98d3e8a992b4e5bf",
+      "compilerInputSha256": "1aa69f6e464151df51c23412a46e420816559aece5c3e011fc19b2efee07afdc",
+      "checks": [
+        {
+          "baseline": "79e7162fe8fd8dc0532033e3a06c2647.json",
+          "storageCompatible": true,
+          "removed": [],
+          "added": []
+        }
+      ]
+    },
+    {
+      "name": "P39Orbit",
+      "compiler": "0.8.24+commit.e11b9ed9",
+      "runtimeBytes": 23124,
+      "runtimeLimit": 24576,
+      "bytecodeTemplateSha256": "87c5be5166e43590421c004472aef7e894b1b871593ce700df13a953dd20bf52",
+      "compilerInputSha256": "1aa69f6e464151df51c23412a46e420816559aece5c3e011fc19b2efee07afdc",
+      "checks": [
+        {
+          "baseline": "79e7162fe8fd8dc0532033e3a06c2647.json",
+          "storageCompatible": true,
+          "removed": [],
+          "added": []
+        }
+      ]
+    },
+    {
+      "name": "LevelSettlementRouter",
+      "compiler": "0.8.24+commit.e11b9ed9",
+      "runtimeBytes": 18738,
+      "runtimeLimit": 24576,
+      "bytecodeTemplateSha256": "518fc26f0d3129695e0a57a36bfd56d4fcd9424551486a2ec59a12a64ae1cdc6",
+      "compilerInputSha256": "b95ee76dc59e93ba068a7014af50c95b53b535ec96d4bd862e15363bab362f2a",
+      "checks": [
+        {
+          "baseline": "79e7162fe8fd8dc0532033e3a06c2647.json",
+          "storageCompatible": true,
+          "unstructuredReserveStorageCompatible": true,
+          "removed": [
+            "function:settleRecycle(uint8,address,address,address,address,address,address,uint8,uint256,uint256,address,uint8,uint32,address[],uint256[])"
+          ],
+          "added": [
+            "function:settleRecycle((uint8,address,address,address,address,address,address,uint8,uint256,uint256,address,uint8,uint32,address[],uint256[]))",
+            "function:settlementRevision()"
+          ]
+        }
+      ]
+    }
+  ]
+}
