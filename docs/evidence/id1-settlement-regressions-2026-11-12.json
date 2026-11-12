@@ -1,0 +1,288 @@
+{
+  "stats": {
+    "suites": 2,
+    "tests": 15,
+    "passes": 15,
+    "pending": 0,
+    "failures": 0,
+    "start": "2026-11-12T12:19:25.685Z",
+    "end": "2026-11-12T12:20:14.960Z",
+    "duration": 49275
+  },
+  "tests": [
+    {
+      "title": "gives a no-referrer Level 1 recycle exactly one ID1 occurrence",
+      "fullTitle": "ID1 settlement adversarial regressions gives a no-referrer Level 1 recycle exactly one ID1 occurrence",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 2152,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "gives a no-referrer Level 2 recycle exactly one ID1 occurrence",
+      "fullTitle": "ID1 settlement adversarial regressions gives a no-referrer Level 2 recycle exactly one ID1 occurrence",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 1089,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "gives a no-referrer Level 3 recycle exactly one ID1 occurrence",
+      "fullTitle": "ID1 settlement adversarial regressions gives a no-referrer Level 3 recycle exactly one ID1 occurrence",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 1207,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "does not create a second ID1 position for the terminal P12 recycle component",
+      "fullTitle": "ID1 settlement adversarial regressions does not create a second ID1 position for the terminal P12 recycle component",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 1056,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "records the ID1 recycle owner's entitlement once, not twice",
+      "fullTitle": "ID1 settlement adversarial regressions records the ID1 recycle owner's entitlement once, not twice",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 1244,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "updates a stale matrix parent when primary recycle re-entry reaches ID1",
+      "fullTitle": "ID1 settlement adversarial regressions updates a stale matrix parent when primary recycle re-entry reaches ID1",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 989,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "reserves the first nested P12 contribution without starting another repurchase",
+      "fullTitle": "ID1 settlement adversarial regressions reserves the first nested P12 contribution without starting another repurchase",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 1453,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "reserves the first nested P39 contribution without starting another repurchase",
+      "fullTitle": "ID1 settlement adversarial regressions reserves the first nested P39 contribution without starting another repurchase",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 2391,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "reserves a recycle spillover that lands in another P12 reserve window",
+      "fullTitle": "ID1 settlement adversarial regressions reserves a recycle spillover that lands in another P12 reserve window",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 1375,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "locks cascaded P4 escrow for the actual upper beneficiary, not the intermediate recycler",
+      "fullTitle": "ID1 settlement adversarial regressions locks cascaded P4 escrow for the actual upper beneficiary, not the intermediate recycler",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 1262,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "preserves escrow ownership through a fully funded registration-driven P4 cascade",
+      "fullTitle": "ID1 settlement adversarial regressions preserves escrow ownership through a fully funded registration-driven P4 cascade",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 1307,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "rejects externally requested recycle escrow credits",
+      "fullTitle": "ID1 settlement adversarial regressions rejects externally requested recycle escrow credits",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 984,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "rejects an old router without changing the currently configured router",
+      "fullTitle": "ID1 settlement adversarial regressions rejects an old router without changing the currently configured router",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 967,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "creates a P12 recycle spillover mirror and applies its destination escrow window",
+      "fullTitle": "Audit readiness contract invariants creates a P12 recycle spillover mirror and applies its destination escrow window",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 1801,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "creates a P39 recycle spillover mirror and applies its destination escrow window",
+      "fullTitle": "Audit readiness contract invariants creates a P39 recycle spillover mirror and applies its destination escrow window",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 29978,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    }
+  ],
+  "pending": [],
+  "failures": [],
+  "passes": [
+    {
+      "title": "gives a no-referrer Level 1 recycle exactly one ID1 occurrence",
+      "fullTitle": "ID1 settlement adversarial regressions gives a no-referrer Level 1 recycle exactly one ID1 occurrence",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 2152,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "gives a no-referrer Level 2 recycle exactly one ID1 occurrence",
+      "fullTitle": "ID1 settlement adversarial regressions gives a no-referrer Level 2 recycle exactly one ID1 occurrence",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 1089,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "gives a no-referrer Level 3 recycle exactly one ID1 occurrence",
+      "fullTitle": "ID1 settlement adversarial regressions gives a no-referrer Level 3 recycle exactly one ID1 occurrence",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 1207,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "does not create a second ID1 position for the terminal P12 recycle component",
+      "fullTitle": "ID1 settlement adversarial regressions does not create a second ID1 position for the terminal P12 recycle component",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 1056,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "records the ID1 recycle owner's entitlement once, not twice",
+      "fullTitle": "ID1 settlement adversarial regressions records the ID1 recycle owner's entitlement once, not twice",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 1244,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "updates a stale matrix parent when primary recycle re-entry reaches ID1",
+      "fullTitle": "ID1 settlement adversarial regressions updates a stale matrix parent when primary recycle re-entry reaches ID1",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 989,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "reserves the first nested P12 contribution without starting another repurchase",
+      "fullTitle": "ID1 settlement adversarial regressions reserves the first nested P12 contribution without starting another repurchase",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 1453,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "reserves the first nested P39 contribution without starting another repurchase",
+      "fullTitle": "ID1 settlement adversarial regressions reserves the first nested P39 contribution without starting another repurchase",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 2391,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "reserves a recycle spillover that lands in another P12 reserve window",
+      "fullTitle": "ID1 settlement adversarial regressions reserves a recycle spillover that lands in another P12 reserve window",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 1375,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "locks cascaded P4 escrow for the actual upper beneficiary, not the intermediate recycler",
+      "fullTitle": "ID1 settlement adversarial regressions locks cascaded P4 escrow for the actual upper beneficiary, not the intermediate recycler",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 1262,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "preserves escrow ownership through a fully funded registration-driven P4 cascade",
+      "fullTitle": "ID1 settlement adversarial regressions preserves escrow ownership through a fully funded registration-driven P4 cascade",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 1307,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "rejects externally requested recycle escrow credits",
+      "fullTitle": "ID1 settlement adversarial regressions rejects externally requested recycle escrow credits",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 984,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "rejects an old router without changing the currently configured router",
+      "fullTitle": "ID1 settlement adversarial regressions rejects an old router without changing the currently configured router",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 967,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "creates a P12 recycle spillover mirror and applies its destination escrow window",
+      "fullTitle": "Audit readiness contract invariants creates a P12 recycle spillover mirror and applies its destination escrow window",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 1801,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "creates a P39 recycle spillover mirror and applies its destination escrow window",
+      "fullTitle": "Audit readiness contract invariants creates a P39 recycle spillover mirror and applies its destination escrow window",
+      "file": "C:\\DevProjects\\f-freedom-stable\\staging-environment\\smart-contract\\test\\audit-readiness.test.js",
+      "duration": 29978,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    }
+  ]
+}

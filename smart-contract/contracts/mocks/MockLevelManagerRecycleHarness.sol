@@ -3,6 +3,12 @@ pragma solidity ^0.8.24;
 
 import "../LevelManager.sol";
 
+contract MockLegacySettlementRouter {
+    function validatesConfig(address, address) external pure returns (bool) {
+        return true;
+    }
+}
+
 contract MockLevelManagerRecycleHarness is LevelManager {
     function testHandleRecycle(
         address orbitOwner,

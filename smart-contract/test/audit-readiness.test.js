@@ -248,6 +248,233 @@ async function findOrbitPosition(orbit, orbitOwner, level, occupant, maxPosition
   return null;
 }
 
+describe("ID1 settlement adversarial regressions", function () {
+  this.timeout(240000);
+
+  before(async function () {
+    expect((await ethers.provider.getNetwork()).chainId).to.equal(31337n);
+  });
+
+  async function fixture() {
+    return deployCoreSystem({ levelManagerContract: "MockLevelManagerRecycleHarness" });
+  }
+
+  async function contribute(system, user, level, amount, activationId, position) {
+    const tx = await system.levelManager.testHandleRecycle(
+      user.address, level, usdtUnits(amount), activationId,
+      system.users[20].address, position, 1
+    );
+    await tx.wait();
+    await assertSupplyAccounted(system);
+    return tx;
+  }
+
+  async function assertSupplyAccounted(system) {
+    const wallets = await ethers.getSigners();
+    const addresses = [...wallets.map(wallet => wallet.address),
+      system.levelManager.target, system.escrow.target, system.registration.target,
+      system.p4.target, system.p12.target, system.p39.target, system.router.target];
+    let held = 0n;
+    for (const address of addresses) held += await system.usdt.balanceOf(address);
+    expect(held).to.equal(await system.usdt.totalSupply());
+  }
+
+  // Synthetic boundary setup: seed positions without pretending they are funded
+  // historical activations. The contribution under test is separately funded.
+  async function seedBeforeReserveWindow(system, owner, level = 2) {
+    const signer = await impersonateLevelManager(system.levelManager);
+    const orbit = level === 2 ? system.p12 : system.p39;
+    const state = await orbit.getUserOrbit(owner.address, level);
+    let count = Number(state.positionsInLine1) + Number(state.positionsInLine2)
+      + Number(state.positionsInLine3);
+    while (count < (level === 2 ? 10 : 37)) {
+      const user = ethers.getAddress(ethers.toBeHex(100000 + count, 20));
+      await orbit.connect(signer).fillPositionDetailed(
+        owner.address, level, user, owner.address, usdtUnits(level === 2 ? 20 : 40), 80000 + count
+      );
+      count += 1;
+    }
+  }
+
+  for (const level of [1, 2, 3]) {
+    it(`gives a no-referrer Level ${level} recycle exactly one ID1 occurrence`, async function () {
+      const s = await fixture();
+      const user = s.users[8];
+      await s.register(user, ethers.ZeroAddress);
+      await s.activateToLevel(user, level);
+      const price = 10 * 2 ** (level - 1);
+      await s.usdt.mint(s.levelManager.target, usdtUnits(price));
+      const lastPosition = level === 1 ? 4 : level === 2 ? 12 : 39;
+      if (level !== 1) await contribute(s, user, level, price / 2, 81000, lastPosition - 1);
+      const receipt = await (await contribute(
+        s, user, level, level === 1 ? 9 : price / 2, 81001, lastPosition
+      )).wait();
+      const orbit = level === 1 ? s.p4 : level === 2 ? s.p12 : s.p39;
+      const fills = parseEvents(receipt, orbit, "PositionFilled").filter(event =>
+        event.args.orbitOwner === s.owner.address && event.args.user === user.address
+      );
+      expect(fills).to.have.length(1);
+      expect(await s.registration.currentMatrixParentOf(user.address, level)).to.equal(s.owner.address);
+    });
+  }
+
+  it("does not create a second ID1 position for the terminal P12 recycle component", async function () {
+    const s = await fixture();
+    const user = s.users[8];
+    await s.register(user);
+    await s.activateToLevel(user, 2);
+    await s.usdt.mint(s.levelManager.target, usdtUnits(20));
+    await contribute(s, user, 2, 10, 82000, 11);
+    const receipt = await (await contribute(s, user, 2, 10, 82001, 12)).wait();
+    expect(parseEvents(receipt, s.p12, "PositionFilled").filter(event =>
+      event.args.orbitOwner === s.owner.address && event.args.user === user.address
+    )).to.have.length(1);
+  });
+
+  it("records the ID1 recycle owner's entitlement once, not twice", async function () {
+    const s = await fixture();
+    const user = s.users[8];
+    await s.register(user);
+    await s.activateToLevel(user, 2);
+    await s.usdt.mint(s.levelManager.target, usdtUnits(20));
+    await contribute(s, user, 2, 10, 82100, 11);
+    const before = (await s.p12.getUserOrbit(s.owner.address, 2)).totalEarned;
+    const founders = s.users.slice(0, 8);
+    const [, nft, ops] = await ethers.getSigners();
+    const { deltas } = await balanceDeltas(s.usdt, [...founders, nft, ops],
+      () => contribute(s, user, 2, 10, 82101, 12));
+    expect(deltas).to.deep.equal([
+      ...founders.map(() => usdtUnits(2.25)), usdtUnits(1.6), usdtUnits(0.4),
+    ]);
+    const after = (await s.p12.getUserOrbit(s.owner.address, 2)).totalEarned;
+    expect(after - before).to.equal(usdtUnits(18));
+  });
+
+  it("updates a stale matrix parent when primary recycle re-entry reaches ID1", async function () {
+    const s = await fixture();
+    const user = s.users[8];
+    await s.register(user);
+    await s.activateToLevel(user, 2);
+    await s.registration.recordCurrentMatrixParent(user.address, 2, s.users[9].address);
+    await s.usdt.mint(s.levelManager.target, usdtUnits(20));
+    await contribute(s, user, 2, 10, 82200, 11);
+    await contribute(s, user, 2, 10, 82201, 12);
+    expect(await s.registration.currentMatrixParentOf(user.address, 2)).to.equal(s.owner.address);
+  });
+
+  for (const level of [2, 3]) {
+    it(`reserves the first nested P${level === 2 ? 12 : 39} contribution without starting another repurchase`, async function () {
+      const s = await fixture();
+      const price = level === 2 ? 20 : 40;
+      const lastPosition = level === 2 ? 12 : 39;
+      const orbit = level === 2 ? s.p12 : s.p39;
+      const parent = s.users[8];
+      const user = s.users[9];
+      await s.register(parent);
+      await s.activateToLevel(parent, level + 1);
+      await s.register(user, parent.address);
+      await s.activateToLevel(user, level);
+      await seedBeforeReserveWindow(s, parent, level);
+      await s.usdt.mint(s.levelManager.target, usdtUnits(price));
+      await contribute(s, user, level, price / 2, 83000, lastPosition - 1);
+      const receipt = await (await contribute(s, user, level, price / 2, 83001, lastPosition)).wait();
+      const reserves = parseEvents(receipt, s.router, "RecycleReserveUpdated")
+        .filter(event => event.args.orbitOwner === parent.address);
+      expect(reserves).to.have.length(1);
+      expect(reserves[0].args.reservedAmount).to.equal(usdtUnits(price / 2));
+      expect(reserves[0].args.released).to.equal(false);
+      expect(parseEvents(receipt, s.router, "RecycleCompletedDetailed")
+        .filter(event => event.args.orbitOwner === parent.address)).to.have.length(0);
+
+      const finalUser = s.users[11];
+      await s.register(finalUser, parent.address);
+      await s.activateToLevel(finalUser, level - 1);
+      const finalReceipt = await (await s.registration.connect(finalUser).activateLevel(level)).wait();
+      const releases = parseEvents(finalReceipt, s.router, "RecycleReserveUpdated")
+        .filter(event => event.args.orbitOwner === parent.address && event.args.released);
+      expect(releases).to.have.length(1);
+      expect(releases[0].args.reservedAmount).to.equal(usdtUnits(price));
+      expect((await orbit.getUserOrbit(parent.address, level)).totalCycles).to.equal(1);
+      await assertSupplyAccounted(s);
+    });
+  }
+
+  it("reserves a recycle spillover that lands in another P12 reserve window", async function () {
+    const s = await fixture();
+    const upper = s.users[8];
+    const parent = s.users[9];
+    const user = s.users[10];
+    await s.register(upper);
+    await s.activateToLevel(upper, 3);
+    await s.register(parent, upper.address);
+    await s.activateToLevel(parent, 3);
+    await s.register(user, parent.address);
+    await s.activateToLevel(user, 2);
+    await seedBeforeReserveWindow(s, upper);
+    await s.usdt.mint(s.levelManager.target, usdtUnits(20));
+    await contribute(s, user, 2, 10, 84000, 11);
+    const before = await s.usdt.balanceOf(upper.address);
+    const receipt = await (await contribute(s, user, 2, 10, 84001, 12)).wait();
+    expect(await s.usdt.balanceOf(upper.address)).to.equal(before);
+    const reserve = parseEvents(receipt, s.router, "RecycleReserveUpdated")
+      .find(event => event.args.orbitOwner === upper.address);
+    expect(reserve).not.to.equal(undefined);
+    expect(reserve.args.reservedAmount).to.equal(usdtUnits(10));
+    expect(reserve.args.released).to.equal(false);
+  });
+
+  it("locks cascaded P4 escrow for the actual upper beneficiary, not the intermediate recycler", async function () {
+    const s = await fixture();
+    const [upper, middle, lower, filler1, filler2] = s.users.slice(8, 13);
+    await s.register(upper);
+    await s.register(middle, upper.address);
+    await s.register(lower, middle.address);
+    await s.register(filler1, middle.address);
+    await s.register(filler2, middle.address);
+    const beforeUpper = await s.escrow.getLockedAmount(upper.address, 1, 2);
+    const beforeMiddle = await s.escrow.getLockedAmount(middle.address, 1, 2);
+    await s.usdt.mint(s.levelManager.target, usdtUnits(9));
+    const receipt = await (await contribute(s, lower, 1, 9, 85001, 4)).wait();
+    expect(await s.escrow.getLockedAmount(upper.address, 1, 2)).to.equal(beforeUpper + usdtUnits(9));
+    expect(await s.escrow.getLockedAmount(middle.address, 1, 2)).to.equal(beforeMiddle);
+    const cascaded = parseEvents(receipt, s.router, "RecycleCompletedDetailed")
+      .find(event => event.args.orbitOwner === middle.address);
+    expect(cascaded.args.sourceUser).to.equal(lower.address);
+    expect(cascaded.args.recycleReceiver).to.equal(upper.address);
+  });
+
+  it("preserves escrow ownership through a fully funded registration-driven P4 cascade", async function () {
+    const s = await fixture();
+    const [upper, middle, lower, filler1, filler2, ...children] = s.users.slice(8, 17);
+    await s.register(upper);
+    await s.register(middle, upper.address);
+    await s.register(lower, middle.address);
+    await s.register(filler1, middle.address);
+    await s.register(filler2, middle.address);
+    for (const child of children.slice(0, 3)) await s.register(child, lower.address);
+    const before = await s.escrow.getLockedAmount(upper.address, 1, 2);
+    await s.register(children[3], lower.address);
+    expect(await s.escrow.getLockedAmount(upper.address, 1, 2)).to.equal(before + usdtUnits(9));
+    expect(await s.escrow.getLockedAmount(middle.address, 1, 2)).to.equal(0);
+    expect(await s.registration.currentMatrixParentOf(middle.address, 1)).to.equal(upper.address);
+    await assertSupplyAccounted(s);
+  });
+
+  it("rejects externally requested recycle escrow credits", async function () {
+    const s = await fixture();
+    await expect(s.levelManager.lockRecycleEscrow(s.users[8].address, 1, usdtUnits(9)))
+      .to.be.revertedWithCustomError(s.levelManager, "OnlySelf");
+  });
+
+  it("rejects an old router without changing the currently configured router", async function () {
+    const s = await fixture();
+    const legacy = await (await ethers.getContractFactory("MockLegacySettlementRouter")).deploy();
+    await expect(s.levelManager.setSettlementRouter(legacy.target))
+      .to.be.revertedWithCustomError(s.levelManager, "InvalidContract");
+    expect(await s.levelManager.settlementRouter()).to.equal(s.router.target);
+  });
+});
+
 describe("Audit readiness contract invariants", function () {
   this.timeout(240000);
 
@@ -1204,7 +1431,7 @@ describe("Audit readiness contract invariants", function () {
     expect(recycleReentry.mirrorEscrowLockAmount).to.equal(mirrorAmount);
   });
 
-  it("routes no-referrer P12 recycle fallback to founders without an ID1 position", async function () {
+  it("gives a no-referrer P12 recycle one normal ID1 re-entry and founder payouts", async function () {
     const { owner, users, registration, levelManager, router, p12, usdt, register, activateToLevel } = await deployCoreSystem();
     const orbitOwner = users[8];
     const fillers = users.slice(9, 19);
@@ -1253,12 +1480,12 @@ describe("Audit readiness contract invariants", function () {
     const recycleReceipt = parseEvents(observed.receipt, levelManager, "DetailedPayoutReceiptRecorded")
       .find((event) => event.args.receiptType === 4n);
 
-    expect(id1Orbit.currentPosition).to.equal(id1OrbitBefore.currentPosition);
+    expect(id1Orbit.currentPosition).to.be.greaterThan(id1OrbitBefore.currentPosition);
     expect(id1Position.occupant).to.equal(id1PositionBefore.occupant);
     expect(founderDelta).to.equal(usdtUnits(18));
-    expect(fallback.args.reasonCode).to.equal(ethers.encodeBytes32String("RECYCLE_FALLBACK_ID1"));
+    expect(fallback).to.equal(undefined);
     expect(recycleReceipt.args.receiver).to.equal(owner.address);
-    expect(recycleReceipt.args.mirroredPosition).to.equal(0);
+    expect(recycleReceipt.args.mirroredPosition).to.be.greaterThan(0);
 
     const recycleEvent = findEvent(receipt, p12, "PositionFilled");
     expect(recycleEvent).to.not.equal(undefined);
@@ -1291,7 +1518,7 @@ describe("Audit readiness contract invariants", function () {
       .find((event) => event.args.reasonCode === ethers.encodeBytes32String("RECYCLE_FALLBACK_ID1"));
 
     expect(after.currentPosition).to.be.greaterThan(before.currentPosition);
-    expect(fills).to.have.length(2);
+    expect(fills).to.have.length(1);
     expect(fallback).to.equal(undefined);
   });
 
@@ -1765,8 +1992,8 @@ describe("Audit readiness contract invariants", function () {
     expect(recycleReceipts.some((event) => event.args.receiver === placementParent.address)).to.equal(false);
   });
 
-  it("creates a P12 mirror position for structured recycle spillover receivers", async function () {
-    const { owner, users, registration, levelManager, router, p12, usdt, register, activateToLevel } = await deployCoreSystem();
+  it("creates a P12 recycle spillover mirror and applies its destination escrow window", async function () {
+    const { owner, users, registration, levelManager, router, p12, usdt, escrow, register, activateToLevel } = await deployCoreSystem();
     const founderWallets = users.slice(0, 8);
     const grandUpline = users[8];
     const sponsor = users[9];
@@ -1791,6 +2018,7 @@ describe("Audit readiness contract invariants", function () {
     await register(finalRecycleTrigger, orbitOwner.address);
     await registration.connect(recycleTrigger).activateLevel(2);
 
+    const grandEscrowBefore = await escrow.getLockedAmount(grandUpline.address, 2, 3);
     const observed = await balanceDeltas(
       usdt,
       [sponsor, grandUpline, ...founderWallets],
@@ -1809,10 +2037,15 @@ describe("Audit readiness contract invariants", function () {
     const grandMirrorPosition = await findOrbitPosition(p12, grandUpline, 2, orbitOwner, 12);
 
     expect(sponsorDelta).to.equal(usdtUnits(8));
-    expect(grandDelta).to.equal(usdtUnits(10));
+    expect(grandDelta).to.equal(0n);
+    expect(await escrow.getLockedAmount(grandUpline.address, 2, 3))
+      .to.equal(grandEscrowBefore + usdtUnits(10));
     expect(founderDelta).to.equal(0n);
     expect(grandMirrorFill).to.not.equal(undefined);
     expect(grandMirrorPosition).to.deep.include({ line: 2, isMirror: true });
+    const rule = await p12.getPositionRuleView(grandUpline.address, 2, grandMirrorFill.args.position);
+    expect(rule.toEscrow).to.equal(usdtUnits(10));
+    expect(rule.toOwner).to.equal(0n);
   });
 
   it("reserves mirrored P12 arrivals that land on the recycle window instead of paying them liquid", async function () {
@@ -2329,8 +2562,8 @@ describe("Audit readiness contract invariants", function () {
     expect(recycleReceipts.some((event) => event.args.receiver === matrixGrandParent.address)).to.equal(false);
   });
 
-  it("creates a P39 mirror position for structured recycle spillover receivers", async function () {
-    const { owner, users, registration, levelManager, router, p39, usdt, register, activateToLevel } = await deployCoreSystem();
+  it("creates a P39 recycle spillover mirror and applies its destination escrow window", async function () {
+    const { owner, users, registration, levelManager, router, p39, usdt, escrow, register, activateToLevel } = await deployCoreSystem();
     const founderWallets = users.slice(0, 8);
     const grandUpline = users[8];
     const sponsor = users[9];
@@ -2358,6 +2591,7 @@ describe("Audit readiness contract invariants", function () {
     await registration.connect(finalRecycleTrigger).activateLevel(2);
     await registration.connect(recycleTrigger).activateLevel(3);
 
+    const grandEscrowBefore = await escrow.getLockedAmount(grandUpline.address, 3, 4);
     const observed = await balanceDeltas(
       usdt,
       [sponsor, grandUpline, ...founderWallets],
@@ -2376,10 +2610,15 @@ describe("Audit readiness contract invariants", function () {
     const grandMirrorPosition = await findOrbitPosition(p39, grandUpline, 3, orbitOwner, 39);
 
     expect(sponsorDelta).to.equal(usdtUnits(8));
-    expect(grandDelta).to.equal(usdtUnits(8));
+    expect(grandDelta).to.equal(0n);
+    expect(await escrow.getLockedAmount(grandUpline.address, 3, 4))
+      .to.equal(grandEscrowBefore + usdtUnits(8));
     expect(founderDelta).to.equal(usdtUnits(20));
     expect(grandMirrorFill).to.not.equal(undefined);
     expect(grandMirrorPosition).to.deep.include({ line: 2, isMirror: true });
+    const rule = await p39.getPositionRuleView(grandUpline.address, 3, grandMirrorFill.args.position);
+    expect(rule.toEscrow).to.equal(usdtUnits(8));
+    expect(rule.toOwner).to.equal(0n);
   });
 
   it("bounds sponsor resolution before deep inactive referral chains can exhaust gas", async function () {

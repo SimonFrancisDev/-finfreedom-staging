@@ -84,6 +84,7 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
     error InvalidOrbitType();
     error InvalidFounderConfig();
     error OnlyRegistration();
+    error OnlySelf();
     error OnlyOrbitContracts();
     error LevelAlreadyActivated();
     error PreviousLevelInactive();
@@ -398,6 +399,15 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
 
     function _requireSettlementRouter() internal view {
         if (address(settlementRouter) == address(0)) revert InvalidContract();
+        try settlementRouter.settlementRevision() returns (uint256 revision) {
+            if (revision != 2) revert InvalidContract();
+        } catch {
+            revert InvalidContract();
+        }
+    }
+
+    function settlementRevision() external pure returns (uint256) {
+        return 2;
     }
 
     function _authorizeUpgrade(address newImplementation) internal view override onlyOwner {
@@ -448,6 +458,7 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
         if (!ILevelSettlementRouter(_settlementRouter).validatesConfig(address(this), address(usdt))) revert InvalidContract();
         address oldRouter = address(settlementRouter);
         settlementRouter = ILevelSettlementRouter(_settlementRouter);
+        _requireSettlementRouter();
         emit SettlementRouterUpdated(oldRouter, _settlementRouter);
     }
 
@@ -801,6 +812,7 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
         _maybeTriggerAutoUpgrade(a.spillover1Recipient, level);
         _maybeTriggerAutoUpgrade(a.spillover2Recipient, level);
         _maybeTriggerAutoUpgrade(a.recycleRecipient, level);
+        if (autoUpgradeExecutionDepth == 0) _drainPendingAutoUpgradeChecks();
     }
 
     function _settleRoutedSpillovers(
@@ -924,8 +936,8 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
         uint256 splitAGross = splitA.liquidAmount + splitA.escrowLocked + splitA.recycleAmount;
         uint256 splitBGross = splitB.liquidAmount + splitB.escrowLocked + splitB.recycleAmount;
 
-        _recordRoutedEarning(orbitType, routedRecipientA, level, splitAGross);
-        _recordRoutedEarning(orbitType, routedRecipientB, level, splitBGross);
+        _recordRoutedEarning(orbitType, routedRecipientA, level, splitA.liquidAmount + splitA.escrowLocked);
+        _recordRoutedEarning(orbitType, routedRecipientB, level, splitB.liquidAmount + splitB.escrowLocked);
 
         if (splitA.recycleAmount > 0 && splitA.mirroredPosition > 0) {
             _handleRecycle(
@@ -1305,45 +1317,40 @@ contract LevelManager is Initializable, OwnableUpgradeable, UUPSUpgradeable, Pau
         ) = abi.decode(_delegateToSettlementRouterWithResult(abi.encodeCall(
             ILevelSettlementRouter.settleRecycle,
             (
-                orbitType,
-                address(registration),
-                address(p4Orbit),
-                address(p12Orbit),
-                address(p39Orbit),
-                id1Wallet,
-                orbitOwner,
-                level,
-                amount,
-                activationId,
-                fromUser,
-                sourcePosition,
-                sourceCycle,
-                founderWallets,
-                founderRatios
+                ILevelSettlementRouter.RecycleInput({
+                    orbitType: orbitType,
+                    registration: address(registration),
+                    p4Orbit: address(p4Orbit),
+                    p12Orbit: address(p12Orbit),
+                    p39Orbit: address(p39Orbit),
+                    id1Wallet: id1Wallet,
+                    orbitOwner: orbitOwner,
+                    level: level,
+                    amount: amount,
+                    activationId: activationId,
+                    fromUser: fromUser,
+                    sourcePosition: sourcePosition,
+                    sourceCycle: sourceCycle,
+                    founderWallets: founderWallets,
+                    founderRatios: founderRatios
+                })
             )
         )), (address, uint256, uint256, uint8, uint32));
 
-        if (result.mirrorPosition != 0 && result.actualRecycleReceiver != id1Wallet) {
-            _delegateToSettlementRouter(abi.encodeCall(
-                ILevelSettlementRouter.recordStructuralPlacement,
-                (
-                    address(registration),
-                    _getOrbitAddress(orbitType),
-                    orbitType,
-                    result.actualRecycleReceiver,
-                    orbitOwner,
-                    level,
-                    result.mirrorPosition,
-                    result.mirrorCycle
-                )
-            ));
-        }
-
         result.recycleGross = amount;
-        if (result.recycleEscrowLocked > 0 && result.actualRecycleReceiver != id1Wallet) {
-            _handleLock(result.actualRecycleReceiver, level, result.recycleEscrowLocked);
-        }
     }
+
+    // The delegatecalled router locks each beneficiary's amount separately.
+    // Upgrade checks wait until all components of the activation have settled.
+    function lockRecycleEscrow(address beneficiary, uint8 level, uint256 amount) external {
+        if (msg.sender != address(this)) revert OnlySelf();
+        if (beneficiary == address(0) || beneficiary == id1Wallet) revert InvalidAddress();
+        if (level < MIN_LEVEL || level >= MAX_LEVEL) revert InvalidLevel();
+        if (amount == 0) return;
+        _handleLock(beneficiary, level, amount);
+        pendingAutoUpgradeChecks.push(PendingAutoUpgradeCheck(beneficiary, level));
+    }
+
     function _handleLock(address beneficiary, uint8 fromLevel, uint256 lockAmount) internal {
         if (fromLevel >= 10 || lockAmount == 0) return;
 

@@ -41,12 +41,14 @@ line.
 
 ### Terminal ID1 fallback
 
-Terminal fallback occurs only when a required payment role has no eligible
-wallet after walking its approved permanent sponsor chain. The component is
-distributed through ID1's founder route and creates no artificial ID1 position.
+A primary activation or recycle that exhausts the sponsor chain still receives
+one legitimate ID1 placement. A stored zero referrer has the same structural
+rights as an ID1 sponsor; storage history need not be rewritten.
 
-ID1 can also be a legitimate normal structural recipient. That is not fallback
-and must retain the normal structural occurrence.
+When additional payment roles terminate at ID1 after its legitimate occurrence
+has been created, those components are payment-only. Keep distinct receipts but
+do not create extra ID1 positions, qualifying arrivals or reserve contributions.
+The recycle self-payment fallback also remains payment-only.
 
 ## 2. Registration
 
@@ -283,7 +285,9 @@ Suppose H lands beneath line-2 parent X, whose line-1 parent is E:
 - System receives 4 USDT.
 
 Every 8, 8, and 20 component remains independently identifiable even when two
-components select the same wallet. They must not be merged into one placement.
+components select the same wallet. Additional terminal components reaching ID1
+do not create additional occurrences in that same participation event. This
+exception applies to activation, recycle and nested recycle alike.
 
 ### P39 automatic upgrade window
 
@@ -343,12 +347,11 @@ If B directly registered under ID1 and ID1 is the legitimate structural owner:
 
 ### Exhausted eligibility fallback
 
-If a component reaches ID1 only because every candidate was inactive or absent:
-
-- The component is distributed among founders.
-- A fallback receipt records the source, level, amount, role, and reason.
-- No artificial participant occurrence is created in ID1's orbit.
-- ID1's cycle does not advance from the fallback.
+If the primary activation or recycle reaches ID1 because every candidate was
+inactive or absent, create one normal structural occurrence and apply its normal
+rules. Its ID1 earnings use the founder route. This includes zero-referrer users.
+Additional terminal portions paid to ID1 create no further position or counter
+increment. Payment-only fallback must not be used to erase the primary position.
 
 ### Recycle self-payment fallback
 
@@ -379,8 +382,9 @@ If a recycle owner's own repurchase component resolves back to that owner:
   mirror flags, and payout snapshots remain immutable.
 - Current-cycle counters reset exactly once.
 - A recycle re-entry is a fresh occurrence and cannot reuse the closed position.
-- Normal connected components also require one occurrence per component; reusing
-  an old occurrence would hide a payment and corrupt line-arrival counters.
+- Normal connected components require their legitimate occurrences; reusing an
+  old occurrence would hide a payment and corrupt line-arrival counters. Extra
+  terminal ID1 components have separate receipts, not extra occurrences.
 
 ## 11. Accounting Conservation
 

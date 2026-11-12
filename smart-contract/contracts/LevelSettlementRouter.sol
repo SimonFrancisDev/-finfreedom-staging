@@ -89,6 +89,11 @@ interface ISettlementChargeRecipients {
     function operationsWallet() external view returns (address);
 }
 
+interface ISettlementManagerCallbacks {
+    function lockRecycleEscrow(address beneficiary, uint8 level, uint256 amount) external;
+    function settlementRevision() external pure returns (uint256);
+}
+
 contract LevelSettlementRouter is ILevelSettlementRouter {
     using SafeERC20 for IERC20;
 
@@ -138,6 +143,36 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
         bool systemChargeAlreadyPaid;
         address[] founderWallets;
         uint256[] founderRatios;
+        uint8 depth;
+    }
+
+    struct RecycleComponent {
+        address receiver;
+        uint8 position;
+        uint32 cycle;
+        uint256 liquid;
+        uint256 escrow;
+        uint256 reserve;
+    }
+
+    struct RecyclePlacement {
+        uint8 position;
+        uint32 cycle;
+        uint256 owner;
+        uint256 spillover1;
+        address recipient1;
+        uint256 spillover2;
+        address recipient2;
+        uint256 escrow;
+        uint256 reserve;
+    }
+
+    struct RecycleOutcome {
+        address receiver;
+        uint256 liquid;
+        uint256 escrow;
+        uint8 position;
+        uint32 cycle;
     }
 
     struct P4RecycleInput {
@@ -317,6 +352,10 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
         return expectedLevelManager == levelManager && expectedUsdt == address(usdt);
     }
 
+    function settlementRevision() external pure returns (uint256) {
+        return 2;
+    }
+
     function recordStructuralPlacement(
         address registration,
         address orbit,
@@ -405,6 +444,7 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
 
     modifier onlyDelegateCall() {
         if (address(this) == self) revert OnlyDelegateCall();
+        if (ISettlementManagerCallbacks(address(this)).settlementRevision() != 2) revert InvalidConfig();
         _;
     }
 
@@ -489,8 +529,8 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
 
         if (upline == address(0) || upline == orbitOwner) {
             upline = id1Wallet;
-            fallbackToId1 = true;
         }
+        fallbackToId1 = orbitOwner == id1Wallet;
 
         if (upline != address(0) && !fallbackToId1) {
             uint256 mirrorOwnerLiquid;
@@ -508,26 +548,15 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
                 activationId
             );
             mirrorOwnerLiquid;
+            _recordStructuralPlacement(
+                registration,
+                orbitType == 4 ? p4Orbit : orbitType == 12 ? p12Orbit : p39Orbit,
+                orbitType, upline, orbitOwner, level, mirroredPosition, mirroredCycle
+            );
         }
     }
 
-    function settleRecycle(
-        uint8 orbitType,
-        address registration,
-        address p4Orbit,
-        address p12Orbit,
-        address p39Orbit,
-        address id1Wallet,
-        address orbitOwner,
-        uint8 level,
-        uint256 amount,
-        uint256 activationId,
-        address fromUser,
-        uint8 sourcePosition,
-        uint32 sourceCycle,
-        address[] calldata founderWallets,
-        uint256[] calldata founderRatios
-    )
+    function settleRecycle(RecycleInput calldata request)
         external
         onlyDelegateCall
         returns (
@@ -538,14 +567,14 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
             uint32 mirrorCycle
         )
     {
-        if (amount == 0) {
+        if (request.amount == 0) {
             emit PayoutNotDelivered(
-                orbitOwner,
-                fromUser,
-                level,
-                orbitType,
-                sourcePosition,
-                sourceCycle,
+                request.orbitOwner,
+                request.fromUser,
+                request.level,
+                request.orbitType,
+                request.sourcePosition,
+                request.sourceCycle,
                 0,
                 address(0),
                 0,
@@ -553,82 +582,56 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
                 ROLE_RECYCLE_CODE,
                 REASON_ZERO_AMOUNT,
                 ACTION_NO_ACTION,
-                activationId
+                request.activationId
             );
             return (address(0), 0, 0, 0, 0);
         }
 
-        if (orbitType == 12 || orbitType == 39) {
-            if (_consumeLegacyRecycleBypass()) {
-                return _settleStructuredRecycle(StructuredRecycleInput({
-                    orbitType: orbitType,
-                    registration: registration,
-                    p12Orbit: p12Orbit,
-                    p39Orbit: p39Orbit,
-                    id1Wallet: id1Wallet,
-                    orbitOwner: orbitOwner,
-                    level: level,
-                    amount: amount,
-                    activationId: activationId,
-                    fromUser: fromUser,
-                    sourcePosition: sourcePosition,
-                    sourceCycle: sourceCycle,
-                    systemChargeAlreadyPaid: true,
-                    founderWallets: founderWallets,
-                    founderRatios: founderRatios
-                }));
+        if (request.orbitType == 12 || request.orbitType == 39) {
+            StructuredRecycleInput memory input;
+            input.orbitType = request.orbitType;
+            input.registration = request.registration;
+            input.p12Orbit = request.p12Orbit;
+            input.p39Orbit = request.p39Orbit;
+            input.id1Wallet = request.id1Wallet;
+            input.orbitOwner = request.orbitOwner;
+            input.level = request.level;
+            input.amount = request.amount;
+            input.activationId = request.activationId;
+            input.fromUser = request.fromUser;
+            input.sourcePosition = request.sourcePosition;
+            input.sourceCycle = request.sourceCycle;
+            input.founderWallets = request.founderWallets;
+            input.founderRatios = request.founderRatios;
+            input.systemChargeAlreadyPaid = _consumeLegacyRecycleBypass();
+            if (!input.systemChargeAlreadyPaid) {
+                (bool ready, uint256 total) = _reserveStructuredRecycle(
+                    request.orbitOwner, request.level, request.amount, request.activationId,
+                    request.fromUser, request.sourcePosition, request.sourceCycle
+                );
+                if (!ready) return (address(0), 0, 0, 0, 0);
+                input.amount = total;
             }
-
-            (bool ready, uint256 releasableAmount) = _reserveStructuredRecycle(
-                orbitOwner,
-                level,
-                amount,
-                activationId,
-                fromUser,
-                sourcePosition,
-                sourceCycle
-            );
-
-            if (!ready) {
-                return (address(0), 0, 0, 0, 0);
-            }
-
-            return _settleStructuredRecycle(StructuredRecycleInput({
-                orbitType: orbitType,
-                registration: registration,
-                p12Orbit: p12Orbit,
-                p39Orbit: p39Orbit,
-                id1Wallet: id1Wallet,
-                orbitOwner: orbitOwner,
-                level: level,
-                amount: releasableAmount,
-                activationId: activationId,
-                fromUser: fromUser,
-                sourcePosition: sourcePosition,
-                sourceCycle: sourceCycle,
-                systemChargeAlreadyPaid: false,
-                founderWallets: founderWallets,
-                founderRatios: founderRatios
-            }));
+            RecycleOutcome memory result = _settleStructuredRecycle(input);
+            return (result.receiver, result.liquid, result.escrow, result.position, result.cycle);
         }
 
-        return _settleP4Recycle(P4RecycleInput({
-            registration: registration,
-            p4Orbit: p4Orbit,
-            p12Orbit: p12Orbit,
-            p39Orbit: p39Orbit,
-            id1Wallet: id1Wallet,
-            orbitOwner: orbitOwner,
-            level: level,
-            amount: amount,
-            activationId: activationId,
-            fromUser: fromUser,
-            sourcePosition: sourcePosition,
-            sourceCycle: sourceCycle,
-            founderWallets: founderWallets,
-            founderRatios: founderRatios,
-            depth: 0
-        }));
+        P4RecycleInput memory p4Input;
+        p4Input.registration = request.registration;
+        p4Input.p4Orbit = request.p4Orbit;
+        p4Input.p12Orbit = request.p12Orbit;
+        p4Input.p39Orbit = request.p39Orbit;
+        p4Input.id1Wallet = request.id1Wallet;
+        p4Input.orbitOwner = request.orbitOwner;
+        p4Input.level = request.level;
+        p4Input.amount = request.amount;
+        p4Input.activationId = request.activationId;
+        p4Input.fromUser = request.fromUser;
+        p4Input.sourcePosition = request.sourcePosition;
+        p4Input.sourceCycle = request.sourceCycle;
+        p4Input.founderWallets = request.founderWallets;
+        p4Input.founderRatios = request.founderRatios;
+        return _settleP4Recycle(p4Input);
     }
 
     function _settleP4Recycle(
@@ -757,6 +760,9 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
         );
 
         if (recycleEscrowLocked > 0) {
+            ISettlementManagerCallbacks(address(this)).lockRecycleEscrow(
+                recycleReceiver, input.level, recycleEscrowLocked
+            );
             emit PayoutNotDelivered(
                 recycleReceiver,
                 input.fromUser,
@@ -806,13 +812,23 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
         );
 
         if (mirrorRecycleAmount > 0) {
-            P4RecycleInput memory nested = input;
-            nested.orbitOwner = recycleReceiver;
-            nested.amount = mirrorRecycleAmount;
-            nested.fromUser = input.orbitOwner;
-            nested.sourcePosition = mirrorPosition;
-            nested.sourceCycle = mirrorCycle;
-            nested.depth = input.depth + 1;
+            P4RecycleInput memory nested = P4RecycleInput({
+                registration: input.registration,
+                p4Orbit: input.p4Orbit,
+                p12Orbit: input.p12Orbit,
+                p39Orbit: input.p39Orbit,
+                id1Wallet: input.id1Wallet,
+                orbitOwner: recycleReceiver,
+                level: input.level,
+                amount: mirrorRecycleAmount,
+                activationId: input.activationId,
+                fromUser: input.orbitOwner,
+                sourcePosition: mirrorPosition,
+                sourceCycle: mirrorCycle,
+                founderWallets: input.founderWallets,
+                founderRatios: input.founderRatios,
+                depth: input.depth + 1
+            });
             (, uint256 nestedLiquid, uint256 nestedEscrow, , ) = _settleP4Recycle(nested);
             recycleLiquidPaid += nestedLiquid;
             recycleEscrowLocked += nestedEscrow;
@@ -839,16 +855,13 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
         StructuredRecycleInput memory input
     )
         internal
-        returns (
-            address recycleReceiver,
-            uint256 recycleLiquidPaid,
-            uint256 recycleEscrowLocked,
-            uint8 mirrorPosition,
-            uint32 mirrorCycle
-        )
+        returns (RecycleOutcome memory result)
     {
+        if (input.depth >= MAX_UPLINE_SEARCH_DEPTH) {
+            revert UplineSearchTooDeep(input.orbitOwner, input.level);
+        }
         bool fallbackToId1;
-        (recycleReceiver, fallbackToId1) = _resolveActiveUpline(
+        (result.receiver, fallbackToId1) = _resolveActiveUpline(
             input.registration,
             input.id1Wallet,
             input.orbitOwner,
@@ -942,111 +955,77 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
                 0,
                 true
             );
-            return (input.id1Wallet, founderAmount, 0, 0, 0);
+            return RecycleOutcome(input.id1Wallet, founderAmount, 0, 0, 0);
         }
 
-        address orbitAddress = input.orbitType == 12 ? input.p12Orbit : input.p39Orbit;
-        uint256 toOwner;
-        uint256 toSpillover1;
-        address spillover1Recipient;
-        uint256 toSpillover2;
-        address spillover2Recipient;
-        uint256 toEscrow;
-        uint256 toRecycle;
+        RecyclePlacement memory placement = _placeStructuredRecycle(input, result.receiver, ruleBaseAmount);
+        result.position = placement.position;
+        result.cycle = placement.cycle;
 
-        (
-            mirrorPosition,
-            mirrorCycle,
-            toOwner,
-            toSpillover1,
-            spillover1Recipient,
-            toSpillover2,
-            spillover2Recipient,
-            toEscrow,
-            toRecycle
-        ) = ISettlementOrbitDetailed(orbitAddress).recyclePositionDetailed(
-            recycleReceiver,
-            input.level,
-            input.orbitOwner,
-            input.amount,
-            ruleBaseAmount,
-            input.activationId
-        );
-
-        uint256 ownerGross = toOwner + toEscrow;
+        uint256 ownerGross = placement.owner + placement.escrow;
         if (ownerGross > 0) {
-            recycleLiquidPaid += _payStructuredRecycleComponent(
+            result.liquid += _payStructuredRecycleComponent(
                 input,
-                recycleReceiver,
+                result.receiver,
                 ownerGross,
-                toEscrow,
-                mirrorPosition,
-                mirrorCycle,
-                1
+                placement.escrow,
+                0,
+                result.position,
+                result.cycle,
+                false
             );
-            recycleEscrowLocked += toEscrow;
+            result.escrow += placement.escrow;
         }
 
-        uint8 spillover1MirrorPosition;
-        uint32 spillover1MirrorCycle;
-        (spillover1Recipient, spillover1MirrorPosition, spillover1MirrorCycle) = _prepareRecyclePayout(
-            input,
-            spillover1Recipient,
-            toSpillover1
+        address routedParent = result.position > 3 && placement.recipient1 != address(0)
+            ? placement.recipient1
+            : result.receiver;
+        RecycleComponent memory componentA = _prepareRecyclePayout(
+            input, placement.recipient1, placement.spillover1, ruleBaseAmount, routedParent,
+            result.receiver == input.id1Wallet
         );
-        recycleLiquidPaid += _payStructuredRecycleComponent(
-            input,
-            spillover1Recipient,
-            toSpillover1,
-            0,
-            spillover1MirrorPosition == 0 ? mirrorPosition : spillover1MirrorPosition,
-            spillover1MirrorCycle == 0 ? mirrorCycle : spillover1MirrorCycle,
-            2
+        RecycleComponent memory componentB = _prepareRecyclePayout(
+            input, placement.recipient2, placement.spillover2, ruleBaseAmount, routedParent,
+            result.receiver == input.id1Wallet ||
+                (componentA.receiver == input.id1Wallet && componentA.position != 0)
         );
+        result.liquid += _payStructuredRecycleComponent(
+            input,
+            componentA.receiver,
+            placement.spillover1,
+            componentA.escrow,
+            componentA.reserve,
+            componentA.position,
+            componentA.cycle,
+            true
+        );
+        result.liquid += _payStructuredRecycleComponent(
+            input,
+            componentB.receiver,
+            placement.spillover2,
+            componentB.escrow,
+            componentB.reserve,
+            componentB.position,
+            componentB.cycle,
+            true
+        );
+        result.escrow += componentA.escrow + componentB.escrow;
 
-        uint8 spillover2MirrorPosition;
-        uint32 spillover2MirrorCycle;
-        (spillover2Recipient, spillover2MirrorPosition, spillover2MirrorCycle) = _prepareRecyclePayout(
-            input,
-            spillover2Recipient,
-            toSpillover2
+        (uint256 nestedLiquid, uint256 nestedEscrow) = _settleNestedRecycleReserve(
+            input, componentA.receiver, componentA.reserve, componentA.position, componentA.cycle
         );
-        recycleLiquidPaid += _payStructuredRecycleComponent(
-            input,
-            spillover2Recipient,
-            toSpillover2,
-            0,
-            spillover2MirrorPosition == 0 ? mirrorPosition : spillover2MirrorPosition,
-            spillover2MirrorCycle == 0 ? mirrorCycle : spillover2MirrorCycle,
-            3
+        result.liquid += nestedLiquid;
+        result.escrow += nestedEscrow;
+        (nestedLiquid, nestedEscrow) = _settleNestedRecycleReserve(
+            input, componentB.receiver, componentB.reserve, componentB.position, componentB.cycle
         );
-
-        if (toRecycle > 0) {
-            (
-                ,
-                uint256 nestedLiquid,
-                uint256 nestedEscrow,
-                ,
-            ) = _settleStructuredRecycle(StructuredRecycleInput({
-                orbitType: input.orbitType,
-                registration: input.registration,
-                p12Orbit: input.p12Orbit,
-                p39Orbit: input.p39Orbit,
-                id1Wallet: input.id1Wallet,
-                orbitOwner: recycleReceiver,
-                level: input.level,
-                amount: toRecycle,
-                activationId: input.activationId,
-                fromUser: input.orbitOwner,
-                sourcePosition: mirrorPosition,
-                sourceCycle: mirrorCycle,
-                systemChargeAlreadyPaid: false,
-                founderWallets: input.founderWallets,
-                founderRatios: input.founderRatios
-            }));
-            recycleLiquidPaid += nestedLiquid;
-            recycleEscrowLocked += nestedEscrow;
-        }
+        result.liquid += nestedLiquid;
+        result.escrow += nestedEscrow;
+        (nestedLiquid, nestedEscrow) = _settleNestedRecycleReserve(
+            input, result.receiver, placement.reserve, result.position, result.cycle
+        );
+        result.liquid += nestedLiquid;
+        result.escrow += nestedEscrow;
 
         emit RecycleCompletedDetailed(
             input.activationId,
@@ -1055,14 +1034,76 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
             input.fromUser,
             input.sourcePosition,
             input.sourceCycle,
-            recycleReceiver,
+            result.receiver,
             input.amount,
-            recycleLiquidPaid,
-            recycleEscrowLocked,
-            mirrorPosition,
-            mirrorCycle,
+            result.liquid,
+            result.escrow,
+            result.position,
+            result.cycle,
             false
         );
+    }
+
+    function _placeStructuredRecycle(
+        StructuredRecycleInput memory input,
+        address receiver,
+        uint256 ruleBaseAmount
+    ) internal returns (RecyclePlacement memory placement) {
+        address orbitAddress = input.orbitType == 12 ? input.p12Orbit : input.p39Orbit;
+        (
+            placement.position,
+            placement.cycle,
+            placement.owner,
+            placement.spillover1,
+            placement.recipient1,
+            placement.spillover2,
+            placement.recipient2,
+            placement.escrow,
+            placement.reserve
+        ) = ISettlementOrbitDetailed(orbitAddress).recyclePositionDetailed(
+            receiver, input.level, input.orbitOwner, input.amount, ruleBaseAmount, input.activationId
+        );
+        _recordStructuralPlacement(
+            input.registration, orbitAddress, input.orbitType, receiver,
+            input.orbitOwner, input.level, placement.position, placement.cycle
+        );
+    }
+
+    function _settleNestedRecycleReserve(
+        StructuredRecycleInput memory input,
+        address orbitOwner,
+        uint256 amount,
+        uint8 position,
+        uint32 cycleNumber
+    ) internal returns (uint256 liquidPaid, uint256 escrowLocked) {
+        if (amount == 0) return (0, 0);
+        (bool ready, uint256 total) = _reserveStructuredRecycle(
+            orbitOwner, input.level, amount, input.activationId,
+            input.orbitOwner, position, cycleNumber
+        );
+        if (!ready) return (0, 0);
+
+        // Construct a separate input: memory-to-memory assignment would alias and
+        // overwrite the outer event's owner, amount and occurrence coordinates.
+        RecycleOutcome memory result = _settleStructuredRecycle(StructuredRecycleInput({
+            orbitType: input.orbitType,
+            registration: input.registration,
+            p12Orbit: input.p12Orbit,
+            p39Orbit: input.p39Orbit,
+            id1Wallet: input.id1Wallet,
+            orbitOwner: orbitOwner,
+            level: input.level,
+            amount: total,
+            activationId: input.activationId,
+            fromUser: input.orbitOwner,
+            sourcePosition: position,
+            sourceCycle: cycleNumber,
+            systemChargeAlreadyPaid: false,
+            founderWallets: input.founderWallets,
+            founderRatios: input.founderRatios,
+            depth: input.depth + 1
+        }));
+        return (result.liquid, result.escrow);
     }
 
     function _normalizeRecycleRecipient(
@@ -1094,37 +1135,35 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
     function _prepareRecyclePayout(
         StructuredRecycleInput memory input,
         address receiver,
-        uint256 amount
-    ) internal returns (address normalized, uint8 position, uint32 cycleNumber) {
+        uint256 amount,
+        uint256 ruleBaseAmount,
+        address placementReferrer,
+        bool id1AlreadyPlaced
+    ) internal returns (RecycleComponent memory result) {
+        if (receiver == address(0) || amount == 0) return result;
         bool selfFallback = receiver == input.orbitOwner && amount > 0;
-        normalized = _normalizeRecycleRecipient(input, receiver, amount);
-        if (selfFallback) return (normalized, 0, 0);
-        (position, cycleNumber) = _mirrorRecyclePayout(input, normalized, amount);
-    }
-
-    function _mirrorRecyclePayout(
-        StructuredRecycleInput memory input,
-        address receiver,
-        uint256 amount
-    ) internal returns (uint8 position, uint32 cycleNumber) {
-        if (receiver == address(0) || amount == 0) return (0, 0);
-
-        address orbitAddress = input.orbitType == 12 ? input.p12Orbit : input.p39Orbit;
+        result.receiver = _normalizeRecycleRecipient(input, receiver, amount);
+        if (selfFallback || (result.receiver == input.id1Wallet && id1AlreadyPlaced)) {
+            result.liquid = amount;
+            return result;
+        }
         (
-            position,
-            cycleNumber,
-            ,
-            ,
-            ,
-            ,
-            ,
-            ,
-        ) = ISettlementOrbitDetailed(orbitAddress).recyclePositionDetailed(
-            receiver,
+            result.position,
+            result.cycle,
+            result.liquid,
+            result.escrow,
+            result.reserve
+        ) = _mirrorFill(
+            input.orbitType,
+            address(0),
+            input.p12Orbit,
+            input.p39Orbit,
+            result.receiver,
             input.level,
             input.orbitOwner,
+            placementReferrer,
             amount,
-            0,
+            ruleBaseAmount,
             input.activationId
         );
     }
@@ -1135,6 +1174,7 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
         address orbitOwner,
         uint8 level
     ) internal view returns (address upline, bool fallbackToId1) {
+        if (orbitOwner == id1Wallet) return (id1Wallet, true);
         upline = IRegistration(registration).getReferrer(orbitOwner);
         uint8 depth = 0;
 
@@ -1148,7 +1188,6 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
 
         if (upline == address(0) || upline == orbitOwner) {
             upline = id1Wallet;
-            fallbackToId1 = true;
         }
     }
 
@@ -1232,20 +1271,31 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
         address receiver,
         uint256 grossAmount,
         uint256 escrowLocked,
+        uint256 reserved,
         uint8 mirrorPosition,
         uint32 mirrorCycle,
-        uint8 routedRole
+        bool recordEarning
     ) internal returns (uint256 liquidPaid) {
         if (receiver == address(0) || grossAmount == 0) return 0;
 
-        liquidPaid = grossAmount >= escrowLocked ? grossAmount - escrowLocked : 0;
+        liquidPaid = grossAmount - escrowLocked - reserved;
+        if (escrowLocked > 0) {
+            ISettlementManagerCallbacks(address(this)).lockRecycleEscrow(
+                receiver, input.level, escrowLocked
+            );
+        }
         if (receiver == input.id1Wallet) {
             _distributeFounders(liquidPaid, input.activationId, input.fromUser, input.level, input.founderWallets, input.founderRatios, REASON_FOUNDER_ROUTE);
         } else if (liquidPaid > 0) {
             usdt.safeTransfer(receiver, liquidPaid);
         }
 
-        _recordExternalEarning(input.orbitType, address(0), input.p12Orbit, input.p39Orbit, receiver, input.level, grossAmount);
+        if (recordEarning) {
+            _recordExternalEarning(
+                input.orbitType, address(0), input.p12Orbit, input.p39Orbit,
+                receiver, input.level, grossAmount - reserved
+            );
+        }
         _emitRecycleReceipt(
             receiver,
             input.activationId,
@@ -1260,8 +1310,6 @@ contract LevelSettlementRouter is ILevelSettlementRouter {
             escrowLocked,
             liquidPaid
         );
-
-        routedRole;
     }
 
     function _emitRecycleReceipt(

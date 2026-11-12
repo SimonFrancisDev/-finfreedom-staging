@@ -2,6 +2,25 @@
 pragma solidity ^0.8.24;
 
 interface ILevelSettlementRouter {
+    struct RecycleInput {
+        uint8 orbitType;
+        address registration;
+        address p4Orbit;
+        address p12Orbit;
+        address p39Orbit;
+        address id1Wallet;
+        address orbitOwner;
+        uint8 level;
+        uint256 amount;
+        uint256 activationId;
+        address fromUser;
+        uint8 sourcePosition;
+        uint32 sourceCycle;
+        address[] founderWallets;
+        uint256[] founderRatios;
+    }
+
+    function settlementRevision() external pure returns (uint256);
     function validatesConfig(address expectedLevelManager, address expectedUsdt) external view returns (bool);
 
     function recordStructuralPlacement(
@@ -67,23 +86,7 @@ interface ILevelSettlementRouter {
             uint256 recycleAmount
         );
 
-    function settleRecycle(
-        uint8 orbitType,
-        address registration,
-        address p4Orbit,
-        address p12Orbit,
-        address p39Orbit,
-        address id1Wallet,
-        address orbitOwner,
-        uint8 level,
-        uint256 amount,
-        uint256 activationId,
-        address fromUser,
-        uint8 sourcePosition,
-        uint32 sourceCycle,
-        address[] calldata founderWallets,
-        uint256[] calldata founderRatios
-    )
+    function settleRecycle(RecycleInput calldata input)
         external
         returns (
             address recycleReceiver,
