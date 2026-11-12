@@ -1,5 +1,31 @@
 # ID1 repair: level-6 deferral and proposal preparation
 
+## Latest status: all proposals submitted
+
+Funding arrived and the authorized deployment/submission completed on Polygon
+mainnet. All ten inert contracts were deployed and verified. All **30 proposals,
+130-159**, are submitted, with exact target/value/calldata verified against the
+prepared package. At verification block **97200181**, none had executed; the five
+production proxies still used their original implementations and were unpaused.
+The submitter retained **13.572354316215833862 POL**. No USDT compensation was sent.
+
+The owner explicitly requested submission of ALL proposals, including reopening,
+before execution readiness. That instruction supersedes the original withholding
+policy described in the preparation history below. Only submission timing changed:
+the five original reopening payloads are unchanged, and their EXECUTION remains
+conditional on successful post-upgrade verification. The package/journal binding
+was preserved; the original unsigned package was not edited or replaced.
+
+**Founders may review and approve 130-159 now. Do not execute the pause/repair
+sequence until the production backend projection is released and a maintenance
+window/current-state check is complete. Do not execute 155-159 before verification.**
+
+Full instructions: `ID1_PROPOSAL_APPROVAL_EXECUTION_2026-11-12.md`.
+Live records: `evidence/id1-production-broadcasts-2026-11-12.json` and
+`evidence/id1-production-submission-verification-2026-11-12.json`.
+The additional all-submissions policy regression passed; five package tests now
+pass alongside eight historical-plan tests. No contract code changed in this pass.
+
 ## Owner decision
 
 The owner instructed us to leave the existing level-6 duplicate positions alone
@@ -78,9 +104,9 @@ runtime. It was NOT substituted or declared identical. Execution used the
 actual forked runtime. Its ABI/storage layout located the next proposal; every
 location primed locally was independently checked against the source RPC.
 
-## Production package and funding
+## Production preparation history and funding
 
-The package is unsigned and undeployed. Its addresses are predicted from the
+At preparation the package was unsigned and undeployed. Its addresses were predicted from the
 authorized submitter's nonce, NOT proof of deployed contracts. Scripts reject
 nonce drift, changed artifact bytes, changed guarded state or a different chain.
 
@@ -113,12 +139,13 @@ mechanism just to reduce the displayed proposal count.
 | 21-24 | Revoke temporary implementation approvals |
 | 25-29 | Reopen only after chain/backend/UI verification; submission withheld |
 
-The submitter script never approves or executes founder proposals. It submits
-only actions 0-24. Do not reopen with mismatched manager/router revisions or
+The submitter script never approves or executes founder proposals. Its default
+SUBMIT mode submits only actions 0-24; the later explicitly authorized SUBMIT_ALL
+mode also submits unchanged actions 25-29. Do not reopen with mismatched manager/router revisions or
 with temporary implementations installed. Do not claim the repair is live until
 founder execution and post-execution checks are complete.
 
-## Immediate continuation
+## Preparation workflow (completed through submission)
 
 1. Confirm funding and refresh capped fees/current guarded prestate. Do not
    overwrite a package already bound to a deployment/submission journal.
@@ -129,8 +156,9 @@ founder execution and post-execution checks are complete.
    substitute local-fork proposal IDs or predicted addresses for live evidence.
 4. Release the tested repair-event backend projection before founder execution.
    Execute the paused sequence in order; stale state must revert, not be ignored.
-5. Reconcile chain, API and real orbit displays, then submit reopening actions.
-   Live verification remains pending; the current pass made no live changes.
+5. Reconcile chain, API and real orbit displays before EXECUTING reopening actions.
+   Deployment/submission are complete; actual upgrade execution and its live
+   chain/API/UI verification remain pending.
 
 Commands run from `staging-environment/smart-contract` after explicitly setting
 `ID1_MAINNET_REPLAY_RPC` to the verified production RPC:
@@ -147,4 +175,6 @@ node scripts/submitId1ProductionPackage.js
 Do not run the write steps until the account is funded and the current package
 has been reviewed. Signing material is loaded privately, never committed or
 printed. The runnable package and resumable broadcast journal live in the
-workspace `tmp` directory. Funding remains the immediate blocker in this pass.
+workspace `tmp` directory. The funding blocker was subsequently resolved; see
+the latest status above. Do not rerun preparation over the existing broadcast
+journal or submit duplicate proposals.

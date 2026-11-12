@@ -4,7 +4,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const { ethers: E } = require("ethers");
-const { A, buildPackage } = require("./lib/id1ProductionPackage");
+const { A, buildPackage, submissionActions } = require("./lib/id1ProductionPackage");
 const { artifact, verifyLive, sha } = require("./prepareId1ProductionPackage");
 const ROOT = path.resolve(__dirname, "../../..");
 const json = value => JSON.stringify(value, (_, v) => typeof v === "bigint" ? v.toString() : v, 2);
@@ -46,7 +46,7 @@ async function checkCode(provider, deployment, art) {
 
 async function main() {
   const mode = process.env.ID1_PRODUCTION_ACTION;
-  assert(["CHECK", "DEPLOY", "SUBMIT"].includes(mode), "Explicit ID1_PRODUCTION_ACTION=CHECK, DEPLOY or SUBMIT required");
+  assert(["CHECK", "DEPLOY", "SUBMIT", "SUBMIT_ALL"].includes(mode), "Explicit ID1_PRODUCTION_ACTION=CHECK, DEPLOY, SUBMIT or SUBMIT_ALL required");
   assert(process.env.ID1_MAINNET_REPLAY_RPC, "Explicit mainnet RPC required");
   assert(process.env.PRODUCTION_SUBMITTER_KEY, "Authorized submitter key required");
   const raw = fs.readFileSync(path.join(ROOT, "tmp/id1-production-package.json"), "utf8");
@@ -83,9 +83,16 @@ async function main() {
       { packageSha256: sha(raw), chainId: 137, deployments: [], submissions: [], approvalsSent: 0, executionsSent: 0 };
     assert.equal(journal.packageSha256, sha(raw), "Journal belongs to a different package");
     const save = () => fs.writeFileSync(journalPath, json(journal) + "\n");
+    const actionsToSubmit = submissionActions(pkg, mode === "SUBMIT_ALL");
+    const pendingActions = actionsToSubmit.filter(a => !journal.submissions.some(r => r.index === a.index && r.confirmed));
+    const submissionLimits = new Map();
+    for (const action of pendingActions) {
+      const limit = action.submissionGasLimit ? BigInt(action.submissionGasLimit) :
+        (await multi.submitTransaction.estimateGas(action.target, 0n, action.data)) * 120n / 100n;
+      submissionLimits.set(action.index, limit);
+    }
     const remainingGas = pkg.deployments.filter(d => !journal.deployments.some(r => r.key === d.key && r.confirmed))
-      .reduce((sum, d) => sum + BigInt(d.gasLimit), 0n) + pkg.actions.filter(a => !a.submitAfterPostUpgradeVerification &&
-        !journal.submissions.some(r => r.index === a.index && r.confirmed)).reduce((sum, a) => sum + BigInt(a.submissionGasLimit), 0n);
+      .reduce((sum, d) => sum + BigInt(d.gasLimit), 0n) + [...submissionLimits.values()].reduce((sum, limit) => sum + limit, 0n);
     const balance = await provider.getBalance(wallet.address);
     if (mode === "CHECK") {
       console.log(json({ chainId: 137, submitter: wallet.address, liveWrites: 0,
@@ -119,10 +126,13 @@ async function main() {
     }
     assert.equal(journal.deployments.filter(row => row.confirmed).length, pkg.deployments.length, "Deployments are incomplete");
     for (const item of pkg.deployments) await checkCode(provider, item, artifact(item.name));
-    for (const action of pkg.actions.filter(a => !a.submitAfterPostUpgradeVerification)) {
+    if (mode === "SUBMIT_ALL") {
+      journal.reopeningSubmissionAuthorization = "Owner explicitly requested all proposals submitted now; reopening EXECUTION still requires post-upgrade verification";
+    }
+    for (const action of pendingActions) {
       let row = journal.submissions.find(row => row.index === action.index);
       if (!row) {
-        const tx = await multi.submitTransaction(action.target, 0n, action.data, { ...options, gasLimit: BigInt(action.submissionGasLimit) });
+        const tx = await multi.submitTransaction(action.target, 0n, action.data, { ...options, gasLimit: submissionLimits.get(action.index) });
         row = { index: action.index, label: action.label, txHash: tx.hash, confirmed: false };
         journal.submissions.push(row); save();
       }
@@ -139,7 +149,9 @@ async function main() {
       Object.assign(row, { proposalId: event.args.txId.toString(), confirmed: true, block: receipt.blockNumber }); save();
       console.log(json(row));
     }
-    console.log("Proposals submitted, not approved or executed. Five reopening proposals remain withheld pending post-upgrade verification.");
+    console.log(mode === "SUBMIT_ALL"
+      ? "All proposals submitted, none approved or executed by this script. Reopening execution must wait for post-upgrade verification."
+      : "Proposals submitted, not approved or executed. Five reopening proposals remain withheld pending post-upgrade verification.");
   } finally { provider.destroy(); }
 }
 

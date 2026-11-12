@@ -1,0 +1,290 @@
+{
+  "chainId": 137,
+  "block": 97200181,
+  "blockHash": "0x0ba4e8ac1c3a0cec7de8f7c0b04a9457a1d1b5d31177ce9143c21368ede23fc4",
+  "checkedAt": "2026-11-12T17:49:03.118Z",
+  "proposalCount": 30,
+  "requiredConfirmations": "3",
+  "timelockSeconds": "120",
+  "proposals": [
+    {
+      "id": "130",
+      "action": 0,
+      "label": "Approve p4 implementation set",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:43:43.000Z"
+    },
+    {
+      "id": "131",
+      "action": 1,
+      "label": "Approve p12 implementation set",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:43:46.000Z"
+    },
+    {
+      "id": "132",
+      "action": 2,
+      "label": "Approve p39 implementation set",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:43:51.000Z"
+    },
+    {
+      "id": "133",
+      "action": 3,
+      "label": "Approve registration implementation set",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:43:54.000Z"
+    },
+    {
+      "id": "134",
+      "action": 4,
+      "label": "Approve manager implementation set",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:43:58.000Z"
+    },
+    {
+      "id": "135",
+      "action": 5,
+      "label": "Pause registration",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:44:01.000Z"
+    },
+    {
+      "id": "136",
+      "action": 6,
+      "label": "Pause manager",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:44:06.000Z"
+    },
+    {
+      "id": "137",
+      "action": 7,
+      "label": "Pause p4",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:44:09.000Z"
+    },
+    {
+      "id": "138",
+      "action": 8,
+      "label": "Pause p12",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:44:13.000Z"
+    },
+    {
+      "id": "139",
+      "action": 9,
+      "label": "Pause p39",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:44:16.000Z"
+    },
+    {
+      "id": "140",
+      "action": 10,
+      "label": "Install bound p4 repair implementation",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:44:21.000Z"
+    },
+    {
+      "id": "141",
+      "action": 11,
+      "label": "Install bound p12 repair implementation",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:44:24.000Z"
+    },
+    {
+      "id": "142",
+      "action": 12,
+      "label": "Install bound p39 repair implementation",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:44:28.000Z"
+    },
+    {
+      "id": "143",
+      "action": 13,
+      "label": "Install bound registration repair implementation",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:44:31.000Z"
+    },
+    {
+      "id": "144",
+      "action": 14,
+      "label": "Apply structural-only repair; level 6 excluded; no token transfer",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:44:37.000Z"
+    },
+    {
+      "id": "145",
+      "action": 15,
+      "label": "Install final p4 implementation",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:44:43.000Z"
+    },
+    {
+      "id": "146",
+      "action": 16,
+      "label": "Install final p12 implementation",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:44:46.000Z"
+    },
+    {
+      "id": "147",
+      "action": 17,
+      "label": "Install final p39 implementation",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:44:52.000Z"
+    },
+    {
+      "id": "148",
+      "action": 18,
+      "label": "Install final registration implementation",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:44:54.000Z"
+    },
+    {
+      "id": "149",
+      "action": 19,
+      "label": "Install final manager implementation",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:45:00.000Z"
+    },
+    {
+      "id": "150",
+      "action": 20,
+      "label": "Bind matching revision-2 settlement router",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:45:03.000Z"
+    },
+    {
+      "id": "151",
+      "action": 21,
+      "label": "Revoke temporary p4 repair implementation",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:45:09.000Z"
+    },
+    {
+      "id": "152",
+      "action": 22,
+      "label": "Revoke temporary p12 repair implementation",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:45:15.000Z"
+    },
+    {
+      "id": "153",
+      "action": 23,
+      "label": "Revoke temporary p39 repair implementation",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:45:21.000Z"
+    },
+    {
+      "id": "154",
+      "action": 24,
+      "label": "Revoke temporary registration repair implementation",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:45:27.000Z"
+    },
+    {
+      "id": "155",
+      "action": 25,
+      "label": "Reopen p4 ONLY after verification",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:49:27.000Z"
+    },
+    {
+      "id": "156",
+      "action": 26,
+      "label": "Reopen p12 ONLY after verification",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:49:33.000Z"
+    },
+    {
+      "id": "157",
+      "action": 27,
+      "label": "Reopen p39 ONLY after verification",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:49:39.000Z"
+    },
+    {
+      "id": "158",
+      "action": 28,
+      "label": "Reopen manager ONLY after verification",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:49:40.000Z"
+    },
+    {
+      "id": "159",
+      "action": 29,
+      "label": "Reopen registration ONLY after verification",
+      "confirmations": "0",
+      "executed": false,
+      "executeAfter": "2026-11-12T17:49:46.000Z"
+    }
+  ],
+  "proxies": [
+    {
+      "key": "registration",
+      "address": "0x02ECA97e944Ac66b0444fd5F61A716917E83CfF5",
+      "implementation": "0x2F2c5E43eBBf666E00a1a2d699256B2Eae6268f5",
+      "stillOriginal": true,
+      "paused": false
+    },
+    {
+      "key": "manager",
+      "address": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "implementation": "0x36017dd046653654dCF2CE52C2a44A1914b3998A",
+      "stillOriginal": true,
+      "paused": false
+    },
+    {
+      "key": "p4",
+      "address": "0x1ED0b443c880Ba88F732c3F5915561A07B21F6B4",
+      "implementation": "0xDCDF3e86B417eFfA411B75373F6596863f9B7bd8",
+      "stillOriginal": true,
+      "paused": false
+    },
+    {
+      "key": "p12",
+      "address": "0xCF998d8f7E9DD4f3FacFbA45e656dE07142f824b",
+      "implementation": "0xCD673bc614Ad2C1d6Bc4F888df7b31A7a468d078",
+      "stillOriginal": true,
+      "paused": false
+    },
+    {
+      "key": "p39",
+      "address": "0xEaD39819B8C4DBb0669320542B6B847D4c31b8Fb",
+      "implementation": "0x9255eD0c56371039Dd2fA70acA23421b1A530455",
+      "stillOriginal": true,
+      "paused": false
+    }
+  ],
+  "balancePOL": "13.572354316215833862",
+  "liveWrites": 0
+}

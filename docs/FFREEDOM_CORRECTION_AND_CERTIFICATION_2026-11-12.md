@@ -155,14 +155,16 @@ scope and successful reduced-manifest governance rehearsal are recorded in
 including counter changes; its old ancestry and earnings are not certified as
 corrected. The scoped local cycle-completion probe passed.
 
-1. Fund the authorized mainnet deployer/submitter, then deploy the inert,
-   bytecode-bound implementation set and submit the reviewed governance actions.
+1. COMPLETE: fund the authorized mainnet deployer/submitter, deploy the ten inert,
+   bytecode-bound contracts and submit the reviewed governance actions. All 30
+   proposals, 130-159, are confirmed on Polygon mainnet. None executed at final
+   verification block 97200181. See `ID1_PROPOSAL_APPROVAL_EXECUTION_2026-11-12.md`.
 2. Before execution, make the already-tested backend repair projections available
    in production; keep both suspended staging services suspended.
 3. Founders approve and execute the paused repair/paired-upgrade sequence in order.
    Fail closed if guarded state has changed; do not bypass the manifest checks.
 4. Verify executed chain state, financial invariants, projections and account/orbit
-   displays. Only then submit the withheld reopening actions and certify the
+   displays. Only then execute the already-submitted reopening actions and certify the
    production repair. Local tests are not live browser/API certification.
 
 No funding request for 512 USDT belongs in any of these steps. Neither hosted

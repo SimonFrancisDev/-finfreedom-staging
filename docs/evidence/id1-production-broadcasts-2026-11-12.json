@@ -1,0 +1,331 @@
+{
+  "packageSha256": "c8e36fa60e65b33cb50ac3d04e8dfabbcbccb169800050a79685eb4b6e11cf5c",
+  "chainId": 137,
+  "deployments": [
+    {
+      "key": "p4",
+      "address": "0xB6E584443796d70B071B15922aEc2538fa5165bE",
+      "txHash": "0x60853f43255194183f0ffff66622d9e394f34bb0c1347b0ee9b3909a19cee16d",
+      "confirmed": true,
+      "block": 97199812,
+      "gasUsed": "5037076"
+    },
+    {
+      "key": "p12",
+      "address": "0x6f9aBC3F882C5f3731752621A1E2712D060c937e",
+      "txHash": "0xf37de1e8863917cb4c78ecca4540afc5c4996ce785234cefc7a776405cf002de",
+      "confirmed": true,
+      "block": 97199816,
+      "gasUsed": "5128021"
+    },
+    {
+      "key": "p39",
+      "address": "0xD72154F2a9313F2e00865CC9d464e47E944e99e5",
+      "txHash": "0x67fd206523979ec91f89300bf4b956be9a778efdedb7b9b8c8f613ed5625c52e",
+      "confirmed": true,
+      "block": 97199820,
+      "gasUsed": "5077677"
+    },
+    {
+      "key": "manager",
+      "address": "0xCC88efa9d0f8500A5e1FAA1a04bDE8d9837B49E1",
+      "txHash": "0x158c6fbf41267ebed1e96943e9395dc5d6375bc387d8c96565c37df5ce25cbe0",
+      "confirmed": true,
+      "block": 97199824,
+      "gasUsed": "5280109"
+    },
+    {
+      "key": "router",
+      "address": "0xfeB6Cc065A0e77641827d692749a3108fE9D8A94",
+      "txHash": "0x7884d46584aa5c81684a7ad7aefa0310104fa135d17cdae48529e0a53c69a24e",
+      "confirmed": true,
+      "block": 97199829,
+      "gasUsed": "4103077"
+    },
+    {
+      "key": "executor",
+      "address": "0x985f18D10112A26C256CB70Ca613207a8bE754F5",
+      "txHash": "0xa3698257d05c64820f7132fbebd1508830968b92d87469b06a21494b6032bd22",
+      "confirmed": true,
+      "block": 97199832,
+      "gasUsed": "542051"
+    },
+    {
+      "key": "p4Migrator",
+      "address": "0xD936aE3F83683F51C24dD3ae73b8280E3643d4aE",
+      "txHash": "0x752481f0b35cd172b25b2c39c8c3704d7871d30942b574fd989c19ca83a429d4",
+      "confirmed": true,
+      "block": 97199836,
+      "gasUsed": "2674228"
+    },
+    {
+      "key": "p12Migrator",
+      "address": "0x792bda652d860Cf99e68DE06F1100bc91DF72c4F",
+      "txHash": "0x33994617f11511b575653c97c5952e594b522ba3007b4eecdf81938216f7545b",
+      "confirmed": true,
+      "block": 97199843,
+      "gasUsed": "2674228"
+    },
+    {
+      "key": "p39Migrator",
+      "address": "0xBEa0985b83Fc67c2333b241e4fdbF8FD5F47D98f",
+      "txHash": "0xe8e5c1ad1362e141dcfc6d1acf838b8976f3723fe8db22b4fd9189c2559f03c1",
+      "confirmed": true,
+      "block": 97199851,
+      "gasUsed": "2674228"
+    },
+    {
+      "key": "registrationMigrator",
+      "address": "0xA5Ca2eb4dc34169feB378080be5438125863B445",
+      "txHash": "0xdef43ea0a45708cd059651318db2084109d3dcd4f8ab7c5a0116de3660b41822",
+      "confirmed": true,
+      "block": 97199857,
+      "gasUsed": "2779635"
+    }
+  ],
+  "submissions": [
+    {
+      "index": 0,
+      "label": "Approve p4 implementation set",
+      "txHash": "0xb751baeeaacd0d4a413827d288fdc7b518234ae9585b07dd4c9920edd77101fd",
+      "confirmed": true,
+      "proposalId": "130",
+      "block": 97199898
+    },
+    {
+      "index": 1,
+      "label": "Approve p12 implementation set",
+      "txHash": "0xfdd791a417cd15e04613fad0fddedb5507fe18670b53356fa032b3d0b6608320",
+      "confirmed": true,
+      "proposalId": "131",
+      "block": 97199900
+    },
+    {
+      "index": 2,
+      "label": "Approve p39 implementation set",
+      "txHash": "0x74e6d5b4e4b3b967e52159172732f93663aa77089ed1ef282893f21af8028c6c",
+      "confirmed": true,
+      "proposalId": "132",
+      "block": 97199903
+    },
+    {
+      "index": 3,
+      "label": "Approve registration implementation set",
+      "txHash": "0xd15782591df6f0ccec4aa871547970402080d9b2cbcae944d918c79097051b77",
+      "confirmed": true,
+      "proposalId": "133",
+      "block": 97199905
+    },
+    {
+      "index": 4,
+      "label": "Approve manager implementation set",
+      "txHash": "0x83d4bafccf63c271daf20b165e3ddac1740dd6392558797fcf81adf58425b204",
+      "confirmed": true,
+      "proposalId": "134",
+      "block": 97199908
+    },
+    {
+      "index": 5,
+      "label": "Pause registration",
+      "txHash": "0x21dc64e8c7c7baca4f830ba91ce9078ecb7435730952c8c67fa0cd05cbd991bf",
+      "confirmed": true,
+      "proposalId": "135",
+      "block": 97199910
+    },
+    {
+      "index": 6,
+      "label": "Pause manager",
+      "txHash": "0x70ef8cfae80236ee1c3cd795193f357162a95ba79349e10e936a6794720318fa",
+      "confirmed": true,
+      "proposalId": "136",
+      "block": 97199913
+    },
+    {
+      "index": 7,
+      "label": "Pause p4",
+      "txHash": "0x910065c49f5c501a0353ad6895cc6f7a4d92f563b237ea67ae764cae349546bf",
+      "confirmed": true,
+      "proposalId": "137",
+      "block": 97199915
+    },
+    {
+      "index": 8,
+      "label": "Pause p12",
+      "txHash": "0x596103e9b0ce652d74d9006cdabdd6653e7e4ccfb9bbb88c972729791f5465ed",
+      "confirmed": true,
+      "proposalId": "138",
+      "block": 97199918
+    },
+    {
+      "index": 9,
+      "label": "Pause p39",
+      "txHash": "0x72198736a37ffffafe0f1151a1ebe9443806ff7d0d0e6b4d848f3f953833a8fc",
+      "confirmed": true,
+      "proposalId": "139",
+      "block": 97199920
+    },
+    {
+      "index": 10,
+      "label": "Install bound p4 repair implementation",
+      "txHash": "0x61309d7c7faaa982092f8cd1614714431feb8aafd68a5f8f12fb98a435e565e1",
+      "confirmed": true,
+      "proposalId": "140",
+      "block": 97199923
+    },
+    {
+      "index": 11,
+      "label": "Install bound p12 repair implementation",
+      "txHash": "0xa89765be6dd9ebe76c44de9aea90ce5634e084cbe69280b499d59a48744d49a3",
+      "confirmed": true,
+      "proposalId": "141",
+      "block": 97199925
+    },
+    {
+      "index": 12,
+      "label": "Install bound p39 repair implementation",
+      "txHash": "0xcb986cc9fc94aaa10ca0c3651617f8e9347a1ba3170a2239a48ef0f3f9534edf",
+      "confirmed": true,
+      "proposalId": "142",
+      "block": 97199928
+    },
+    {
+      "index": 13,
+      "label": "Install bound registration repair implementation",
+      "txHash": "0x49bc0e85b7662140af3a4479b0c42725e67a09ed7297a1c5ab7aa4d4d331e8c9",
+      "confirmed": true,
+      "proposalId": "143",
+      "block": 97199930
+    },
+    {
+      "index": 14,
+      "label": "Apply structural-only repair; level 6 excluded; no token transfer",
+      "txHash": "0x5c48411909bb1764ec231eaa9628e083fd85136b7ab6db1fa6843570d94319e1",
+      "confirmed": true,
+      "proposalId": "144",
+      "block": 97199934
+    },
+    {
+      "index": 15,
+      "label": "Install final p4 implementation",
+      "txHash": "0x69c06d8781d1346d7c6efbce369bc67468166ed2a9060a778cfeac4c3fc14e1d",
+      "confirmed": true,
+      "proposalId": "145",
+      "block": 97199938
+    },
+    {
+      "index": 16,
+      "label": "Install final p12 implementation",
+      "txHash": "0x4a514f6a1f5ecf3a18576c2756a6144c2d23c18e7f46bf4898175b10888af5ca",
+      "confirmed": true,
+      "proposalId": "146",
+      "block": 97199940
+    },
+    {
+      "index": 17,
+      "label": "Install final p39 implementation",
+      "txHash": "0xa7db50af0eb362fc025ff9a30fd9d05a450579e63cc0921902ba568263f27460",
+      "confirmed": true,
+      "proposalId": "147",
+      "block": 97199944
+    },
+    {
+      "index": 18,
+      "label": "Install final registration implementation",
+      "txHash": "0x9194e670f0608314b938ed63b45db994492e5c82dabee76908c1cde1cad6548f",
+      "confirmed": true,
+      "proposalId": "148",
+      "block": 97199945
+    },
+    {
+      "index": 19,
+      "label": "Install final manager implementation",
+      "txHash": "0xcfaf493353607518d7778c5251e497f6e38c2c68ace129ab10197a35527bf657",
+      "confirmed": true,
+      "proposalId": "149",
+      "block": 97199949
+    },
+    {
+      "index": 20,
+      "label": "Bind matching revision-2 settlement router",
+      "txHash": "0x31dfa4e988591ab20a157f7b5a37761714a792a1302fd48d3c45366a821d5435",
+      "confirmed": true,
+      "proposalId": "150",
+      "block": 97199951
+    },
+    {
+      "index": 21,
+      "label": "Revoke temporary p4 repair implementation",
+      "txHash": "0xd07552e6626721ee64098e7d4135f5fde2adef3b7d135a556db591d8e38c6245",
+      "confirmed": true,
+      "proposalId": "151",
+      "block": 97199955
+    },
+    {
+      "index": 22,
+      "label": "Revoke temporary p12 repair implementation",
+      "txHash": "0xf705a2fdeaf245300c15b367c597a070ab91c72f7137b630f88662196c1827be",
+      "confirmed": true,
+      "proposalId": "152",
+      "block": 97199959
+    },
+    {
+      "index": 23,
+      "label": "Revoke temporary p39 repair implementation",
+      "txHash": "0x83b5ddcc232c3278bfb574694d94727bf917a694fe7774a46a056799567ac074",
+      "confirmed": true,
+      "proposalId": "153",
+      "block": 97199963
+    },
+    {
+      "index": 24,
+      "label": "Revoke temporary registration repair implementation",
+      "txHash": "0x75d0c6a66f73255c9f048529f437ee32b8dfeda7e647ef110fd7ca1325698328",
+      "confirmed": true,
+      "proposalId": "154",
+      "block": 97199967
+    },
+    {
+      "index": 25,
+      "label": "Reopen p4 ONLY after verification",
+      "txHash": "0x0b1b48fe84ade8955ccacc63f3cd066feb419dde3269bb63c5c8cb31e17514fa",
+      "confirmed": true,
+      "proposalId": "155",
+      "block": 97200127
+    },
+    {
+      "index": 26,
+      "label": "Reopen p12 ONLY after verification",
+      "txHash": "0x68efd83cd09f88707e8c1132bfd40f08bc3538e942e793a0e177672d061bbc67",
+      "confirmed": true,
+      "proposalId": "156",
+      "block": 97200131
+    },
+    {
+      "index": 27,
+      "label": "Reopen p39 ONLY after verification",
+      "txHash": "0xad9d850ff4e86d7ba24b22d067d413831b44f218d66604bf84ed62f7c46b9295",
+      "confirmed": true,
+      "proposalId": "157",
+      "block": 97200135
+    },
+    {
+      "index": 28,
+      "label": "Reopen manager ONLY after verification",
+      "txHash": "0xb6c74c9edc31070c6c8f4905fef9c8b958f284091588b8fabc6050e0d3246de3",
+      "confirmed": true,
+      "proposalId": "158",
+      "block": 97200136
+    },
+    {
+      "index": 29,
+      "label": "Reopen registration ONLY after verification",
+      "txHash": "0x9435000dc133d43325c4a5debd6e6d65267bb933ec7a786f4cb2959015ff2012",
+      "confirmed": true,
+      "proposalId": "159",
+      "block": 97200140
+    }
+  ],
+  "approvalsSent": 0,
+  "executionsSent": 0,
+  "reopeningSubmissionAuthorization": "Owner explicitly requested all proposals submitted now; reopening EXECUTION still requires post-upgrade verification"
+}

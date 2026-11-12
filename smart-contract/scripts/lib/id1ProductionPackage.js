@@ -109,4 +109,8 @@ function buildPackage(evidence, startNonce) {
   };
 }
 
-module.exports = { A, validateEvidence, buildPackage };
+function submissionActions(pkg, includeReopening = false) {
+  return pkg.actions.filter(action => includeReopening || !action.submitAfterPostUpgradeVerification);
+}
+
+module.exports = { A, validateEvidence, buildPackage, submissionActions };

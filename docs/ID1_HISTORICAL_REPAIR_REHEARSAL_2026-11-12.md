@@ -10,6 +10,11 @@ superseded test record, not as the current production proposal.
 
 ## Boundary
 
+The boundary below describes the historical local rehearsal, not the subsequent
+live deployment/submission. All 30 production proposals 130-159 have now been
+submitted, but not executed at final verification. See
+`ID1_PROPOSAL_APPROVAL_EXECUTION_2026-11-12.md` for the current state and sequence.
+
 This is preparation and local validation, not an executed production repair.
 Production, databases, hosted environment variables, and both suspended staging
 services are unchanged. No private signing key is used. Mainnet is read-only;
