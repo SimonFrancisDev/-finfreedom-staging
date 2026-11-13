@@ -1,0 +1,154 @@
+{
+  "status": "source-and-served-bindings-verified-live-repair-not-executed",
+  "liveWrites": 0,
+  "checks": [
+    {
+      "label": "frontend RegistrationFixed",
+      "fragments": 52,
+      "passed": true
+    },
+    {
+      "label": "backend RegistrationFixed",
+      "fragments": 52,
+      "passed": true
+    },
+    {
+      "label": "frontend LevelManager",
+      "fragments": 90,
+      "passed": true
+    },
+    {
+      "label": "backend LevelManager",
+      "fragments": 91,
+      "passed": true
+    },
+    {
+      "label": "frontend P4Orbit",
+      "fragments": 65,
+      "passed": true
+    },
+    {
+      "label": "backend P4Orbit",
+      "fragments": 65,
+      "passed": true
+    },
+    {
+      "label": "frontend P12Orbit",
+      "fragments": 65,
+      "passed": true
+    },
+    {
+      "label": "backend P12Orbit",
+      "fragments": 65,
+      "passed": true
+    },
+    {
+      "label": "frontend P39Orbit",
+      "fragments": 66,
+      "passed": true
+    },
+    {
+      "label": "backend P39Orbit",
+      "fragments": 66,
+      "passed": true
+    },
+    {
+      "label": "backend FreedomPlusRegistration",
+      "fragments": 39,
+      "passed": true
+    },
+    {
+      "label": "backend FreedomPlusLevelManager",
+      "fragments": 36,
+      "passed": true
+    },
+    {
+      "label": "backend FreedomPlusSettlementRouter",
+      "fragments": 48,
+      "passed": true
+    },
+    {
+      "label": "backend P39PlusOrbit",
+      "fragments": 33,
+      "passed": true
+    },
+    {
+      "label": "backend P14PlusOrbit",
+      "fragments": 33,
+      "passed": true
+    },
+    {
+      "label": "backend P12PlusOrbit",
+      "fragments": 33,
+      "passed": true
+    },
+    {
+      "label": "backend P6PlusOrbit",
+      "fragments": 33,
+      "passed": true
+    },
+    {
+      "label": "backend P4PlusOrbit",
+      "fragments": 33,
+      "passed": true
+    },
+    {
+      "label": "backend P3PlusOrbit",
+      "fragments": 33,
+      "passed": true
+    },
+    {
+      "label": "frontend inline Freedom Plus registration",
+      "fragments": 8,
+      "passed": true
+    },
+    {
+      "label": "F-Freedom repair event ABI",
+      "fragments": 3,
+      "passed": true
+    },
+    {
+      "label": "Freedom Plus repair event ABI",
+      "fragments": 2,
+      "passed": true
+    },
+    {
+      "label": "actual served production bundle bindings",
+      "passed": true,
+      "chainId": 137,
+      "sourceCheckedAt": "2026-11-13T23:08:45.721Z",
+      "scripts": [
+        {
+          "url": "https://www.finfreedomnetwork.io/assets/web3-Bo2CQ_Xs.js",
+          "sha256": "fc8e383852936d772bb0e21d3101df73691dd8dd18575bf71ced62c792f994c3"
+        },
+        {
+          "url": "https://www.finfreedomnetwork.io/assets/ui-3bNG7nPN.js",
+          "sha256": "549f9ad688d1891174cce0a8121ebfd23caea23969cfe07388ef1ccb3242a477"
+        },
+        {
+          "url": "https://www.finfreedomnetwork.io/assets/router-Cyl9mt9x.js",
+          "sha256": "ea815b53c5de8a4653328a0bf7b1764c9c82c824ff1d19e86396c416c64112b8"
+        },
+        {
+          "url": "https://www.finfreedomnetwork.io/assets/vendor-CqpHP1bg.js",
+          "sha256": "68a49ce35a7dc5b84218fa58f33d4c54eb3300c6f7191665ca245ffa34dc1ceb"
+        },
+        {
+          "url": "https://www.finfreedomnetwork.io/assets/index-BavC32Je.js",
+          "sha256": "3897cfaeb6dd1ec5c5681a75094712b98fd24f0aebe5354ee5e06997cea69dcd"
+        }
+      ],
+      "addressBindings": 14
+    },
+    {
+      "label": "all combined-package maintenance descriptions (fixture manifest)",
+      "passed": true,
+      "actions": 45
+    }
+  ],
+  "limitations": [
+    "Source/ABI compatibility does not certify hosted deployment or post-repair data.",
+    "The frontend repair manifest must be bound to verified live deployments before replacement submission."
+  ]
+}

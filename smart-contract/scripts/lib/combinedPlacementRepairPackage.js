@@ -105,7 +105,7 @@ function buildCombinedPackage(ffEvidence, previous, fpEvidence, audit, table, st
   const fpActions = [];
   const addAction = (phase, label, target, iface, fn, args = []) => fpActions.push({
     program: "Freedom Plus", phase, label, target, value: "0", data: iface.encodeFunctionData(fn, args),
-    submitAfterPostUpgradeVerification: phase === "REOPEN",
+    executeAfterPostUpgradeVerification: phase === "REOPEN",
   });
   for (const [key, name] of [...engines, ["router", "FreedomPlusSettlementRouter"]]) {
     addAction("PREAPPROVAL", `Approve Freedom Plus ${key} proxy`, A.guardian, guardian, "setApprovedProxy", [FP[key], true]);
@@ -121,7 +121,9 @@ function buildCombinedPackage(ffEvidence, previous, fpEvidence, audit, table, st
   addAction("INSTALL", "Install preventive Freedom Plus router", FP.router, proxy, "upgradeToAndCall", [next.router, "0x"]);
   for (const [key] of engines) addAction("REVOKE", `Revoke temporary Freedom Plus ${key} repair`, A.guardian, guardian, "setApprovedImplementation", [FP[key], next[`${key}Migrator`], false]);
   for (const key of [...engines.map(([key]) => key), "router", "manager", "registration"]) addAction("REOPEN", `Reopen Freedom Plus ${key} ONLY after verification`, FP[key], proxy, "unpause");
-  const ffActions = ff.actions.map(a => ({ ...a, program: "F-Freedom" }));
+  const ffActions = ff.actions.map(({ submitAfterPostUpgradeVerification, ...a }) => ({
+    ...a, program: "F-Freedom", executeAfterPostUpgradeVerification: a.phase === "REOPEN",
+  }));
   const actions = phases.flatMap(phase => [...ffActions, ...fpActions].filter(a => a.phase === phase))
     .map((a, index) => ({ ...a, index }));
   const gov = new E.Interface(["function cancelTransaction(uint256)"]);
@@ -131,10 +133,14 @@ function buildCombinedPackage(ffEvidence, previous, fpEvidence, audit, table, st
     addresses: { fFreedom: A, freedomPlus: FP }, deployments, reusedDeployments: ff.reusedDeployments,
     requiredCancelledProposalIds: ff.requiredCancelledProposalIds,
     cancellations: ff.requiredCancelledProposalIds.map(id => ({ oldProposalId: id, target: A.governance, value: "0", data: gov.encodeFunctionData("cancelTransaction", [id]) })),
-    actions, fFreedom: ff, freedomPlus: { plans, hashes, edits: fpEvidence.edits, previousBindings: audit.contracts },
+    actions, fFreedom: { ...ff, actions: ffActions,
+      rules: ff.rules.map(rule => rule === "Do not submit replacements until all old proposals 130-159 are cancelled on chain."
+        ? "Submit replacements after integration and deployment verification; execute only after old proposals 130-159 are cancelled on chain."
+        : rule),
+    }, freedomPlus: { plans, hashes, edits: fpEvidence.edits, previousBindings: audit.contracts },
     rules: [
-      "Cancel obsolete proposals 130-159 on chain before replacement submissions. Never erase the audit history.",
-      "Predicted addresses must be rebound to the real deployer nonce after cancellations; no local proposal IDs are live IDs.",
+      "All replacement proposals may be submitted together after integration and deployment verification. Cancel obsolete proposals 130-159 before maintenance EXECUTION, not submission.",
+      "Predicted addresses must be rebound to the real deployer nonce before deployment; no local proposal IDs are live IDs.",
       "Follow the phase order. All twelve affected program contracts stay paused until both repairs and final installations are verified.",
       "Each repair call is atomic; the entire multi-proposal maintenance sequence is NOT atomic.",
       "Reopen only after chain, backend projections, balances and rendered positions have been reconciled.",
@@ -143,4 +149,31 @@ function buildCombinedPackage(ffEvidence, previous, fpEvidence, audit, table, st
   };
 }
 
-module.exports = { A, FP, engines, EDIT_TYPE, phases, validateFreedomPlusEvidence, buildCombinedPackage };
+function omitVerifiedProxyApprovals(pkg, evidence) {
+  assert.equal(pkg.chainId, 137); assert.equal(evidence.chainId, 137);
+  assert(Number.isSafeInteger(evidence.block) && evidence.block > 0);
+  assert(/^0x[0-9a-f]{64}$/i.test(evidence.blockHash));
+  const approved = new Set();
+  const seen = new Set();
+  for (const row of evidence.proxies) {
+    assert(['p39', 'p14', 'p12', 'p6', 'router'].includes(row.key));
+    same(row.address, FP[row.key]);
+    assert(!seen.has(row.key)); seen.add(row.key);
+    assert.equal(typeof row.alreadyApproved, 'boolean');
+    if (row.alreadyApproved) approved.add(row.address.toLowerCase());
+  }
+  const guardian = new E.Interface(['function setApprovedProxy(address,bool)']);
+  const omitted = [];
+  const actions = pkg.actions.filter(action => {
+    if (action.phase !== 'PREAPPROVAL' || action.target.toLowerCase() !== A.guardian.toLowerCase() || action.value !== '0') return true;
+    let parsed;
+    try { parsed = guardian.parseTransaction({ data: action.data }); } catch { return true; }
+    if (!parsed || !parsed.args[1] || !approved.has(parsed.args[0].toLowerCase())) return true;
+    omitted.push({ ...action, reason: 'Proxy already approved at the verified mainnet block; recheck before execution.' });
+    return false;
+  }).map((action, index) => ({ ...action, index }));
+  return { ...pkg, actions, omittedRedundantActions: omitted, proxyApprovalEvidence: evidence,
+    executionApprovalRequirements: omitted.map(action => guardian.decodeFunctionData('setApprovedProxy', action.data)[0]) };
+}
+
+module.exports = { A, FP, engines, EDIT_TYPE, phases, validateFreedomPlusEvidence, buildCombinedPackage, omitVerifiedProxyApprovals };

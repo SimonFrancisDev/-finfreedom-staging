@@ -1,0 +1,22 @@
+{
+  "commit": "978f5143c41fd097b723e7f8d5378712f7b5e9fc",
+  "services": [
+    {
+      "id": "srv-d7eeof8sfn5c738thl60",
+      "name": "fin-freedom-backend-3",
+      "deployment": "dep-dbrpbhl6e07s73fp8leg",
+      "status": "live",
+      "commit": "978f5143c41fd097b723e7f8d5378712f7b5e9fc",
+      "environmentFingerprintBefore": "48f2db8bfd33b856fadcc2d4131548d22a73999442355f6f91652fc356761f3e"
+    },
+    {
+      "id": "srv-d7eit4favr4c73c08t8g",
+      "name": "fin-freedom-backend-4(bg_worker)",
+      "deployment": "dep-dbrpbi0n74is73fq6tig",
+      "status": "live",
+      "commit": "978f5143c41fd097b723e7f8d5378712f7b5e9fc",
+      "environmentFingerprintBefore": "ef55800d005a45e50fecf4a4585c02dd14413f77e2bf5b6e7e6857b64204adf4"
+    }
+  ],
+  "checkedAt": "2026-11-13T22:58:51.461Z"
+}
