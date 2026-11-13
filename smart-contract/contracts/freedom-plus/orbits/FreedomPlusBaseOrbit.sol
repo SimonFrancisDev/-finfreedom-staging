@@ -28,9 +28,9 @@ abstract contract FreedomPlusBaseOrbit is
     address public manager;
     address public guardian;
 
-    mapping(address => mapping(uint8 => uint256)) private _currentCycles;
-    mapping(address => mapping(uint8 => mapping(uint256 => CycleData))) private _cycles;
-    mapping(address => mapping(uint8 => address)) private _currentStructuralParents;
+    mapping(address => mapping(uint8 => uint256)) internal _currentCycles;
+    mapping(address => mapping(uint8 => mapping(uint256 => CycleData))) internal _cycles;
+    mapping(address => mapping(uint8 => address)) internal _currentStructuralParents;
 
     error OnlyManager();
     error InvalidContract(address target);

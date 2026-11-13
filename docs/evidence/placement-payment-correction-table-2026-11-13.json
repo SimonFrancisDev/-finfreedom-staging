@@ -1,0 +1,2588 @@
+{
+  "chainId": 137,
+  "liveWrites": 0,
+  "scope": "Step 1 only: position-to-original-payment correction table, not a repair or release approval",
+  "checkedAtUtc": "2026-11-13T17:49:58.000Z",
+  "checkedAtBlock": 97257828,
+  "checkedAtBlockHash": "0xa29f6d1b28e9cfe2fcf3ff563aa0303c01d4b2e11f1c435c742018ab62e36bb5",
+  "auditBoundary": {
+    "fpBlock": 97254886,
+    "ffSnapshotBlock": 97251930,
+    "additionalFpEvents": 0
+  },
+  "identities": {
+    "id1": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+    "sofia": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+    "sabina": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+    "ffContracts": {
+      "registration": "0x02ECA97e944Ac66b0444fd5F61A716917E83CfF5",
+      "manager": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+      "p4": "0x1ED0b443c880Ba88F732c3F5915561A07B21F6B4",
+      "p12": "0xCF998d8f7E9DD4f3FacFbA45e656dE07142f824b",
+      "p39": "0xEaD39819B8C4DBb0669320542B6B847D4c31b8Fb"
+    },
+    "fpRouter": "0x8C88262595cbEAA5FffB60a0689b3EAbe22B0498",
+    "usdt": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F"
+  },
+  "counts": {
+    "proposedPositions": 19,
+    "freedomPlusPaymentMatched": 16,
+    "fFreedomLevel9PaymentMatchedWithBranchException": 1,
+    "fFreedomLevel8UnmatchedPositions": 2,
+    "fFreedomLevel8UnmatchedActivations": 1
+  },
+  "important": [
+    "No amount in this table is authorization to pay, claw back or rewrite a transfer.",
+    "Two level-8 rows describe ONE Sofia activation and ONE proposed relationship exception, not two debts.",
+    "The eight founders' actual transfers are distinguished from an ID1 wallet balance.",
+    "No evidence of unpaid historical compensation was established by the placement comparison.",
+    "Historical level-6 duplicates remain deferred. Existing package counter-only edits at levels 1,3,7 do not introduce users, but are outside this payment-mapping table.",
+    "Observed empty destination slots do not replace a full guarded prestate and implementation/storage rehearsal before execution."
+  ],
+  "rows": [
+    {
+      "key": "FP-1-4",
+      "program": "Freedom Plus",
+      "participant": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+      "level": 1,
+      "orbitType": "P39",
+      "orbitOwner": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "cycle": 0,
+      "proposedRing": 2,
+      "proposedSlot": 4,
+      "proposedParent": "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+      "originalTx": "0xd84b0858a2185eb0d486a9ecd2ed5061c87072feedef9f66ba7f638944ae6e44",
+      "originalBlock": 94853254,
+      "originalUtc": "2026-10-02T23:50:21.000Z",
+      "priceUSDT": "50.0",
+      "permanentSponsor": "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+      "primaryOrbit": "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+      "existingParentPosition": {
+        "owner": "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+        "ring": 1,
+        "slot": 1
+      },
+      "paymentForMissingPosition": {
+        "beneficiary": "ID1, paid to its eight founders",
+        "raw": "10000000",
+        "usdt": "10.0",
+        "actualFounderTransfersForComponent": [
+          {
+            "wallet": "0x88d350Bd016751B08Baf6508e1bdF186A1B1305B",
+            "usdt": "1.25"
+          },
+          {
+            "wallet": "0x5fd791B457aD32A8E2A2e81FC211238639824127",
+            "usdt": "1.25"
+          },
+          {
+            "wallet": "0xa2033515F0f35A5FA4803eDde306c293a81c2da9",
+            "usdt": "1.25"
+          },
+          {
+            "wallet": "0xf73d4Ae3a9EFeBAb76ab9053Cd055b4503929231",
+            "usdt": "1.25"
+          },
+          {
+            "wallet": "0xb850f836d0e3CfeD4A7DbDCAa7A4c78aFac0d911",
+            "usdt": "1.25"
+          },
+          {
+            "wallet": "0x435363daD972a7abb2A739525c461F06A45CE294",
+            "usdt": "1.25"
+          },
+          {
+            "wallet": "0xf4F83F8181cD9A8C96a33f4d9aF487b444353a15",
+            "usdt": "1.25"
+          },
+          {
+            "wallet": "0x120FBeeeb36c003CAEE1F4B37Ac9297C88d51D42",
+            "usdt": "1.25"
+          }
+        ]
+      },
+      "parentPayment": {
+        "wallet": "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+        "expectedUSDT": "10.0",
+        "actualUSDT": "10.0",
+        "differenceUSDT": "0.0"
+      },
+      "historicalOutflows": [
+        {
+          "wallet": "0x120fbeeeb36c003caee1f4b37ac9297c88d51d42",
+          "raw": "4375000",
+          "usdt": "4.375"
+        },
+        {
+          "wallet": "0x3ee9b4913e175c15b2ef76ac352b6737210248fb",
+          "raw": "1000000",
+          "usdt": "1.0"
+        },
+        {
+          "wallet": "0x435363dad972a7abb2a739525c461f06a45ce294",
+          "raw": "4375000",
+          "usdt": "4.375"
+        },
+        {
+          "wallet": "0x5fd791b457ad32a8e2a2e81fc211238639824127",
+          "raw": "4375000",
+          "usdt": "4.375"
+        },
+        {
+          "wallet": "0x88d350bd016751b08baf6508e1bdf186a1b1305b",
+          "raw": "4375000",
+          "usdt": "4.375"
+        },
+        {
+          "wallet": "0xa2033515f0f35a5fa4803edde306c293a81c2da9",
+          "raw": "4375000",
+          "usdt": "4.375"
+        },
+        {
+          "wallet": "0xaa254e8e177de104d9f87211b0f4a6b7ec71306a",
+          "raw": "10000000",
+          "usdt": "10.0"
+        },
+        {
+          "wallet": "0xb850f836d0e3cfed4a7dbdcaa7a4c78afac0d911",
+          "raw": "4375000",
+          "usdt": "4.375"
+        },
+        {
+          "wallet": "0xbb2cf7ef867f46a93ae1f9ded564927874b79b52",
+          "raw": "4000000",
+          "usdt": "4.0"
+        },
+        {
+          "wallet": "0xf4f83f8181cd9a8c96a33f4d9af487b444353a15",
+          "raw": "4375000",
+          "usdt": "4.375"
+        },
+        {
+          "wallet": "0xf73d4ae3a9efebab76ab9053cd055b4503929231",
+          "raw": "4375000",
+          "usdt": "4.375"
+        }
+      ],
+      "currentTarget": {
+        "occupant": "0x0000000000000000000000000000000000000000",
+        "cycle": 0,
+        "empty": true
+      },
+      "restoresAnAlreadyPaidRelationship": true,
+      "introducesNewOrdinaryUserOrbitEntry": false,
+      "changesHistoricalAmounts": false,
+      "repairPaymentAuthorizedUSDT": "0.0",
+      "financialMapping": "MATCH: historical payments support the missing ID1 position and its existing paid parent relationship",
+      "futureEffect": "Restores the missing ID1 branch and occupancy. Can change future placement capacity and recycle timing relative to the defective state; no historical payments are repeated.",
+      "releaseStatus": "MAPPING_ONLY_NOT_RELEASE_APPROVAL"
+    },
+    {
+      "key": "FP-2-5",
+      "program": "Freedom Plus",
+      "participant": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+      "level": 2,
+      "orbitType": "P14",
+      "orbitOwner": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "cycle": 0,
+      "proposedRing": 2,
+      "proposedSlot": 5,
+      "proposedParent": "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+      "originalTx": "0x86c6ec2ac88b64507217a06066fd4f5b0289a6185a2a83515cca99a5d0d81208",
+      "originalBlock": 94853283,
+      "originalUtc": "2026-10-02T23:51:05.000Z",
+      "priceUSDT": "150.0",
+      "permanentSponsor": "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+      "primaryOrbit": "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+      "existingParentPosition": {
+        "owner": "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+        "ring": 1,
+        "slot": 1
+      },
+      "paymentForMissingPosition": {
+        "beneficiary": "ID1, paid to its eight founders",
+        "raw": "37500000",
+        "usdt": "37.5",
+        "actualFounderTransfersForComponent": [
+          {
+            "wallet": "0x88d350Bd016751B08Baf6508e1bdF186A1B1305B",
+            "usdt": "4.6875"
+          },
+          {
+            "wallet": "0x5fd791B457aD32A8E2A2e81FC211238639824127",
+            "usdt": "4.6875"
+          },
+          {
+            "wallet": "0xa2033515F0f35A5FA4803eDde306c293a81c2da9",
+            "usdt": "4.6875"
+          },
+          {
+            "wallet": "0xf73d4Ae3a9EFeBAb76ab9053Cd055b4503929231",
+            "usdt": "4.6875"
+          },
+          {
+            "wallet": "0xb850f836d0e3CfeD4A7DbDCAa7A4c78aFac0d911",
+            "usdt": "4.6875"
+          },
+          {
+            "wallet": "0x435363daD972a7abb2A739525c461F06A45CE294",
+            "usdt": "4.6875"
+          },
+          {
+            "wallet": "0xf4F83F8181cD9A8C96a33f4d9aF487b444353a15",
+            "usdt": "4.6875"
+          },
+          {
+            "wallet": "0x120FBeeeb36c003CAEE1F4B37Ac9297C88d51D42",
+            "usdt": "4.6875"
+          }
+        ]
+      },
+      "parentPayment": {
+        "wallet": "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+        "expectedUSDT": "22.5",
+        "actualUSDT": "22.5",
+        "differenceUSDT": "0.0"
+      },
+      "historicalOutflows": [
+        {
+          "wallet": "0x120fbeeeb36c003caee1f4b37ac9297c88d51d42",
+          "raw": "14062500",
+          "usdt": "14.0625"
+        },
+        {
+          "wallet": "0x3ee9b4913e175c15b2ef76ac352b6737210248fb",
+          "raw": "3000000",
+          "usdt": "3.0"
+        },
+        {
+          "wallet": "0x435363dad972a7abb2a739525c461f06a45ce294",
+          "raw": "14062500",
+          "usdt": "14.0625"
+        },
+        {
+          "wallet": "0x5fd791b457ad32a8e2a2e81fc211238639824127",
+          "raw": "14062500",
+          "usdt": "14.0625"
+        },
+        {
+          "wallet": "0x88d350bd016751b08baf6508e1bdf186a1b1305b",
+          "raw": "14062500",
+          "usdt": "14.0625"
+        },
+        {
+          "wallet": "0xa2033515f0f35a5fa4803edde306c293a81c2da9",
+          "raw": "14062500",
+          "usdt": "14.0625"
+        },
+        {
+          "wallet": "0xaa254e8e177de104d9f87211b0f4a6b7ec71306a",
+          "raw": "22500000",
+          "usdt": "22.5"
+        },
+        {
+          "wallet": "0xb850f836d0e3cfed4a7dbdcaa7a4c78afac0d911",
+          "raw": "14062500",
+          "usdt": "14.0625"
+        },
+        {
+          "wallet": "0xbb2cf7ef867f46a93ae1f9ded564927874b79b52",
+          "raw": "12000000",
+          "usdt": "12.0"
+        },
+        {
+          "wallet": "0xf4f83f8181cd9a8c96a33f4d9af487b444353a15",
+          "raw": "14062500",
+          "usdt": "14.0625"
+        },
+        {
+          "wallet": "0xf73d4ae3a9efebab76ab9053cd055b4503929231",
+          "raw": "14062500",
+          "usdt": "14.0625"
+        }
+      ],
+      "currentTarget": {
+        "occupant": "0x0000000000000000000000000000000000000000",
+        "cycle": 0,
+        "empty": true
+      },
+      "restoresAnAlreadyPaidRelationship": true,
+      "introducesNewOrdinaryUserOrbitEntry": false,
+      "changesHistoricalAmounts": false,
+      "repairPaymentAuthorizedUSDT": "0.0",
+      "financialMapping": "MATCH: historical payments support the missing ID1 position and its existing paid parent relationship",
+      "futureEffect": "Restores the missing ID1 branch and occupancy. Can change future placement capacity and recycle timing relative to the defective state; no historical payments are repeated.",
+      "releaseStatus": "MAPPING_ONLY_NOT_RELEASE_APPROVAL"
+    },
+    {
+      "key": "FP-3-4",
+      "program": "Freedom Plus",
+      "participant": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+      "level": 3,
+      "orbitType": "P12",
+      "orbitOwner": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "cycle": 0,
+      "proposedRing": 2,
+      "proposedSlot": 4,
+      "proposedParent": "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+      "originalTx": "0x1f28b1a54eb307c47493eb7ee93d62b99f1cb65b28e929048fd2e2693fa46ddb",
+      "originalBlock": 94853311,
+      "originalUtc": "2026-10-02T23:51:47.000Z",
+      "priceUSDT": "450.0",
+      "permanentSponsor": "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+      "primaryOrbit": "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+      "existingParentPosition": {
+        "owner": "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+        "ring": 1,
+        "slot": 1
+      },
+      "paymentForMissingPosition": {
+        "beneficiary": "ID1, paid to its eight founders",
+        "raw": "225000000",
+        "usdt": "225.0",
+        "actualFounderTransfersForComponent": [
+          {
+            "wallet": "0x88d350Bd016751B08Baf6508e1bdF186A1B1305B",
+            "usdt": "28.125"
+          },
+          {
+            "wallet": "0x5fd791B457aD32A8E2A2e81FC211238639824127",
+            "usdt": "28.125"
+          },
+          {
+            "wallet": "0xa2033515F0f35A5FA4803eDde306c293a81c2da9",
+            "usdt": "28.125"
+          },
+          {
+            "wallet": "0xf73d4Ae3a9EFeBAb76ab9053Cd055b4503929231",
+            "usdt": "28.125"
+          },
+          {
+            "wallet": "0xb850f836d0e3CfeD4A7DbDCAa7A4c78aFac0d911",
+            "usdt": "28.125"
+          },
+          {
+            "wallet": "0x435363daD972a7abb2A739525c461F06A45CE294",
+            "usdt": "28.125"
+          },
+          {
+            "wallet": "0xf4F83F8181cD9A8C96a33f4d9aF487b444353a15",
+            "usdt": "28.125"
+          },
+          {
+            "wallet": "0x120FBeeeb36c003CAEE1F4B37Ac9297C88d51D42",
+            "usdt": "28.125"
+          }
+        ]
+      },
+      "parentPayment": {
+        "wallet": "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+        "expectedUSDT": "180.0",
+        "actualUSDT": "180.0",
+        "differenceUSDT": "0.0"
+      },
+      "historicalOutflows": [
+        {
+          "wallet": "0x120fbeeeb36c003caee1f4b37ac9297c88d51d42",
+          "raw": "28125000",
+          "usdt": "28.125"
+        },
+        {
+          "wallet": "0x3ee9b4913e175c15b2ef76ac352b6737210248fb",
+          "raw": "9000000",
+          "usdt": "9.0"
+        },
+        {
+          "wallet": "0x435363dad972a7abb2a739525c461f06a45ce294",
+          "raw": "28125000",
+          "usdt": "28.125"
+        },
+        {
+          "wallet": "0x5fd791b457ad32a8e2a2e81fc211238639824127",
+          "raw": "28125000",
+          "usdt": "28.125"
+        },
+        {
+          "wallet": "0x88d350bd016751b08baf6508e1bdf186a1b1305b",
+          "raw": "28125000",
+          "usdt": "28.125"
+        },
+        {
+          "wallet": "0xa2033515f0f35a5fa4803edde306c293a81c2da9",
+          "raw": "28125000",
+          "usdt": "28.125"
+        },
+        {
+          "wallet": "0xaa254e8e177de104d9f87211b0f4a6b7ec71306a",
+          "raw": "180000000",
+          "usdt": "180.0"
+        },
+        {
+          "wallet": "0xb850f836d0e3cfed4a7dbdcaa7a4c78afac0d911",
+          "raw": "28125000",
+          "usdt": "28.125"
+        },
+        {
+          "wallet": "0xbb2cf7ef867f46a93ae1f9ded564927874b79b52",
+          "raw": "36000000",
+          "usdt": "36.0"
+        },
+        {
+          "wallet": "0xf4f83f8181cd9a8c96a33f4d9af487b444353a15",
+          "raw": "28125000",
+          "usdt": "28.125"
+        },
+        {
+          "wallet": "0xf73d4ae3a9efebab76ab9053cd055b4503929231",
+          "raw": "28125000",
+          "usdt": "28.125"
+        }
+      ],
+      "currentTarget": {
+        "occupant": "0x0000000000000000000000000000000000000000",
+        "cycle": 0,
+        "empty": true
+      },
+      "restoresAnAlreadyPaidRelationship": true,
+      "introducesNewOrdinaryUserOrbitEntry": false,
+      "changesHistoricalAmounts": false,
+      "repairPaymentAuthorizedUSDT": "0.0",
+      "financialMapping": "MATCH: historical payments support the missing ID1 position and its existing paid parent relationship",
+      "futureEffect": "Restores the missing ID1 branch and occupancy. Can change future placement capacity and recycle timing relative to the defective state; no historical payments are repeated.",
+      "releaseStatus": "MAPPING_ONLY_NOT_RELEASE_APPROVAL"
+    },
+    {
+      "key": "FP-1-5",
+      "program": "Freedom Plus",
+      "participant": "0xBafaFb77a090D7F989aa64D4f867b1B942A50591",
+      "level": 1,
+      "orbitType": "P39",
+      "orbitOwner": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "cycle": 0,
+      "proposedRing": 2,
+      "proposedSlot": 5,
+      "proposedParent": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "originalTx": "0x310e50b3e10ca5909a34d3984c9ea284d9d4a0c27de5547e84def110e640af97",
+      "originalBlock": 94853403,
+      "originalUtc": "2026-10-02T23:54:05.000Z",
+      "priceUSDT": "50.0",
+      "permanentSponsor": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "primaryOrbit": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "existingParentPosition": {
+        "owner": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+        "ring": 1,
+        "slot": 1
+      },
+      "paymentForMissingPosition": {
+        "beneficiary": "ID1, paid to its eight founders",
+        "raw": "10000000",
+        "usdt": "10.0",
+        "actualFounderTransfersForComponent": [
+          {
+            "wallet": "0x88d350Bd016751B08Baf6508e1bdF186A1B1305B",
+            "usdt": "1.25"
+          },
+          {
+            "wallet": "0x5fd791B457aD32A8E2A2e81FC211238639824127",
+            "usdt": "1.25"
+          },
+          {
+            "wallet": "0xa2033515F0f35A5FA4803eDde306c293a81c2da9",
+            "usdt": "1.25"
+          },
+          {
+            "wallet": "0xf73d4Ae3a9EFeBAb76ab9053Cd055b4503929231",
+            "usdt": "1.25"
+          },
+          {
+            "wallet": "0xb850f836d0e3CfeD4A7DbDCAa7A4c78aFac0d911",
+            "usdt": "1.25"
+          },
+          {
+            "wallet": "0x435363daD972a7abb2A739525c461F06A45CE294",
+            "usdt": "1.25"
+          },
+          {
+            "wallet": "0xf4F83F8181cD9A8C96a33f4d9aF487b444353a15",
+            "usdt": "1.25"
+          },
+          {
+            "wallet": "0x120FBeeeb36c003CAEE1F4B37Ac9297C88d51D42",
+            "usdt": "1.25"
+          }
+        ]
+      },
+      "parentPayment": {
+        "wallet": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+        "expectedUSDT": "10.0",
+        "actualUSDT": "10.0",
+        "differenceUSDT": "0.0"
+      },
+      "historicalOutflows": [
+        {
+          "wallet": "0x120fbeeeb36c003caee1f4b37ac9297c88d51d42",
+          "raw": "4375000",
+          "usdt": "4.375"
+        },
+        {
+          "wallet": "0x3ee9b4913e175c15b2ef76ac352b6737210248fb",
+          "raw": "1000000",
+          "usdt": "1.0"
+        },
+        {
+          "wallet": "0x435363dad972a7abb2a739525c461f06a45ce294",
+          "raw": "4375000",
+          "usdt": "4.375"
+        },
+        {
+          "wallet": "0x5fd791b457ad32a8e2a2e81fc211238639824127",
+          "raw": "4375000",
+          "usdt": "4.375"
+        },
+        {
+          "wallet": "0x88d350bd016751b08baf6508e1bdf186a1b1305b",
+          "raw": "4375000",
+          "usdt": "4.375"
+        },
+        {
+          "wallet": "0xa2033515f0f35a5fa4803edde306c293a81c2da9",
+          "raw": "4375000",
+          "usdt": "4.375"
+        },
+        {
+          "wallet": "0xb673c9d14da920f187d25cc793f1955a43284622",
+          "raw": "10000000",
+          "usdt": "10.0"
+        },
+        {
+          "wallet": "0xb850f836d0e3cfed4a7dbdcaa7a4c78afac0d911",
+          "raw": "4375000",
+          "usdt": "4.375"
+        },
+        {
+          "wallet": "0xbb2cf7ef867f46a93ae1f9ded564927874b79b52",
+          "raw": "4000000",
+          "usdt": "4.0"
+        },
+        {
+          "wallet": "0xf4f83f8181cd9a8c96a33f4d9af487b444353a15",
+          "raw": "4375000",
+          "usdt": "4.375"
+        },
+        {
+          "wallet": "0xf73d4ae3a9efebab76ab9053cd055b4503929231",
+          "raw": "4375000",
+          "usdt": "4.375"
+        }
+      ],
+      "currentTarget": {
+        "occupant": "0x0000000000000000000000000000000000000000",
+        "cycle": 0,
+        "empty": true
+      },
+      "restoresAnAlreadyPaidRelationship": true,
+      "introducesNewOrdinaryUserOrbitEntry": false,
+      "changesHistoricalAmounts": false,
+      "repairPaymentAuthorizedUSDT": "0.0",
+      "financialMapping": "MATCH: historical payments support the missing ID1 position and its existing paid parent relationship",
+      "futureEffect": "Restores the missing ID1 branch and occupancy. Can change future placement capacity and recycle timing relative to the defective state; no historical payments are repeated.",
+      "releaseStatus": "MAPPING_ONLY_NOT_RELEASE_APPROVAL"
+    },
+    {
+      "key": "FP-1-13",
+      "program": "Freedom Plus",
+      "participant": "0xCC7f84F64ABc9E5861E9f27d20811Af42f189E45",
+      "level": 1,
+      "orbitType": "P39",
+      "orbitOwner": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "cycle": 0,
+      "proposedRing": 3,
+      "proposedSlot": 13,
+      "proposedParent": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+      "originalTx": "0x958bb0d3a101047b83e197fcba443c101ccf945c5e085814ce4af76e6f357f79",
+      "originalBlock": 94853512,
+      "originalUtc": "2026-10-02T23:56:48.000Z",
+      "priceUSDT": "50.0",
+      "permanentSponsor": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+      "primaryOrbit": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+      "existingParentPosition": {
+        "owner": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+        "ring": 1,
+        "slot": 1
+      },
+      "paymentForMissingPosition": {
+        "beneficiary": "ID1, paid to its eight founders",
+        "raw": "25000000",
+        "usdt": "25.0",
+        "actualFounderTransfersForComponent": [
+          {
+            "wallet": "0x88d350Bd016751B08Baf6508e1bdF186A1B1305B",
+            "usdt": "3.125"
+          },
+          {
+            "wallet": "0x5fd791B457aD32A8E2A2e81FC211238639824127",
+            "usdt": "3.125"
+          },
+          {
+            "wallet": "0xa2033515F0f35A5FA4803eDde306c293a81c2da9",
+            "usdt": "3.125"
+          },
+          {
+            "wallet": "0xf73d4Ae3a9EFeBAb76ab9053Cd055b4503929231",
+            "usdt": "3.125"
+          },
+          {
+            "wallet": "0xb850f836d0e3CfeD4A7DbDCAa7A4c78aFac0d911",
+            "usdt": "3.125"
+          },
+          {
+            "wallet": "0x435363daD972a7abb2A739525c461F06A45CE294",
+            "usdt": "3.125"
+          },
+          {
+            "wallet": "0xf4F83F8181cD9A8C96a33f4d9aF487b444353a15",
+            "usdt": "3.125"
+          },
+          {
+            "wallet": "0x120FBeeeb36c003CAEE1F4B37Ac9297C88d51D42",
+            "usdt": "3.125"
+          }
+        ]
+      },
+      "parentPayment": {
+        "wallet": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+        "expectedUSDT": "10.0",
+        "actualUSDT": "10.0",
+        "differenceUSDT": "0.0"
+      },
+      "historicalOutflows": [
+        {
+          "wallet": "0x120fbeeeb36c003caee1f4b37ac9297c88d51d42",
+          "raw": "3125000",
+          "usdt": "3.125"
+        },
+        {
+          "wallet": "0x3ee9b4913e175c15b2ef76ac352b6737210248fb",
+          "raw": "1000000",
+          "usdt": "1.0"
+        },
+        {
+          "wallet": "0x435363dad972a7abb2a739525c461f06a45ce294",
+          "raw": "3125000",
+          "usdt": "3.125"
+        },
+        {
+          "wallet": "0x5fd791b457ad32a8e2a2e81fc211238639824127",
+          "raw": "3125000",
+          "usdt": "3.125"
+        },
+        {
+          "wallet": "0x863447369632ea4aac724683c1d448c68e2f1ade",
+          "raw": "10000000",
+          "usdt": "10.0"
+        },
+        {
+          "wallet": "0x88d350bd016751b08baf6508e1bdf186a1b1305b",
+          "raw": "3125000",
+          "usdt": "3.125"
+        },
+        {
+          "wallet": "0xa2033515f0f35a5fa4803edde306c293a81c2da9",
+          "raw": "3125000",
+          "usdt": "3.125"
+        },
+        {
+          "wallet": "0xaa254e8e177de104d9f87211b0f4a6b7ec71306a",
+          "raw": "10000000",
+          "usdt": "10.0"
+        },
+        {
+          "wallet": "0xb850f836d0e3cfed4a7dbdcaa7a4c78afac0d911",
+          "raw": "3125000",
+          "usdt": "3.125"
+        },
+        {
+          "wallet": "0xbb2cf7ef867f46a93ae1f9ded564927874b79b52",
+          "raw": "4000000",
+          "usdt": "4.0"
+        },
+        {
+          "wallet": "0xf4f83f8181cd9a8c96a33f4d9af487b444353a15",
+          "raw": "3125000",
+          "usdt": "3.125"
+        },
+        {
+          "wallet": "0xf73d4ae3a9efebab76ab9053cd055b4503929231",
+          "raw": "3125000",
+          "usdt": "3.125"
+        }
+      ],
+      "currentTarget": {
+        "occupant": "0x0000000000000000000000000000000000000000",
+        "cycle": 0,
+        "empty": true
+      },
+      "restoresAnAlreadyPaidRelationship": true,
+      "introducesNewOrdinaryUserOrbitEntry": false,
+      "changesHistoricalAmounts": false,
+      "repairPaymentAuthorizedUSDT": "0.0",
+      "financialMapping": "MATCH: historical payments support the missing ID1 position and its existing paid parent relationship",
+      "futureEffect": "Restores the missing ID1 branch and occupancy. Can change future placement capacity and recycle timing relative to the defective state; no historical payments are repeated.",
+      "releaseStatus": "MAPPING_ONLY_NOT_RELEASE_APPROVAL"
+    },
+    {
+      "key": "FP-2-9",
+      "program": "Freedom Plus",
+      "participant": "0xCC7f84F64ABc9E5861E9f27d20811Af42f189E45",
+      "level": 2,
+      "orbitType": "P14",
+      "orbitOwner": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "cycle": 0,
+      "proposedRing": 3,
+      "proposedSlot": 9,
+      "proposedParent": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+      "originalTx": "0xfe159f482ecc69f6ac369d7dad7be3176864082fff9f086abb7a44f6a4d97e0a",
+      "originalBlock": 94853823,
+      "originalUtc": "2026-10-03T00:04:35.000Z",
+      "priceUSDT": "150.0",
+      "permanentSponsor": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+      "primaryOrbit": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+      "existingParentPosition": {
+        "owner": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+        "ring": 1,
+        "slot": 1
+      },
+      "paymentForMissingPosition": {
+        "beneficiary": "ID1, paid to its eight founders",
+        "raw": "75000000",
+        "usdt": "75.0",
+        "actualFounderTransfersForComponent": [
+          {
+            "wallet": "0x88d350Bd016751B08Baf6508e1bdF186A1B1305B",
+            "usdt": "9.375"
+          },
+          {
+            "wallet": "0x5fd791B457aD32A8E2A2e81FC211238639824127",
+            "usdt": "9.375"
+          },
+          {
+            "wallet": "0xa2033515F0f35A5FA4803eDde306c293a81c2da9",
+            "usdt": "9.375"
+          },
+          {
+            "wallet": "0xf73d4Ae3a9EFeBAb76ab9053Cd055b4503929231",
+            "usdt": "9.375"
+          },
+          {
+            "wallet": "0xb850f836d0e3CfeD4A7DbDCAa7A4c78aFac0d911",
+            "usdt": "9.375"
+          },
+          {
+            "wallet": "0x435363daD972a7abb2A739525c461F06A45CE294",
+            "usdt": "9.375"
+          },
+          {
+            "wallet": "0xf4F83F8181cD9A8C96a33f4d9aF487b444353a15",
+            "usdt": "9.375"
+          },
+          {
+            "wallet": "0x120FBeeeb36c003CAEE1F4B37Ac9297C88d51D42",
+            "usdt": "9.375"
+          }
+        ]
+      },
+      "parentPayment": {
+        "wallet": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+        "expectedUSDT": "22.5",
+        "actualUSDT": "22.5",
+        "differenceUSDT": "0.0"
+      },
+      "historicalOutflows": [
+        {
+          "wallet": "0x120fbeeeb36c003caee1f4b37ac9297c88d51d42",
+          "raw": "9375000",
+          "usdt": "9.375"
+        },
+        {
+          "wallet": "0x3ee9b4913e175c15b2ef76ac352b6737210248fb",
+          "raw": "3000000",
+          "usdt": "3.0"
+        },
+        {
+          "wallet": "0x435363dad972a7abb2a739525c461f06a45ce294",
+          "raw": "9375000",
+          "usdt": "9.375"
+        },
+        {
+          "wallet": "0x5fd791b457ad32a8e2a2e81fc211238639824127",
+          "raw": "9375000",
+          "usdt": "9.375"
+        },
+        {
+          "wallet": "0x863447369632ea4aac724683c1d448c68e2f1ade",
+          "raw": "22500000",
+          "usdt": "22.5"
+        },
+        {
+          "wallet": "0x88d350bd016751b08baf6508e1bdf186a1b1305b",
+          "raw": "9375000",
+          "usdt": "9.375"
+        },
+        {
+          "wallet": "0xa2033515f0f35a5fa4803edde306c293a81c2da9",
+          "raw": "9375000",
+          "usdt": "9.375"
+        },
+        {
+          "wallet": "0xaa254e8e177de104d9f87211b0f4a6b7ec71306a",
+          "raw": "37500000",
+          "usdt": "37.5"
+        },
+        {
+          "wallet": "0xb850f836d0e3cfed4a7dbdcaa7a4c78afac0d911",
+          "raw": "9375000",
+          "usdt": "9.375"
+        },
+        {
+          "wallet": "0xbb2cf7ef867f46a93ae1f9ded564927874b79b52",
+          "raw": "12000000",
+          "usdt": "12.0"
+        },
+        {
+          "wallet": "0xf4f83f8181cd9a8c96a33f4d9af487b444353a15",
+          "raw": "9375000",
+          "usdt": "9.375"
+        },
+        {
+          "wallet": "0xf73d4ae3a9efebab76ab9053cd055b4503929231",
+          "raw": "9375000",
+          "usdt": "9.375"
+        }
+      ],
+      "currentTarget": {
+        "occupant": "0x0000000000000000000000000000000000000000",
+        "cycle": 0,
+        "empty": true
+      },
+      "restoresAnAlreadyPaidRelationship": true,
+      "introducesNewOrdinaryUserOrbitEntry": false,
+      "changesHistoricalAmounts": false,
+      "repairPaymentAuthorizedUSDT": "0.0",
+      "financialMapping": "MATCH: historical payments support the missing ID1 position and its existing paid parent relationship",
+      "futureEffect": "Restores the missing ID1 branch and occupancy. Can change future placement capacity and recycle timing relative to the defective state; no historical payments are repeated.",
+      "releaseStatus": "MAPPING_ONLY_NOT_RELEASE_APPROVAL"
+    },
+    {
+      "key": "FP-1-22",
+      "program": "Freedom Plus",
+      "participant": "0xa1B5a30fAF2032471fBAc7d5A89842c0d80b2372",
+      "level": 1,
+      "orbitType": "P39",
+      "orbitOwner": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "cycle": 0,
+      "proposedRing": 3,
+      "proposedSlot": 22,
+      "proposedParent": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+      "originalTx": "0x07b2064953cb68deb95eefaa32a8463459890013fa9576b208d07b0c61008a5b",
+      "originalBlock": 94854101,
+      "originalUtc": "2026-10-03T00:11:32.000Z",
+      "priceUSDT": "50.0",
+      "permanentSponsor": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+      "primaryOrbit": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+      "existingParentPosition": {
+        "owner": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+        "ring": 1,
+        "slot": 2
+      },
+      "paymentForMissingPosition": {
+        "beneficiary": "ID1, paid to its eight founders",
+        "raw": "25000000",
+        "usdt": "25.0",
+        "actualFounderTransfersForComponent": [
+          {
+            "wallet": "0x88d350Bd016751B08Baf6508e1bdF186A1B1305B",
+            "usdt": "3.125"
+          },
+          {
+            "wallet": "0x5fd791B457aD32A8E2A2e81FC211238639824127",
+            "usdt": "3.125"
+          },
+          {
+            "wallet": "0xa2033515F0f35A5FA4803eDde306c293a81c2da9",
+            "usdt": "3.125"
+          },
+          {
+            "wallet": "0xf73d4Ae3a9EFeBAb76ab9053Cd055b4503929231",
+            "usdt": "3.125"
+          },
+          {
+            "wallet": "0xb850f836d0e3CfeD4A7DbDCAa7A4c78aFac0d911",
+            "usdt": "3.125"
+          },
+          {
+            "wallet": "0x435363daD972a7abb2A739525c461F06A45CE294",
+            "usdt": "3.125"
+          },
+          {
+            "wallet": "0xf4F83F8181cD9A8C96a33f4d9aF487b444353a15",
+            "usdt": "3.125"
+          },
+          {
+            "wallet": "0x120FBeeeb36c003CAEE1F4B37Ac9297C88d51D42",
+            "usdt": "3.125"
+          }
+        ]
+      },
+      "parentPayment": {
+        "wallet": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+        "expectedUSDT": "10.0",
+        "actualUSDT": "10.0",
+        "differenceUSDT": "0.0"
+      },
+      "historicalOutflows": [
+        {
+          "wallet": "0x120fbeeeb36c003caee1f4b37ac9297c88d51d42",
+          "raw": "3125000",
+          "usdt": "3.125"
+        },
+        {
+          "wallet": "0x3ee9b4913e175c15b2ef76ac352b6737210248fb",
+          "raw": "1000000",
+          "usdt": "1.0"
+        },
+        {
+          "wallet": "0x435363dad972a7abb2a739525c461f06a45ce294",
+          "raw": "3125000",
+          "usdt": "3.125"
+        },
+        {
+          "wallet": "0x5fd791b457ad32a8e2a2e81fc211238639824127",
+          "raw": "3125000",
+          "usdt": "3.125"
+        },
+        {
+          "wallet": "0x863447369632ea4aac724683c1d448c68e2f1ade",
+          "raw": "10000000",
+          "usdt": "10.0"
+        },
+        {
+          "wallet": "0x88d350bd016751b08baf6508e1bdf186a1b1305b",
+          "raw": "3125000",
+          "usdt": "3.125"
+        },
+        {
+          "wallet": "0xa2033515f0f35a5fa4803edde306c293a81c2da9",
+          "raw": "3125000",
+          "usdt": "3.125"
+        },
+        {
+          "wallet": "0xaa254e8e177de104d9f87211b0f4a6b7ec71306a",
+          "raw": "10000000",
+          "usdt": "10.0"
+        },
+        {
+          "wallet": "0xb850f836d0e3cfed4a7dbdcaa7a4c78afac0d911",
+          "raw": "3125000",
+          "usdt": "3.125"
+        },
+        {
+          "wallet": "0xbb2cf7ef867f46a93ae1f9ded564927874b79b52",
+          "raw": "4000000",
+          "usdt": "4.0"
+        },
+        {
+          "wallet": "0xf4f83f8181cd9a8c96a33f4d9af487b444353a15",
+          "raw": "3125000",
+          "usdt": "3.125"
+        },
+        {
+          "wallet": "0xf73d4ae3a9efebab76ab9053cd055b4503929231",
+          "raw": "3125000",
+          "usdt": "3.125"
+        }
+      ],
+      "currentTarget": {
+        "occupant": "0x0000000000000000000000000000000000000000",
+        "cycle": 0,
+        "empty": true
+      },
+      "restoresAnAlreadyPaidRelationship": true,
+      "introducesNewOrdinaryUserOrbitEntry": false,
+      "changesHistoricalAmounts": false,
+      "repairPaymentAuthorizedUSDT": "0.0",
+      "financialMapping": "MATCH: historical payments support the missing ID1 position and its existing paid parent relationship",
+      "futureEffect": "Restores the missing ID1 branch and occupancy. Can change future placement capacity and recycle timing relative to the defective state; no historical payments are repeated.",
+      "releaseStatus": "MAPPING_ONLY_NOT_RELEASE_APPROVAL"
+    },
+    {
+      "key": "FP-2-13",
+      "program": "Freedom Plus",
+      "participant": "0xa1B5a30fAF2032471fBAc7d5A89842c0d80b2372",
+      "level": 2,
+      "orbitType": "P14",
+      "orbitOwner": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "cycle": 0,
+      "proposedRing": 3,
+      "proposedSlot": 13,
+      "proposedParent": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+      "originalTx": "0xa5050033f86f7284a74eca918cf3464d4c11bbd00827fae0c7c9fdc2c8f294e6",
+      "originalBlock": 94854130,
+      "originalUtc": "2026-10-03T00:12:15.000Z",
+      "priceUSDT": "150.0",
+      "permanentSponsor": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+      "primaryOrbit": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+      "existingParentPosition": {
+        "owner": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+        "ring": 1,
+        "slot": 2
+      },
+      "paymentForMissingPosition": {
+        "beneficiary": "ID1, paid to its eight founders",
+        "raw": "75000000",
+        "usdt": "75.0",
+        "actualFounderTransfersForComponent": [
+          {
+            "wallet": "0x88d350Bd016751B08Baf6508e1bdF186A1B1305B",
+            "usdt": "9.375"
+          },
+          {
+            "wallet": "0x5fd791B457aD32A8E2A2e81FC211238639824127",
+            "usdt": "9.375"
+          },
+          {
+            "wallet": "0xa2033515F0f35A5FA4803eDde306c293a81c2da9",
+            "usdt": "9.375"
+          },
+          {
+            "wallet": "0xf73d4Ae3a9EFeBAb76ab9053Cd055b4503929231",
+            "usdt": "9.375"
+          },
+          {
+            "wallet": "0xb850f836d0e3CfeD4A7DbDCAa7A4c78aFac0d911",
+            "usdt": "9.375"
+          },
+          {
+            "wallet": "0x435363daD972a7abb2A739525c461F06A45CE294",
+            "usdt": "9.375"
+          },
+          {
+            "wallet": "0xf4F83F8181cD9A8C96a33f4d9aF487b444353a15",
+            "usdt": "9.375"
+          },
+          {
+            "wallet": "0x120FBeeeb36c003CAEE1F4B37Ac9297C88d51D42",
+            "usdt": "9.375"
+          }
+        ]
+      },
+      "parentPayment": {
+        "wallet": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+        "expectedUSDT": "22.5",
+        "actualUSDT": "22.5",
+        "differenceUSDT": "0.0"
+      },
+      "historicalOutflows": [
+        {
+          "wallet": "0x120fbeeeb36c003caee1f4b37ac9297c88d51d42",
+          "raw": "9375000",
+          "usdt": "9.375"
+        },
+        {
+          "wallet": "0x3ee9b4913e175c15b2ef76ac352b6737210248fb",
+          "raw": "3000000",
+          "usdt": "3.0"
+        },
+        {
+          "wallet": "0x435363dad972a7abb2a739525c461f06a45ce294",
+          "raw": "9375000",
+          "usdt": "9.375"
+        },
+        {
+          "wallet": "0x5fd791b457ad32a8e2a2e81fc211238639824127",
+          "raw": "9375000",
+          "usdt": "9.375"
+        },
+        {
+          "wallet": "0x863447369632ea4aac724683c1d448c68e2f1ade",
+          "raw": "22500000",
+          "usdt": "22.5"
+        },
+        {
+          "wallet": "0x88d350bd016751b08baf6508e1bdf186a1b1305b",
+          "raw": "9375000",
+          "usdt": "9.375"
+        },
+        {
+          "wallet": "0xa2033515f0f35a5fa4803edde306c293a81c2da9",
+          "raw": "9375000",
+          "usdt": "9.375"
+        },
+        {
+          "wallet": "0xaa254e8e177de104d9f87211b0f4a6b7ec71306a",
+          "raw": "37500000",
+          "usdt": "37.5"
+        },
+        {
+          "wallet": "0xb850f836d0e3cfed4a7dbdcaa7a4c78afac0d911",
+          "raw": "9375000",
+          "usdt": "9.375"
+        },
+        {
+          "wallet": "0xbb2cf7ef867f46a93ae1f9ded564927874b79b52",
+          "raw": "12000000",
+          "usdt": "12.0"
+        },
+        {
+          "wallet": "0xf4f83f8181cd9a8c96a33f4d9af487b444353a15",
+          "raw": "9375000",
+          "usdt": "9.375"
+        },
+        {
+          "wallet": "0xf73d4ae3a9efebab76ab9053cd055b4503929231",
+          "raw": "9375000",
+          "usdt": "9.375"
+        }
+      ],
+      "currentTarget": {
+        "occupant": "0x0000000000000000000000000000000000000000",
+        "cycle": 0,
+        "empty": true
+      },
+      "restoresAnAlreadyPaidRelationship": true,
+      "introducesNewOrdinaryUserOrbitEntry": false,
+      "changesHistoricalAmounts": false,
+      "repairPaymentAuthorizedUSDT": "0.0",
+      "financialMapping": "MATCH: historical payments support the missing ID1 position and its existing paid parent relationship",
+      "futureEffect": "Restores the missing ID1 branch and occupancy. Can change future placement capacity and recycle timing relative to the defective state; no historical payments are repeated.",
+      "releaseStatus": "MAPPING_ONLY_NOT_RELEASE_APPROVAL"
+    },
+    {
+      "key": "FP-1-31",
+      "program": "Freedom Plus",
+      "participant": "0xEA51893495D285D737db5062500C4F003E2b3A4D",
+      "level": 1,
+      "orbitType": "P39",
+      "orbitOwner": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "cycle": 0,
+      "proposedRing": 3,
+      "proposedSlot": 31,
+      "proposedParent": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+      "originalTx": "0x4e12e4a4519e665e8a563c5d80d18b34f556e71f37acd3709bfc99ced9613106",
+      "originalBlock": 94854624,
+      "originalUtc": "2026-10-03T00:24:36.000Z",
+      "priceUSDT": "50.0",
+      "permanentSponsor": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+      "primaryOrbit": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+      "existingParentPosition": {
+        "owner": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+        "ring": 1,
+        "slot": 3
+      },
+      "paymentForMissingPosition": {
+        "beneficiary": "ID1, paid to its eight founders",
+        "raw": "25000000",
+        "usdt": "25.0",
+        "actualFounderTransfersForComponent": [
+          {
+            "wallet": "0x88d350Bd016751B08Baf6508e1bdF186A1B1305B",
+            "usdt": "3.125"
+          },
+          {
+            "wallet": "0x5fd791B457aD32A8E2A2e81FC211238639824127",
+            "usdt": "3.125"
+          },
+          {
+            "wallet": "0xa2033515F0f35A5FA4803eDde306c293a81c2da9",
+            "usdt": "3.125"
+          },
+          {
+            "wallet": "0xf73d4Ae3a9EFeBAb76ab9053Cd055b4503929231",
+            "usdt": "3.125"
+          },
+          {
+            "wallet": "0xb850f836d0e3CfeD4A7DbDCAa7A4c78aFac0d911",
+            "usdt": "3.125"
+          },
+          {
+            "wallet": "0x435363daD972a7abb2A739525c461F06A45CE294",
+            "usdt": "3.125"
+          },
+          {
+            "wallet": "0xf4F83F8181cD9A8C96a33f4d9aF487b444353a15",
+            "usdt": "3.125"
+          },
+          {
+            "wallet": "0x120FBeeeb36c003CAEE1F4B37Ac9297C88d51D42",
+            "usdt": "3.125"
+          }
+        ]
+      },
+      "parentPayment": {
+        "wallet": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+        "expectedUSDT": "10.0",
+        "actualUSDT": "10.0",
+        "differenceUSDT": "0.0"
+      },
+      "historicalOutflows": [
+        {
+          "wallet": "0x120fbeeeb36c003caee1f4b37ac9297c88d51d42",
+          "raw": "3125000",
+          "usdt": "3.125"
+        },
+        {
+          "wallet": "0x3ee9b4913e175c15b2ef76ac352b6737210248fb",
+          "raw": "1000000",
+          "usdt": "1.0"
+        },
+        {
+          "wallet": "0x435363dad972a7abb2a739525c461f06a45ce294",
+          "raw": "3125000",
+          "usdt": "3.125"
+        },
+        {
+          "wallet": "0x5fd791b457ad32a8e2a2e81fc211238639824127",
+          "raw": "3125000",
+          "usdt": "3.125"
+        },
+        {
+          "wallet": "0x863447369632ea4aac724683c1d448c68e2f1ade",
+          "raw": "10000000",
+          "usdt": "10.0"
+        },
+        {
+          "wallet": "0x88d350bd016751b08baf6508e1bdf186a1b1305b",
+          "raw": "3125000",
+          "usdt": "3.125"
+        },
+        {
+          "wallet": "0xa2033515f0f35a5fa4803edde306c293a81c2da9",
+          "raw": "3125000",
+          "usdt": "3.125"
+        },
+        {
+          "wallet": "0xaa254e8e177de104d9f87211b0f4a6b7ec71306a",
+          "raw": "10000000",
+          "usdt": "10.0"
+        },
+        {
+          "wallet": "0xb850f836d0e3cfed4a7dbdcaa7a4c78afac0d911",
+          "raw": "3125000",
+          "usdt": "3.125"
+        },
+        {
+          "wallet": "0xbb2cf7ef867f46a93ae1f9ded564927874b79b52",
+          "raw": "4000000",
+          "usdt": "4.0"
+        },
+        {
+          "wallet": "0xf4f83f8181cd9a8c96a33f4d9af487b444353a15",
+          "raw": "3125000",
+          "usdt": "3.125"
+        },
+        {
+          "wallet": "0xf73d4ae3a9efebab76ab9053cd055b4503929231",
+          "raw": "3125000",
+          "usdt": "3.125"
+        }
+      ],
+      "currentTarget": {
+        "occupant": "0x0000000000000000000000000000000000000000",
+        "cycle": 0,
+        "empty": true
+      },
+      "restoresAnAlreadyPaidRelationship": true,
+      "introducesNewOrdinaryUserOrbitEntry": false,
+      "changesHistoricalAmounts": false,
+      "repairPaymentAuthorizedUSDT": "0.0",
+      "financialMapping": "MATCH: historical payments support the missing ID1 position and its existing paid parent relationship",
+      "futureEffect": "Restores the missing ID1 branch and occupancy. Can change future placement capacity and recycle timing relative to the defective state; no historical payments are repeated.",
+      "releaseStatus": "MAPPING_ONLY_NOT_RELEASE_APPROVAL"
+    },
+    {
+      "key": "FP-1-14",
+      "program": "Freedom Plus",
+      "participant": "0xAE0c7305860351a270f4c756e03071e4c18ed086",
+      "level": 1,
+      "orbitType": "P39",
+      "orbitOwner": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "cycle": 0,
+      "proposedRing": 3,
+      "proposedSlot": 14,
+      "proposedParent": "0xBafaFb77a090D7F989aa64D4f867b1B942A50591",
+      "originalTx": "0xf6b6f5b35bed0c2689b18e548acf14e6a8337eee58f585d581e1e8aae376dc74",
+      "originalBlock": 94887243,
+      "originalUtc": "2026-10-03T14:00:05.000Z",
+      "priceUSDT": "50.0",
+      "permanentSponsor": "0x834b9535468aDCEbA7d36E225837FC66e749ba9c",
+      "primaryOrbit": "0xBafaFb77a090D7F989aa64D4f867b1B942A50591",
+      "existingParentPosition": {
+        "owner": "0xBafaFb77a090D7F989aa64D4f867b1B942A50591",
+        "ring": 1,
+        "slot": 1
+      },
+      "paymentForMissingPosition": {
+        "beneficiary": "ID1, paid to its eight founders",
+        "raw": "25000000",
+        "usdt": "25.0",
+        "actualFounderTransfersForComponent": [
+          {
+            "wallet": "0x88d350Bd016751B08Baf6508e1bdF186A1B1305B",
+            "usdt": "3.125"
+          },
+          {
+            "wallet": "0x5fd791B457aD32A8E2A2e81FC211238639824127",
+            "usdt": "3.125"
+          },
+          {
+            "wallet": "0xa2033515F0f35A5FA4803eDde306c293a81c2da9",
+            "usdt": "3.125"
+          },
+          {
+            "wallet": "0xf73d4Ae3a9EFeBAb76ab9053Cd055b4503929231",
+            "usdt": "3.125"
+          },
+          {
+            "wallet": "0xb850f836d0e3CfeD4A7DbDCAa7A4c78aFac0d911",
+            "usdt": "3.125"
+          },
+          {
+            "wallet": "0x435363daD972a7abb2A739525c461F06A45CE294",
+            "usdt": "3.125"
+          },
+          {
+            "wallet": "0xf4F83F8181cD9A8C96a33f4d9aF487b444353a15",
+            "usdt": "3.125"
+          },
+          {
+            "wallet": "0x120FBeeeb36c003CAEE1F4B37Ac9297C88d51D42",
+            "usdt": "3.125"
+          }
+        ]
+      },
+      "parentPayment": {
+        "wallet": "0xBafaFb77a090D7F989aa64D4f867b1B942A50591",
+        "expectedUSDT": "10.0",
+        "actualUSDT": "10.0",
+        "differenceUSDT": "0.0"
+      },
+      "historicalOutflows": [
+        {
+          "wallet": "0x120fbeeeb36c003caee1f4b37ac9297c88d51d42",
+          "raw": "3125000",
+          "usdt": "3.125"
+        },
+        {
+          "wallet": "0x3ee9b4913e175c15b2ef76ac352b6737210248fb",
+          "raw": "1000000",
+          "usdt": "1.0"
+        },
+        {
+          "wallet": "0x435363dad972a7abb2a739525c461f06a45ce294",
+          "raw": "3125000",
+          "usdt": "3.125"
+        },
+        {
+          "wallet": "0x5fd791b457ad32a8e2a2e81fc211238639824127",
+          "raw": "3125000",
+          "usdt": "3.125"
+        },
+        {
+          "wallet": "0x88d350bd016751b08baf6508e1bdf186a1b1305b",
+          "raw": "3125000",
+          "usdt": "3.125"
+        },
+        {
+          "wallet": "0xa2033515f0f35a5fa4803edde306c293a81c2da9",
+          "raw": "3125000",
+          "usdt": "3.125"
+        },
+        {
+          "wallet": "0xb673c9d14da920f187d25cc793f1955a43284622",
+          "raw": "10000000",
+          "usdt": "10.0"
+        },
+        {
+          "wallet": "0xb850f836d0e3cfed4a7dbdcaa7a4c78afac0d911",
+          "raw": "3125000",
+          "usdt": "3.125"
+        },
+        {
+          "wallet": "0xbafafb77a090d7f989aa64d4f867b1b942a50591",
+          "raw": "10000000",
+          "usdt": "10.0"
+        },
+        {
+          "wallet": "0xbb2cf7ef867f46a93ae1f9ded564927874b79b52",
+          "raw": "4000000",
+          "usdt": "4.0"
+        },
+        {
+          "wallet": "0xf4f83f8181cd9a8c96a33f4d9af487b444353a15",
+          "raw": "3125000",
+          "usdt": "3.125"
+        },
+        {
+          "wallet": "0xf73d4ae3a9efebab76ab9053cd055b4503929231",
+          "raw": "3125000",
+          "usdt": "3.125"
+        }
+      ],
+      "currentTarget": {
+        "occupant": "0x0000000000000000000000000000000000000000",
+        "cycle": 0,
+        "empty": true
+      },
+      "restoresAnAlreadyPaidRelationship": true,
+      "introducesNewOrdinaryUserOrbitEntry": false,
+      "changesHistoricalAmounts": false,
+      "repairPaymentAuthorizedUSDT": "0.0",
+      "financialMapping": "MATCH: historical payments support the missing ID1 position and its existing paid parent relationship",
+      "futureEffect": "Restores the missing ID1 branch and occupancy. Can change future placement capacity and recycle timing relative to the defective state; no historical payments are repeated.",
+      "releaseStatus": "MAPPING_ONLY_NOT_RELEASE_APPROVAL"
+    },
+    {
+      "key": "FP-2-4",
+      "program": "Freedom Plus",
+      "participant": "0xBafaFb77a090D7F989aa64D4f867b1B942A50591",
+      "level": 2,
+      "orbitType": "P14",
+      "orbitOwner": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "cycle": 0,
+      "proposedRing": 2,
+      "proposedSlot": 4,
+      "proposedParent": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "originalTx": "0xa5df8c1bf3333e4d080fcb6505026577f9195620a2360a502465903f14507f48",
+      "originalBlock": 94889049,
+      "originalUtc": "2026-10-03T14:45:14.000Z",
+      "priceUSDT": "150.0",
+      "permanentSponsor": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "primaryOrbit": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "existingParentPosition": {
+        "owner": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+        "ring": 1,
+        "slot": 1
+      },
+      "paymentForMissingPosition": {
+        "beneficiary": "ID1, paid to its eight founders",
+        "raw": "37500000",
+        "usdt": "37.5",
+        "actualFounderTransfersForComponent": [
+          {
+            "wallet": "0x88d350Bd016751B08Baf6508e1bdF186A1B1305B",
+            "usdt": "4.6875"
+          },
+          {
+            "wallet": "0x5fd791B457aD32A8E2A2e81FC211238639824127",
+            "usdt": "4.6875"
+          },
+          {
+            "wallet": "0xa2033515F0f35A5FA4803eDde306c293a81c2da9",
+            "usdt": "4.6875"
+          },
+          {
+            "wallet": "0xf73d4Ae3a9EFeBAb76ab9053Cd055b4503929231",
+            "usdt": "4.6875"
+          },
+          {
+            "wallet": "0xb850f836d0e3CfeD4A7DbDCAa7A4c78aFac0d911",
+            "usdt": "4.6875"
+          },
+          {
+            "wallet": "0x435363daD972a7abb2A739525c461F06A45CE294",
+            "usdt": "4.6875"
+          },
+          {
+            "wallet": "0xf4F83F8181cD9A8C96a33f4d9aF487b444353a15",
+            "usdt": "4.6875"
+          },
+          {
+            "wallet": "0x120FBeeeb36c003CAEE1F4B37Ac9297C88d51D42",
+            "usdt": "4.6875"
+          }
+        ]
+      },
+      "parentPayment": {
+        "wallet": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+        "expectedUSDT": "22.5",
+        "actualUSDT": "22.5",
+        "differenceUSDT": "0.0"
+      },
+      "historicalOutflows": [
+        {
+          "wallet": "0x120fbeeeb36c003caee1f4b37ac9297c88d51d42",
+          "raw": "14062500",
+          "usdt": "14.0625"
+        },
+        {
+          "wallet": "0x3ee9b4913e175c15b2ef76ac352b6737210248fb",
+          "raw": "3000000",
+          "usdt": "3.0"
+        },
+        {
+          "wallet": "0x435363dad972a7abb2a739525c461f06a45ce294",
+          "raw": "14062500",
+          "usdt": "14.0625"
+        },
+        {
+          "wallet": "0x5fd791b457ad32a8e2a2e81fc211238639824127",
+          "raw": "14062500",
+          "usdt": "14.0625"
+        },
+        {
+          "wallet": "0x88d350bd016751b08baf6508e1bdf186a1b1305b",
+          "raw": "14062500",
+          "usdt": "14.0625"
+        },
+        {
+          "wallet": "0xa2033515f0f35a5fa4803edde306c293a81c2da9",
+          "raw": "14062500",
+          "usdt": "14.0625"
+        },
+        {
+          "wallet": "0xb673c9d14da920f187d25cc793f1955a43284622",
+          "raw": "22500000",
+          "usdt": "22.5"
+        },
+        {
+          "wallet": "0xb850f836d0e3cfed4a7dbdcaa7a4c78afac0d911",
+          "raw": "14062500",
+          "usdt": "14.0625"
+        },
+        {
+          "wallet": "0xbb2cf7ef867f46a93ae1f9ded564927874b79b52",
+          "raw": "12000000",
+          "usdt": "12.0"
+        },
+        {
+          "wallet": "0xf4f83f8181cd9a8c96a33f4d9af487b444353a15",
+          "raw": "14062500",
+          "usdt": "14.0625"
+        },
+        {
+          "wallet": "0xf73d4ae3a9efebab76ab9053cd055b4503929231",
+          "raw": "14062500",
+          "usdt": "14.0625"
+        }
+      ],
+      "currentTarget": {
+        "occupant": "0x0000000000000000000000000000000000000000",
+        "cycle": 0,
+        "empty": true
+      },
+      "restoresAnAlreadyPaidRelationship": true,
+      "introducesNewOrdinaryUserOrbitEntry": false,
+      "changesHistoricalAmounts": false,
+      "repairPaymentAuthorizedUSDT": "0.0",
+      "financialMapping": "MATCH: historical payments support the missing ID1 position and its existing paid parent relationship",
+      "futureEffect": "Restores the missing ID1 branch and occupancy. Can change future placement capacity and recycle timing relative to the defective state; no historical payments are repeated.",
+      "releaseStatus": "MAPPING_ONLY_NOT_RELEASE_APPROVAL"
+    },
+    {
+      "key": "FP-2-8",
+      "program": "Freedom Plus",
+      "participant": "0xAE0c7305860351a270f4c756e03071e4c18ed086",
+      "level": 2,
+      "orbitType": "P14",
+      "orbitOwner": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "cycle": 0,
+      "proposedRing": 3,
+      "proposedSlot": 8,
+      "proposedParent": "0xBafaFb77a090D7F989aa64D4f867b1B942A50591",
+      "originalTx": "0x6a5cdf2796c03b86a36b8580a666d3cc298b2b0ca930bba0c104243e3be6c455",
+      "originalBlock": 94896233,
+      "originalUtc": "2026-10-03T17:44:50.000Z",
+      "priceUSDT": "150.0",
+      "permanentSponsor": "0x834b9535468aDCEbA7d36E225837FC66e749ba9c",
+      "primaryOrbit": "0xBafaFb77a090D7F989aa64D4f867b1B942A50591",
+      "existingParentPosition": {
+        "owner": "0xBafaFb77a090D7F989aa64D4f867b1B942A50591",
+        "ring": 1,
+        "slot": 1
+      },
+      "paymentForMissingPosition": {
+        "beneficiary": "ID1, paid to its eight founders",
+        "raw": "75000000",
+        "usdt": "75.0",
+        "actualFounderTransfersForComponent": [
+          {
+            "wallet": "0x88d350Bd016751B08Baf6508e1bdF186A1B1305B",
+            "usdt": "9.375"
+          },
+          {
+            "wallet": "0x5fd791B457aD32A8E2A2e81FC211238639824127",
+            "usdt": "9.375"
+          },
+          {
+            "wallet": "0xa2033515F0f35A5FA4803eDde306c293a81c2da9",
+            "usdt": "9.375"
+          },
+          {
+            "wallet": "0xf73d4Ae3a9EFeBAb76ab9053Cd055b4503929231",
+            "usdt": "9.375"
+          },
+          {
+            "wallet": "0xb850f836d0e3CfeD4A7DbDCAa7A4c78aFac0d911",
+            "usdt": "9.375"
+          },
+          {
+            "wallet": "0x435363daD972a7abb2A739525c461F06A45CE294",
+            "usdt": "9.375"
+          },
+          {
+            "wallet": "0xf4F83F8181cD9A8C96a33f4d9aF487b444353a15",
+            "usdt": "9.375"
+          },
+          {
+            "wallet": "0x120FBeeeb36c003CAEE1F4B37Ac9297C88d51D42",
+            "usdt": "9.375"
+          }
+        ]
+      },
+      "parentPayment": {
+        "wallet": "0xBafaFb77a090D7F989aa64D4f867b1B942A50591",
+        "expectedUSDT": "22.5",
+        "actualUSDT": "22.5",
+        "differenceUSDT": "0.0"
+      },
+      "historicalOutflows": [
+        {
+          "wallet": "0x120fbeeeb36c003caee1f4b37ac9297c88d51d42",
+          "raw": "9375000",
+          "usdt": "9.375"
+        },
+        {
+          "wallet": "0x3ee9b4913e175c15b2ef76ac352b6737210248fb",
+          "raw": "3000000",
+          "usdt": "3.0"
+        },
+        {
+          "wallet": "0x435363dad972a7abb2a739525c461f06a45ce294",
+          "raw": "9375000",
+          "usdt": "9.375"
+        },
+        {
+          "wallet": "0x5fd791b457ad32a8e2a2e81fc211238639824127",
+          "raw": "9375000",
+          "usdt": "9.375"
+        },
+        {
+          "wallet": "0x88d350bd016751b08baf6508e1bdf186a1b1305b",
+          "raw": "9375000",
+          "usdt": "9.375"
+        },
+        {
+          "wallet": "0xa2033515f0f35a5fa4803edde306c293a81c2da9",
+          "raw": "9375000",
+          "usdt": "9.375"
+        },
+        {
+          "wallet": "0xb673c9d14da920f187d25cc793f1955a43284622",
+          "raw": "37500000",
+          "usdt": "37.5"
+        },
+        {
+          "wallet": "0xb850f836d0e3cfed4a7dbdcaa7a4c78afac0d911",
+          "raw": "9375000",
+          "usdt": "9.375"
+        },
+        {
+          "wallet": "0xbafafb77a090d7f989aa64d4f867b1b942a50591",
+          "raw": "22500000",
+          "usdt": "22.5"
+        },
+        {
+          "wallet": "0xbb2cf7ef867f46a93ae1f9ded564927874b79b52",
+          "raw": "12000000",
+          "usdt": "12.0"
+        },
+        {
+          "wallet": "0xf4f83f8181cd9a8c96a33f4d9af487b444353a15",
+          "raw": "9375000",
+          "usdt": "9.375"
+        },
+        {
+          "wallet": "0xf73d4ae3a9efebab76ab9053cd055b4503929231",
+          "raw": "9375000",
+          "usdt": "9.375"
+        }
+      ],
+      "currentTarget": {
+        "occupant": "0x0000000000000000000000000000000000000000",
+        "cycle": 0,
+        "empty": true
+      },
+      "restoresAnAlreadyPaidRelationship": true,
+      "introducesNewOrdinaryUserOrbitEntry": false,
+      "changesHistoricalAmounts": false,
+      "repairPaymentAuthorizedUSDT": "0.0",
+      "financialMapping": "MATCH: historical payments support the missing ID1 position and its existing paid parent relationship",
+      "futureEffect": "Restores the missing ID1 branch and occupancy. Can change future placement capacity and recycle timing relative to the defective state; no historical payments are repeated.",
+      "releaseStatus": "MAPPING_ONLY_NOT_RELEASE_APPROVAL"
+    },
+    {
+      "key": "FP-1-8",
+      "program": "Freedom Plus",
+      "participant": "0x31f9a0B00E75456571f77f2fD806479433494e9B",
+      "level": 1,
+      "orbitType": "P39",
+      "orbitOwner": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "cycle": 0,
+      "proposedRing": 2,
+      "proposedSlot": 8,
+      "proposedParent": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "originalTx": "0xfb124e7d6c87c3ee732dc00d62b7476568f706283e516253c64578ca0e5efae7",
+      "originalBlock": 95163199,
+      "originalUtc": "2026-10-08T09:00:05.000Z",
+      "priceUSDT": "50.0",
+      "permanentSponsor": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "primaryOrbit": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "existingParentPosition": {
+        "owner": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+        "ring": 1,
+        "slot": 2
+      },
+      "paymentForMissingPosition": {
+        "beneficiary": "ID1, paid to its eight founders",
+        "raw": "10000000",
+        "usdt": "10.0",
+        "actualFounderTransfersForComponent": [
+          {
+            "wallet": "0x88d350Bd016751B08Baf6508e1bdF186A1B1305B",
+            "usdt": "1.25"
+          },
+          {
+            "wallet": "0x5fd791B457aD32A8E2A2e81FC211238639824127",
+            "usdt": "1.25"
+          },
+          {
+            "wallet": "0xa2033515F0f35A5FA4803eDde306c293a81c2da9",
+            "usdt": "1.25"
+          },
+          {
+            "wallet": "0xf73d4Ae3a9EFeBAb76ab9053Cd055b4503929231",
+            "usdt": "1.25"
+          },
+          {
+            "wallet": "0xb850f836d0e3CfeD4A7DbDCAa7A4c78aFac0d911",
+            "usdt": "1.25"
+          },
+          {
+            "wallet": "0x435363daD972a7abb2A739525c461F06A45CE294",
+            "usdt": "1.25"
+          },
+          {
+            "wallet": "0xf4F83F8181cD9A8C96a33f4d9aF487b444353a15",
+            "usdt": "1.25"
+          },
+          {
+            "wallet": "0x120FBeeeb36c003CAEE1F4B37Ac9297C88d51D42",
+            "usdt": "1.25"
+          }
+        ]
+      },
+      "parentPayment": {
+        "wallet": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+        "expectedUSDT": "10.0",
+        "actualUSDT": "10.0",
+        "differenceUSDT": "0.0"
+      },
+      "historicalOutflows": [
+        {
+          "wallet": "0x120fbeeeb36c003caee1f4b37ac9297c88d51d42",
+          "raw": "4375000",
+          "usdt": "4.375"
+        },
+        {
+          "wallet": "0x3ee9b4913e175c15b2ef76ac352b6737210248fb",
+          "raw": "1000000",
+          "usdt": "1.0"
+        },
+        {
+          "wallet": "0x435363dad972a7abb2a739525c461f06a45ce294",
+          "raw": "4375000",
+          "usdt": "4.375"
+        },
+        {
+          "wallet": "0x5fd791b457ad32a8e2a2e81fc211238639824127",
+          "raw": "4375000",
+          "usdt": "4.375"
+        },
+        {
+          "wallet": "0x88d350bd016751b08baf6508e1bdf186a1b1305b",
+          "raw": "4375000",
+          "usdt": "4.375"
+        },
+        {
+          "wallet": "0xa2033515f0f35a5fa4803edde306c293a81c2da9",
+          "raw": "4375000",
+          "usdt": "4.375"
+        },
+        {
+          "wallet": "0xb673c9d14da920f187d25cc793f1955a43284622",
+          "raw": "10000000",
+          "usdt": "10.0"
+        },
+        {
+          "wallet": "0xb850f836d0e3cfed4a7dbdcaa7a4c78afac0d911",
+          "raw": "4375000",
+          "usdt": "4.375"
+        },
+        {
+          "wallet": "0xbb2cf7ef867f46a93ae1f9ded564927874b79b52",
+          "raw": "4000000",
+          "usdt": "4.0"
+        },
+        {
+          "wallet": "0xf4f83f8181cd9a8c96a33f4d9af487b444353a15",
+          "raw": "4375000",
+          "usdt": "4.375"
+        },
+        {
+          "wallet": "0xf73d4ae3a9efebab76ab9053cd055b4503929231",
+          "raw": "4375000",
+          "usdt": "4.375"
+        }
+      ],
+      "currentTarget": {
+        "occupant": "0x0000000000000000000000000000000000000000",
+        "cycle": 0,
+        "empty": true
+      },
+      "restoresAnAlreadyPaidRelationship": true,
+      "introducesNewOrdinaryUserOrbitEntry": false,
+      "changesHistoricalAmounts": false,
+      "repairPaymentAuthorizedUSDT": "0.0",
+      "financialMapping": "MATCH: historical payments support the missing ID1 position and its existing paid parent relationship",
+      "futureEffect": "Restores the missing ID1 branch and occupancy. Can change future placement capacity and recycle timing relative to the defective state; no historical payments are repeated.",
+      "releaseStatus": "MAPPING_ONLY_NOT_RELEASE_APPROVAL"
+    },
+    {
+      "key": "FP-1-11",
+      "program": "Freedom Plus",
+      "participant": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+      "level": 1,
+      "orbitType": "P39",
+      "orbitOwner": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "cycle": 0,
+      "proposedRing": 2,
+      "proposedSlot": 11,
+      "proposedParent": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "originalTx": "0xc252c30bac39632e83f852368c99321f77ad4f8f3fa988a6d23a87f7afd29771",
+      "originalBlock": 96535563,
+      "originalUtc": "2026-11-01T04:53:21.000Z",
+      "priceUSDT": "50.0",
+      "permanentSponsor": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "primaryOrbit": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "existingParentPosition": {
+        "owner": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+        "ring": 1,
+        "slot": 3
+      },
+      "paymentForMissingPosition": {
+        "beneficiary": "ID1, paid to its eight founders",
+        "raw": "10000000",
+        "usdt": "10.0",
+        "actualFounderTransfersForComponent": [
+          {
+            "wallet": "0x88d350Bd016751B08Baf6508e1bdF186A1B1305B",
+            "usdt": "1.25"
+          },
+          {
+            "wallet": "0x5fd791B457aD32A8E2A2e81FC211238639824127",
+            "usdt": "1.25"
+          },
+          {
+            "wallet": "0xa2033515F0f35A5FA4803eDde306c293a81c2da9",
+            "usdt": "1.25"
+          },
+          {
+            "wallet": "0xf73d4Ae3a9EFeBAb76ab9053Cd055b4503929231",
+            "usdt": "1.25"
+          },
+          {
+            "wallet": "0xb850f836d0e3CfeD4A7DbDCAa7A4c78aFac0d911",
+            "usdt": "1.25"
+          },
+          {
+            "wallet": "0x435363daD972a7abb2A739525c461F06A45CE294",
+            "usdt": "1.25"
+          },
+          {
+            "wallet": "0xf4F83F8181cD9A8C96a33f4d9aF487b444353a15",
+            "usdt": "1.25"
+          },
+          {
+            "wallet": "0x120FBeeeb36c003CAEE1F4B37Ac9297C88d51D42",
+            "usdt": "1.25"
+          }
+        ]
+      },
+      "parentPayment": {
+        "wallet": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+        "expectedUSDT": "10.0",
+        "actualUSDT": "10.0",
+        "differenceUSDT": "0.0"
+      },
+      "historicalOutflows": [
+        {
+          "wallet": "0x120fbeeeb36c003caee1f4b37ac9297c88d51d42",
+          "raw": "4375000",
+          "usdt": "4.375"
+        },
+        {
+          "wallet": "0x3ee9b4913e175c15b2ef76ac352b6737210248fb",
+          "raw": "1000000",
+          "usdt": "1.0"
+        },
+        {
+          "wallet": "0x435363dad972a7abb2a739525c461f06a45ce294",
+          "raw": "4375000",
+          "usdt": "4.375"
+        },
+        {
+          "wallet": "0x5fd791b457ad32a8e2a2e81fc211238639824127",
+          "raw": "4375000",
+          "usdt": "4.375"
+        },
+        {
+          "wallet": "0x88d350bd016751b08baf6508e1bdf186a1b1305b",
+          "raw": "4375000",
+          "usdt": "4.375"
+        },
+        {
+          "wallet": "0xa2033515f0f35a5fa4803edde306c293a81c2da9",
+          "raw": "4375000",
+          "usdt": "4.375"
+        },
+        {
+          "wallet": "0xb673c9d14da920f187d25cc793f1955a43284622",
+          "raw": "10000000",
+          "usdt": "10.0"
+        },
+        {
+          "wallet": "0xb850f836d0e3cfed4a7dbdcaa7a4c78afac0d911",
+          "raw": "4375000",
+          "usdt": "4.375"
+        },
+        {
+          "wallet": "0xbb2cf7ef867f46a93ae1f9ded564927874b79b52",
+          "raw": "4000000",
+          "usdt": "4.0"
+        },
+        {
+          "wallet": "0xf4f83f8181cd9a8c96a33f4d9af487b444353a15",
+          "raw": "4375000",
+          "usdt": "4.375"
+        },
+        {
+          "wallet": "0xf73d4ae3a9efebab76ab9053cd055b4503929231",
+          "raw": "4375000",
+          "usdt": "4.375"
+        }
+      ],
+      "currentTarget": {
+        "occupant": "0x0000000000000000000000000000000000000000",
+        "cycle": 0,
+        "empty": true
+      },
+      "restoresAnAlreadyPaidRelationship": true,
+      "introducesNewOrdinaryUserOrbitEntry": false,
+      "changesHistoricalAmounts": false,
+      "repairPaymentAuthorizedUSDT": "0.0",
+      "financialMapping": "MATCH: historical payments support the missing ID1 position and its existing paid parent relationship",
+      "futureEffect": "Restores the missing ID1 branch and occupancy. Can change future placement capacity and recycle timing relative to the defective state; no historical payments are repeated.",
+      "releaseStatus": "MAPPING_ONLY_NOT_RELEASE_APPROVAL"
+    },
+    {
+      "key": "FP-2-6",
+      "program": "Freedom Plus",
+      "participant": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+      "level": 2,
+      "orbitType": "P14",
+      "orbitOwner": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "cycle": 0,
+      "proposedRing": 2,
+      "proposedSlot": 6,
+      "proposedParent": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "originalTx": "0x100d9168bc50af7f27d5fae550ac6f2444f0fb4c817467d67510f3c51aec4129",
+      "originalBlock": 96535583,
+      "originalUtc": "2026-11-01T04:53:51.000Z",
+      "priceUSDT": "150.0",
+      "permanentSponsor": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "primaryOrbit": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "existingParentPosition": {
+        "owner": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+        "ring": 1,
+        "slot": 2
+      },
+      "paymentForMissingPosition": {
+        "beneficiary": "ID1, paid to its eight founders",
+        "raw": "37500000",
+        "usdt": "37.5",
+        "actualFounderTransfersForComponent": [
+          {
+            "wallet": "0x88d350Bd016751B08Baf6508e1bdF186A1B1305B",
+            "usdt": "4.6875"
+          },
+          {
+            "wallet": "0x5fd791B457aD32A8E2A2e81FC211238639824127",
+            "usdt": "4.6875"
+          },
+          {
+            "wallet": "0xa2033515F0f35A5FA4803eDde306c293a81c2da9",
+            "usdt": "4.6875"
+          },
+          {
+            "wallet": "0xf73d4Ae3a9EFeBAb76ab9053Cd055b4503929231",
+            "usdt": "4.6875"
+          },
+          {
+            "wallet": "0xb850f836d0e3CfeD4A7DbDCAa7A4c78aFac0d911",
+            "usdt": "4.6875"
+          },
+          {
+            "wallet": "0x435363daD972a7abb2A739525c461F06A45CE294",
+            "usdt": "4.6875"
+          },
+          {
+            "wallet": "0xf4F83F8181cD9A8C96a33f4d9aF487b444353a15",
+            "usdt": "4.6875"
+          },
+          {
+            "wallet": "0x120FBeeeb36c003CAEE1F4B37Ac9297C88d51D42",
+            "usdt": "4.6875"
+          }
+        ]
+      },
+      "parentPayment": {
+        "wallet": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+        "expectedUSDT": "22.5",
+        "actualUSDT": "22.5",
+        "differenceUSDT": "0.0"
+      },
+      "historicalOutflows": [
+        {
+          "wallet": "0x120fbeeeb36c003caee1f4b37ac9297c88d51d42",
+          "raw": "14062500",
+          "usdt": "14.0625"
+        },
+        {
+          "wallet": "0x3ee9b4913e175c15b2ef76ac352b6737210248fb",
+          "raw": "3000000",
+          "usdt": "3.0"
+        },
+        {
+          "wallet": "0x435363dad972a7abb2a739525c461f06a45ce294",
+          "raw": "14062500",
+          "usdt": "14.0625"
+        },
+        {
+          "wallet": "0x5fd791b457ad32a8e2a2e81fc211238639824127",
+          "raw": "14062500",
+          "usdt": "14.0625"
+        },
+        {
+          "wallet": "0x88d350bd016751b08baf6508e1bdf186a1b1305b",
+          "raw": "14062500",
+          "usdt": "14.0625"
+        },
+        {
+          "wallet": "0xa2033515f0f35a5fa4803edde306c293a81c2da9",
+          "raw": "14062500",
+          "usdt": "14.0625"
+        },
+        {
+          "wallet": "0xb673c9d14da920f187d25cc793f1955a43284622",
+          "raw": "22500000",
+          "usdt": "22.5"
+        },
+        {
+          "wallet": "0xb850f836d0e3cfed4a7dbdcaa7a4c78afac0d911",
+          "raw": "14062500",
+          "usdt": "14.0625"
+        },
+        {
+          "wallet": "0xbb2cf7ef867f46a93ae1f9ded564927874b79b52",
+          "raw": "12000000",
+          "usdt": "12.0"
+        },
+        {
+          "wallet": "0xf4f83f8181cd9a8c96a33f4d9af487b444353a15",
+          "raw": "14062500",
+          "usdt": "14.0625"
+        },
+        {
+          "wallet": "0xf73d4ae3a9efebab76ab9053cd055b4503929231",
+          "raw": "14062500",
+          "usdt": "14.0625"
+        }
+      ],
+      "currentTarget": {
+        "occupant": "0x0000000000000000000000000000000000000000",
+        "cycle": 0,
+        "empty": true
+      },
+      "restoresAnAlreadyPaidRelationship": true,
+      "introducesNewOrdinaryUserOrbitEntry": false,
+      "changesHistoricalAmounts": false,
+      "repairPaymentAuthorizedUSDT": "0.0",
+      "financialMapping": "MATCH: historical payments support the missing ID1 position and its existing paid parent relationship",
+      "futureEffect": "Restores the missing ID1 branch and occupancy. Can change future placement capacity and recycle timing relative to the defective state; no historical payments are repeated.",
+      "releaseStatus": "MAPPING_ONLY_NOT_RELEASE_APPROVAL"
+    },
+    {
+      "key": "FP-3-5",
+      "program": "Freedom Plus",
+      "participant": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+      "level": 3,
+      "orbitType": "P12",
+      "orbitOwner": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "cycle": 0,
+      "proposedRing": 2,
+      "proposedSlot": 5,
+      "proposedParent": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "originalTx": "0x92a746e4b3d8b137b521eaed117a25aa1cad2b6a19107607ad917733f6652a49",
+      "originalBlock": 96535653,
+      "originalUtc": "2026-11-01T04:55:36.000Z",
+      "priceUSDT": "450.0",
+      "permanentSponsor": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "primaryOrbit": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "existingParentPosition": {
+        "owner": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+        "ring": 1,
+        "slot": 1
+      },
+      "paymentForMissingPosition": {
+        "beneficiary": "ID1, paid to its eight founders",
+        "raw": "225000000",
+        "usdt": "225.0",
+        "actualFounderTransfersForComponent": [
+          {
+            "wallet": "0x88d350Bd016751B08Baf6508e1bdF186A1B1305B",
+            "usdt": "28.125"
+          },
+          {
+            "wallet": "0x5fd791B457aD32A8E2A2e81FC211238639824127",
+            "usdt": "28.125"
+          },
+          {
+            "wallet": "0xa2033515F0f35A5FA4803eDde306c293a81c2da9",
+            "usdt": "28.125"
+          },
+          {
+            "wallet": "0xf73d4Ae3a9EFeBAb76ab9053Cd055b4503929231",
+            "usdt": "28.125"
+          },
+          {
+            "wallet": "0xb850f836d0e3CfeD4A7DbDCAa7A4c78aFac0d911",
+            "usdt": "28.125"
+          },
+          {
+            "wallet": "0x435363daD972a7abb2A739525c461F06A45CE294",
+            "usdt": "28.125"
+          },
+          {
+            "wallet": "0xf4F83F8181cD9A8C96a33f4d9aF487b444353a15",
+            "usdt": "28.125"
+          },
+          {
+            "wallet": "0x120FBeeeb36c003CAEE1F4B37Ac9297C88d51D42",
+            "usdt": "28.125"
+          }
+        ]
+      },
+      "parentPayment": {
+        "wallet": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+        "expectedUSDT": "180.0",
+        "actualUSDT": "180.0",
+        "differenceUSDT": "0.0"
+      },
+      "historicalOutflows": [
+        {
+          "wallet": "0x120fbeeeb36c003caee1f4b37ac9297c88d51d42",
+          "raw": "28125000",
+          "usdt": "28.125"
+        },
+        {
+          "wallet": "0x3ee9b4913e175c15b2ef76ac352b6737210248fb",
+          "raw": "9000000",
+          "usdt": "9.0"
+        },
+        {
+          "wallet": "0x435363dad972a7abb2a739525c461f06a45ce294",
+          "raw": "28125000",
+          "usdt": "28.125"
+        },
+        {
+          "wallet": "0x5fd791b457ad32a8e2a2e81fc211238639824127",
+          "raw": "28125000",
+          "usdt": "28.125"
+        },
+        {
+          "wallet": "0x88d350bd016751b08baf6508e1bdf186a1b1305b",
+          "raw": "28125000",
+          "usdt": "28.125"
+        },
+        {
+          "wallet": "0xa2033515f0f35a5fa4803edde306c293a81c2da9",
+          "raw": "28125000",
+          "usdt": "28.125"
+        },
+        {
+          "wallet": "0xb673c9d14da920f187d25cc793f1955a43284622",
+          "raw": "180000000",
+          "usdt": "180.0"
+        },
+        {
+          "wallet": "0xb850f836d0e3cfed4a7dbdcaa7a4c78afac0d911",
+          "raw": "28125000",
+          "usdt": "28.125"
+        },
+        {
+          "wallet": "0xbb2cf7ef867f46a93ae1f9ded564927874b79b52",
+          "raw": "36000000",
+          "usdt": "36.0"
+        },
+        {
+          "wallet": "0xf4f83f8181cd9a8c96a33f4d9af487b444353a15",
+          "raw": "28125000",
+          "usdt": "28.125"
+        },
+        {
+          "wallet": "0xf73d4ae3a9efebab76ab9053cd055b4503929231",
+          "raw": "28125000",
+          "usdt": "28.125"
+        }
+      ],
+      "currentTarget": {
+        "occupant": "0x0000000000000000000000000000000000000000",
+        "cycle": 0,
+        "empty": true
+      },
+      "restoresAnAlreadyPaidRelationship": true,
+      "introducesNewOrdinaryUserOrbitEntry": false,
+      "changesHistoricalAmounts": false,
+      "repairPaymentAuthorizedUSDT": "0.0",
+      "financialMapping": "MATCH: historical payments support the missing ID1 position and its existing paid parent relationship",
+      "futureEffect": "Restores the missing ID1 branch and occupancy. Can change future placement capacity and recycle timing relative to the defective state; no historical payments are repeated.",
+      "releaseStatus": "MAPPING_ONLY_NOT_RELEASE_APPROVAL"
+    },
+    {
+      "key": "FF-8-ID1-6",
+      "program": "F-Freedom",
+      "participant": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+      "level": 8,
+      "orbitType": "P12",
+      "orbitOwner": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "proposedRing": 2,
+      "proposedSlot": 6,
+      "proposedParent": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "originalTx": "0xfcc07130e2dfe7eff8e4475220d4f120cbcb70c61324c03492bca07eb45c88d1",
+      "originalBlock": 96536531,
+      "originalUtc": "2026-11-01T05:17:33.000Z",
+      "priceUSDT": "1280.0",
+      "actualHistoricalPayout": {
+        "foundersUSDT": "1152.0",
+        "sabinaUSDT": "0.0",
+        "nftUSDT": "102.4",
+        "opsUSDT": "25.6"
+      },
+      "ordinaryPaymentAtProposedRelationship": {
+        "beneficiary": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+        "participantShareUSDT": "512.0",
+        "foundersUSDT": "640.0",
+        "unpaidComparedWithNewRelationshipUSDT": "512.0",
+        "warning": "Hypothetical normal-placement comparison only. Sabina was inactive at the original activation, so this does not establish an historical debt or authorize compensation."
+      },
+      "mismatchGroup": "SOFIA_L8_NEW_SABINA_RELATIONSHIP",
+      "currentTarget": {
+        "occupant": "0x0000000000000000000000000000000000000000",
+        "empty": true
+      },
+      "currentMatrixParent": "0x0000000000000000000000000000000000000000",
+      "permanentSponsor": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "proposedMatrixParent": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "restoresAnAlreadyPaidRelationship": false,
+      "introducesNewOrdinaryUserOrbitEntry": false,
+      "changesHistoricalAmounts": false,
+      "repairPaymentAuthorizedUSDT": "0.0",
+      "financialMapping": "MISMATCH: proposed parent relationship is not backed by a historical payment to Sabina",
+      "futureEffect": "Creates a new level-8 structural relationship under Sabina and changes Sofia's future branch rights. Not equivalent to restoring the original ID1 first-ring position.",
+      "releaseStatus": "HOLD_DOES_NOT_MEET_ORDINARY_PLACEMENT_PAYMENT_RULE"
+    },
+    {
+      "key": "FF-8-SABINA-1",
+      "program": "F-Freedom",
+      "participant": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+      "level": 8,
+      "orbitType": "P12",
+      "orbitOwner": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "proposedRing": 1,
+      "proposedSlot": 1,
+      "proposedParent": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "originalTx": "0xfcc07130e2dfe7eff8e4475220d4f120cbcb70c61324c03492bca07eb45c88d1",
+      "originalBlock": 96536531,
+      "originalUtc": "2026-11-01T05:17:33.000Z",
+      "priceUSDT": "1280.0",
+      "actualHistoricalPayout": {
+        "foundersUSDT": "1152.0",
+        "sabinaUSDT": "0.0",
+        "nftUSDT": "102.4",
+        "opsUSDT": "25.6"
+      },
+      "ordinaryPaymentAtProposedRelationship": {
+        "beneficiary": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+        "participantShareUSDT": "512.0",
+        "foundersUSDT": "640.0",
+        "unpaidComparedWithNewRelationshipUSDT": "512.0",
+        "warning": "Hypothetical normal-placement comparison only. Sabina was inactive at the original activation, so this does not establish an historical debt or authorize compensation."
+      },
+      "mismatchGroup": "SOFIA_L8_NEW_SABINA_RELATIONSHIP",
+      "currentTarget": {
+        "occupant": "0x0000000000000000000000000000000000000000",
+        "empty": true
+      },
+      "currentMatrixParent": "0x0000000000000000000000000000000000000000",
+      "permanentSponsor": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "proposedMatrixParent": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "restoresAnAlreadyPaidRelationship": false,
+      "introducesNewOrdinaryUserOrbitEntry": true,
+      "changesHistoricalAmounts": false,
+      "repairPaymentAuthorizedUSDT": "0.0",
+      "financialMapping": "MISMATCH: proposed parent relationship is not backed by a historical payment to Sabina",
+      "futureEffect": "Creates a new level-8 structural relationship under Sabina and changes Sofia's future branch rights. Not equivalent to restoring the original ID1 first-ring position.",
+      "releaseStatus": "HOLD_DOES_NOT_MEET_ORDINARY_PLACEMENT_PAYMENT_RULE"
+    },
+    {
+      "key": "FF-9-ID1-3",
+      "program": "F-Freedom",
+      "participant": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+      "level": 9,
+      "orbitType": "P39",
+      "orbitOwner": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "proposedRing": 1,
+      "proposedSlot": 3,
+      "proposedParent": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "originalTx": "0x2b6956b22f6f67b731285554f835263e05a583e48f02fed2791ec92ca1982e7c",
+      "originalBlock": 96536585,
+      "originalUtc": "2026-11-01T05:18:54.000Z",
+      "priceUSDT": "2560.0",
+      "actualHistoricalPayout": {
+        "foundersUSDT": "2304.0",
+        "sabinaUSDT": "0.0",
+        "nftUSDT": "204.8",
+        "opsUSDT": "51.2"
+      },
+      "ordinaryPaymentAtProposedRelationship": {
+        "beneficiary": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+        "foundersUSDT": "2304.0",
+        "differenceUSDT": "0.0"
+      },
+      "mismatchGroup": null,
+      "currentTarget": {
+        "occupant": "0x0000000000000000000000000000000000000000",
+        "empty": true
+      },
+      "currentMatrixParent": "0x0000000000000000000000000000000000000000",
+      "permanentSponsor": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "proposedMatrixParent": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "restoresAnAlreadyPaidRelationship": true,
+      "introducesNewOrdinaryUserOrbitEntry": false,
+      "changesHistoricalAmounts": false,
+      "repairPaymentAuthorizedUSDT": "0.0",
+      "financialMapping": "PAYMENTS MATCH, BUT SLOT 3 IS A DELIBERATE NONCHRONOLOGICAL BRANCH ASSIGNMENT",
+      "futureEffect": "Gives Sofia the third first-ring branch, preserving Sabina at slot 2, rather than restoring the original chronological order. Future descendants can earn through Sofia on that branch.",
+      "releaseStatus": "PAYMENT_MATCH_BRANCH_POLICY_REVIEW_REQUIRED"
+    }
+  ],
+  "unchangedControls": [
+    {
+      "program": "F-Freedom",
+      "participant": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "level": 8,
+      "orbitOwner": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "slot": 3,
+      "proposedAction": "KEEP EXISTING POSITION; no move, payment or new activation",
+      "currentOccupant": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "matrixParent": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470"
+    },
+    {
+      "program": "F-Freedom",
+      "participant": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "level": 9,
+      "orbitOwner": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "slot": 2,
+      "proposedAction": "KEEP EXISTING POSITION; no move, payment or new activation",
+      "currentOccupant": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "matrixParent": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470"
+    }
+  ],
+  "fFreedomOriginalReceipts": [
+    {
+      "level": 8,
+      "tx": "0xfcc07130e2dfe7eff8e4475220d4f120cbcb70c61324c03492bca07eb45c88d1",
+      "date": "2026-11-01T05:17:33.000Z",
+      "grossUSDT": "1280.0",
+      "sponsorActiveAtOriginalActivation": false,
+      "foundersUSDT": "1152.0",
+      "nftUSDT": "102.4",
+      "opsUSDT": "25.6",
+      "sabinaUSDT": "0.0",
+      "transfers": [
+        {
+          "from": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+          "to": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+          "raw": "1280000000",
+          "usdt": "1280.0"
+        },
+        {
+          "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+          "to": "0x88d350Bd016751B08Baf6508e1bdF186A1B1305B",
+          "raw": "144000000",
+          "usdt": "144.0"
+        },
+        {
+          "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+          "to": "0x5fd791B457aD32A8E2A2e81FC211238639824127",
+          "raw": "144000000",
+          "usdt": "144.0"
+        },
+        {
+          "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+          "to": "0xa2033515F0f35A5FA4803eDde306c293a81c2da9",
+          "raw": "144000000",
+          "usdt": "144.0"
+        },
+        {
+          "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+          "to": "0xf73d4Ae3a9EFeBAb76ab9053Cd055b4503929231",
+          "raw": "144000000",
+          "usdt": "144.0"
+        },
+        {
+          "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+          "to": "0xb850f836d0e3CfeD4A7DbDCAa7A4c78aFac0d911",
+          "raw": "144000000",
+          "usdt": "144.0"
+        },
+        {
+          "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+          "to": "0x435363daD972a7abb2A739525c461F06A45CE294",
+          "raw": "144000000",
+          "usdt": "144.0"
+        },
+        {
+          "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+          "to": "0xf4F83F8181cD9A8C96a33f4d9aF487b444353a15",
+          "raw": "144000000",
+          "usdt": "144.0"
+        },
+        {
+          "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+          "to": "0x120FBeeeb36c003CAEE1F4B37Ac9297C88d51D42",
+          "raw": "144000000",
+          "usdt": "144.0"
+        },
+        {
+          "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+          "to": "0xbb2cF7ef867F46A93ae1F9DEd564927874b79B52",
+          "raw": "102400000",
+          "usdt": "102.4"
+        },
+        {
+          "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+          "to": "0x3ee9B4913e175c15B2Ef76Ac352B6737210248Fb",
+          "raw": "25600000",
+          "usdt": "25.6"
+        }
+      ]
+    },
+    {
+      "level": 9,
+      "tx": "0x2b6956b22f6f67b731285554f835263e05a583e48f02fed2791ec92ca1982e7c",
+      "date": "2026-11-01T05:18:54.000Z",
+      "grossUSDT": "2560.0",
+      "sponsorActiveAtOriginalActivation": false,
+      "foundersUSDT": "2304.0",
+      "nftUSDT": "204.8",
+      "opsUSDT": "51.2",
+      "sabinaUSDT": "0.0",
+      "transfers": [
+        {
+          "from": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+          "to": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+          "raw": "2560000000",
+          "usdt": "2560.0"
+        },
+        {
+          "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+          "to": "0x88d350Bd016751B08Baf6508e1bdF186A1B1305B",
+          "raw": "288000000",
+          "usdt": "288.0"
+        },
+        {
+          "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+          "to": "0x5fd791B457aD32A8E2A2e81FC211238639824127",
+          "raw": "288000000",
+          "usdt": "288.0"
+        },
+        {
+          "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+          "to": "0xa2033515F0f35A5FA4803eDde306c293a81c2da9",
+          "raw": "288000000",
+          "usdt": "288.0"
+        },
+        {
+          "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+          "to": "0xf73d4Ae3a9EFeBAb76ab9053Cd055b4503929231",
+          "raw": "288000000",
+          "usdt": "288.0"
+        },
+        {
+          "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+          "to": "0xb850f836d0e3CfeD4A7DbDCAa7A4c78aFac0d911",
+          "raw": "288000000",
+          "usdt": "288.0"
+        },
+        {
+          "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+          "to": "0x435363daD972a7abb2A739525c461F06A45CE294",
+          "raw": "288000000",
+          "usdt": "288.0"
+        },
+        {
+          "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+          "to": "0xf4F83F8181cD9A8C96a33f4d9aF487b444353a15",
+          "raw": "288000000",
+          "usdt": "288.0"
+        },
+        {
+          "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+          "to": "0x120FBeeeb36c003CAEE1F4B37Ac9297C88d51D42",
+          "raw": "288000000",
+          "usdt": "288.0"
+        },
+        {
+          "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+          "to": "0xbb2cF7ef867F46A93ae1F9DEd564927874b79B52",
+          "raw": "204800000",
+          "usdt": "204.8"
+        },
+        {
+          "from": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+          "to": "0x3ee9B4913e175c15B2Ef76Ac352B6737210248Fb",
+          "raw": "51200000",
+          "usdt": "51.2"
+        }
+      ]
+    }
+  ],
+  "proofFile": "tmp/placement-payment-correction-table/read-only-proof.json",
+  "inputSHA256": {
+    "fpAudit": "ab080105a86661a5900dc51864365dd5600dc6bd69196e063b3f37e4a35745b2",
+    "ffPrestate": "7e26e7be03d5ea188044ea982ed713bee6e5f30e10cccaac8f59d84846c1d222",
+    "ffOriginalCase": "171942a919630bb041a2d91d65f539bf08d569b91376d949ce3b636752669ec8"
+  },
+  "negativeControl": "Removing original mainnet USDT transfers correctly rejects the table",
+  "readOnlyProofSHA256": "66b85e1b1c8811bd2ba04727e39c015a3931b629a25b30a3927f7647c58342c6"
+}

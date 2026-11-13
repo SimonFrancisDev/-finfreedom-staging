@@ -1,5 +1,5 @@
 const { expect } = require("chai");
-const { ethers, upgrades } = require("hardhat");
+const { ethers, upgrades, artifacts } = require("hardhat");
 
 describe("Freedom-Plus ordinary settlement router", function () {
   this.timeout(360_000);
@@ -128,6 +128,200 @@ describe("Freedom-Plus ordinary settlement router", function () {
     for (let level = 2; level <= finalLevel; level++) {
       await system.registration.connect(signer).activateLevel(level);
     }
+  }
+
+  const repairEditType = "tuple(address account,uint8 level,uint256 cycle,bytes32 beforeHash,tuple(uint8 slot,tuple(address participant,address structuralParent,bytes32 activationId,bytes32 placementId,uint256 amount,uint40 timestamp,uint8 kind,bool financial) data,bytes32 originalTransaction)[] additions)[]";
+  const coder = ethers.AbiCoder.defaultAbiCoder();
+
+  async function eraseLocalAppearance(orbit, account, level, slot) {
+    expect((await ethers.provider.getNetwork()).chainId).to.equal(31337n);
+    const data = await orbit.positionAt(account, level, 0, slot);
+    const build = await artifacts.getBuildInfo("contracts/freedom-plus/orbits/P39PlusOrbit.sol:P39PlusOrbit");
+    const layout = build.output.contracts["contracts/freedom-plus/orbits/P39PlusOrbit.sol"].P39PlusOrbit.storageLayout;
+    const map = (key, base, type = "uint256") => BigInt(ethers.keccak256(coder.encode([type, "uint256"], [key, base])));
+    const cycleBase = map(0, map(level, map(account, layout.storage.find(v => v.label === "_cycles").slot, "address")));
+    const positionBase = map(slot, cycleBase + 1n);
+    const type = Number(await orbit.orbitType());
+    const width = [3, 2, 3, 2][type];
+    const ring = slot <= width ? 1 : slot <= width + width * width ? 2 : 3;
+    const filled = (await orbit.cycleState(account, level, 0)).filledPositions;
+    const ringFilled = await orbit.ringFilledCount(account, level, 0, ring);
+    const write = (key, value) => ethers.provider.send("hardhat_setStorageAt", [orbit.target, ethers.toBeHex(key), ethers.toBeHex(value, 32)]);
+    for (let i = 0n; i < 6n; i++) await write(positionBase + i, 0);
+    await write(cycleBase, filled - 1n);
+    await write(map(ring, cycleBase + 2n), ringFilled - 1n);
+    await write(map(data.placementId, layout.storage.find(v => v.label === "placementRecorded").slot, "bytes32"), 0);
+    return Array.from(data);
+  }
+
+  async function prepareLocalRepair(system, rowsByType, bindingOverrides = {}) {
+    const names = ["FreedomPlusP39HistoricalRepair", "FreedomPlusP14HistoricalRepair",
+      "FreedomPlusP12HistoricalRepair", "FreedomPlusP6HistoricalRepair"];
+    const original = [], plans = [], targets = [], repairs = [];
+    for (let type = 0; type < 4; type++) {
+      const orbit = system.orbits[type];
+      original.push(await upgrades.erc1967.getImplementationAddress(orbit.target));
+      targets.push(orbit.target);
+      const factory = await ethers.getContractFactory(names[type]);
+      const inspector = await factory.deploy(orbit.target, ethers.ZeroAddress, ethers.ZeroHash, 31337);
+      await orbit.upgradeToAndCall(inspector.target, "0x");
+      const view = factory.attach(orbit.target);
+      const edits = [];
+      for (const row of rowsByType[type] || []) {
+        edits.push({ ...row, cycle: 0, beforeHash: await view.repairStateHash(row.account, row.level) });
+      }
+      plans.push(coder.encode([repairEditType], [edits]));
+    }
+    const executor = await (await ethers.getContractFactory("Id1HistoricalRepairExecutor"))
+      .deploy(owner.address, targets, plans.map(ethers.keccak256), 31337);
+    for (let type = 0; type < 4; type++) {
+      const factory = await ethers.getContractFactory(names[type]);
+      const implementation = await factory.deploy(bindingOverrides.proxy || targets[type], executor.target,
+        ethers.keccak256(plans[type]), bindingOverrides.chain || 31337);
+      await system.orbits[type].upgradeToAndCall(implementation.target, "0x");
+      repairs.push(factory.attach(targets[type]));
+    }
+    return { executor, plans, repairs, original };
+  }
+
+  async function pauseForLocalRepair(system) {
+    await system.registration.pause();
+    await system.manager.pause();
+    await system.router.pause();
+    for (let type = 0; type < 4; type++) await system.orbits[type].pause();
+  }
+
+  async function restoreLocalEngines(system, repair) {
+    for (let type = 0; type < 4; type++) {
+      await system.orbits[type].upgradeToAndCall(repair.original[type], "0x");
+      await system.orbits[type].unpause();
+    }
+    await system.router.unpause();
+    await system.manager.unpause();
+    await system.registration.unpause();
+  }
+
+  it("historical repair: restores a paid ID1 appearance without a transfer, mint, reparent, or repeated execution", async function () {
+    const system = await deployGraph();
+    for (const signer of [a, b, c]) await fundAndApprove(system, signer, 50n * UNIT);
+    await register(system, a, id1.address);
+    const receipt = await (await register(system, b, a.address)).wait();
+    const orbit = system.orbits[0];
+    const original = await eraseLocalAppearance(orbit, id1.address, 1, 4);
+    const parentBefore = await orbit.positionAt(a.address, 1, 0, 1);
+    const supply = await system.fpt.totalSupply();
+    const founders = await founderBalance(system);
+    const aBalance = await system.usdt.balanceOf(a.address);
+    const repair = await prepareLocalRepair(system, { 0: [{ account: id1.address, level: 1,
+      additions: [{ slot: 4, data: original, originalTransaction: receipt.hash }] }] });
+    await pauseForLocalRepair(system);
+    const result = await (await repair.executor.execute(repair.plans)).wait();
+    const tokenAddresses = [system.usdt.target, system.fpt.target, system.fptr.target].map(x => x.toLowerCase());
+    expect(result.logs.filter(log => tokenAddresses.includes(log.address.toLowerCase()))).to.have.length(0);
+    expect(await system.fpt.totalSupply()).to.equal(supply);
+    expect(await founderBalance(system)).to.equal(founders);
+    expect(await system.usdt.balanceOf(a.address)).to.equal(aBalance);
+    expect(Array.from(await orbit.positionAt(id1.address, 1, 0, 4))).to.deep.equal(original);
+    expect(await orbit.positionAt(a.address, 1, 0, 1)).to.deep.equal(parentBefore);
+    expect(await orbit.currentStructuralParentOf(b.address, 1)).to.equal(a.address);
+    expect((await orbit.cycleState(id1.address, 1, 0)).filledPositions).to.equal(2);
+    await expect(repair.executor.execute(repair.plans)).to.be.revertedWith("Already executed");
+    await restoreLocalEngines(system, repair);
+    await register(system, c, b.address);
+    expect((await orbit.positionAt(id1.address, 1, 0, 13)).participant).to.equal(c.address);
+  });
+
+  it("historical repair: rejects unauthorized, unpaused, altered, and stale plans atomically", async function () {
+    const system = await deployGraph();
+    for (const signer of [a, b, c]) await fundAndApprove(system, signer, 50n * UNIT);
+    await register(system, a, id1.address);
+    const receipt = await (await register(system, b, a.address)).wait();
+    const data = await eraseLocalAppearance(system.orbits[0], id1.address, 1, 4);
+    const repair = await prepareLocalRepair(system, { 0: [{ account: id1.address, level: 1,
+      additions: [{ slot: 4, data, originalTransaction: receipt.hash }] }] });
+    await expect(repair.executor.connect(outsider).execute(repair.plans)).to.be.revertedWith("Not authorized");
+    await expect(repair.executor.execute(repair.plans)).to.be.revertedWithCustomError(repair.repairs[0], "ExpectedPause");
+    const altered = [...repair.plans]; altered[0] = coder.encode([repairEditType], [[]]);
+    await expect(repair.executor.execute(altered)).to.be.revertedWith("Plan mismatch");
+    await pauseForLocalRepair(system);
+    await expect(repair.repairs[0].repair(repair.plans[0])).to.be.revertedWithCustomError(repair.repairs[0], "RepairUnauthorized");
+    await system.router.unpause();
+    await expect(repair.executor.execute(repair.plans)).to.be.revertedWithCustomError(repair.repairs[0], "RepairInvalidState");
+    await system.router.pause();
+    await system.registration.unpause(); await system.manager.unpause(); await system.router.unpause();
+    for (let i = 0; i < 4; i++) await system.orbits[i].unpause();
+    await register(system, c, id1.address);
+    await pauseForLocalRepair(system);
+    await expect(repair.executor.execute(repair.plans)).to.be.revertedWithCustomError(repair.repairs[0], "RepairStateChanged");
+    expect(await repair.executor.executed()).to.equal(false);
+    expect(await repair.repairs[0].repairExecuted()).to.equal(false);
+    expect((await system.orbits[0].positionAt(id1.address, 1, 0, 4)).participant).to.equal(ethers.ZeroAddress);
+  });
+
+  it("historical repair: restores omitted genesis links without displacing a later paid first-ring user", async function () {
+    const system = await deployGraph();
+    const genesis = await (await system.registration.initializeGenesis([a.address, b.address, c.address])).wait();
+    const p14 = await eraseLocalAppearance(system.orbits[1], a.address, 2, 1);
+    const p6 = await eraseLocalAppearance(system.orbits[3], a.address, 4, 1);
+    await fundAndApprove(system, d, 200n * UNIT);
+    await register(system, d, a.address);
+    await system.registration.connect(d).activateLevel(2);
+    const paidSlot = await system.orbits[1].positionAt(a.address, 2, 0, 1);
+    const repair = await prepareLocalRepair(system, {
+      1: [{ account: a.address, level: 2, additions: [{ slot: 2, data: p14, originalTransaction: genesis.hash }] }],
+      3: [{ account: a.address, level: 4, additions: [{ slot: 1, data: p6, originalTransaction: genesis.hash }] }],
+    });
+    await pauseForLocalRepair(system);
+    const receipt = await (await repair.executor.execute(repair.plans)).wait();
+    expect(receipt.logs.filter(log => log.address.toLowerCase() === system.usdt.target.toLowerCase())).to.have.length(0);
+    expect(await system.orbits[1].positionAt(a.address, 2, 0, 1)).to.deep.equal(paidSlot);
+    expect((await system.orbits[1].positionAt(a.address, 2, 0, 2)).participant).to.equal(c.address);
+    expect(await system.orbits[1].currentStructuralParentOf(c.address, 2)).to.equal(a.address);
+    await restoreLocalEngines(system, repair);
+    await fundAndApprove(system, outsider, 2000n * UNIT);
+    await register(system, outsider, c.address);
+    await activateThrough(system, outsider, 4);
+    expect((await system.orbits[1].positionAt(a.address, 2, 0, 4)).participant).to.equal(outsider.address);
+    expect((await system.orbits[3].positionAt(a.address, 4, 0, 3)).participant).to.equal(outsider.address);
+    expect(await system.registration.sponsorOf(c.address)).to.equal(id1.address);
+  });
+
+  const invalidRepairCases = [
+    ["wrong component amount", row => { row.data[4] += 1n; }, "RepairInvalidState"],
+    ["primary placement disguised as repair", row => { row.data[6] = 1n; }, "RepairInvalidState"],
+    ["unbacked timestamp", row => { row.data[5] += 1n; }, "RepairInvalidState"],
+    ["empty structural parent", row => { row.slot = 5; }, "RepairInvalidState"],
+    ["occupied destination", row => { row.slot = 1; }, "RepairStateChanged"],
+    ["missing original transaction", row => { row.originalTransaction = ethers.ZeroHash; }, "RepairInvalidState"],
+    ["invented component identifier", row => { row.data[3] = ethers.id("unpaid-component"); }, "RepairInvalidState"],
+  ];
+  for (const [label, mutate, error] of invalidRepairCases) {
+    it(`historical repair: rejects ${label} even in a hash-bound plan`, async function () {
+      const system = await deployGraph();
+      for (const signer of [a, b]) await fundAndApprove(system, signer, 50n * UNIT);
+      await register(system, a, id1.address);
+      const receipt = await (await register(system, b, a.address)).wait();
+      const data = await eraseLocalAppearance(system.orbits[0], id1.address, 1, 4);
+      const addition = { slot: 4, data, originalTransaction: receipt.hash };
+      mutate(addition);
+      const repair = await prepareLocalRepair(system, { 0: [{ account: id1.address, level: 1, additions: [addition] }] });
+      await pauseForLocalRepair(system);
+      await expect(repair.executor.execute(repair.plans)).to.be.revertedWithCustomError(repair.repairs[0], error);
+      expect(await repair.executor.executed()).to.equal(false);
+      expect((await system.orbits[0].cycleState(id1.address, 1, 0)).filledPositions).to.equal(1);
+      expect((await system.orbits[0].positionAt(id1.address, 1, 0, 4)).participant).to.equal(ethers.ZeroAddress);
+    });
+  }
+
+  for (const [label, binding] of [["wrong execution chain", { chain: 137 }], ["wrong proxy", { proxy: ethers.ZeroAddress }]]) {
+    it(`historical repair: rejects ${label} binding`, async function () {
+      const system = await deployGraph();
+      const actualBinding = label === "wrong proxy" ? { proxy: system.router.target } : binding;
+      const repair = await prepareLocalRepair(system, {}, actualBinding);
+      await pauseForLocalRepair(system);
+      await expect(repair.executor.execute(repair.plans)).to.be.revertedWithCustomError(repair.repairs[0], "RepairUnauthorized");
+      expect(await repair.executor.executed()).to.equal(false);
+    });
   }
 
   it("rejects genesis representatives without matching active F-Freedom sponsorship", async function () {
@@ -311,6 +505,115 @@ describe("Freedom-Plus ordinary settlement router", function () {
     expect(await system.usdt.balanceOf(await system.operationsVault.getAddress())).to.equal(1n * UNIT);
     const id1Cycle = await system.orbits[0].cycleState(id1.address, 1, 0);
     expect(id1Cycle.filledPositions).to.equal(1);
+  });
+
+  it("ID1 genesis ancestry regression: seeds binary ancestry without payments or extra token issuance", async function () {
+    const system = await deployGraph();
+    const receipt = await (await system.registration.initializeGenesis([a.address, b.address, c.address])).wait();
+    expect(receipt.logs.filter(log => log.address.toLowerCase() === system.usdt.target.toLowerCase())).to.have.length(0);
+    expect(await founderBalance(system)).to.equal(0);
+    for (const rep of [a, b, c]) expect(await system.fpt.balanceOf(rep.address)).to.equal(54650n * UNIT);
+    for (const [level, type] of [[2, 1], [4, 3]]) {
+      const orbit = system.orbits[type];
+      const root = await orbit.positionAt(id1.address, level, 0, 3);
+      const mirror = await orbit.positionAt(a.address, level, 0, 1);
+      expect(root.participant).to.equal(c.address);
+      expect(root.structuralParent).to.equal(a.address);
+      expect(mirror.participant).to.equal(c.address);
+      expect(mirror.structuralParent).to.equal(a.address);
+      expect(mirror.activationId).to.equal(root.activationId);
+      expect(mirror.amount).to.equal(0);
+      expect(mirror.financial).to.equal(false);
+      expect(mirror.kind).to.equal(0);
+      expect((await orbit.cycleState(a.address, level, 0)).filledPositions).to.equal(1);
+      expect((await orbit.cycleState(id1.address, level, 0)).filledPositions).to.equal(3);
+      expect(await orbit.currentStructuralParentOf(c.address, level)).to.equal(a.address);
+      expect(await system.registration.sponsorOf(c.address)).to.equal(id1.address);
+    }
+    await expect(system.registration.initializeGenesis([a.address, b.address, c.address])).to.be.reverted;
+  });
+
+  for (const [level, type, price, first, second, founder] of [
+    [2, 1, 150n, 22500000n, 37500000n, 75000000n],
+    [4, 3, 1350n, 540000000n, 675000000n, 0n],
+  ]) it(`ID1 genesis ancestry regression: supports a paid level-${level} child of the third representative`, async function () {
+    const system = await deployGraph();
+    await system.registration.initializeGenesis([a.address, b.address, c.address]);
+    await fundAndApprove(system, d, 2000n * UNIT);
+    await register(system, d, c.address);
+    await activateThrough(system, d, level - 1);
+    const before = await system.usdt.balanceOf(d.address);
+    const cBefore = await system.usdt.balanceOf(c.address);
+    const aBefore = await system.usdt.balanceOf(a.address);
+    const foundersBefore = await founderBalance(system);
+    const nftBefore = await system.usdt.balanceOf(system.nftVault.target);
+    const opsBefore = await system.usdt.balanceOf(system.operationsVault.target);
+    await system.registration.connect(d).activateLevel(level);
+    expect(before - await system.usdt.balanceOf(d.address)).to.equal(price * UNIT);
+    expect(await system.usdt.balanceOf(c.address) - cBefore).to.equal(first);
+    expect(await system.usdt.balanceOf(a.address) - aBefore).to.equal(second);
+    expect(await founderBalance(system) - foundersBefore).to.equal(founder);
+    expect(await system.usdt.balanceOf(system.nftVault.target) - nftBefore).to.equal(price * UNIT * 8n / 100n);
+    expect(await system.usdt.balanceOf(system.operationsVault.target) - opsBefore).to.equal(price * UNIT * 2n / 100n);
+    expect(await system.usdt.balanceOf(system.router.target)).to.equal(0);
+    expect((await system.orbits[type].positionAt(c.address, level, 0, 1)).participant).to.equal(d.address);
+    expect((await system.orbits[type].positionAt(a.address, level, 0, 3)).participant).to.equal(d.address);
+    if (level === 2) {
+      expect((await system.orbits[type].positionAt(id1.address, level, 0, 7)).participant).to.equal(d.address);
+    } else {
+      expect((await system.orbits[type].cycleState(id1.address, level, 0)).filledPositions).to.equal(3);
+    }
+  });
+
+  for (const [level, orbitType, secondRingSlot] of [[1, 0, 4], [2, 1, 3], [3, 2, 4], [4, 3, 3]]) {
+    it(`ID1 ancestry regression: records the real second-ring placement at level ${level} exactly once`, async function () {
+      const system = await deployGraph();
+      for (const signer of [a, b]) await fundAndApprove(system, signer, 50000n * UNIT);
+      await register(system, a, id1.address);
+      await activateThrough(system, a, level);
+      await register(system, b, a.address);
+      await activateThrough(system, b, level);
+      const orbit = system.orbits[orbitType];
+      expect((await orbit.positionAt(a.address, level, 0, 1)).participant).to.equal(b.address);
+      const mirrored = await orbit.positionAt(id1.address, level, 0, secondRingSlot);
+      expect(mirrored.participant).to.equal(b.address);
+      expect(mirrored.structuralParent).to.equal(a.address);
+      expect((await orbit.cycleState(id1.address, level, 0)).filledPositions).to.equal(2);
+      expect(await orbit.currentStructuralParentOf(b.address, level)).to.equal(a.address);
+    });
+  }
+
+  for (const [level, orbitType, thirdRingSlot] of [[1, 0, 13], [2, 1, 7]]) {
+    it(`ID1 ancestry regression: records the real third-ring placement at level ${level} without duplicate fallback slots`, async function () {
+      const system = await deployGraph();
+      for (const signer of [a, b, c]) await fundAndApprove(system, signer, 50000n * UNIT);
+      for (const [signer, sponsor] of [[a, id1], [b, a], [c, b]]) {
+        await register(system, signer, sponsor.address);
+        await activateThrough(system, signer, level);
+      }
+      const orbit = system.orbits[orbitType];
+      const mirrored = await orbit.positionAt(id1.address, level, 0, thirdRingSlot);
+      expect(mirrored.participant).to.equal(c.address);
+      expect(mirrored.structuralParent).to.equal(b.address);
+      expect((await orbit.cycleState(id1.address, level, 0)).filledPositions).to.equal(3);
+      expect(await orbit.currentStructuralParentOf(c.address, level)).to.equal(b.address);
+    });
+  }
+
+  it("ID1 cycle boundary regression: keeps an existing representative branch usable after ID1 recycles", async function () {
+    const system = await deployGraph();
+    await system.registration.initializeGenesis([a.address, b.address, c.address]);
+    const participants = [];
+    for (let i = 0; i < 37; i++) {
+      const address = ethers.getAddress(ethers.toBeHex(5000 + i, 20));
+      await ethers.provider.send("hardhat_setBalance", [address, ethers.toBeHex(ethers.parseEther("1"))]);
+      participants.push(await ethers.getImpersonatedSigner(address));
+    }
+    for (const participant of participants) await fundAndApprove(system, participant, 50n * UNIT);
+    for (const participant of participants.slice(0, 36)) await register(system, participant, id1.address);
+    expect(await system.orbits[0].currentCycleOf(id1.address, 1)).to.equal(1);
+    expect(await system.router.recycleReserveConsumed(id1.address, 1, 0)).to.equal(true);
+    await register(system, participants[36], a.address);
   });
 
   it("uses P39 line-2 structure: immediate parent 20%, owner 20%, upper recipient 50%", async function () {

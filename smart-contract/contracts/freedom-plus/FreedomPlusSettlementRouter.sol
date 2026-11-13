@@ -47,6 +47,7 @@ contract FreedomPlusSettlementRouter is
         uint8 position;
         uint8 ring;
         address parent;
+        bool id1MirrorRecorded;
     }
 
     IERC20 public usdt;
@@ -273,7 +274,7 @@ contract FreedomPlusSettlementRouter is
         FreedomPlusConfig.LevelConfig memory config = FreedomPlusConfig.levelConfig(level);
         IFreedomPlusOrbit orbit = orbitByType[uint8(config.orbitType)];
         bytes32 placementId = keccak256(abi.encode(activationId, "GENESIS"));
-        (uint256 cycle, uint8 position, uint8 ring,) = orbit.recordPosition(
+        (uint256 cycle, uint8 position, uint8 ring, address parent) = orbit.recordPosition(
             sponsor,
             participant,
             sponsor,
@@ -284,6 +285,21 @@ contract FreedomPlusSettlementRouter is
             IFreedomPlusOrbit.PlacementKind.Genesis,
             false
         );
+        // The third genesis representative is in ring two of binary orbits.
+        // Its parent's own orbit needs the same non-financial ancestry link.
+        if (parent != sponsor) {
+            orbit.recordPosition(
+                parent,
+                participant,
+                parent,
+                level,
+                activationId,
+                keccak256(abi.encode(activationId, "GENESIS_ANCESTRY")),
+                0,
+                IFreedomPlusOrbit.PlacementKind.Genesis,
+                false
+            );
+        }
         activationSettled[activationId] = true;
         emit GenesisPlacementRecorded(
             activationId,
@@ -536,8 +552,14 @@ contract FreedomPlusSettlementRouter is
             && (component.candidate != id1Wallet || component.candidate == participant);
         bytes32 placementId;
 
+        // A real ancestor requires one mirrored position. Exhausted-chain
+        // fallback payments to ID1 must not consume additional positions.
+        bool realId1Ancestor = recipient == id1Wallet
+            && component.candidate == id1Wallet
+            && component.anchor != id1Wallet
+            && !source.id1MirrorRecorded;
         if (
-            recipient != id1Wallet
+            (recipient != id1Wallet || realId1Ancestor)
                 && recipient != address(0)
                 && recipient != source.orbitOwner
         ) {
@@ -558,6 +580,7 @@ contract FreedomPlusSettlementRouter is
                 IFreedomPlusOrbit.PlacementKind.RoutedPayment,
                 true
             );
+            if (recipient == id1Wallet) source.id1MirrorRecorded = true;
             // Routed final-ring arrivals fund the recipient's cycle just like direct arrivals.
             if (component.bps == 5_000 && _isRecycleWindow(routed, level)) {
                 uint256 price = FreedomPlusConfig.levelConfig(level).price;

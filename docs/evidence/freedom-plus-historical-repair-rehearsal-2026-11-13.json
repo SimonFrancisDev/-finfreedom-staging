@@ -1,0 +1,418 @@
+{
+  "sourceChainId": 137,
+  "executionChainId": 31337,
+  "liveTransactionsSent": 0,
+  "status": "local-fork-passed-not-live-release-approval",
+  "governanceMode": "local-impersonation-not-multisig-certification",
+  "phases": [
+    {
+      "phase": "source-storage-cached-locally",
+      "proxy": "0x1DFC59c915163D56998b764E6536CF869550B233",
+      "slots": 241,
+      "cacheSHA256": "205a9eab129b6be68946f35b56a1b4f9d18a591257e69e2307906f015918b48f"
+    },
+    {
+      "phase": "plan-and-storage-validated",
+      "name": "P39PlusOrbit",
+      "additions": 8
+    },
+    {
+      "phase": "source-storage-cached-locally",
+      "proxy": "0x81e21a812181404325818dc042676e93293e0751",
+      "slots": 182,
+      "cacheSHA256": "341ef346aafd10ddb8e9606dd23cf72f6f17cdd0ff20de6eaff7cee8df92ee3d"
+    },
+    {
+      "phase": "plan-and-storage-validated",
+      "name": "P14PlusOrbit",
+      "additions": 7
+    },
+    {
+      "phase": "source-storage-cached-locally",
+      "proxy": "0xf1C9A1AFa0534cEb1075726Fab6Ac364224BD45d",
+      "slots": 79,
+      "cacheSHA256": "584aacb04381ade09439ec20ae05f76deb10e4eb2828a020be067378919f931c"
+    },
+    {
+      "phase": "plan-and-storage-validated",
+      "name": "P12PlusOrbit",
+      "additions": 2
+    },
+    {
+      "phase": "source-storage-cached-locally",
+      "proxy": "0x4C2A8058f87E194e277BADB853C87E1a9f44BC0d",
+      "slots": 86,
+      "cacheSHA256": "5d7ed7d31d284cfaaa30aab7d0a63434095e8f3f13d6f2580ff37cdb0698f730"
+    },
+    {
+      "phase": "plan-and-storage-validated",
+      "name": "P6PlusOrbit",
+      "additions": 1
+    },
+    {
+      "phase": "local-upgrade-preapproval",
+      "proxy": "0x1DFC59c915163D56998b764E6536CF869550B233",
+      "guardian": "0x290c2300296379BD0048aFe9099Ed6Fc81BF75fC",
+      "previouslyApprovedProxy": false
+    },
+    {
+      "phase": "local-upgrade-preapproval",
+      "proxy": "0x81e21a812181404325818dc042676e93293e0751",
+      "guardian": "0x290c2300296379BD0048aFe9099Ed6Fc81BF75fC",
+      "previouslyApprovedProxy": false
+    },
+    {
+      "phase": "local-upgrade-preapproval",
+      "proxy": "0xf1C9A1AFa0534cEb1075726Fab6Ac364224BD45d",
+      "guardian": "0x290c2300296379BD0048aFe9099Ed6Fc81BF75fC",
+      "previouslyApprovedProxy": false
+    },
+    {
+      "phase": "local-upgrade-preapproval",
+      "proxy": "0x4C2A8058f87E194e277BADB853C87E1a9f44BC0d",
+      "guardian": "0x290c2300296379BD0048aFe9099Ed6Fc81BF75fC",
+      "previouslyApprovedProxy": false
+    },
+    {
+      "phase": "repair-passed",
+      "paidAppearances": 16,
+      "genesisAppearances": 2,
+      "transfers": 0,
+      "preservedExistingPositions": true
+    },
+    {
+      "phase": "complete",
+      "status": "local-fork-passed-not-live-release-approval"
+    }
+  ],
+  "block": 97257828,
+  "blockHash": "0xa29f6d1b28e9cfe2fcf3ff563aa0303c01d4b2e11f1c435c742018ab62e36bb5",
+  "sourceHashes": {
+    "contracts/migration/FreedomPlusHistoricalOrbitRepair.sol": "426483d624c2cad53458bd5657b1b1f002dc6f80ffbfcd114f587fced7d4f351",
+    "contracts/freedom-plus/FreedomPlusSettlementRouter.sol": "d137fc5ba8d02db7957277d8cb84eaacfc55f1fb63337e823a93247a407f8c3c",
+    "contracts/freedom-plus/orbits/FreedomPlusBaseOrbit.sol": "30ab6d66c8acdaee5f5b583e023c3225dee14afe3cbd721592ef9ce3ae691be6",
+    "scripts/rehearseFreedomPlusHistoricalRepair.js": "bbad33273460a7a8e0f65aa7f4054e952e987fac708a15c51405d0968842a921"
+  },
+  "edits": [
+    {
+      "name": "P39PlusOrbit",
+      "edits": [
+        {
+          "account": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+          "level": 1,
+          "cycle": 0,
+          "beforeHash": "0x66b9525b2c08c90985bb07eb8dfb3e89a44df728c606a5ba9ca0921ff9167b11",
+          "additions": [
+            {
+              "slot": 4,
+              "originalTransaction": "0xd84b0858a2185eb0d486a9ecd2ed5061c87072feedef9f66ba7f638944ae6e44",
+              "data": [
+                "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+                "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+                "0xc70f8f0aa46e365ebe07acb03ad252713d1939e8e0edc2ded13de602e69084f7",
+                "0x2427dd01916d216e2d3e4e35e0ca48653f2ff893380524d957f8d95504939060",
+                "10000000",
+                "1790985021",
+                2,
+                true
+              ]
+            },
+            {
+              "slot": 5,
+              "originalTransaction": "0x310e50b3e10ca5909a34d3984c9ea284d9d4a0c27de5547e84def110e640af97",
+              "data": [
+                "0xBafaFb77a090D7F989aa64D4f867b1B942A50591",
+                "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+                "0x41155039dfbe710c28f4fa8651056851832c8ead02f44d4813b27c76136a3a79",
+                "0x12d54bd8ebea02c854871eac6e091be93af8af84459a9034849f73146c50470e",
+                "10000000",
+                "1790985245",
+                2,
+                true
+              ]
+            },
+            {
+              "slot": 13,
+              "originalTransaction": "0x958bb0d3a101047b83e197fcba443c101ccf945c5e085814ce4af76e6f357f79",
+              "data": [
+                "0xCC7f84F64ABc9E5861E9f27d20811Af42f189E45",
+                "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+                "0x67d621792dabc01c7e25ffbe5a01808bd263ae4aa383fd26c84365689aae5e0c",
+                "0x9a57be4ed101c69888229361ac2e21e0aacfe478f472f6939d107cfc4ce2562c",
+                "25000000",
+                "1790985408",
+                2,
+                true
+              ]
+            },
+            {
+              "slot": 22,
+              "originalTransaction": "0x07b2064953cb68deb95eefaa32a8463459890013fa9576b208d07b0c61008a5b",
+              "data": [
+                "0xa1B5a30fAF2032471fBAc7d5A89842c0d80b2372",
+                "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+                "0x9e963cda76c222715a166a27387064b855a3e0d2d7b85356122ca82450034add",
+                "0xc92ceb453ed9530fd129d7a7b49b8ab2401ae06b8dfcc2fc3b31cba26ecc8c12",
+                "25000000",
+                "1790986292",
+                2,
+                true
+              ]
+            },
+            {
+              "slot": 31,
+              "originalTransaction": "0x4e12e4a4519e665e8a563c5d80d18b34f556e71f37acd3709bfc99ced9613106",
+              "data": [
+                "0xEA51893495D285D737db5062500C4F003E2b3A4D",
+                "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+                "0x266311ecc03d676a973ebcd9ae45a4c219dbbb9b403a8d1d0dbc0f233656022f",
+                "0x21ca17972ddb8b21820e4c4214e2e9194bb1445c0ee2ecf00aebb53ab3947ef4",
+                "25000000",
+                "1790987076",
+                2,
+                true
+              ]
+            },
+            {
+              "slot": 14,
+              "originalTransaction": "0xf6b6f5b35bed0c2689b18e548acf14e6a8337eee58f585d581e1e8aae376dc74",
+              "data": [
+                "0xAE0c7305860351a270f4c756e03071e4c18ed086",
+                "0xBafaFb77a090D7F989aa64D4f867b1B942A50591",
+                "0x378fa2028daf76b546bd8818d03a96608a27e31ccc915ecc723aa38eaad7482b",
+                "0xdfdd06bbf9e39448eafe896833fcbd938d01bf32aced9e1f1365b14a71e4675d",
+                "25000000",
+                "1791036005",
+                2,
+                true
+              ]
+            },
+            {
+              "slot": 8,
+              "originalTransaction": "0xfb124e7d6c87c3ee732dc00d62b7476568f706283e516253c64578ca0e5efae7",
+              "data": [
+                "0x31f9a0B00E75456571f77f2fD806479433494e9B",
+                "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+                "0xa584d57746a21f33384394dca17c136ed59a08cb85ac4a8ac630603d11f7466d",
+                "0xbc09c7b54181196916207dc5ec50357446731cc46de64d31087627f883020d2e",
+                "10000000",
+                "1791450005",
+                2,
+                true
+              ]
+            },
+            {
+              "slot": 11,
+              "originalTransaction": "0xc252c30bac39632e83f852368c99321f77ad4f8f3fa988a6d23a87f7afd29771",
+              "data": [
+                "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+                "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+                "0x482eb5237986b86c3f427903fb53e3d4d4aa0967d475222a18df48dff3ebbab8",
+                "0x2a2527ff12d42f1ce24377a8907bb3cbf9afb1186de582debe4b548e8e46c05e",
+                "10000000",
+                "1793508801",
+                2,
+                true
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "P14PlusOrbit",
+      "edits": [
+        {
+          "account": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+          "level": 2,
+          "cycle": 0,
+          "beforeHash": "0xdfc26dbddda5c359a5db83a5ed786666f701041685401536aa65c8032a1f4595",
+          "additions": [
+            {
+              "slot": 5,
+              "originalTransaction": "0x86c6ec2ac88b64507217a06066fd4f5b0289a6185a2a83515cca99a5d0d81208",
+              "data": [
+                "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+                "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+                "0x544f8e6141c67e43dd90ebe8c20a7e692cea2df8b911cab3dae3e018545abd4b",
+                "0xe5765c1ed67ae34573f1309993a5dcce439f5bcfcea9d6f7b7a3b84f70c50caa",
+                "37500000",
+                "1790985065",
+                2,
+                true
+              ]
+            },
+            {
+              "slot": 9,
+              "originalTransaction": "0xfe159f482ecc69f6ac369d7dad7be3176864082fff9f086abb7a44f6a4d97e0a",
+              "data": [
+                "0xCC7f84F64ABc9E5861E9f27d20811Af42f189E45",
+                "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+                "0x74a115c860744a7f17977551d5662767ea861d33c3f37671ff0e9d682c8b5897",
+                "0x5bd72637f4dbf8f804e6c31d9c2e86deb751ce750d3760b8f4564a3b7f243d3f",
+                "75000000",
+                "1790985875",
+                2,
+                true
+              ]
+            },
+            {
+              "slot": 13,
+              "originalTransaction": "0xa5050033f86f7284a74eca918cf3464d4c11bbd00827fae0c7c9fdc2c8f294e6",
+              "data": [
+                "0xa1B5a30fAF2032471fBAc7d5A89842c0d80b2372",
+                "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+                "0x075d6a982babd955799b213389eaa3843c7664d752aa108b3f37805f263176a2",
+                "0xe31234b3a7b0ffb7d4500fc8e3beb8bac6c0729f8bde3d776fbc20f0e2e73d3c",
+                "75000000",
+                "1790986335",
+                2,
+                true
+              ]
+            },
+            {
+              "slot": 4,
+              "originalTransaction": "0xa5df8c1bf3333e4d080fcb6505026577f9195620a2360a502465903f14507f48",
+              "data": [
+                "0xBafaFb77a090D7F989aa64D4f867b1B942A50591",
+                "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+                "0x85760c8c1a08429ef9a359685e159d785235d6ccc7ce172c8555417a9fc6042c",
+                "0x853dba43d3c2b37d6febc0867ee10909064ae245c5cecde84132ec47663e4bb5",
+                "37500000",
+                "1791038714",
+                2,
+                true
+              ]
+            },
+            {
+              "slot": 8,
+              "originalTransaction": "0x6a5cdf2796c03b86a36b8580a666d3cc298b2b0ca930bba0c104243e3be6c455",
+              "data": [
+                "0xAE0c7305860351a270f4c756e03071e4c18ed086",
+                "0xBafaFb77a090D7F989aa64D4f867b1B942A50591",
+                "0x96c49f1161ef55914c9b90581dfc832d1d6c24e131c144ba104cd6197a25d7eb",
+                "0x74802179d9aa784bfd6c8fa534393f33815ccd3fbfa2079b84d951ea3dfcdd44",
+                "75000000",
+                "1791049490",
+                2,
+                true
+              ]
+            },
+            {
+              "slot": 6,
+              "originalTransaction": "0x100d9168bc50af7f27d5fae550ac6f2444f0fb4c817467d67510f3c51aec4129",
+              "data": [
+                "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+                "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+                "0xf6d697c53a46e15a65ee0328665f8b9d83d0f393bd64b9a7d01ce64ac1ab5528",
+                "0xda50237b6f92a4d8ff9dfa13fa737c38622f6ebaf714f277666afabdfbab62f0",
+                "37500000",
+                "1793508831",
+                2,
+                true
+              ]
+            }
+          ]
+        },
+        {
+          "account": "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+          "level": 2,
+          "cycle": 0,
+          "beforeHash": "0x6623dcdd084319c7215017bc1734bdea43389e220612017e0beaee9c054f0da1",
+          "additions": [
+            {
+              "slot": 2,
+              "originalTransaction": "0x5e8007ed8deee9891ab1c98b66bc83a28b2f45c865525d544836d66fbf08fd80",
+              "data": [
+                "0x117C9258a95775Ecf448fd086D00cA22506Ea79d",
+                "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+                "0xbde5e128453c126a77b10d3b7bc6c97783f094fb44b5bccc1b450f5f2049ce99",
+                "0x004353086936198a09ac0340f62d634a22b85b92702b369887c55c86937770e7",
+                0,
+                "1790893023",
+                0,
+                false
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "P12PlusOrbit",
+      "edits": [
+        {
+          "account": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+          "level": 3,
+          "cycle": 0,
+          "beforeHash": "0x3fe6d919c57f2c750868af98698ad4153911a6660545c5824078bce1f955d8a3",
+          "additions": [
+            {
+              "slot": 4,
+              "originalTransaction": "0x1f28b1a54eb307c47493eb7ee93d62b99f1cb65b28e929048fd2e2693fa46ddb",
+              "data": [
+                "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+                "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+                "0xae811ed1e88f863d42da9d9801297d828bbd1656f358b7570dee5f2bb5cd7cb8",
+                "0x9b97aef3f1d5132f45346be58367d5e066477d98bb5dd6458fa166b9e9533204",
+                "225000000",
+                "1790985107",
+                2,
+                true
+              ]
+            },
+            {
+              "slot": 5,
+              "originalTransaction": "0x92a746e4b3d8b137b521eaed117a25aa1cad2b6a19107607ad917733f6652a49",
+              "data": [
+                "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+                "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+                "0x744e0588524e954801c396397f9cb5c5d66a044ac1dca528af3e332624865a5b",
+                "0x1767aefc44109f4c9aaac4b670c39062bc68c1b2412682648f0cdc405655e7ed",
+                "225000000",
+                "1793508936",
+                2,
+                true
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "P6PlusOrbit",
+      "edits": [
+        {
+          "account": "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+          "level": 4,
+          "cycle": 0,
+          "beforeHash": "0x46f3baef6125d72f4f881fd925363f467a91ca246cb37488ef302c07083a8059",
+          "additions": [
+            {
+              "slot": 1,
+              "originalTransaction": "0x5e8007ed8deee9891ab1c98b66bc83a28b2f45c865525d544836d66fbf08fd80",
+              "data": [
+                "0x117C9258a95775Ecf448fd086D00cA22506Ea79d",
+                "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+                "0x61a87bb33f8934ef3903bd8dc6e37c965b6cf892231475ca3c970c18543177bc",
+                "0xafee5d3d9f3955c760dee7e44c3785ffc562e9fa03d3bcc36a3a1537458bf653",
+                0,
+                "1790893023",
+                0,
+                false
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "repairLocalTransaction": "0x68cbf4480f018184978d3ec8f41895864f1c0b99cb7b3de234e64ae1dbfb9113",
+  "repairGasUsed": "5557415",
+  "futureProbe": {
+    "participant": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+    "level": 4,
+    "localTransaction": "0x2f5fbedce81926fc03c5851e21774b02ce74593352314a8dc667a87fd78dbc0a",
+    "syntheticFunding": true
+  }
+}
