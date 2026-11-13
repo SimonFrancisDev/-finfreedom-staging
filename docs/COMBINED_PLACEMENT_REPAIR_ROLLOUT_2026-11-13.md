@@ -2,6 +2,11 @@
 
 ## Status
 
+The later live cancellation-submission pass is tracked separately in
+[the cancellation record](ID1_CANCELLATION_SUBMISSIONS_2026-11-13.md).
+Cancellation proposals are not the replacement repair proposals, and submission
+does not mean founder approval, execution or on-chain cancellation.
+
 Unsigned preparation and local governance rehearsal only. No live deployment,
 proposal, approval, cancellation, transfer, pause, database change, environment
 edit or service restart is authorized by this document alone or implied by a

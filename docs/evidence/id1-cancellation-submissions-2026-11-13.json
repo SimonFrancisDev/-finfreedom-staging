@@ -1,0 +1,1025 @@
+{
+  "chainId": 137,
+  "block": 97265105,
+  "blockHash": "0x332977a6e247ff7a8de8bd240b777da6da315225577ea389fc7b65ee8bc16602",
+  "timestamp": "2026-11-13T20:51:54.000Z",
+  "governance": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+  "runtimeHash": "0x39381be5a244f93beb7d4f297de0f4cd7a211cb0676d67f5e4decefba4fcc0fa",
+  "originalPackageSha256": "c8e36fa60e65b33cb50ac3d04e8dfabbcbccb169800050a79685eb4b6e11cf5c",
+  "requiredConfirmations": 3,
+  "timelockSeconds": 120,
+  "submitter": "0x884e48f9897E8633238747b608DD49dE12bF94df",
+  "totalGovernanceProposals": 160,
+  "originals": [
+    {
+      "id": 130,
+      "cancelled": false,
+      "confirmations": "0"
+    },
+    {
+      "id": 131,
+      "cancelled": false,
+      "confirmations": "0"
+    },
+    {
+      "id": 132,
+      "cancelled": false,
+      "confirmations": "0"
+    },
+    {
+      "id": 133,
+      "cancelled": false,
+      "confirmations": "0"
+    },
+    {
+      "id": 134,
+      "cancelled": false,
+      "confirmations": "0"
+    },
+    {
+      "id": 135,
+      "cancelled": false,
+      "confirmations": "0"
+    },
+    {
+      "id": 136,
+      "cancelled": false,
+      "confirmations": "0"
+    },
+    {
+      "id": 137,
+      "cancelled": false,
+      "confirmations": "0"
+    },
+    {
+      "id": 138,
+      "cancelled": false,
+      "confirmations": "0"
+    },
+    {
+      "id": 139,
+      "cancelled": false,
+      "confirmations": "0"
+    },
+    {
+      "id": 140,
+      "cancelled": false,
+      "confirmations": "0"
+    },
+    {
+      "id": 141,
+      "cancelled": false,
+      "confirmations": "0"
+    },
+    {
+      "id": 142,
+      "cancelled": false,
+      "confirmations": "0"
+    },
+    {
+      "id": 143,
+      "cancelled": false,
+      "confirmations": "0"
+    },
+    {
+      "id": 144,
+      "cancelled": false,
+      "confirmations": "0"
+    },
+    {
+      "id": 145,
+      "cancelled": false,
+      "confirmations": "0"
+    },
+    {
+      "id": 146,
+      "cancelled": false,
+      "confirmations": "0"
+    },
+    {
+      "id": 147,
+      "cancelled": false,
+      "confirmations": "0"
+    },
+    {
+      "id": 148,
+      "cancelled": false,
+      "confirmations": "0"
+    },
+    {
+      "id": 149,
+      "cancelled": false,
+      "confirmations": "0"
+    },
+    {
+      "id": 150,
+      "cancelled": false,
+      "confirmations": "0"
+    },
+    {
+      "id": 151,
+      "cancelled": false,
+      "confirmations": "0"
+    },
+    {
+      "id": 152,
+      "cancelled": false,
+      "confirmations": "0"
+    },
+    {
+      "id": 153,
+      "cancelled": false,
+      "confirmations": "0"
+    },
+    {
+      "id": 154,
+      "cancelled": false,
+      "confirmations": "0"
+    },
+    {
+      "id": 155,
+      "cancelled": false,
+      "confirmations": "0"
+    },
+    {
+      "id": 156,
+      "cancelled": false,
+      "confirmations": "0"
+    },
+    {
+      "id": 157,
+      "cancelled": false,
+      "confirmations": "0"
+    },
+    {
+      "id": 158,
+      "cancelled": false,
+      "confirmations": "0"
+    },
+    {
+      "id": 159,
+      "cancelled": false,
+      "confirmations": "0"
+    }
+  ],
+  "plan": [
+    {
+      "retires": 130,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000082",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    },
+    {
+      "retires": 131,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000083",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    },
+    {
+      "retires": 132,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000084",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    },
+    {
+      "retires": 133,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000085",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    },
+    {
+      "retires": 134,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000086",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    },
+    {
+      "retires": 135,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000087",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    },
+    {
+      "retires": 136,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000088",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    },
+    {
+      "retires": 137,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000089",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    },
+    {
+      "retires": 138,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d8000000000000000000000000000000000000000000000000000000000000008a",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    },
+    {
+      "retires": 139,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d8000000000000000000000000000000000000000000000000000000000000008b",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    },
+    {
+      "retires": 140,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d8000000000000000000000000000000000000000000000000000000000000008c",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    },
+    {
+      "retires": 141,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d8000000000000000000000000000000000000000000000000000000000000008d",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    },
+    {
+      "retires": 142,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d8000000000000000000000000000000000000000000000000000000000000008e",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    },
+    {
+      "retires": 143,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d8000000000000000000000000000000000000000000000000000000000000008f",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    },
+    {
+      "retires": 144,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000090",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    },
+    {
+      "retires": 145,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000091",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    },
+    {
+      "retires": 146,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000092",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    },
+    {
+      "retires": 147,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000093",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    },
+    {
+      "retires": 148,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000094",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    },
+    {
+      "retires": 149,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000095",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    },
+    {
+      "retires": 150,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000096",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    },
+    {
+      "retires": 151,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000097",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    },
+    {
+      "retires": 152,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000098",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    },
+    {
+      "retires": 153,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000099",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    },
+    {
+      "retires": 154,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d8000000000000000000000000000000000000000000000000000000000000009a",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    },
+    {
+      "retires": 155,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d8000000000000000000000000000000000000000000000000000000000000009b",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    },
+    {
+      "retires": 156,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d8000000000000000000000000000000000000000000000000000000000000009c",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    },
+    {
+      "retires": 157,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d8000000000000000000000000000000000000000000000000000000000000009d",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    },
+    {
+      "retires": 158,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d8000000000000000000000000000000000000000000000000000000000000009e",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    },
+    {
+      "retires": 159,
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d8000000000000000000000000000000000000000000000000000000000000009f",
+      "alreadyCancelled": false,
+      "existingCancellationId": null,
+      "gasLimit": "260622"
+    }
+  ],
+  "pendingSubmissions": 30,
+  "maxFeePerGas": "450000000000",
+  "maxPriorityFeePerGas": "55638958806",
+  "balancePOL": "13.572354316215833862",
+  "cappedSubmissionBudgetPOL": "3.518397",
+  "sufficientlyFunded": true,
+  "approvalsSent": 0,
+  "executionsSent": 0,
+  "status": "cancellation-proposals-submitted-not-executed",
+  "verifiedBlock": 97265476,
+  "verifiedBlockHash": "0xd2e2411f9643ec7f232e6ce1312ed9ff8da41cdb2ccfe7e5d6b73ff5aec501e7",
+  "verifiedAt": "2026-11-13T21:01:10.000Z",
+  "mappings": [
+    {
+      "retires": 130,
+      "proposalId": 160,
+      "txHash": "0x1a75c8a5781e088cca9b5ed1b690fcce9acc81cc847a6c67faa815feab6091a9",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    },
+    {
+      "retires": 131,
+      "proposalId": 161,
+      "txHash": "0x1487041452ede49a3a15f68bd89c1b3eb43a0efe71a2ddbda6c7fe8ee9d8629b",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    },
+    {
+      "retires": 132,
+      "proposalId": 162,
+      "txHash": "0x3bbf88e5ad8084c841782ea37988696c3b4b29fc55a84661342043ec6f492ec8",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    },
+    {
+      "retires": 133,
+      "proposalId": 163,
+      "txHash": "0x5a2a345e4e45678ededc12125100318367d8f06d9a958465e6ce9fd78d802ce5",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    },
+    {
+      "retires": 134,
+      "proposalId": 164,
+      "txHash": "0x89153653a2de2e7c52fbf07ff2ee0833fafd8eabfcdc957c8147f5db6005a6c8",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    },
+    {
+      "retires": 135,
+      "proposalId": 165,
+      "txHash": "0xabf13563c3acfa50f63797a3d66b09795b0859dc496066b222ab474e90bc6257",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    },
+    {
+      "retires": 136,
+      "proposalId": 166,
+      "txHash": "0x7087f74c959d96d7652ed6c6c65cb1db5b1033b0d17f66bf400dff6ed91e1cfa",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    },
+    {
+      "retires": 137,
+      "proposalId": 167,
+      "txHash": "0x838e4f481f25a2942f3aa75046cc97485917a5d249393a45fa0a1c1f87633fc1",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    },
+    {
+      "retires": 138,
+      "proposalId": 168,
+      "txHash": "0x07a64acc53c72d4bdd0969896ff9d33b5e4e392ce7dae66162578e3cf51ff7a7",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    },
+    {
+      "retires": 139,
+      "proposalId": 169,
+      "txHash": "0x1920b7f0b2ed916281ddf34fef25711e8b34372f23eb65f6a07800569ac9554c",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    },
+    {
+      "retires": 140,
+      "proposalId": 170,
+      "txHash": "0x8356f993028b6e67da2d7b2416bdf2846e046de07b585961020705b868fd5116",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    },
+    {
+      "retires": 141,
+      "proposalId": 171,
+      "txHash": "0x87456fb487e7c76eca6ca36b8add17acddc8169c2b3605a570dad0e8e7a378dd",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    },
+    {
+      "retires": 142,
+      "proposalId": 172,
+      "txHash": "0x9be3d6aa232fdcdef2768d73c5d1af51f2376ea081619e91f7eaded89ed0cab9",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    },
+    {
+      "retires": 143,
+      "proposalId": 173,
+      "txHash": "0x4d15347926d0913b715fb6ef7656ec9cd09dba216eba6eb0bf11e1426e88505c",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    },
+    {
+      "retires": 144,
+      "proposalId": 174,
+      "txHash": "0xc7b7914259b88630126b4b5cc95a24d12e0d87e1021003a747726829ae0db6ec",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    },
+    {
+      "retires": 145,
+      "proposalId": 175,
+      "txHash": "0x6d81d0979b25d70b8e910a24d9d928f37b77e1b522116721e19b44d05257b02e",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    },
+    {
+      "retires": 146,
+      "proposalId": 176,
+      "txHash": "0x2b227a00605c7f19fcd4bd4a03d677d76a70bdb67991aff07b6fcd8a32ffba41",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    },
+    {
+      "retires": 147,
+      "proposalId": 177,
+      "txHash": "0x67ed4c1a9f4d62b1a3bfd9018185831c9c3ffeb4da89871521b03132039ac99c",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    },
+    {
+      "retires": 148,
+      "proposalId": 178,
+      "txHash": "0x95fe021684db4ec301b86a52655091c35c5bdba273e3880c731fe7bad980a8ff",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    },
+    {
+      "retires": 149,
+      "proposalId": 179,
+      "txHash": "0xc8e2d111da3d07bc9ff461a15e87db44ab6a9867a123e19ef02cb97ec5f3be75",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    },
+    {
+      "retires": 150,
+      "proposalId": 180,
+      "txHash": "0x1561775776aa5cda4761ca46ab1aa26dfd84e840751dd9093f6f8ba16a21b58a",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    },
+    {
+      "retires": 151,
+      "proposalId": 181,
+      "txHash": "0xfb503c7abc78ec9054f0bea7cb6b5b0854d1aeba5de3747e3414dc03c25bf1c4",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    },
+    {
+      "retires": 152,
+      "proposalId": 182,
+      "txHash": "0xe8a4e4553dded8a2b94d728dda2d83c8e1d7378baa93efb3a06a6458f545a4ca",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    },
+    {
+      "retires": 153,
+      "proposalId": 183,
+      "txHash": "0x42b22ec9ea2048f21c40baf1b4633dadc5661eaf70a1b885932f94a865d77b87",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    },
+    {
+      "retires": 154,
+      "proposalId": 184,
+      "txHash": "0xeb063f064c2fec97072025c62db1bf804dc05c7e1468ad84793b0ec5b9355bbf",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    },
+    {
+      "retires": 155,
+      "proposalId": 185,
+      "txHash": "0x85e40cc642da00c8a21f3acc7a1ac1720af2ce4affc863490ece0bdaac69afd0",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    },
+    {
+      "retires": 156,
+      "proposalId": 186,
+      "txHash": "0x42c20ce10ad470fd6ad95f8a3454f18609a9f97501b41dbe6dd9b65e413e0c90",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    },
+    {
+      "retires": 157,
+      "proposalId": 187,
+      "txHash": "0x61f08684b9052ed2216a768b1b947c223e9b0a25590b85fc1bac95a8e3887694",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    },
+    {
+      "retires": 158,
+      "proposalId": 188,
+      "txHash": "0x8f6608ec0fef5cc64eeb117db87ad0925bbe10463c2b5723f4508276c318a5dd",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    },
+    {
+      "retires": 159,
+      "proposalId": 189,
+      "txHash": "0x7dbb7a17ad3f771270da59c509dbb4abdadfafc1f2fe39d734592eb6be071239",
+      "oldCancelled": false,
+      "cancellationExecuted": false,
+      "confirmations": "0"
+    }
+  ],
+  "submissionTransactions": [
+    {
+      "retires": 130,
+      "nonce": 323,
+      "txHash": "0x1a75c8a5781e088cca9b5ed1b690fcce9acc81cc847a6c67faa815feab6091a9",
+      "confirmed": true,
+      "proposalId": 160,
+      "block": 97265144,
+      "blockHash": "0x2460954eeab4758135c1cdeb03ec0ae7fa61070af4c31b742b1b4cba110006b3",
+      "gasUsed": "205698",
+      "gasPrice": "306478323619"
+    },
+    {
+      "retires": 131,
+      "nonce": 324,
+      "txHash": "0x1487041452ede49a3a15f68bd89c1b3eb43a0efe71a2ddbda6c7fe8ee9d8629b",
+      "confirmed": true,
+      "proposalId": 161,
+      "block": 97265159,
+      "blockHash": "0x9da5ad09b2e1b8ae8c93e64cc449967ca31fb7b405229e780cfd7f009401765d",
+      "gasUsed": "205698",
+      "gasPrice": "307643267385"
+    },
+    {
+      "retires": 132,
+      "nonce": 325,
+      "txHash": "0x3bbf88e5ad8084c841782ea37988696c3b4b29fc55a84661342043ec6f492ec8",
+      "confirmed": true,
+      "proposalId": 162,
+      "block": 97265170,
+      "blockHash": "0xd899448bde94156f8a0ce0e98eeeb1c835d76d0cf75d9b3b91fa71598366929a",
+      "gasUsed": "205698",
+      "gasPrice": "305634966510"
+    },
+    {
+      "retires": 133,
+      "nonce": 326,
+      "txHash": "0x5a2a345e4e45678ededc12125100318367d8f06d9a958465e6ce9fd78d802ce5",
+      "confirmed": true,
+      "proposalId": 163,
+      "block": 97265183,
+      "blockHash": "0xf217285b12ce21762723741cc19d7871809e5c194c6bb18c36d32f0a736e9418",
+      "gasUsed": "205698",
+      "gasPrice": "305201751091"
+    },
+    {
+      "retires": 134,
+      "nonce": 327,
+      "txHash": "0x89153653a2de2e7c52fbf07ff2ee0833fafd8eabfcdc957c8147f5db6005a6c8",
+      "confirmed": true,
+      "proposalId": 164,
+      "block": 97265193,
+      "blockHash": "0xbecb4c1e2d79395a94bff2a59dbb23b440e3b2beb69e1394afe76d45dab0de3b",
+      "gasUsed": "205698",
+      "gasPrice": "305719730767"
+    },
+    {
+      "retires": 135,
+      "nonce": 328,
+      "txHash": "0xabf13563c3acfa50f63797a3d66b09795b0859dc496066b222ab474e90bc6257",
+      "confirmed": true,
+      "proposalId": 165,
+      "block": 97265205,
+      "blockHash": "0xae6a713ccc65339ad38ec8e07d6e84f7d68db4827f6a6a617aff9f046c25f7f6",
+      "gasUsed": "205698",
+      "gasPrice": "303924228765"
+    },
+    {
+      "retires": 136,
+      "nonce": 329,
+      "txHash": "0x7087f74c959d96d7652ed6c6c65cb1db5b1033b0d17f66bf400dff6ed91e1cfa",
+      "confirmed": true,
+      "proposalId": 166,
+      "block": 97265215,
+      "blockHash": "0x1f3731e13605a9e942599edb9c2362de76ab71c4e5383fa40740f5e39ee09156",
+      "gasUsed": "205698",
+      "gasPrice": "304497021695"
+    },
+    {
+      "retires": 137,
+      "nonce": 330,
+      "txHash": "0x838e4f481f25a2942f3aa75046cc97485917a5d249393a45fa0a1c1f87633fc1",
+      "confirmed": true,
+      "proposalId": 167,
+      "block": 97265225,
+      "blockHash": "0xbb45aa9d0a3b621fdcb4527267814eef44dba38c852ea9be63d363829564b412",
+      "gasUsed": "205698",
+      "gasPrice": "307644332719"
+    },
+    {
+      "retires": 138,
+      "nonce": 331,
+      "txHash": "0x07a64acc53c72d4bdd0969896ff9d33b5e4e392ce7dae66162578e3cf51ff7a7",
+      "confirmed": true,
+      "proposalId": 168,
+      "block": 97265235,
+      "blockHash": "0x3b043fbc9a8ffb1b42f756347e6790b40d80a40e17e5341a97601b25fe79eaeb",
+      "gasUsed": "205698",
+      "gasPrice": "310650238201"
+    },
+    {
+      "retires": 139,
+      "nonce": 332,
+      "txHash": "0x1920b7f0b2ed916281ddf34fef25711e8b34372f23eb65f6a07800569ac9554c",
+      "confirmed": true,
+      "proposalId": 169,
+      "block": 97265245,
+      "blockHash": "0xc149b8aeb5bc6263fe0c8ce3b4a4e2c164492c82e44cb7836a1e7931f81a0d66",
+      "gasUsed": "205698",
+      "gasPrice": "314289210902"
+    },
+    {
+      "retires": 140,
+      "nonce": 333,
+      "txHash": "0x8356f993028b6e67da2d7b2416bdf2846e046de07b585961020705b868fd5116",
+      "confirmed": true,
+      "proposalId": 170,
+      "block": 97265256,
+      "blockHash": "0x406f4b5851b66ca96c06206127d427ab7c75957688cd0bc52f0e4bf4cc7b8b08",
+      "gasUsed": "205698",
+      "gasPrice": "307347430899"
+    },
+    {
+      "retires": 141,
+      "nonce": 334,
+      "txHash": "0x87456fb487e7c76eca6ca36b8add17acddc8169c2b3605a570dad0e8e7a378dd",
+      "confirmed": true,
+      "proposalId": 171,
+      "block": 97265269,
+      "blockHash": "0xf49e55456da099b516eb7c29e1f3be0ec163f9486fb3d435d41c35db3f57db93",
+      "gasUsed": "205698",
+      "gasPrice": "306122971314"
+    },
+    {
+      "retires": 142,
+      "nonce": 335,
+      "txHash": "0x9be3d6aa232fdcdef2768d73c5d1af51f2376ea081619e91f7eaded89ed0cab9",
+      "confirmed": true,
+      "proposalId": 172,
+      "block": 97265279,
+      "blockHash": "0xfdddd716d63a88c9b8a387a3289f98429c1eca409501f2cddf4819396618fcbd",
+      "gasUsed": "205698",
+      "gasPrice": "308585498553"
+    },
+    {
+      "retires": 143,
+      "nonce": 336,
+      "txHash": "0x4d15347926d0913b715fb6ef7656ec9cd09dba216eba6eb0bf11e1426e88505c",
+      "confirmed": true,
+      "proposalId": 173,
+      "block": 97265289,
+      "blockHash": "0xf53af0be664daf6396627b91d3f50ea2d2a13347f96bdf9c65ec2ce4ac044ed2",
+      "gasUsed": "205698",
+      "gasPrice": "302675322296"
+    },
+    {
+      "retires": 144,
+      "nonce": 337,
+      "txHash": "0xc7b7914259b88630126b4b5cc95a24d12e0d87e1021003a747726829ae0db6ec",
+      "confirmed": true,
+      "proposalId": 174,
+      "block": 97265300,
+      "blockHash": "0x3a895fd406e3244e5aa113edeca336f9b166ab88611154c844261fe5bf803e51",
+      "gasUsed": "205698",
+      "gasPrice": "302782038124"
+    },
+    {
+      "retires": 145,
+      "nonce": 338,
+      "txHash": "0x6d81d0979b25d70b8e910a24d9d928f37b77e1b522116721e19b44d05257b02e",
+      "confirmed": true,
+      "proposalId": 175,
+      "block": 97265310,
+      "blockHash": "0xb20f12456b17d2c836f3c06be5afddaea0a9a112d00d7fb1b7557f20cef8036a",
+      "gasUsed": "205698",
+      "gasPrice": "303184864893"
+    },
+    {
+      "retires": 146,
+      "nonce": 339,
+      "txHash": "0x2b227a00605c7f19fcd4bd4a03d677d76a70bdb67991aff07b6fcd8a32ffba41",
+      "confirmed": true,
+      "proposalId": 176,
+      "block": 97265321,
+      "blockHash": "0x7db5fa5790b28e60807348acfd873255a6d668a49079ea6fc436c9a1082820a7",
+      "gasUsed": "205698",
+      "gasPrice": "305800515767"
+    },
+    {
+      "retires": 147,
+      "nonce": 340,
+      "txHash": "0x67ed4c1a9f4d62b1a3bfd9018185831c9c3ffeb4da89871521b03132039ac99c",
+      "confirmed": true,
+      "proposalId": 177,
+      "block": 97265334,
+      "blockHash": "0xf4840c70ecfcec0887a104b54509f2d5289f53b10c4a6fa7b3a6db12d0823a0b",
+      "gasUsed": "205698",
+      "gasPrice": "312193834619"
+    },
+    {
+      "retires": 148,
+      "nonce": 341,
+      "txHash": "0x95fe021684db4ec301b86a52655091c35c5bdba273e3880c731fe7bad980a8ff",
+      "confirmed": true,
+      "proposalId": 178,
+      "block": 97265345,
+      "blockHash": "0xed033f3c351f8e0ad1d0eaaf2f561a3e81c8c1765b258f450f3d4f1f48dc2de9",
+      "gasUsed": "205698",
+      "gasPrice": "304777078645"
+    },
+    {
+      "retires": 149,
+      "nonce": 342,
+      "txHash": "0xc8e2d111da3d07bc9ff461a15e87db44ab6a9867a123e19ef02cb97ec5f3be75",
+      "confirmed": true,
+      "proposalId": 179,
+      "block": 97265356,
+      "blockHash": "0xc144c5b7af51104859de2ad78cd44c9967f7813b24d866c0f5cf4d8561a570c7",
+      "gasUsed": "205698",
+      "gasPrice": "305485187533"
+    },
+    {
+      "retires": 150,
+      "nonce": 343,
+      "txHash": "0x1561775776aa5cda4761ca46ab1aa26dfd84e840751dd9093f6f8ba16a21b58a",
+      "confirmed": true,
+      "proposalId": 180,
+      "block": 97265369,
+      "blockHash": "0xb08e5327d6938a7ba0f91108e6a8aa4422c804cc181011f40d3bc2efe696fbaf",
+      "gasUsed": "205698",
+      "gasPrice": "307945377628"
+    },
+    {
+      "retires": 151,
+      "nonce": 344,
+      "txHash": "0xfb503c7abc78ec9054f0bea7cb6b5b0854d1aeba5de3747e3414dc03c25bf1c4",
+      "confirmed": true,
+      "proposalId": 181,
+      "block": 97265382,
+      "blockHash": "0xa38c519c9667c92d902032c1bda047d42a108bae807ff82fc4991a4ca5a5fbdc",
+      "gasUsed": "205698",
+      "gasPrice": "303455125810"
+    },
+    {
+      "retires": 152,
+      "nonce": 345,
+      "txHash": "0xe8a4e4553dded8a2b94d728dda2d83c8e1d7378baa93efb3a06a6458f545a4ca",
+      "confirmed": true,
+      "proposalId": 182,
+      "block": 97265393,
+      "blockHash": "0xac41079a887a8d58bc8de9ab9cb4db777599e163b0c5bc64de29dfe0329c8e79",
+      "gasUsed": "205698",
+      "gasPrice": "306682014931"
+    },
+    {
+      "retires": 153,
+      "nonce": 346,
+      "txHash": "0x42b22ec9ea2048f21c40baf1b4633dadc5661eaf70a1b885932f94a865d77b87",
+      "confirmed": true,
+      "proposalId": 183,
+      "block": 97265404,
+      "blockHash": "0x78b36e765092c332c7c331eab83051e59bf68783ee708881df1f7969dfe5aa25",
+      "gasUsed": "205698",
+      "gasPrice": "306637541151"
+    },
+    {
+      "retires": 154,
+      "nonce": 347,
+      "txHash": "0xeb063f064c2fec97072025c62db1bf804dc05c7e1468ad84793b0ec5b9355bbf",
+      "confirmed": true,
+      "proposalId": 184,
+      "block": 97265415,
+      "blockHash": "0x4146bb01f65ade91a40f5172d26ee2bff4608e1df5df9391210fddae12a1a9b6",
+      "gasUsed": "205698",
+      "gasPrice": "304166222132"
+    },
+    {
+      "retires": 155,
+      "nonce": 348,
+      "txHash": "0x85e40cc642da00c8a21f3acc7a1ac1720af2ce4affc863490ece0bdaac69afd0",
+      "confirmed": true,
+      "proposalId": 185,
+      "block": 97265425,
+      "blockHash": "0x1c184fca22deb2bdf26adac7215c0b873654e0938bf570212286ad92911e293e",
+      "gasUsed": "205698",
+      "gasPrice": "304858674424"
+    },
+    {
+      "retires": 156,
+      "nonce": 349,
+      "txHash": "0x42c20ce10ad470fd6ad95f8a3454f18609a9f97501b41dbe6dd9b65e413e0c90",
+      "confirmed": true,
+      "proposalId": 186,
+      "block": 97265435,
+      "blockHash": "0xd8273f40524eca0ed1faf4748925434a5df4e251e07466d503585c50986a092d",
+      "gasUsed": "205698",
+      "gasPrice": "309394659582"
+    },
+    {
+      "retires": 157,
+      "nonce": 350,
+      "txHash": "0x61f08684b9052ed2216a768b1b947c223e9b0a25590b85fc1bac95a8e3887694",
+      "confirmed": true,
+      "proposalId": 187,
+      "block": 97265446,
+      "blockHash": "0x8c13c3db9d39247729b792279f820b1e7db31fcaf9e68adf7244e3de247796d2",
+      "gasUsed": "205698",
+      "gasPrice": "304659146746"
+    },
+    {
+      "retires": 158,
+      "nonce": 351,
+      "txHash": "0x8f6608ec0fef5cc64eeb117db87ad0925bbe10463c2b5723f4508276c318a5dd",
+      "confirmed": true,
+      "proposalId": 188,
+      "block": 97265460,
+      "blockHash": "0x0ff6173560cc4ca58ce73d1cc2aada16ca99c4295cab9d43ba40d9320b04e1e5",
+      "gasUsed": "205698",
+      "gasPrice": "307225561293"
+    },
+    {
+      "retires": 159,
+      "nonce": 352,
+      "txHash": "0x7dbb7a17ad3f771270da59c509dbb4abdadfafc1f2fe39d734592eb6be071239",
+      "confirmed": true,
+      "proposalId": 189,
+      "block": 97265473,
+      "blockHash": "0xc912c1a19ed7c4a32760c8d69f12e46c8b756547f763d4fbdad30e6857f901f4",
+      "gasUsed": "205698",
+      "gasPrice": "308983309509"
+    }
+  ],
+  "totalGasCostPOL": "1.891320179260472094",
+  "allOldProposalsCancelled": false
+}
