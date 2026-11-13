@@ -1,5 +1,4 @@
 // Read-only mainnet preparation. Predicted addresses are NOT deployed addresses.
-require("dotenv").config({ quiet: true });
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
@@ -106,5 +105,8 @@ async function main() {
   } finally { provider.destroy(); }
 }
 
-if (require.main === module) main().catch(error => { console.error(error.shortMessage || error.message); process.exitCode = 1; });
+if (require.main === module) {
+  require("dotenv").config({ quiet: true });
+  main().catch(error => { console.error(error.shortMessage || error.message); process.exitCode = 1; });
+}
 module.exports = { artifact, verifyLive, sha };

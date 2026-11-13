@@ -47,6 +47,7 @@ async function checkCode(provider, deployment, art) {
 async function main() {
   const mode = process.env.ID1_PRODUCTION_ACTION;
   assert(["CHECK", "DEPLOY", "SUBMIT", "SUBMIT_ALL"].includes(mode), "Explicit ID1_PRODUCTION_ACTION=CHECK, DEPLOY, SUBMIT or SUBMIT_ALL required");
+  assert.equal(mode, "CHECK", "The November 12 package is withdrawn. No further deployment or submission is allowed from this script.");
   assert(process.env.ID1_MAINNET_REPLAY_RPC, "Explicit mainnet RPC required");
   assert(process.env.PRODUCTION_SUBMITTER_KEY, "Authorized submitter key required");
   const raw = fs.readFileSync(path.join(ROOT, "tmp/id1-production-package.json"), "utf8");

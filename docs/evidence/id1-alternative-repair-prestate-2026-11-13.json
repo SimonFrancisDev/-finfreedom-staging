@@ -1,0 +1,1743 @@
+{
+  "chainId": 137,
+  "block": 97251930,
+  "blockHash": "0xf3aae2a73e4ca78a41b5cb53f05d1054eaac3162d72d70f83384d609e3d07fd9",
+  "timestamp": "2026-11-13T15:22:31.000Z",
+  "addresses": {
+    "registration": "0x02ECA97e944Ac66b0444fd5F61A716917E83CfF5",
+    "manager": "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+    "p4": "0x1ED0b443c880Ba88F732c3F5915561A07B21F6B4",
+    "p12": "0xCF998d8f7E9DD4f3FacFbA45e656dE07142f824b",
+    "p39": "0xEaD39819B8C4DBb0669320542B6B847D4c31b8Fb"
+  },
+  "id1": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+  "participants": [
+    {
+      "wallet": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "sponsor": "0x0000000000000000000000000000000000000000",
+      "noReferrer": false,
+      "levels": {
+        "8": {
+          "active": true,
+          "matrixParent": "0x0000000000000000000000000000000000000000"
+        },
+        "9": {
+          "active": true,
+          "matrixParent": "0x0000000000000000000000000000000000000000"
+        }
+      }
+    },
+    {
+      "wallet": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+      "sponsor": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "noReferrer": false,
+      "levels": {
+        "8": {
+          "active": true,
+          "matrixParent": "0x0000000000000000000000000000000000000000"
+        },
+        "9": {
+          "active": true,
+          "matrixParent": "0x0000000000000000000000000000000000000000"
+        }
+      }
+    },
+    {
+      "wallet": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "sponsor": "0x0000000000000000000000000000000000000000",
+      "noReferrer": true,
+      "levels": {
+        "8": {
+          "active": true,
+          "matrixParent": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470"
+        },
+        "9": {
+          "active": true,
+          "matrixParent": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470"
+        }
+      }
+    },
+    {
+      "wallet": "0xE8b1ac47231651cCc38326a59645a8D976D0Eabf",
+      "sponsor": "0x5b511a2b0e4db2CA73B276969f3A52661aEf12f1",
+      "noReferrer": false,
+      "levels": {
+        "8": {
+          "active": true,
+          "matrixParent": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470"
+        },
+        "9": {
+          "active": true,
+          "matrixParent": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470"
+        }
+      }
+    }
+  ],
+  "orbits": [
+    {
+      "wallet": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "level": 1,
+      "engine": "p4",
+      "state": {
+        "currentPosition": "3",
+        "escrowBalance": "0",
+        "autoUpgradeCompleted": false,
+        "positionsInLine1": "2",
+        "positionsInLine2": "0",
+        "positionsInLine3": "0",
+        "totalCycles": "5",
+        "totalEarned": "198000000"
+      },
+      "counts": {
+        "line1Count": "1",
+        "line2Count": "0",
+        "line3Count": "0"
+      },
+      "positions": [
+        {
+          "slot": 1,
+          "occupant": "0x669FD1349eEEc4A1eba9E5B11ad03c3eCa8Bba55",
+          "amount": "10000000",
+          "timestamp": "1781261716",
+          "referrer": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+          "isActive": true,
+          "arrival": "0",
+          "link": {
+            "activationId": "283",
+            "cycleNumber": "6",
+            "isMirror": false
+          },
+          "rule": {
+            "position": "1",
+            "line": "1",
+            "linePaymentNumber": "0",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": true,
+            "toOwner": "9000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 2,
+          "occupant": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+          "amount": "9000000",
+          "timestamp": "1781271147",
+          "referrer": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+          "isActive": true,
+          "arrival": "1",
+          "link": {
+            "activationId": "284",
+            "cycleNumber": "6",
+            "isMirror": true
+          },
+          "rule": {
+            "position": "2",
+            "line": "1",
+            "linePaymentNumber": "1",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "9000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "wallet": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "level": 2,
+      "engine": "p12",
+      "state": {
+        "currentPosition": "1",
+        "escrowBalance": "0",
+        "autoUpgradeCompleted": false,
+        "positionsInLine1": "0",
+        "positionsInLine2": "0",
+        "positionsInLine3": "0",
+        "totalCycles": "2",
+        "totalEarned": "304000000"
+      },
+      "counts": {
+        "line1Count": "0",
+        "line2Count": "0",
+        "line3Count": "0"
+      },
+      "positions": []
+    },
+    {
+      "wallet": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "level": 3,
+      "engine": "p39",
+      "state": {
+        "currentPosition": "18",
+        "escrowBalance": "0",
+        "autoUpgradeCompleted": false,
+        "positionsInLine1": "3",
+        "positionsInLine2": "9",
+        "positionsInLine3": "10",
+        "totalCycles": "0",
+        "totalEarned": "584000000"
+      },
+      "counts": {
+        "line1Count": "0",
+        "line2Count": "6",
+        "line3Count": "10"
+      },
+      "positions": [
+        {
+          "slot": 1,
+          "occupant": "0x117C9258a95775Ecf448fd086D00cA22506Ea79d",
+          "amount": "40000000",
+          "timestamp": "1779884978",
+          "referrer": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+          "isActive": true,
+          "arrival": "0",
+          "link": {
+            "activationId": "5",
+            "cycleNumber": "1",
+            "isMirror": false
+          },
+          "rule": {
+            "position": "1",
+            "line": "1",
+            "linePaymentNumber": "0",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": true,
+            "toOwner": "36000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 2,
+          "occupant": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+          "amount": "40000000",
+          "timestamp": "1779885298",
+          "referrer": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+          "isActive": true,
+          "arrival": "0",
+          "link": {
+            "activationId": "10",
+            "cycleNumber": "1",
+            "isMirror": false
+          },
+          "rule": {
+            "position": "2",
+            "line": "1",
+            "linePaymentNumber": "0",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": true,
+            "toOwner": "36000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 3,
+          "occupant": "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+          "amount": "40000000",
+          "timestamp": "1779885317",
+          "referrer": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+          "isActive": true,
+          "arrival": "0",
+          "link": {
+            "activationId": "11",
+            "cycleNumber": "1",
+            "isMirror": false
+          },
+          "rule": {
+            "position": "3",
+            "line": "1",
+            "linePaymentNumber": "0",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": true,
+            "toOwner": "36000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 4,
+          "occupant": "0xeCe179f5A7fbd46f619f882795954b457Bf2B71c",
+          "amount": "40000000",
+          "timestamp": "1779889846",
+          "referrer": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+          "isActive": true,
+          "arrival": "0",
+          "link": {
+            "activationId": "51",
+            "cycleNumber": "1",
+            "isMirror": false
+          },
+          "rule": {
+            "position": "4",
+            "line": "2",
+            "linePaymentNumber": "0",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": true,
+            "toOwner": "36000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 5,
+          "occupant": "0xBafaFb77a090D7F989aa64D4f867b1B942A50591",
+          "amount": "28000000",
+          "timestamp": "1779888002",
+          "referrer": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+          "isActive": true,
+          "arrival": "2",
+          "link": {
+            "activationId": "28",
+            "cycleNumber": "1",
+            "isMirror": true
+          },
+          "rule": {
+            "position": "5",
+            "line": "2",
+            "linePaymentNumber": "2",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "28000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 6,
+          "occupant": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+          "amount": "28000000",
+          "timestamp": "1779886763",
+          "referrer": "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+          "isActive": true,
+          "arrival": "1",
+          "link": {
+            "activationId": "23",
+            "cycleNumber": "1",
+            "isMirror": true
+          },
+          "rule": {
+            "position": "6",
+            "line": "2",
+            "linePaymentNumber": "1",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "28000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 7,
+          "occupant": "0x2e1b8be48C993159B059A9830F834e1E6d025Fc9",
+          "amount": "40000000",
+          "timestamp": "1779891419",
+          "referrer": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+          "isActive": true,
+          "arrival": "0",
+          "link": {
+            "activationId": "59",
+            "cycleNumber": "1",
+            "isMirror": false
+          },
+          "rule": {
+            "position": "7",
+            "line": "2",
+            "linePaymentNumber": "0",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": true,
+            "toOwner": "36000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 8,
+          "occupant": "0xf1761118B08734B5d51F31c671069E0730EeD018",
+          "amount": "40000000",
+          "timestamp": "1779894219",
+          "referrer": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+          "isActive": true,
+          "arrival": "3",
+          "link": {
+            "activationId": "94",
+            "cycleNumber": "1",
+            "isMirror": false
+          },
+          "rule": {
+            "position": "8",
+            "line": "2",
+            "linePaymentNumber": "3",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "8000000",
+            "toSpillover1": "8000000",
+            "toSpillover2": "20000000",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+            "spillover2Recipient": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470"
+          }
+        },
+        {
+          "slot": 9,
+          "occupant": "0x327f94F642B92b882Ecb9880A5de4e18D518794B",
+          "amount": "40000000",
+          "timestamp": "1780511877",
+          "referrer": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+          "isActive": true,
+          "arrival": "0",
+          "link": {
+            "activationId": "228",
+            "cycleNumber": "1",
+            "isMirror": false
+          },
+          "rule": {
+            "position": "9",
+            "line": "2",
+            "linePaymentNumber": "0",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": true,
+            "toOwner": "36000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 10,
+          "occupant": "0x1D657D118B2322275481F6a3d5900A2BEFbF5312",
+          "amount": "28000000",
+          "timestamp": "1780158086",
+          "referrer": "0x117C9258a95775Ecf448fd086D00cA22506Ea79d",
+          "isActive": true,
+          "arrival": "4",
+          "link": {
+            "activationId": "207",
+            "cycleNumber": "1",
+            "isMirror": true
+          },
+          "rule": {
+            "position": "10",
+            "line": "2",
+            "linePaymentNumber": "4",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "28000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 11,
+          "occupant": "0x31f9a0B00E75456571f77f2fD806479433494e9B",
+          "amount": "28000000",
+          "timestamp": "1781113116",
+          "referrer": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+          "isActive": true,
+          "arrival": "5",
+          "link": {
+            "activationId": "272",
+            "cycleNumber": "1",
+            "isMirror": true
+          },
+          "rule": {
+            "position": "11",
+            "line": "2",
+            "linePaymentNumber": "5",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "28000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 12,
+          "occupant": "0x02A289526936CD78a0c941872A1893e69aB73bF2",
+          "amount": "20000000",
+          "timestamp": "1781260711",
+          "referrer": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+          "isActive": true,
+          "arrival": "6",
+          "link": {
+            "activationId": "282",
+            "cycleNumber": "1",
+            "isMirror": true
+          },
+          "rule": {
+            "position": "12",
+            "line": "2",
+            "linePaymentNumber": "6",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "20000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 13,
+          "occupant": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+          "amount": "20000000",
+          "timestamp": "1781319442",
+          "referrer": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+          "isActive": true,
+          "arrival": "6",
+          "link": {
+            "activationId": "286",
+            "cycleNumber": "1",
+            "isMirror": true
+          },
+          "rule": {
+            "position": "13",
+            "line": "3",
+            "linePaymentNumber": "6",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "20000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 14,
+          "occupant": "0x3508dE31c9252242e2E22bb4BC9C19a4B76f715e",
+          "amount": "20000000",
+          "timestamp": "1781859653",
+          "referrer": "0xBafaFb77a090D7F989aa64D4f867b1B942A50591",
+          "isActive": true,
+          "arrival": "7",
+          "link": {
+            "activationId": "306",
+            "cycleNumber": "1",
+            "isMirror": true
+          },
+          "rule": {
+            "position": "14",
+            "line": "3",
+            "linePaymentNumber": "7",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "20000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 15,
+          "occupant": "0x3F02D99D7398ACdb29b2F6DCA50a0E35908629C1",
+          "amount": "20000000",
+          "timestamp": "1779888341",
+          "referrer": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+          "isActive": true,
+          "arrival": "1",
+          "link": {
+            "activationId": "35",
+            "cycleNumber": "1",
+            "isMirror": true
+          },
+          "rule": {
+            "position": "15",
+            "line": "3",
+            "linePaymentNumber": "1",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "20000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 16,
+          "occupant": "0xdD961Bb674d4749c2812C3EcC4cE6627Aa06984E",
+          "amount": "28000000",
+          "timestamp": "1780008312",
+          "referrer": "0x2e1b8be48C993159B059A9830F834e1E6d025Fc9",
+          "isActive": true,
+          "arrival": "4",
+          "link": {
+            "activationId": "193",
+            "cycleNumber": "1",
+            "isMirror": true
+          },
+          "rule": {
+            "position": "16",
+            "line": "3",
+            "linePaymentNumber": "4",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "28000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 17,
+          "occupant": "0xF67C4b0e01da9D129016E22deE646BB9a438C8d9",
+          "amount": "20000000",
+          "timestamp": "1782295739",
+          "referrer": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+          "isActive": true,
+          "arrival": "9",
+          "link": {
+            "activationId": "323",
+            "cycleNumber": "1",
+            "isMirror": true
+          },
+          "rule": {
+            "position": "17",
+            "line": "3",
+            "linePaymentNumber": "9",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "20000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 19,
+          "occupant": "0x25Ec6900cA5962653DA51BCB0c8A92d475a565bb",
+          "amount": "20000000",
+          "timestamp": "1780159215",
+          "referrer": "0x1D657D118B2322275481F6a3d5900A2BEFbF5312",
+          "isActive": true,
+          "arrival": "5",
+          "link": {
+            "activationId": "211",
+            "cycleNumber": "1",
+            "isMirror": true
+          },
+          "rule": {
+            "position": "19",
+            "line": "3",
+            "linePaymentNumber": "5",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "20000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 23,
+          "occupant": "0x834b9535468aDCEbA7d36E225837FC66e749ba9c",
+          "amount": "20000000",
+          "timestamp": "1782150145",
+          "referrer": "0xBafaFb77a090D7F989aa64D4f867b1B942A50591",
+          "isActive": true,
+          "arrival": "8",
+          "link": {
+            "activationId": "318",
+            "cycleNumber": "1",
+            "isMirror": true
+          },
+          "rule": {
+            "position": "23",
+            "line": "3",
+            "linePaymentNumber": "8",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "20000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 24,
+          "occupant": "0xa1B5a30fAF2032471fBAc7d5A89842c0d80b2372",
+          "amount": "20000000",
+          "timestamp": "1779893416",
+          "referrer": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+          "isActive": true,
+          "arrival": "2",
+          "link": {
+            "activationId": "79",
+            "cycleNumber": "1",
+            "isMirror": true
+          },
+          "rule": {
+            "position": "24",
+            "line": "3",
+            "linePaymentNumber": "2",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "20000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 26,
+          "occupant": "0x7C1f5930B56eb1F3e9D5c47551fB3FfA3e4EE19E",
+          "amount": "20000000",
+          "timestamp": "1793191217",
+          "referrer": "0xf1761118B08734B5d51F31c671069E0730EeD018",
+          "isActive": true,
+          "arrival": "10",
+          "link": {
+            "activationId": "1094",
+            "cycleNumber": "1",
+            "isMirror": true
+          },
+          "rule": {
+            "position": "26",
+            "line": "3",
+            "linePaymentNumber": "10",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "20000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 33,
+          "occupant": "0x4B6990c97184Bb8a95B0f0c972423eC91Ef2c34d",
+          "amount": "20000000",
+          "timestamp": "1779897901",
+          "referrer": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+          "isActive": true,
+          "arrival": "3",
+          "link": {
+            "activationId": "113",
+            "cycleNumber": "1",
+            "isMirror": true
+          },
+          "rule": {
+            "position": "33",
+            "line": "3",
+            "linePaymentNumber": "3",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "20000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "wallet": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "level": 4,
+      "engine": "p4",
+      "state": {
+        "currentPosition": "1",
+        "escrowBalance": "0",
+        "autoUpgradeCompleted": false,
+        "positionsInLine1": "0",
+        "positionsInLine2": "0",
+        "positionsInLine3": "0",
+        "totalCycles": "1",
+        "totalEarned": "288000000"
+      },
+      "counts": {
+        "line1Count": "0",
+        "line2Count": "0",
+        "line3Count": "0"
+      },
+      "positions": []
+    },
+    {
+      "wallet": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "level": 5,
+      "engine": "p12",
+      "state": {
+        "currentPosition": "3",
+        "escrowBalance": "0",
+        "autoUpgradeCompleted": false,
+        "positionsInLine1": "2",
+        "positionsInLine2": "0",
+        "positionsInLine3": "0",
+        "totalCycles": "1",
+        "totalEarned": "1376000000"
+      },
+      "counts": {
+        "line1Count": "2",
+        "line2Count": "0",
+        "line3Count": "0"
+      },
+      "positions": [
+        {
+          "slot": 1,
+          "occupant": "0xcB3169aCcB5CB0ca2F86F609d5765c5a256782dF",
+          "amount": "80000000",
+          "timestamp": "1783696414",
+          "referrer": "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+          "isActive": true,
+          "arrival": "1",
+          "link": {
+            "activationId": "374",
+            "cycleNumber": "2",
+            "isMirror": true
+          },
+          "rule": {
+            "position": "1",
+            "line": "1",
+            "linePaymentNumber": "1",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "80000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 2,
+          "occupant": "0x7C1f5930B56eb1F3e9D5c47551fB3FfA3e4EE19E",
+          "amount": "80000000",
+          "timestamp": "1793198786",
+          "referrer": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+          "isActive": true,
+          "arrival": "2",
+          "link": {
+            "activationId": "1096",
+            "cycleNumber": "2",
+            "isMirror": true
+          },
+          "rule": {
+            "position": "2",
+            "line": "1",
+            "linePaymentNumber": "2",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "80000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "wallet": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "level": 6,
+      "engine": "p39",
+      "state": {
+        "currentPosition": "8",
+        "escrowBalance": "0",
+        "autoUpgradeCompleted": false,
+        "positionsInLine1": "3",
+        "positionsInLine2": "7",
+        "positionsInLine3": "3",
+        "totalCycles": "0",
+        "totalEarned": "2528000000"
+      },
+      "counts": {
+        "line1Count": "1",
+        "line2Count": "6",
+        "line3Count": "3"
+      },
+      "positions": [
+        {
+          "slot": 1,
+          "occupant": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+          "amount": "320000000",
+          "timestamp": "1779885454",
+          "referrer": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+          "isActive": true,
+          "arrival": "0",
+          "link": {
+            "activationId": "16",
+            "cycleNumber": "1",
+            "isMirror": false
+          },
+          "rule": {
+            "position": "1",
+            "line": "1",
+            "linePaymentNumber": "0",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": true,
+            "toOwner": "288000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 2,
+          "occupant": "0x117C9258a95775Ecf448fd086D00cA22506Ea79d",
+          "amount": "320000000",
+          "timestamp": "1779885800",
+          "referrer": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+          "isActive": true,
+          "arrival": "0",
+          "link": {
+            "activationId": "20",
+            "cycleNumber": "1",
+            "isMirror": false
+          },
+          "rule": {
+            "position": "2",
+            "line": "1",
+            "linePaymentNumber": "0",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": true,
+            "toOwner": "288000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 3,
+          "occupant": "0x3F02D99D7398ACdb29b2F6DCA50a0E35908629C1",
+          "amount": "320000000",
+          "timestamp": "1779888460",
+          "referrer": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+          "isActive": true,
+          "arrival": "1",
+          "link": {
+            "activationId": "38",
+            "cycleNumber": "1",
+            "isMirror": false
+          },
+          "rule": {
+            "position": "3",
+            "line": "1",
+            "linePaymentNumber": "1",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "64000000",
+            "toSpillover1": "64000000",
+            "toSpillover2": "160000000",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+            "spillover2Recipient": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470"
+          }
+        },
+        {
+          "slot": 4,
+          "occupant": "0xBafaFb77a090D7F989aa64D4f867b1B942A50591",
+          "amount": "224000000",
+          "timestamp": "1779888108",
+          "referrer": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+          "isActive": true,
+          "arrival": "1",
+          "link": {
+            "activationId": "31",
+            "cycleNumber": "1",
+            "isMirror": true
+          },
+          "rule": {
+            "position": "4",
+            "line": "2",
+            "linePaymentNumber": "1",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "224000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 5,
+          "occupant": "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+          "amount": "320000000",
+          "timestamp": "1779889668",
+          "referrer": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+          "isActive": true,
+          "arrival": "0",
+          "link": {
+            "activationId": "44",
+            "cycleNumber": "1",
+            "isMirror": false
+          },
+          "rule": {
+            "position": "5",
+            "line": "2",
+            "linePaymentNumber": "0",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": true,
+            "toOwner": "288000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 6,
+          "occupant": "0xcB3169aCcB5CB0ca2F86F609d5765c5a256782dF",
+          "amount": "160000000",
+          "timestamp": "1784559807",
+          "referrer": "0xD39dB4B1535bcC980915Bb5e92C601783213F06A",
+          "isActive": true,
+          "arrival": "2",
+          "link": {
+            "activationId": "536",
+            "cycleNumber": "1",
+            "isMirror": true
+          },
+          "rule": {
+            "position": "6",
+            "line": "2",
+            "linePaymentNumber": "2",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "160000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 7,
+          "occupant": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+          "amount": "64000000",
+          "timestamp": "1793504041",
+          "referrer": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+          "isActive": true,
+          "arrival": "5",
+          "link": {
+            "activationId": "1124",
+            "cycleNumber": "1",
+            "isMirror": true
+          },
+          "rule": {
+            "position": "7",
+            "line": "2",
+            "linePaymentNumber": "5",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "64000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 9,
+          "occupant": "0x5b511a2b0e4db2CA73B276969f3A52661aEf12f1",
+          "amount": "64000000",
+          "timestamp": "1791923221",
+          "referrer": "0x3F02D99D7398ACdb29b2F6DCA50a0E35908629C1",
+          "isActive": true,
+          "arrival": "3",
+          "link": {
+            "activationId": "1036",
+            "cycleNumber": "1",
+            "isMirror": true
+          },
+          "rule": {
+            "position": "9",
+            "line": "2",
+            "linePaymentNumber": "3",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "64000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 10,
+          "occupant": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+          "amount": "160000000",
+          "timestamp": "1793504041",
+          "referrer": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+          "isActive": true,
+          "arrival": "6",
+          "link": {
+            "activationId": "1124",
+            "cycleNumber": "1",
+            "isMirror": true
+          },
+          "rule": {
+            "position": "10",
+            "line": "2",
+            "linePaymentNumber": "6",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "160000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 12,
+          "occupant": "0x5b511a2b0e4db2CA73B276969f3A52661aEf12f1",
+          "amount": "160000000",
+          "timestamp": "1791923221",
+          "referrer": "0x3F02D99D7398ACdb29b2F6DCA50a0E35908629C1",
+          "isActive": true,
+          "arrival": "4",
+          "link": {
+            "activationId": "1036",
+            "cycleNumber": "1",
+            "isMirror": true
+          },
+          "rule": {
+            "position": "12",
+            "line": "2",
+            "linePaymentNumber": "4",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "160000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 14,
+          "occupant": "0x863447369632EA4AaC724683c1D448C68e2f1ADE",
+          "amount": "224000000",
+          "timestamp": "1779889769",
+          "referrer": "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+          "isActive": true,
+          "arrival": "1",
+          "link": {
+            "activationId": "49",
+            "cycleNumber": "1",
+            "isMirror": true
+          },
+          "rule": {
+            "position": "14",
+            "line": "3",
+            "linePaymentNumber": "1",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "224000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 15,
+          "occupant": "0x33a228Ed5926985Ad9FF6010d2a9e43BcFc7F35f",
+          "amount": "160000000",
+          "timestamp": "1784563522",
+          "referrer": "0xcB3169aCcB5CB0ca2F86F609d5765c5a256782dF",
+          "isActive": true,
+          "arrival": "2",
+          "link": {
+            "activationId": "544",
+            "cycleNumber": "1",
+            "isMirror": true
+          },
+          "rule": {
+            "position": "15",
+            "line": "3",
+            "linePaymentNumber": "2",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "160000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 21,
+          "occupant": "0x97a9D413D35D02E84f936e1a05e7262b90BB3F82",
+          "amount": "160000000",
+          "timestamp": "1793283284",
+          "referrer": "0xE8b1ac47231651cCc38326a59645a8D976D0Eabf",
+          "isActive": true,
+          "arrival": "3",
+          "link": {
+            "activationId": "1107",
+            "cycleNumber": "1",
+            "isMirror": true
+          },
+          "rule": {
+            "position": "21",
+            "line": "3",
+            "linePaymentNumber": "3",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "160000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "wallet": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "level": 7,
+      "engine": "p4",
+      "state": {
+        "currentPosition": "3",
+        "escrowBalance": "0",
+        "autoUpgradeCompleted": false,
+        "positionsInLine1": "2",
+        "positionsInLine2": "0",
+        "positionsInLine3": "0",
+        "totalCycles": "0",
+        "totalEarned": "1152000000"
+      },
+      "counts": {
+        "line1Count": "0",
+        "line2Count": "0",
+        "line3Count": "0"
+      },
+      "positions": [
+        {
+          "slot": 1,
+          "occupant": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+          "amount": "640000000",
+          "timestamp": "1779885503",
+          "referrer": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+          "isActive": true,
+          "arrival": "0",
+          "link": {
+            "activationId": "17",
+            "cycleNumber": "1",
+            "isMirror": false
+          },
+          "rule": {
+            "position": "1",
+            "line": "1",
+            "linePaymentNumber": "0",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": true,
+            "toOwner": "576000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 2,
+          "occupant": "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+          "amount": "640000000",
+          "timestamp": "1779891827",
+          "referrer": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+          "isActive": true,
+          "arrival": "0",
+          "link": {
+            "activationId": "63",
+            "cycleNumber": "1",
+            "isMirror": false
+          },
+          "rule": {
+            "position": "2",
+            "line": "1",
+            "linePaymentNumber": "0",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": true,
+            "toOwner": "576000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "wallet": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "level": 8,
+      "engine": "p12",
+      "state": {
+        "currentPosition": "4",
+        "escrowBalance": "0",
+        "autoUpgradeCompleted": false,
+        "positionsInLine1": "3",
+        "positionsInLine2": "1",
+        "positionsInLine3": "0",
+        "totalCycles": "0",
+        "totalEarned": "5248000000"
+      },
+      "counts": {
+        "line1Count": "1",
+        "line2Count": "1",
+        "line3Count": "0"
+      },
+      "positions": [
+        {
+          "slot": 1,
+          "occupant": "0xE8b1ac47231651cCc38326a59645a8D976D0Eabf",
+          "amount": "1280000000",
+          "timestamp": "1779894396",
+          "referrer": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+          "isActive": true,
+          "arrival": "1",
+          "link": {
+            "activationId": "97",
+            "cycleNumber": "1",
+            "isMirror": false
+          },
+          "rule": {
+            "position": "1",
+            "line": "1",
+            "linePaymentNumber": "1",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "512000000",
+            "toSpillover1": "640000000",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 2,
+          "occupant": "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+          "amount": "1280000000",
+          "timestamp": "1779898089",
+          "referrer": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+          "isActive": true,
+          "arrival": "0",
+          "link": {
+            "activationId": "116",
+            "cycleNumber": "1",
+            "isMirror": false
+          },
+          "rule": {
+            "position": "2",
+            "line": "1",
+            "linePaymentNumber": "0",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": true,
+            "toOwner": "1152000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 3,
+          "occupant": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+          "amount": "1280000000",
+          "timestamp": "1793705170",
+          "referrer": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+          "isActive": true,
+          "arrival": "0",
+          "link": {
+            "activationId": "1132",
+            "cycleNumber": "1",
+            "isMirror": false
+          },
+          "rule": {
+            "position": "3",
+            "line": "1",
+            "linePaymentNumber": "0",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": true,
+            "toOwner": "1152000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "slot": 5,
+          "occupant": "0x3F02D99D7398ACdb29b2F6DCA50a0E35908629C1",
+          "amount": "640000000",
+          "timestamp": "1784815731",
+          "referrer": "0xAa254e8e177dE104D9F87211b0f4a6B7eC71306A",
+          "isActive": true,
+          "arrival": "1",
+          "link": {
+            "activationId": "650",
+            "cycleNumber": "1",
+            "isMirror": true
+          },
+          "rule": {
+            "position": "5",
+            "line": "2",
+            "linePaymentNumber": "1",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "640000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "wallet": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "level": 9,
+      "engine": "p39",
+      "state": {
+        "currentPosition": "3",
+        "escrowBalance": "0",
+        "autoUpgradeCompleted": false,
+        "positionsInLine1": "2",
+        "positionsInLine2": "0",
+        "positionsInLine3": "0",
+        "totalCycles": "0",
+        "totalEarned": "6912000000"
+      },
+      "counts": {
+        "line1Count": "1",
+        "line2Count": "0",
+        "line3Count": "0"
+      },
+      "positions": [
+        {
+          "slot": 1,
+          "occupant": "0xE8b1ac47231651cCc38326a59645a8D976D0Eabf",
+          "amount": "2560000000",
+          "timestamp": "1779894463",
+          "referrer": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+          "isActive": true,
+          "arrival": "1",
+          "link": {
+            "activationId": "98",
+            "cycleNumber": "1",
+            "isMirror": false
+          },
+          "rule": {
+            "position": "1",
+            "line": "1",
+            "linePaymentNumber": "1",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": false,
+            "toOwner": "512000000",
+            "toSpillover1": "512000000",
+            "toSpillover2": "1280000000",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+            "spillover2Recipient": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470"
+          }
+        },
+        {
+          "slot": 2,
+          "occupant": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+          "amount": "2560000000",
+          "timestamp": "1794384955",
+          "referrer": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+          "isActive": true,
+          "arrival": "0",
+          "link": {
+            "activationId": "1171",
+            "cycleNumber": "1",
+            "isMirror": false
+          },
+          "rule": {
+            "position": "2",
+            "line": "1",
+            "linePaymentNumber": "0",
+            "autoUpgradeEnabled": false,
+            "isFounderNoReferrerPath": true,
+            "toOwner": "2304000000",
+            "toSpillover1": "0",
+            "toSpillover2": "0",
+            "toEscrow": "0",
+            "toRecycle": "0",
+            "spillover1Recipient": "0x0000000000000000000000000000000000000000",
+            "spillover2Recipient": "0x0000000000000000000000000000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "wallet": "0xCE38722a72c9099D9237897E18B0cfb6D51c4470",
+      "level": 10,
+      "engine": "p4",
+      "state": {
+        "currentPosition": "0",
+        "escrowBalance": "0",
+        "autoUpgradeCompleted": false,
+        "positionsInLine1": "0",
+        "positionsInLine2": "0",
+        "positionsInLine3": "0",
+        "totalCycles": "0",
+        "totalEarned": "0"
+      },
+      "counts": {
+        "line1Count": "0",
+        "line2Count": "0",
+        "line3Count": "0"
+      },
+      "positions": []
+    },
+    {
+      "wallet": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+      "level": 8,
+      "engine": "p12",
+      "state": {
+        "currentPosition": "0",
+        "escrowBalance": "0",
+        "autoUpgradeCompleted": false,
+        "positionsInLine1": "0",
+        "positionsInLine2": "0",
+        "positionsInLine3": "0",
+        "totalCycles": "0",
+        "totalEarned": "0"
+      },
+      "counts": {
+        "line1Count": "0",
+        "line2Count": "0",
+        "line3Count": "0"
+      },
+      "positions": []
+    },
+    {
+      "wallet": "0xEA2bCf620d164Af63fba2F832C5F37E9eABdC528",
+      "level": 9,
+      "engine": "p39",
+      "state": {
+        "currentPosition": "0",
+        "escrowBalance": "0",
+        "autoUpgradeCompleted": false,
+        "positionsInLine1": "0",
+        "positionsInLine2": "0",
+        "positionsInLine3": "0",
+        "totalCycles": "0",
+        "totalEarned": "0"
+      },
+      "counts": {
+        "line1Count": "0",
+        "line2Count": "0",
+        "line3Count": "0"
+      },
+      "positions": []
+    },
+    {
+      "wallet": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "level": 8,
+      "engine": "p12",
+      "state": {
+        "currentPosition": "0",
+        "escrowBalance": "0",
+        "autoUpgradeCompleted": false,
+        "positionsInLine1": "0",
+        "positionsInLine2": "0",
+        "positionsInLine3": "0",
+        "totalCycles": "0",
+        "totalEarned": "0"
+      },
+      "counts": {
+        "line1Count": "0",
+        "line2Count": "0",
+        "line3Count": "0"
+      },
+      "positions": []
+    },
+    {
+      "wallet": "0xb673c9D14Da920f187d25Cc793f1955a43284622",
+      "level": 9,
+      "engine": "p39",
+      "state": {
+        "currentPosition": "0",
+        "escrowBalance": "0",
+        "autoUpgradeCompleted": false,
+        "positionsInLine1": "0",
+        "positionsInLine2": "0",
+        "positionsInLine3": "0",
+        "totalCycles": "0",
+        "totalEarned": "0"
+      },
+      "counts": {
+        "line1Count": "0",
+        "line2Count": "0",
+        "line3Count": "0"
+      },
+      "positions": []
+    },
+    {
+      "wallet": "0xE8b1ac47231651cCc38326a59645a8D976D0Eabf",
+      "level": 8,
+      "engine": "p12",
+      "state": {
+        "currentPosition": "0",
+        "escrowBalance": "0",
+        "autoUpgradeCompleted": false,
+        "positionsInLine1": "0",
+        "positionsInLine2": "0",
+        "positionsInLine3": "0",
+        "totalCycles": "0",
+        "totalEarned": "0"
+      },
+      "counts": {
+        "line1Count": "0",
+        "line2Count": "0",
+        "line3Count": "0"
+      },
+      "positions": []
+    },
+    {
+      "wallet": "0xE8b1ac47231651cCc38326a59645a8D976D0Eabf",
+      "level": 9,
+      "engine": "p39",
+      "state": {
+        "currentPosition": "0",
+        "escrowBalance": "0",
+        "autoUpgradeCompleted": false,
+        "positionsInLine1": "0",
+        "positionsInLine2": "0",
+        "positionsInLine3": "0",
+        "totalCycles": "0",
+        "totalEarned": "0"
+      },
+      "counts": {
+        "line1Count": "0",
+        "line2Count": "0",
+        "line3Count": "0"
+      },
+      "positions": []
+    }
+  ],
+  "writes": 0,
+  "managerOwner": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+  "registrationOwner": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+  "usdt": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+  "nftPool": "0xbb2cF7ef867F46A93ae1F9DEd564927874b79B52",
+  "operationsWallet": "0x3ee9B4913e175c15B2Ef76Ac352B6737210248Fb"
+}

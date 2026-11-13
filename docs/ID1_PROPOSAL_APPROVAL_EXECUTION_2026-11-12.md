@@ -1,5 +1,15 @@
 # ID1 repair: founder approval and execution instructions
 
+> WITHDRAWN 2026-11-13: do not approve or execute proposals 130-159.
+> The replacement repair preserves Sabina's seats. This document is historical
+> evidence, not current signing instructions. UI withdrawal is not on-chain
+> cancellation. See `ID1_ALTERNATIVE_REPAIR_2026-11-13.md` for the current gates.
+
+> WITHDRAWN 2026-11-13: do not approve or execute proposals 130-159.
+> The replacement repair preserves Sabina's seats. This document is historical
+> evidence, not current signing instructions. UI withdrawal is not on-chain
+> cancellation. See `ID1_ALTERNATIVE_REPAIR_2026-11-13.md` for the current gates.
+
 ## What is ready
 
 All **30 proposals, 130 through 159 inclusive**, are submitted on **Polygon

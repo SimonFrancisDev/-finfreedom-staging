@@ -1,0 +1,468 @@
+{
+  "chainId": 137,
+  "block": 97252314,
+  "blockHash": "0x2b233c8f9f59b47143e0683c607ec4bfe48e0313aef359fb08aa8e77cf70ffe6",
+  "timestamp": "2026-11-13T15:32:07.000Z",
+  "governance": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+  "runtimeHash": "0x39381be5a244f93beb7d4f297de0f4cd7a211cb0676d67f5e4decefba4fcc0fa",
+  "originalPackageSha256": "c8e36fa60e65b33cb50ac3d04e8dfabbcbccb169800050a79685eb4b6e11cf5c",
+  "requiredConfirmations": "3",
+  "liveWrites": 0,
+  "status": "unsigned-cancellation-plan-not-submitted",
+  "proposals": [
+    {
+      "id": 130,
+      "label": "Approve p4 implementation set",
+      "payloadHash": "0x14946649fdd31231c345192f77bf8422cdc04b8ba8ff6ebd16ffccf1089c1470",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    },
+    {
+      "id": 131,
+      "label": "Approve p12 implementation set",
+      "payloadHash": "0x7e5f9c08588e1559f79c5a1e6e224101f1454c636eb52c6ff6a3294d2d8785c7",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    },
+    {
+      "id": 132,
+      "label": "Approve p39 implementation set",
+      "payloadHash": "0x883deca61ed29a2d245f215ab12583f557e8007d6cfb04ea57fe353aa9da1a84",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    },
+    {
+      "id": 133,
+      "label": "Approve registration implementation set",
+      "payloadHash": "0xabdad2109d5d92ccd8ff8fe61e89d5d6cedbef9b3eecf36df62f448638ddb8c8",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    },
+    {
+      "id": 134,
+      "label": "Approve manager implementation set",
+      "payloadHash": "0x3a54b0f786079be9adbf88ff03f9c8dcedc796034a23251e58a81628bbf45842",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    },
+    {
+      "id": 135,
+      "label": "Pause registration",
+      "payloadHash": "0x7c85f13cbc00e94f65b56843fd4599d9ebf4603adcd733a14a54c28d66dd332e",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    },
+    {
+      "id": 136,
+      "label": "Pause manager",
+      "payloadHash": "0x7c85f13cbc00e94f65b56843fd4599d9ebf4603adcd733a14a54c28d66dd332e",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    },
+    {
+      "id": 137,
+      "label": "Pause p4",
+      "payloadHash": "0x7c85f13cbc00e94f65b56843fd4599d9ebf4603adcd733a14a54c28d66dd332e",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    },
+    {
+      "id": 138,
+      "label": "Pause p12",
+      "payloadHash": "0x7c85f13cbc00e94f65b56843fd4599d9ebf4603adcd733a14a54c28d66dd332e",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    },
+    {
+      "id": 139,
+      "label": "Pause p39",
+      "payloadHash": "0x7c85f13cbc00e94f65b56843fd4599d9ebf4603adcd733a14a54c28d66dd332e",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    },
+    {
+      "id": 140,
+      "label": "Install bound p4 repair implementation",
+      "payloadHash": "0x73b7979b601851a756a06c3640a73cf62b0990ecb923c604dc4b27247fe43a11",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    },
+    {
+      "id": 141,
+      "label": "Install bound p12 repair implementation",
+      "payloadHash": "0xa9486ca8d6bf584e35eabb14056d2e64f0c59bd6ff540fcb99379cc8b3f9f8a8",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    },
+    {
+      "id": 142,
+      "label": "Install bound p39 repair implementation",
+      "payloadHash": "0x57538274871cb38f5160994659cf17547cf544a098672612a4b59c7d98629ec8",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    },
+    {
+      "id": 143,
+      "label": "Install bound registration repair implementation",
+      "payloadHash": "0xeec4ab2b51b64f32b05ee63fdbfda3dc700d903210d30d28a3bb949d7112474e",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    },
+    {
+      "id": 144,
+      "label": "Apply structural-only repair; level 6 excluded; no token transfer",
+      "payloadHash": "0xb8ed4aa65c6b71d5f1e461f75ed72ee1fc360b1e62bea1324deb8568aa13dc64",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    },
+    {
+      "id": 145,
+      "label": "Install final p4 implementation",
+      "payloadHash": "0x5e3b5d7b020b097b0e458a5ca263cdc566e0efd15459843ac6c03a599cfcb41e",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    },
+    {
+      "id": 146,
+      "label": "Install final p12 implementation",
+      "payloadHash": "0x90d66ee17f110e1cbf9d5b9bae8ddba036bab718b43800dbbbc6304f8626c5aa",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    },
+    {
+      "id": 147,
+      "label": "Install final p39 implementation",
+      "payloadHash": "0x9fbff74ad43d359bf21f64f8ed9146cacd7ee468570035e6daa063c7ef4119db",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    },
+    {
+      "id": 148,
+      "label": "Install final registration implementation",
+      "payloadHash": "0x6bce61ae7d9f68592f4064337dad272837002523c185e43a20ec1aafed1b99d7",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    },
+    {
+      "id": 149,
+      "label": "Install final manager implementation",
+      "payloadHash": "0xe7fcbbe86679cebedf1742e00961330023d606ea12a2788206808cd665e32d25",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    },
+    {
+      "id": 150,
+      "label": "Bind matching revision-2 settlement router",
+      "payloadHash": "0x66392c582cfed8d6de7895dd64b225fcd614e0fcccec2e1e36604831aaa5ca78",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    },
+    {
+      "id": 151,
+      "label": "Revoke temporary p4 repair implementation",
+      "payloadHash": "0xc2831b86e746fd194499992fdb7ed4573490190c4a06efbe4c1e6805d67ad5de",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    },
+    {
+      "id": 152,
+      "label": "Revoke temporary p12 repair implementation",
+      "payloadHash": "0x4117156765a55b52ae1667b577c3cbff7d2172eecd1481e5e0a805296f27a33e",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    },
+    {
+      "id": 153,
+      "label": "Revoke temporary p39 repair implementation",
+      "payloadHash": "0x1f8c03dbadb80c57551bc6a497ab8e9a7ea4dd563dff2559037e16466dc78036",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    },
+    {
+      "id": 154,
+      "label": "Revoke temporary registration repair implementation",
+      "payloadHash": "0xa93b268315196e6f95be960dfa820121a55e9bd563a5f8cd04d7dea735255b7f",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    },
+    {
+      "id": 155,
+      "label": "Reopen p4 ONLY after verification",
+      "payloadHash": "0x2e0b3eaf0cdee5e3edb3587a639f993dc24c3ed89ce7321ef60ccd2d17df98b1",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    },
+    {
+      "id": 156,
+      "label": "Reopen p12 ONLY after verification",
+      "payloadHash": "0x2e0b3eaf0cdee5e3edb3587a639f993dc24c3ed89ce7321ef60ccd2d17df98b1",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    },
+    {
+      "id": 157,
+      "label": "Reopen p39 ONLY after verification",
+      "payloadHash": "0x2e0b3eaf0cdee5e3edb3587a639f993dc24c3ed89ce7321ef60ccd2d17df98b1",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    },
+    {
+      "id": 158,
+      "label": "Reopen manager ONLY after verification",
+      "payloadHash": "0x2e0b3eaf0cdee5e3edb3587a639f993dc24c3ed89ce7321ef60ccd2d17df98b1",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    },
+    {
+      "id": 159,
+      "label": "Reopen registration ONLY after verification",
+      "payloadHash": "0x2e0b3eaf0cdee5e3edb3587a639f993dc24c3ed89ce7321ef60ccd2d17df98b1",
+      "confirmations": "0",
+      "cancelled": false,
+      "executed": false
+    }
+  ],
+  "cancellationCalls": [
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000082",
+      "label": "Cancel superseded ID1 proposal 130",
+      "retires": 130
+    },
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000083",
+      "label": "Cancel superseded ID1 proposal 131",
+      "retires": 131
+    },
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000084",
+      "label": "Cancel superseded ID1 proposal 132",
+      "retires": 132
+    },
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000085",
+      "label": "Cancel superseded ID1 proposal 133",
+      "retires": 133
+    },
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000086",
+      "label": "Cancel superseded ID1 proposal 134",
+      "retires": 134
+    },
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000087",
+      "label": "Cancel superseded ID1 proposal 135",
+      "retires": 135
+    },
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000088",
+      "label": "Cancel superseded ID1 proposal 136",
+      "retires": 136
+    },
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000089",
+      "label": "Cancel superseded ID1 proposal 137",
+      "retires": 137
+    },
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d8000000000000000000000000000000000000000000000000000000000000008a",
+      "label": "Cancel superseded ID1 proposal 138",
+      "retires": 138
+    },
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d8000000000000000000000000000000000000000000000000000000000000008b",
+      "label": "Cancel superseded ID1 proposal 139",
+      "retires": 139
+    },
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d8000000000000000000000000000000000000000000000000000000000000008c",
+      "label": "Cancel superseded ID1 proposal 140",
+      "retires": 140
+    },
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d8000000000000000000000000000000000000000000000000000000000000008d",
+      "label": "Cancel superseded ID1 proposal 141",
+      "retires": 141
+    },
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d8000000000000000000000000000000000000000000000000000000000000008e",
+      "label": "Cancel superseded ID1 proposal 142",
+      "retires": 142
+    },
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d8000000000000000000000000000000000000000000000000000000000000008f",
+      "label": "Cancel superseded ID1 proposal 143",
+      "retires": 143
+    },
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000090",
+      "label": "Cancel superseded ID1 proposal 144",
+      "retires": 144
+    },
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000091",
+      "label": "Cancel superseded ID1 proposal 145",
+      "retires": 145
+    },
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000092",
+      "label": "Cancel superseded ID1 proposal 146",
+      "retires": 146
+    },
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000093",
+      "label": "Cancel superseded ID1 proposal 147",
+      "retires": 147
+    },
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000094",
+      "label": "Cancel superseded ID1 proposal 148",
+      "retires": 148
+    },
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000095",
+      "label": "Cancel superseded ID1 proposal 149",
+      "retires": 149
+    },
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000096",
+      "label": "Cancel superseded ID1 proposal 150",
+      "retires": 150
+    },
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000097",
+      "label": "Cancel superseded ID1 proposal 151",
+      "retires": 151
+    },
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000098",
+      "label": "Cancel superseded ID1 proposal 152",
+      "retires": 152
+    },
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d80000000000000000000000000000000000000000000000000000000000000099",
+      "label": "Cancel superseded ID1 proposal 153",
+      "retires": 153
+    },
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d8000000000000000000000000000000000000000000000000000000000000009a",
+      "label": "Cancel superseded ID1 proposal 154",
+      "retires": 154
+    },
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d8000000000000000000000000000000000000000000000000000000000000009b",
+      "label": "Cancel superseded ID1 proposal 155",
+      "retires": 155
+    },
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d8000000000000000000000000000000000000000000000000000000000000009c",
+      "label": "Cancel superseded ID1 proposal 156",
+      "retires": 156
+    },
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d8000000000000000000000000000000000000000000000000000000000000009d",
+      "label": "Cancel superseded ID1 proposal 157",
+      "retires": 157
+    },
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d8000000000000000000000000000000000000000000000000000000000000009e",
+      "label": "Cancel superseded ID1 proposal 158",
+      "retires": 158
+    },
+    {
+      "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "value": "0",
+      "data": "0x3380c0d8000000000000000000000000000000000000000000000000000000000000009f",
+      "label": "Cancel superseded ID1 proposal 159",
+      "retires": 159
+    }
+  ],
+  "allOldProposalsCancelled": false,
+  "replacementSubmissionAllowed": false
+}

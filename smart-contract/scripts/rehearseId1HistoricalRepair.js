@@ -5,7 +5,11 @@ const path = require("node:path");
 const hre = require("hardhat");
 const { assertStorageUpgradeSafe } = require("@openzeppelin/upgrades-core");
 const { addresses: A, baselineContract, fundLocalReplayBalance } = require("./rehearseId1PrimaryPlacement");
-const { plain, buildOrbitEdit, encodeOrbitPlan, encodeParentPlan } = require("./lib/id1HistoricalRepairPlan");
+const alternative = process.env.ID1_REPAIR_PLAN === "sabina-preserved-2026-11-13";
+assert([undefined, "sabina-preserved-2026-11-13"].includes(process.env.ID1_REPAIR_PLAN), "Unknown repair policy");
+const planModule = alternative ? "./lib/id1AlternativeRepairPlan" : "./lib/id1HistoricalRepairPlan";
+const { plain, buildOrbitEdit, encodeOrbitPlan, encodeParentPlan } = require(planModule);
+const { primeForkOrbitStorage } = require("./lib/primeForkOrbitStorage");
 const { ethers: E, network: N, artifacts } = hre;
 const IMPL = "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc";
 const MIGRATION = "contracts/migration/Id1HistoricalRepair.sol";
@@ -14,9 +18,11 @@ const json = (x) => JSON.stringify(x, (_, v) => typeof v === "bigint" ? v.toStri
 const same = (a, b) => assert.equal(a.toLowerCase(), b.toLowerCase());
 const evidence = { sourceChainId: 137, executionChainId: 31337, liveTransactionsSent: 0, status: "in-progress", phases: [], checks: [] };
 const directOnly = process.env.ID1_REHEARSAL_GOVERNANCE === "direct";
-const output = path.join(ROOT, directOnly
+const output = path.join(ROOT, alternative
+  ? `tmp/id1-alternative-repair-${directOnly ? "direct-" : ""}rehearsal.json` : directOnly
   ? "tmp/id1-structural-repair-direct-rehearsal.json" : "tmp/id1-structural-repair-rehearsal.json");
 evidence.governanceMode = directOnly ? "direct-local-call-not-governance-certification" : "multisig";
+evidence.repairPolicy = alternative ? "sabina-preserved-2026-11-13" : "chronological-2026-11-12";
 function record(phase, data = {}) {
   evidence.phases.push({ phase, ...data });
   fs.writeFileSync(output, json(evidence) + "\n");
@@ -48,7 +54,8 @@ async function main() {
   const rpc = process.env.ID1_MAINNET_REPLAY_RPC;
   const baseline = process.env.ID1_BASELINE_BUILD_INFO;
   assert(rpc && baseline, "Source RPC and bytecode baseline are required");
-  const snapshot = JSON.parse(fs.readFileSync(path.join(ROOT, "tmp/id1-repair-prestate.json"), "utf8"));
+  const snapshot = JSON.parse(fs.readFileSync(path.join(ROOT, alternative
+    ? "tmp/id1-alternative-repair-prestate.json" : "tmp/id1-repair-prestate.json"), "utf8"));
   const source = new E.JsonRpcProvider(rpc);
   try {
     assert.equal((await source.getNetwork()).chainId, 137n);
@@ -59,7 +66,8 @@ async function main() {
   evidence.snapshotTimestamp = snapshot.timestamp;
   evidence.candidateSources = Object.fromEntries([
     "contracts/migration/Id1HistoricalRepair.sol", "scripts/rehearseId1HistoricalRepair.js",
-    "scripts/lib/id1HistoricalRepairPlan.js",
+    "scripts/lib/id1HistoricalRepairPlan.js", "scripts/lib/primeForkOrbitStorage.js",
+    ...(alternative ? ["scripts/lib/id1AlternativeRepairPlan.js"] : []),
   ].map(file => [file, require("node:crypto").createHash("sha256")
     .update(fs.readFileSync(path.resolve(__dirname, "..", file))).digest("hex")]));
   await N.provider.send("hardhat_reset", [{ forking: { jsonRpcUrl: rpc, blockNumber: snapshot.block } }]);
@@ -73,7 +81,7 @@ async function main() {
   const [deployer, stranger, child] = await E.getSigners();
   const definitions = [
     ["p4", "P4Orbit", "Id1P4RepairMigrator", [[A.id1, 1], [A.id1, 7]]],
-    ["p12", "P12Orbit", "Id1MultiRingRepairMigrator", [[A.id1, 8], [A.parent, 8]]],
+    ["p12", "P12Orbit", "Id1MultiRingRepairMigrator", [[A.id1, 8], [alternative ? A.sabina : A.parent, 8]]],
     ["p39", "P39Orbit", "Id1MultiRingRepairMigrator", [[A.id1, 3], [A.id1, 9]]],
     ["registration", "RegistrationFixed", "Id1RegistrationRepairMigrator", []],
     ["manager", "LevelManager", null, []],
@@ -89,6 +97,15 @@ async function main() {
     same(await contract.owner(), governanceAddress);
     const originalImplementation = E.getAddress("0x" + (await E.provider.getStorage(A[key], IMPL)).slice(-40));
     const original = baselineContract(baseline, `contracts/${name}.sol`, name, await E.provider.getCode(originalImplementation));
+    if (alternative && keys.length) {
+      const watched = key === "p39" ? [...keys, [A.id1, 6]] : keys;
+      const count = await primeForkOrbitStorage({ network: N, rpc, block: snapshot.block, proxy: A[key],
+        layout: original.storageLayout, rows: watched.map(([wallet, level]) => ({ wallet, level,
+          capacity: key === "p4" ? 4 : key === "p12" ? 12 : 39,
+          totalCycles: snapshot.orbits.find(row => row.wallet.toLowerCase() === wallet.toLowerCase() && row.level === level).state.totalCycles,
+        })), progress: data => record("pinned-source-storage-cached-locally", data) });
+      evidence.checks.push({ label: `${key} storage primed exclusively from pinned mainnet reads`, slots: count, passed: true });
+    }
     const currentLayout = await layout(`contracts/${name}.sol`, name);
     assertStorageUpgradeSafe(original.storageLayout, currentLayout, false);
     const entry = { key, name, migrator, proxy: A[key], originalImplementation,
@@ -396,9 +413,9 @@ async function main() {
   }
   assert.equal((await records.find(r => r.key === "p39").repair.repairState(A.id1, 6))[0], deferredBefore[0]);
   evidence.deferredLevel6.unchangedByRepair = true;
-  same(await registration.currentMatrixParentOf(A.sofia, 8), A.id1);
+  same(await registration.currentMatrixParentOf(A.sofia, 8), alternative ? A.sabina : A.id1);
   same(await registration.currentMatrixParentOf(A.sofia, 9), A.id1);
-  same(await registration.currentMatrixParentOf(A.sabina, 8), A.parent);
+  same(await registration.currentMatrixParentOf(A.sabina, 8), alternative ? A.id1 : A.parent);
   same(await registration.currentMatrixParentOf(A.sabina, 9), A.id1);
   evidence.checks.push({ label: "zero transfers and earnings credits; immutable sponsors/activations/tokens/completed cycles; exact positions; no replay", passed: true });
   record("historical-repair-passed", { gasUsed: receipt.gasUsed, repairTransferRaw: 0n });
@@ -458,7 +475,11 @@ async function main() {
     await N.provider.send("evm_revert", [checkpoint]);
     record("deferred-level6-cycle-probe-passed", { arrivals: fills.length, reserveFills: reserveFills.length, reserveRaw: 320000000n });
   }
-  for (const [upline, level, rootSlot, recipient, recipientAmount] of [
+  for (const [upline, level, rootSlot, recipient, recipientAmount] of alternative ? [
+    [A.sofia, 8, 0, A.sofia, 512000000n],
+    [A.sabina, 8, 9, A.sabina, 512000000n],
+    [A.sofia, 9, 6, A.sofia, 512000000n],
+  ] : [
     [A.sofia, 8, 6, A.sofia, 512000000n],
     [A.sabina, 8, 0, A.parent, 640000000n],
     [A.sofia, 9, 5, A.sofia, 512000000n],
@@ -470,12 +491,22 @@ async function main() {
     await (await registration.connect(child).register(upline)).wait();
     for (let l = 2; l < level; l += 1) await (await registration.connect(child).activateLevel(l)).wait();
     const balance = await token.balanceOf(recipient);
+    const sabinaBalance = await token.balanceOf(A.sabina);
     const activation = await (await registration.connect(child).activateLevel(level)).wait();
     assert.equal((await token.balanceOf(recipient)) - balance, recipientAmount);
     const engine = level === 8 ? engines.p12 : engines.p39;
     if (rootSlot) same((await engine.getPosition(A.id1, level, rootSlot)).occupant, child.address);
-    if (upline === A.sabina) same((await engine.getPosition(A.parent, 8, 4)).occupant, child.address);
-    same((await engine.getPosition(upline, level, 1)).occupant, child.address);
+    if (!alternative && upline === A.sabina) same((await engine.getPosition(A.parent, 8, 4)).occupant, child.address);
+    same((await engine.getPosition(upline, level, alternative && upline === A.sabina ? 2 : 1)).occupant, child.address);
+    if (alternative && level === 8) {
+      same((await engine.getPosition(A.id1, 8, 3)).occupant, A.sabina);
+      same((await engine.getPosition(A.id1, 8, 6)).occupant, A.sofia);
+      same((await engine.getPosition(A.parent, 8, 1)).occupant, E.ZeroAddress);
+      if (upline === A.sofia) {
+        same((await engine.getPosition(A.sabina, 8, 4)).occupant, child.address);
+        assert.equal((await token.balanceOf(A.sabina)) - sabinaBalance, 640000000n);
+      }
+    }
     const summary = activation.logs.map((l) => { try { return manager.interface.parseLog(l); } catch { return null; } })
       .find((l) => l?.name === "ActivationFinancialSummaryRecorded");
     assert(summary);

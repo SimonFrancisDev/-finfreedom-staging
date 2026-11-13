@@ -72,7 +72,8 @@ async function main() {
     report.usdt = await manager.usdt({ blockTag });
     report.nftPool = await manager.nftPool({ blockTag });
     report.operationsWallet = await manager.operationsWallet({ blockTag });
-    const output = path.resolve(__dirname, "../../../tmp/id1-repair-prestate.json");
+    const output = path.resolve(__dirname, process.env.ID1_REPAIR_PLAN === "sabina-preserved-2026-11-13"
+      ? "../../../tmp/id1-alternative-repair-prestate.json" : "../../../tmp/id1-repair-prestate.json");
     fs.writeFileSync(output, json(report) + "\n");
     console.log(`Pinned read-only inventory: ${output}`);
   } finally {

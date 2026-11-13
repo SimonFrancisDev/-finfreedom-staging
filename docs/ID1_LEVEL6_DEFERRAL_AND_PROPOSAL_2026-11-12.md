@@ -1,6 +1,13 @@
 # ID1 repair: level-6 deferral and proposal preparation
 
-## Latest status: all proposals submitted
+## Withdrawn on November 13: do not approve or execute 130-159
+
+The Sofia/Sabina arrangement below has been superseded. Proposals 130-159 are
+withdrawn from the production signing queue, but still require on-chain
+cancellation. The previous submission record remains here for audit purposes.
+Follow `ID1_ALTERNATIVE_REPAIR_2026-11-13.md`, not the historical instructions below.
+
+## Historical status on November 12: all proposals submitted
 
 Funding arrived and the authorized deployment/submission completed on Polygon
 mainnet. All ten inert contracts were deployed and verified. All **30 proposals,
@@ -16,9 +23,8 @@ the five original reopening payloads are unchanged, and their EXECUTION remains
 conditional on successful post-upgrade verification. The package/journal binding
 was preserved; the original unsigned package was not edited or replaced.
 
-**Founders may review and approve 130-159 now. Do not execute the pause/repair
-sequence until the production backend projection is released and a maintenance
-window/current-state check is complete. Do not execute 155-159 before verification.**
+**The November 12 approval instructions are withdrawn. Do not approve or execute
+130-159. No replacement proposal IDs have been submitted in this repair pass.**
 
 Full instructions: `ID1_PROPOSAL_APPROVAL_EXECUTION_2026-11-12.md`.
 Live records: `evidence/id1-production-broadcasts-2026-11-12.json` and
