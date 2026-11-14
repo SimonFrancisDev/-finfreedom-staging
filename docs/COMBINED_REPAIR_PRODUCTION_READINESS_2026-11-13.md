@@ -2,6 +2,9 @@
 
 ## Status
 
+**Latest:** [replacement proposals 190-256 are submitted](COMBINED_REPAIR_SUBMISSIONS_2026-11-14.md).
+Funding and submission are complete; founder execution and post-repair verification remain.
+
 **November 14 update:** [all 11 inert mainnet deployments are now complete](COMBINED_REPAIR_LIVE_DEPLOYMENTS_2026-11-14.md),
 costing 7.428325578177567834 POL. The historical repair remains unexecuted.
 The remainder of this document preserves the earlier integration-release record.

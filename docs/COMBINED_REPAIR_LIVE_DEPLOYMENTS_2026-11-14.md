@@ -1,5 +1,11 @@
 # Combined placement repair: inert mainnet deployment completed
 
+**Later November 14 update:** all 67 replacement proposals are now submitted as
+**190-256**. See the [submission record](COMBINED_REPAIR_SUBMISSIONS_2026-11-14.md)
+and [founder instructions](FOUNDERS_COMBINED_REPAIR_EXECUTION_2026-11-14.md).
+The figures and pending-submission notes below preserve the earlier deployment
+record. The repair itself still requires founder execution and verification.
+
 ## Outcome
 
 All **11** remaining inert contracts were deployed to **Polygon mainnet (137)**
