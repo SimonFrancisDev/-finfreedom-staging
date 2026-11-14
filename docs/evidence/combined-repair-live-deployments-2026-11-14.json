@@ -1,0 +1,312 @@
+{
+  "status": "all-inert-deployments-verified-live-proxies-unchanged",
+  "chainId": 137,
+  "checkedAt": "2026-11-14T08:43:57.713Z",
+  "checkedBlock": {
+    "number": 97293578,
+    "hash": "0xf38f592135421f5d6b6e1656821c3427b3ab5122f1544e4ff852f649e3ed1ae0"
+  },
+  "packageSha256": "8a757bbfdddb28b81fc4da67e71f0755b640b38089290a6de26c205cac437ea2",
+  "submitter": "0x884e48f9897E8633238747b608DD49dE12bF94df",
+  "deployments": [
+    {
+      "key": "executor",
+      "name": "Id1HistoricalRepairExecutor",
+      "address": "0xd952d21B114F54C1259470b1693893F4D0Dd50Ed",
+      "txHash": "0x716f912915080ab6a76e280450fdbe7c3d6f31b0beda9f4ddca32088fd9891b2",
+      "block": 97293096,
+      "blockHash": "0xd27c9477d8382d104725410c8b6c634275d705632ce54d940a17af305023cf4d",
+      "runtimeHash": "0xc1e6f8cc1b5f9306580356b793163ec91ad072e3f196fc9bc4f4426efe5fdbfe",
+      "creationBytecodeHash": "0x43982fa4a6fcd210c7cf5024fa9f5a878253fdb199c211bd445ac0c1a26a9967",
+      "constructorArgs": [
+        "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+        [
+          "0x1ED0b443c880Ba88F732c3F5915561A07B21F6B4",
+          "0xCF998d8f7E9DD4f3FacFbA45e656dE07142f824b",
+          "0xEaD39819B8C4DBb0669320542B6B847D4c31b8Fb",
+          "0x02ECA97e944Ac66b0444fd5F61A716917E83CfF5"
+        ],
+        [
+          "0x7a63bf9303d0decf6578853e4dd74b28774a7b35beb8eb2eb2a215f342f27a24",
+          "0x585e6ae770defa2ce69d895e2938878a796a6fceb21ac62f1921d2f4878cd34d",
+          "0x3ff9e013749648f5e5d40aed3bdc29938cb126653b9720e4ba1c51ec6b357524",
+          "0xff96f7bf8711c569241845fb9e0ed380522264aea00c17822e8c773c72ac96c0"
+        ],
+        137
+      ],
+      "gasUsed": "542051",
+      "effectiveGasPrice": "275671598713",
+      "actualFeeWei": "149428065753980363"
+    },
+    {
+      "key": "p4Migrator",
+      "name": "Id1P4RepairMigrator",
+      "address": "0x17eF38bffdA3F4FCa04ECc1e7111c5176Ef9507E",
+      "txHash": "0x254f36ae1dae25d86801a0ef2559ade382bff5c4972f58db4ddc68eb7f1a96ac",
+      "block": 97293108,
+      "blockHash": "0xf27283646be76a9bb0ae65dbf8c9213227f4529db70e85457cfc6d3d5b88dd0a",
+      "runtimeHash": "0x18d48c55a4aeff71506df25a658e1731414926c3f1861b6e6004ef95b576b964",
+      "creationBytecodeHash": "0xa12ea93f88f72a4596e982f79c9af82a15729b4ab7d8787ea7a19ebe1bc7c9ed",
+      "constructorArgs": [
+        "0x1ED0b443c880Ba88F732c3F5915561A07B21F6B4",
+        "0xd952d21B114F54C1259470b1693893F4D0Dd50Ed",
+        "0x7a63bf9303d0decf6578853e4dd74b28774a7b35beb8eb2eb2a215f342f27a24",
+        137
+      ],
+      "gasUsed": "2674228",
+      "effectiveGasPrice": "272287835554",
+      "actualFeeWei": "728159753897902312"
+    },
+    {
+      "key": "p12Migrator",
+      "name": "Id1MultiRingRepairMigrator",
+      "address": "0xE62Bf2473606D465AA03601505E5A873F47AfDf5",
+      "txHash": "0x9f5f8e40c5d4e75c122addde6b4e32734955a8fb395e7b5a50673e8f899d783b",
+      "block": 97293119,
+      "blockHash": "0x482f7153dc50c647f585d222a32f34b2baaf1cd0776fad8ec1a4554fda99efda",
+      "runtimeHash": "0x5d80574e72d752117dca2a5ef6b0e04a06da775ef7f7fe0cbf28975b8d5619e8",
+      "creationBytecodeHash": "0x782496e4fe2fb622d5c8ac96d94b8b8bc8ad305a51c8dadc3368df384fc85c37",
+      "constructorArgs": [
+        "0xCF998d8f7E9DD4f3FacFbA45e656dE07142f824b",
+        "0xd952d21B114F54C1259470b1693893F4D0Dd50Ed",
+        "0x585e6ae770defa2ce69d895e2938878a796a6fceb21ac62f1921d2f4878cd34d",
+        137
+      ],
+      "gasUsed": "2674228",
+      "effectiveGasPrice": "270943399202",
+      "actualFeeWei": "724564424561166056"
+    },
+    {
+      "key": "p39Migrator",
+      "name": "Id1MultiRingRepairMigrator",
+      "address": "0x1F4B8f4749F9d06ad052C0C2859EFb14183ED27F",
+      "txHash": "0x69781448becbc0b6db290d1ccb23a700e4afa3466060d9c7e4810fb84dbbd33c",
+      "block": 97293130,
+      "blockHash": "0xd4f7c73db3e2498c7f4fc83c25c52ba1230f71c530b8744b140013549be84b34",
+      "runtimeHash": "0x61d34f48b4542cf959bf684e3ac568f833c93f872b9d1c7bea7caae92931d029",
+      "creationBytecodeHash": "0x782496e4fe2fb622d5c8ac96d94b8b8bc8ad305a51c8dadc3368df384fc85c37",
+      "constructorArgs": [
+        "0xEaD39819B8C4DBb0669320542B6B847D4c31b8Fb",
+        "0xd952d21B114F54C1259470b1693893F4D0Dd50Ed",
+        "0x3ff9e013749648f5e5d40aed3bdc29938cb126653b9720e4ba1c51ec6b357524",
+        137
+      ],
+      "gasUsed": "2674228",
+      "effectiveGasPrice": "270193501201",
+      "actualFeeWei": "722559026329747828"
+    },
+    {
+      "key": "registrationMigrator",
+      "name": "Id1RegistrationRepairMigrator",
+      "address": "0x695740BBb37064D3c9DCF988439F8155013c58B8",
+      "txHash": "0x6a77acf9be91dbf31423526cf604cf89b73a5b8cb5af54598b14726a7338afc4",
+      "block": 97293142,
+      "blockHash": "0x610fb0d022882296f648d5d5411897f1df0a3c3c1be7c627b5af95adbb80a96f",
+      "runtimeHash": "0xb30282b189f8eb9cf71f1379548d95648becbd872af19b52085a4c057e059984",
+      "creationBytecodeHash": "0x475a8f7b1e818734ecaa2ca2c85e0207b40c1d9bf70e5fc24b125365b15cd394",
+      "constructorArgs": [
+        "0x02ECA97e944Ac66b0444fd5F61A716917E83CfF5",
+        "0xd952d21B114F54C1259470b1693893F4D0Dd50Ed",
+        "0xff96f7bf8711c569241845fb9e0ed380522264aea00c17822e8c773c72ac96c0",
+        137
+      ],
+      "gasUsed": "2779635",
+      "effectiveGasPrice": "272969525249",
+      "actualFeeWei": "758755646315504115"
+    },
+    {
+      "key": "fp.router",
+      "name": "FreedomPlusSettlementRouter",
+      "address": "0x19727A58419fE2e06b5A5b3dF351f775b12abDA6",
+      "txHash": "0xff1b385e81ea42e466a5de294229fefeab2e3238dbe871a7b92086218b7cfbd3",
+      "block": 97293154,
+      "blockHash": "0xa8ab61a3d92601d7a2b5ffb3843b87abc75be98deb481fe49a72a59b9b673c8d",
+      "runtimeHash": "0xc297bbd083f3633f76c51b6085a89c05e3e71aea2452081c712f419e7c679d60",
+      "creationBytecodeHash": "0xe76a46681a2176b45780011b76d37e3bc26dc6a186b888f742bbedb23e879510",
+      "constructorArgs": [],
+      "gasUsed": "3354168",
+      "effectiveGasPrice": "269129273638",
+      "actualFeeWei": "902704797499823184"
+    },
+    {
+      "key": "fp.executor",
+      "name": "Id1HistoricalRepairExecutor",
+      "address": "0x9bb75E6F09B94428547555d900a66bf21B246e34",
+      "txHash": "0xdee70dbf3813dc6523fb2e3d45aede9fa050396717ed102a5770b0190a537ff1",
+      "block": 97293163,
+      "blockHash": "0x2d835bd150f4950ab97aa3e0342dd06e607a0bf60c6f8f2b4f33d036c8aaac72",
+      "runtimeHash": "0xc1e6f8cc1b5f9306580356b793163ec91ad072e3f196fc9bc4f4426efe5fdbfe",
+      "creationBytecodeHash": "0x43982fa4a6fcd210c7cf5024fa9f5a878253fdb199c211bd445ac0c1a26a9967",
+      "constructorArgs": [
+        "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+        [
+          "0x1DFC59c915163D56998b764E6536CF869550B233",
+          "0x81e21a812181404325818dc042676e93293e0751",
+          "0xf1C9A1AFa0534cEb1075726Fab6Ac364224BD45d",
+          "0x4C2A8058f87E194e277BADB853C87E1a9f44BC0d"
+        ],
+        [
+          "0x012b37500c5060a076f983422bf0b55782ba2277e25229f76f3053cb0df69083",
+          "0x95017f23f070ae05b484c13ced2ebdd7b5de0f59beb0bcd025001fcb8866917d",
+          "0x480c58ffb0726f4cad3fd4915fc712ccc5fc903a210d6f56069fa513bb94fa68",
+          "0x897090d0250557d4d5ade2f2fdecd3ee042ad8cd6865ba072ba0f1f007985c4b"
+        ],
+        137
+      ],
+      "gasUsed": "542039",
+      "effectiveGasPrice": "273345514596",
+      "actualFeeWei": "148163929386101244"
+    },
+    {
+      "key": "fp.p39Migrator",
+      "name": "FreedomPlusP39HistoricalRepair",
+      "address": "0x99526FBDD558Ba63931F9b99E5B2Eb2E4bD8b664",
+      "txHash": "0xb31574f6f44e354b02bab00bd01b83628d175ff02050a555c86c7ab4f8913e14",
+      "block": 97293172,
+      "blockHash": "0x980fe3174476f11a93f7a695d3cd09ec3009eb170ee1501a98581076cd6e1b13",
+      "runtimeHash": "0x6fab959d0b39017b68d619bec015604c63f18f9ff9d329798567f49c81085de1",
+      "creationBytecodeHash": "0x4c5131351782a5b9332cf5ee77a9190bba0a15bc63a6c1b50e1bc7b5429ed8ad",
+      "constructorArgs": [
+        "0x1DFC59c915163D56998b764E6536CF869550B233",
+        "0x9bb75E6F09B94428547555d900a66bf21B246e34",
+        "0x012b37500c5060a076f983422bf0b55782ba2277e25229f76f3053cb0df69083",
+        137
+      ],
+      "gasUsed": "3070994",
+      "effectiveGasPrice": "270183747488",
+      "actualFeeWei": "829732667433163072"
+    },
+    {
+      "key": "fp.p14Migrator",
+      "name": "FreedomPlusP14HistoricalRepair",
+      "address": "0x5dcAbc1d354f5497164Fe27CdBB3F344a71d59C3",
+      "txHash": "0xed6e960dc5d6bc273235a147467a1e55385a48226771963f1348956451496e3f",
+      "block": 97293183,
+      "blockHash": "0x0d80472c7e0bc4c7bfab9881391c8826dc8fc2b58bae7fa6bef31e1c0223a672",
+      "runtimeHash": "0x700d9615d513e5d1888832a0ffda8c7db0e88ad326fb24a87d60c856467075ef",
+      "creationBytecodeHash": "0x3fdb29d6a7479428c145fe4662a95bfb2dae9177ec77d78250e151346d8aa9c4",
+      "constructorArgs": [
+        "0x81e21a812181404325818dc042676e93293e0751",
+        "0x9bb75E6F09B94428547555d900a66bf21B246e34",
+        "0x95017f23f070ae05b484c13ced2ebdd7b5de0f59beb0bcd025001fcb8866917d",
+        137
+      ],
+      "gasUsed": "3068894",
+      "effectiveGasPrice": "263403509077",
+      "actualFeeWei": "808357448585350838"
+    },
+    {
+      "key": "fp.p12Migrator",
+      "name": "FreedomPlusP12HistoricalRepair",
+      "address": "0xeC83e9D46e1AD95bE1C6591f968EB5A24841E145",
+      "txHash": "0x168a095d5909f5b7c64e83233d58bf3d25af7546c5885d49c85a74e999803489",
+      "block": 97293292,
+      "blockHash": "0xbe6675ba6298c6bd262db8965abb18fb1fe92acf4bbc9115e2b233d7eab56324",
+      "runtimeHash": "0xc27c17e4d0fa5d9fb4dd2693a10ee1d82c0caba638c63f8934106d4499c9baf5",
+      "creationBytecodeHash": "0xe7792b157971aa90e1a29cfc575f309567f7c57fe4f425b2aa60ad463f759586",
+      "constructorArgs": [
+        "0xf1C9A1AFa0534cEb1075726Fab6Ac364224BD45d",
+        "0x9bb75E6F09B94428547555d900a66bf21B246e34",
+        "0x480c58ffb0726f4cad3fd4915fc712ccc5fc903a210d6f56069fa513bb94fa68",
+        137
+      ],
+      "gasUsed": "3051801",
+      "effectiveGasPrice": "270429909070",
+      "actualFeeWei": "825298266929735070"
+    },
+    {
+      "key": "fp.p6Migrator",
+      "name": "FreedomPlusP6HistoricalRepair",
+      "address": "0x37810FB89f71A675a35864A801e4eF5e91E41De0",
+      "txHash": "0x0019c79d270c05e7f7e218dbcefa4a5dd014e1b2285da97f37a352ee99f64393",
+      "block": 97293303,
+      "blockHash": "0xcea621cc5f1a781cc37d112c405a43b7aa364577278be7cd49feedceaea99a5d",
+      "runtimeHash": "0xd63e5ec293c15864cf7fb86081247dcc3ff808c3c408fb50c690993c266df552",
+      "creationBytecodeHash": "0xf4c609bba3f2cd20381e29ecd565251eeac5fd341187b59554447826a057afc0",
+      "constructorArgs": [
+        "0x4C2A8058f87E194e277BADB853C87E1a9f44BC0d",
+        "0x9bb75E6F09B94428547555d900a66bf21B246e34",
+        "0x897090d0250557d4d5ade2f2fdecd3ee042ad8cd6865ba072ba0f1f007985c4b",
+        137
+      ],
+      "gasUsed": "3051153",
+      "effectiveGasPrice": "272225467384",
+      "actualFeeWei": "830601551485093752"
+    }
+  ],
+  "reusedDeployments": [
+    {
+      "key": "p4",
+      "name": "P4Orbit",
+      "nonce": 283,
+      "address": "0xB6E584443796d70B071B15922aEc2538fa5165bE",
+      "args": [],
+      "creationBytecodeHash": "0xd0313dade992fe7f2cebe993a562caee5c345c9b33f752f0b1b041f17b49e372",
+      "runtimeTemplateHash": "0x5fdd6f70ba8926e0f451e8ab929f90f5bc55c177da7d88c0f27f5d6bc33a4d85",
+      "gasLimit": "6093864"
+    },
+    {
+      "key": "p12",
+      "name": "P12Orbit",
+      "nonce": 284,
+      "address": "0x6f9aBC3F882C5f3731752621A1E2712D060c937e",
+      "args": [],
+      "creationBytecodeHash": "0x8235da82bb88fa20eac64ebca445c1a7735dbb2a6fe08c72142feceb4819e83e",
+      "runtimeTemplateHash": "0xd75d7fb443bc44e2427bf22ffb45e066080bbd94f1ea5ff3541d28c85a80aa9c",
+      "gasLimit": "6203864"
+    },
+    {
+      "key": "p39",
+      "name": "P39Orbit",
+      "nonce": 285,
+      "address": "0xD72154F2a9313F2e00865CC9d464e47E944e99e5",
+      "args": [],
+      "creationBytecodeHash": "0x856f2de6310e97044c0bf3454fbda98292ddd755e50bb9bfb387bacb66dd9a54",
+      "runtimeTemplateHash": "0xdaeeb3d44156b3b167fa11d74325480073844d12ca24e34d5fe3ec54d5233c84",
+      "gasLimit": "6142971"
+    },
+    {
+      "key": "manager",
+      "name": "LevelManager",
+      "nonce": 286,
+      "address": "0xCC88efa9d0f8500A5e1FAA1a04bDE8d9837B49E1",
+      "args": [],
+      "creationBytecodeHash": "0x84763b7c4b207b79e1c2ae9e55db805f9bb8002da1ec219f7dc0390440d8e886",
+      "runtimeTemplateHash": "0x39b9418af00f2d64bb593e99cdd66b0e081f0b2c85ddc3c87720970ebb46cfc5",
+      "gasLimit": "6387818"
+    },
+    {
+      "key": "router",
+      "name": "LevelSettlementRouter",
+      "nonce": 287,
+      "address": "0xfeB6Cc065A0e77641827d692749a3108fE9D8A94",
+      "args": [
+        "0x0E9De0F24eB4774834A2c4A63eaBa8356A4A4B53",
+        "0xc2132D05D31c914a87C6611C10748AEb04B58e8F"
+      ],
+      "creationBytecodeHash": "0x84969da47ed9908e76a48bad630968c3dd830f2760ecfc4d43b5f06fda430c08",
+      "runtimeTemplateHash": "0xe00ab6f8f1539f153cc960842d91290c27a9c45e3d391d1a45d0a24750017473",
+      "gasLimit": "4964169"
+    }
+  ],
+  "totalDeploymentFeesPOL": "7.428325578177567834",
+  "balancePOL": "4.252708558777793934",
+  "proposalsSubmittedThisPass": 0,
+  "approvalsSent": 0,
+  "executionsSent": 0,
+  "remainingProposals": 67,
+  "remainingSubmissionBudget": {
+    "estimatedCostPOL": "10.40611328962606414",
+    "cappedReservePOL": "14.754832878323252103",
+    "cappedShortfallPOL": "10.502124319545458169",
+    "sufficientlyFunded": false,
+    "feeBlock": 97293578,
+    "maxFeeGwei": "320.786448973",
+    "priorityFeeGwei": "25.0",
+    "gasEstimatesFrom": "2026-11-14T08:28:04.736Z",
+    "excludesFounderApprovalAndExecutionGas": true
+  },
+  "limitations": [
+    "Manifest publication is not governance approval or execution."
+  ]
+}

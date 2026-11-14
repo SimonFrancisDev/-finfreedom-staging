@@ -1,5 +1,10 @@
 # Combined repair: actual POL fees and remaining budget
 
+**Subsequent execution:** the user authorized starting with available funds.
+[All 11 inert deployments succeeded](COMBINED_REPAIR_LIVE_DEPLOYMENTS_2026-11-14.md)
+for 7.428325578177567834 POL. The figures below are the preceding audit, not the
+remaining balance or remaining cost after deployment.
+
 ## Decision
 
 Another 30 POL is not a fixed requirement. The available 11.681034136955361768

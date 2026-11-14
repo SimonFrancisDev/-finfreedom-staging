@@ -2,6 +2,10 @@
 
 ## Status
 
+**November 14 update:** [all 11 inert mainnet deployments are now complete](COMBINED_REPAIR_LIVE_DEPLOYMENTS_2026-11-14.md),
+costing 7.428325578177567834 POL. The historical repair remains unexecuted.
+The remainder of this document preserves the earlier integration-release record.
+
 The backend and founder-panel readiness releases are deployed to production.
 The historical repair itself is NOT deployed or executed. Existing program
 proxies, placements, payments, permanent sponsors and balances were not modified

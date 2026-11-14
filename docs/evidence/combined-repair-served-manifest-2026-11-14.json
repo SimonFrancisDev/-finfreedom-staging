@@ -1,0 +1,20 @@
+{
+  "status": "official-production-serves-verified-repair-manifest",
+  "chainId": 137,
+  "origin": "https://www.finfreedomnetwork.io",
+  "checkedAt": "2026-11-14T08:53:42.110Z",
+  "sourcePackageSha256": "8a757bbfdddb28b81fc4da67e71f0755b640b38089290a6de26c205cac437ea2",
+  "matchedProposalTargetsAndPayloads": 67,
+  "liveWrites": 0,
+  "applicationJavaScriptDisabled": true,
+  "apiAndRpcRequestsBlocked": true,
+  "limitations": [
+    "Unused metadata and deployment receipt hashes can be removed by the production bundler. Verification checks all exact executable targets and payloads."
+  ],
+  "scripts": [
+    {
+      "url": "https://www.finfreedomnetwork.io/assets/index-v2pGx5DM.js",
+      "sha256": "671ab8b4f4caedd7ed5abc1f3030b98059c343e0e219b70dd822f61c7e81fda7"
+    }
+  ]
+}
