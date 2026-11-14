@@ -82,6 +82,12 @@ to archive/block the withdrawn package. Blockchain history is not deleted.
 
 ## Funding blocker
 
+**Superseded funding estimate:** the November 14
+[receipt reconciliation and fresh fee audit](COMBINED_REPAIR_GAS_RECONCILIATION_2026-11-14.md)
+accounts for all 70 earlier transactions and revises the snapshot top-up to
+**15 POL**, using a lower-tip quote with measured headroom. The numbers below
+are the historical November 13 ceiling, not a current spending requirement.
+
 Submitter: `0x884e48f9897E8633238747b608DD49dE12bF94df`.
 
 At preflight it held **11.681034136955361768 POL**. The remaining 11 deployments

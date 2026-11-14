@@ -5,6 +5,7 @@ const path = require('node:path');
 const { ethers: E } = require('ethers');
 const { A, FP, engines, buildCombinedPackage, omitVerifiedProxyApprovals } = require('./lib/combinedPlacementRepairPackage');
 const { verifyLive } = require('./prepareId1ProductionPackage');
+const { repairFeeBudget } = require('./lib/repairFeeBudget');
 const ROOT = path.resolve(__dirname, '../../..');
 const IMPL = '0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc';
 const read = p => JSON.parse(fs.readFileSync(path.join(ROOT, p), 'utf8'));
@@ -77,38 +78,42 @@ async function prepare() {
     const proxies = [];
     for (const key of [...engines.map(([key]) => key), 'router']) proxies.push({ key, address: FP[key], alreadyApproved: await guardian.approvedProxies(FP[key], at) });
     pkg = omitVerifiedProxyApprovals(pkg, { chainId: 137, block: block.number, blockHash: block.hash, proxies });
-    const fee = await provider.getFeeData();
-    const cap = E.parseUnits('450', 'gwei');
-    const maxFeePerGas = fee.maxFeePerGas < cap ? fee.maxFeePerGas : cap;
-    const tip = fee.maxPriorityFeePerGas > E.parseUnits('25', 'gwei') ? fee.maxPriorityFeePerGas : E.parseUnits('25', 'gwei');
-    assert(block.baseFeePerGas + tip <= maxFeePerGas, 'Current fees exceed reviewed 450-gwei limit');
-    let deploymentGas = 0n, submissionGas = 0n;
+    let deploymentGas = 0n, submissionGas = 0n, estimatedGas = 0n;
     for (const item of pkg.deployments) {
       const art = artifact(item.name);
       const proved = rehearsal.package.deployments.find(d => d.key === item.key);
       assert.equal(E.keccak256(art.bytecode), proved.creationBytecodeHash, `Candidate changed since rehearsal: ${item.key}`);
       const tx = await new E.ContractFactory(art.abi, art.bytecode).getDeployTransaction(...item.args);
       item.creationBytecodeHash = E.keccak256(art.bytecode); item.runtimeTemplateHash = E.keccak256(art.deployedBytecode);
-      item.gasLimit = (await provider.estimateGas({ ...tx, from: A.submitter })) * 120n / 100n;
+      item.estimatedGas = await provider.estimateGas({ ...tx, from: A.submitter });
+      item.gasLimit = (item.estimatedGas * 120n + 99n) / 100n;
+      estimatedGas += item.estimatedGas;
       deploymentGas += item.gasLimit;
     }
     console.log('PASS 11 deployment bytecode hashes match the completed rehearsal; estimating proposal submissions');
     for (const action of pkg.actions) {
       const tx = await gov.submitTransaction.populateTransaction(action.target, 0n, action.data);
-      action.submissionGasLimit = (await provider.estimateGas({ ...tx, from: A.submitter })) * 120n / 100n;
+      action.estimatedSubmissionGas = await provider.estimateGas({ ...tx, from: A.submitter });
+      action.submissionGasLimit = (action.estimatedSubmissionGas * 120n + 99n) / 100n;
+      estimatedGas += action.estimatedSubmissionGas;
       submissionGas += action.submissionGasLimit;
     }
     const balance = await provider.getBalance(A.submitter);
-    const maximumCost = (deploymentGas + submissionGas) * maxFeePerGas;
+    const feeBlock = await provider.getBlock('latest');
+    const quote = repairFeeBudget({ baseFeePerGas: feeBlock.baseFeePerGas, estimatedGas,
+      gasLimit: deploymentGas + submissionGas, balanceWei: balance });
     Object.assign(pkg, { verifiedBlock: { number: block.number, hash: block.hash }, checkedAt: new Date().toISOString(),
       cancellations, nextProposalId: await gov.getTransactionCount(),
-      budget: { maxFeePerGas, maxPriorityFeePerGas: tip, deploymentGas, submissionGas, balanceWei: balance,
-        maxCostWei: maximumCost, sufficientlyFunded: balance >= maximumCost, excludesFoundersApprovalAndExecutionGas: true },
+      budget: { ...quote, estimatedGas, deploymentGas, submissionGas, balanceWei: balance,
+        feeBlock: { number: feeBlock.number, hash: feeBlock.hash, baseFeePerGas: feeBlock.baseFeePerGas },
+        excludesFoundersApprovalAndExecutionGas: true },
       status: 'verified-unsigned-package-not-deployed-or-submitted' });
     fs.writeFileSync(path.join(ROOT, 'tmp/combined-placement-live-package.json'), json(pkg) + '\n');
     console.log(json({ chainId: 137, liveWrites: 0, verifiedBlock: pkg.verifiedBlock, deployments: pkg.deployments.length,
-      proposals: pkg.actions.length, balancePOL: E.formatEther(balance), cappedBudgetPOL: E.formatEther(maximumCost),
-      sufficientlyFunded: pkg.budget.sufficientlyFunded, maxFeeGwei: E.formatUnits(maxFeePerGas, 'gwei'),
+      proposals: pkg.actions.length, balancePOL: E.formatEther(balance),
+      estimatedCostPOL: E.formatEther(quote.estimatedCostWei), cappedBudgetPOL: E.formatEther(quote.maxCostWei),
+      estimatedShortfallPOL: E.formatEther(quote.estimatedShortfallWei), cappedShortfallPOL: E.formatEther(quote.cappedShortfallWei),
+      sufficientlyFunded: pkg.budget.sufficientlyFunded, maxFeeGwei: E.formatUnits(quote.maxFeePerGas, 'gwei'),
       cancellationsStillRequiredBeforeExecution: cancellations.filter(r => !r.cancelled).map(r => r.id) }));
   } finally { provider.destroy(); }
 }
