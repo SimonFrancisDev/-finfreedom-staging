@@ -1,5 +1,12 @@
 # Proposal 224 gas-estimation recovery
 
+> SUPERSEDED: the retry instruction and 50-million-gas workaround in this record
+> were incorrect. Polygon has a separate 32-million per-transaction cap; the
+> successful ~44.1-million eth_call was not an admissible signed transaction.
+> Do not retry 224 or proceed to dependent proposals. See
+> `COMBINED_REPAIR_224_TRANSACTION_CAP_HOLD_2026-11-15.md` for the production hold
+> and correction. This record is retained as an audit trail, not execution advice.
+
 ## Verified production release
 
 The official production frontend received commit `7c919d9` in
