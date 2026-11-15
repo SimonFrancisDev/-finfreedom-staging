@@ -1,0 +1,29 @@
+{
+  "status": "candidate-only-read-only-state-override-simulation",
+  "chainId": 137,
+  "block": 97365869,
+  "utc": "2026-11-15T14:51:13.000Z",
+  "syntheticAddress": "0x0000000000000000000000000000000000000224",
+  "runtimeHash": "0x391bdf63a93a9ec64929f8ab3dacb79371054365a6ae6f336a22b3af80aa96f4",
+  "sourceSha256": "76c7360affd403e5e6982576817ddbd0cd643d4033a30837a4c3115f03c2e580",
+  "compiler": "0.8.24+commit.e11b9ed9",
+  "gasUsed": 30637888,
+  "gasLimit": 32800000,
+  "protocolMaxTxGas": 33554432,
+  "headroom": 2162112,
+  "accessListKeys": 3900,
+  "maximumPacketBytes": 129073,
+  "identicalRepairEvents": 46,
+  "identicalRepairStorage": true,
+  "negative": [
+    { "name": "wrong operator", "error": "execution reverted", "reason": "Not operator" },
+    { "name": "not authorized owner", "error": "execution reverted", "reason": "Not owner" },
+    { "name": "relay already used", "error": "execution reverted", "reason": "Already executed" },
+    { "name": "arbitrary governance selector", "error": "execution reverted", "reason": null },
+    { "name": "native value attached", "error": "execution reverted", "reason": null },
+    { "name": "governance code mismatch", "error": "execution reverted", "reason": "Governance code changed" }
+  ],
+  "requiresExplicitGovernanceApproval": true,
+  "deployed": false,
+  "liveWrites": 0
+}
