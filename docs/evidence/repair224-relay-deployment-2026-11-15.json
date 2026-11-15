@@ -1,0 +1,81 @@
+{
+  "chainId": 137,
+  "governance": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+  "operator": "0x884e48f9897E8633238747b608DD49dE12bF94df",
+  "runtimeHash": "0x391bdf63a93a9ec64929f8ab3dacb79371054365a6ae6f336a22b3af80aa96f4",
+  "authorization": "User explicitly approved restricted helper deployment and two founder proposals on 2026-11-15",
+  "maximumSpendWei": "12000000000000000000",
+  "transactions": [
+    {
+      "kind": "deploy",
+      "to": null,
+      "dataHash": "0xb82879f034e6751e01c8eb190c06cc7a244fd3b1f5474496e3097ef3d7a9d421",
+      "txHash": "0x68b7345b487be9ac68ffee0a75ff6866f0644e87c33804c0c61d1478f4ce017d",
+      "nonce": 431,
+      "address": "0x16F9ac40B06e2a17bc0CC145b211A176E8654906",
+      "gasLimit": "17051631",
+      "maxFeePerGas": "330510428119",
+      "confirmed": true,
+      "block": 97367245,
+      "blockHash": "0x9fc16e37485b49dd612f43607893081044641e8df20ac808289039afde60c398",
+      "gasUsed": "14096647",
+      "feeWei": "3897441649560091545"
+    },
+    {
+      "kind": "addOwner",
+      "to": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "dataHash": "0x329820ca20b0eefd5cb518ca12d1244409ab6b52d4d4e441fbb4520fd5fe964d",
+      "txHash": "0x1244b955b3483ec1b9d77fe89797e529bbfc08af85e6c39934227ddc1bfd9cda",
+      "nonce": 432,
+      "action": {
+        "name": "addOwner",
+        "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+        "value": "0",
+        "data": "0x7065cb4800000000000000000000000016f9ac40b06e2a17bc0cc145b211a176e8654906"
+      },
+      "proposalId": "257",
+      "gasLimit": "250474",
+      "maxFeePerGas": "326891509741",
+      "confirmed": true,
+      "executeAfter": "1794756466",
+      "block": 97367251,
+      "blockHash": "0xacbc13950c37bbae84631fce52911520bb59b419b26a94721a17d50b75cc726f",
+      "gasUsed": "205926",
+      "feeWei": "56400160533398010"
+    },
+    {
+      "kind": "removeOwner",
+      "to": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+      "dataHash": "0x79a66fe5bc58eff8c60a6004f433903207cff0aecf4da395d5189f7e7006b18f",
+      "txHash": "0xdd6edaaa0b57688666e02d7e06933f6f9bd4ea9808648311839232579d9e82fb",
+      "nonce": 433,
+      "action": {
+        "name": "removeOwner",
+        "target": "0x785cC854ce9e13CE1140cbFD7C08620713E1711d",
+        "value": "0",
+        "data": "0x173825d900000000000000000000000016f9ac40b06e2a17bc0cc145b211a176e8654906"
+      },
+      "proposalId": "258",
+      "gasLimit": "250474",
+      "maxFeePerGas": "322830624596",
+      "confirmed": true,
+      "executeAfter": "1794756478",
+      "block": 97367259,
+      "blockHash": "0xabb672477a613311ec66309fa965d79cf4d662377af522727c921d8368dc72f6",
+      "gasUsed": "205926",
+      "feeWei": "56699159845199088"
+    }
+  ],
+  "approvalsSent": 0,
+  "executionsSent": 0,
+  "relay": "0x16F9ac40B06e2a17bc0CC145b211A176E8654906",
+  "originalOwners": [
+    "0x17Fb12B3d5A2bbb4dD10bd3C5C35618baDA3D2D6",
+    "0x67E138a2f46AEF2a0031CfCb5Ae843b41c973f41",
+    "0x04eaa54e7896C24aF2622b804Bf35E4C662bf12f",
+    "0xEA51893495D285D737db5062500C4F003E2b3A4D"
+  ],
+  "status": "helper-deployed-two-proposals-submitted-awaiting-founder-authorization",
+  "remainingPOL": "14.837348800636870601",
+  "checkedAt": "2026-11-15T15:26:01.454Z"
+}

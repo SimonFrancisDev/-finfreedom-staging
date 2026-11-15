@@ -1,5 +1,9 @@
 # Proposal 224 restricted execution relay: approval required
 
+Historical candidate record. The user subsequently approved deployment and two
+proposal submissions. See [the deployment record](REPAIR_224_RELAY_DEPLOYMENT_2026-11-15.md)
+for completed authorization tests, the real helper and proposals 257/258.
+
 ## Current status
 
 The founder reported that sign-only output could not be returned. The message

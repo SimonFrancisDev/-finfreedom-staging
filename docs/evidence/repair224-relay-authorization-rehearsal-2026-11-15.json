@@ -1,0 +1,91 @@
+{
+  "status": "candidate-only-read-only-state-override-simulation",
+  "chainId": 137,
+  "block": 97367088,
+  "utc": "2026-11-15T15:21:41.000Z",
+  "simulationAddress": "0x16f9ac40b06e2a17bc0cc145b211a176e8654906",
+  "runtimeHash": "0x391bdf63a93a9ec64929f8ab3dacb79371054365a6ae6f336a22b3af80aa96f4",
+  "sourceSha256": "76c7360affd403e5e6982576817ddbd0cd643d4033a30837a4c3115f03c2e580",
+  "compiler": "0.8.24+commit.e11b9ed9",
+  "gasUsed": 30637888,
+  "gasLimit": 32800000,
+  "protocolMaxTxGas": 33554432,
+  "headroom": 2162112,
+  "accessListKeys": 3900,
+  "maximumPacketBytes": 129073,
+  "identicalRepairEvents": 46,
+  "identicalRepairStorage": true,
+  "negative": [
+    {
+      "name": "wrong operator",
+      "error": "execution reverted",
+      "reason": "Not operator"
+    },
+    {
+      "name": "not authorized owner",
+      "error": "execution reverted",
+      "reason": "Not owner"
+    },
+    {
+      "name": "relay already used",
+      "error": "execution reverted",
+      "reason": "Already executed"
+    },
+    {
+      "name": "arbitrary governance selector",
+      "error": "execution reverted",
+      "reason": null
+    },
+    {
+      "name": "native value attached",
+      "error": "execution reverted",
+      "reason": null
+    },
+    {
+      "name": "governance code mismatch",
+      "error": "execution reverted",
+      "reason": "Governance code changed"
+    },
+    {
+      "name": "insufficient existing founder approvals",
+      "error": "execution reverted",
+      "reason": "Not enough confirmations"
+    },
+    {
+      "name": "timelock not expired",
+      "error": "execution reverted",
+      "reason": "Timelock not expired"
+    },
+    {
+      "name": "proposal cancelled",
+      "error": "execution reverted",
+      "reason": "Tx cancelled"
+    },
+    {
+      "name": "proposal already executed",
+      "error": "execution reverted",
+      "reason": "Tx already executed"
+    }
+  ],
+  "governanceRehearsals": [
+    {
+      "action": "addOwner",
+      "gasUsed": 165476,
+      "originalOwnersPreserved": true,
+      "threshold": 3,
+      "ownerCountAfter": 5,
+      "simulationOnly": true
+    },
+    {
+      "action": "removeOwner",
+      "gasUsed": 1919029,
+      "originalOwnersPreserved": true,
+      "threshold": 3,
+      "ownerCountAfter": 4,
+      "simulationOnly": true
+    }
+  ],
+  "liveDeploymentPresent": false,
+  "authorized": false,
+  "liveWrites": 0
+}

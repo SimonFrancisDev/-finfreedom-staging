@@ -9,7 +9,7 @@ const E = require('ethers');
 const ROOT = path.resolve(__dirname, '../../..');
 const GOV = '0x785cC854ce9e13CE1140cbFD7C08620713E1711d';
 const OPERATOR = '0x884e48f9897E8633238747b608DD49dE12bF94df';
-const RELAY = '0x0000000000000000000000000000000000000224';
+const RELAY = (process.env.REPAIR224_RELAY_ADDRESS || '0x0000000000000000000000000000000000000224').toLowerCase();
 const GAS_LIMIT = 32_800_000; // Below Bor MaxTxGas (1 << 25); includes nested-call headroom.
 const POL = '0x0000000000000000000000000000000000001010';
 const FEE_EVENT = E.id('LogFeeTransfer(address,address,address,uint256,uint256,uint256,uint256,uint256)');
@@ -55,7 +55,9 @@ async function main() {
     const tx = await g.transactions(224, { blockTag: b.number });
     assert.equal(tx.data, manifest.actions[34].data); assert.equal(tx.to.toLowerCase(), manifest.actions[34].target.toLowerCase());
     assert(!tx.executed && !tx.cancelled); assert.equal(tx.confirmations, 3n);
-    assert.equal(await p.getCode(RELAY, b.number), '0x');
+    assert(E.isAddress(RELAY) && RELAY !== E.ZeroAddress);
+    const liveCode = await p.getCode(RELAY, b.number);
+    assert(liveCode === '0x' || liveCode === '0x' + artifact.evm.deployedBytecode.object, 'Unexpected live helper code');
     const createdCode = await p.send('eth_call', [{ from: OPERATOR,
       data: '0x' + artifact.evm.bytecode.object, gas: E.toQuantity(20_000_000) }, at]);
     assert.equal(createdCode, '0x' + artifact.evm.deployedBytecode.object, 'Constructor binding failed');
@@ -64,6 +66,9 @@ async function main() {
     const ownerSlot = BigInt(layout.storage.find(s => s.label === 'isOwner').slot);
     const ownersSlot = BigInt(layout.storage.find(s => s.label === 'owners').slot);
     const ownerKey = E.keccak256(E.AbiCoder.defaultAbiCoder().encode(['address', 'uint256'], [RELAY, ownerSlot]));
+    assert.equal(await g.isOwner(RELAY, { blockTag: b.number }), false, 'Helper already authorized; use execution preflight instead');
+    assert.equal(await g.requiredConfirmations({ blockTag: b.number }), 3n);
+    assert.equal(await g.timelockDelay({ blockTag: b.number }), 120n);
     const arrayKey = slot(BigInt(E.keccak256(slot(ownersSlot))) + BigInt(owners.length));
     const overrides = {
       [RELAY]: { code: '0x' + artifact.evm.deployedBytecode.object, state: { [slot(0)]: slot(0) } },
@@ -104,6 +109,17 @@ async function main() {
     const diff = await p.send('debug_traceCall', [request, at, { tracer: 'prestateTracer', tracerConfig: { diffMode: true }, stateOverrides: overrides }]);
     assert.deepEqual(storage(diff), baseline.storage, 'Repair storage changed');
     assert.equal(BigInt(diff.post[RELAY].storage[slot(0)]), 1n);
+    const transactionsLayout = layout.storage.find(s => s.label === 'transactions');
+    const transactionType = layout.types[layout.types[transactionsLayout.type].base];
+    const stride = BigInt(transactionType.numberOfBytes) / 32n;
+    const base = BigInt(E.keccak256(slot(BigInt(transactionsLayout.slot))));
+    const field = (id, label) => {
+      const member = transactionType.members.find(m => m.label === label);
+      assert(member, label);
+      return { key: slot(base + BigInt(id) * stride + BigInt(member.slot)), offset: member.offset };
+    };
+    const changedField = (label, value) => ({ ...overrides,
+      [GOV]: { stateDiff: { ...overrides[GOV].stateDiff, [field(224, label).key]: slot(BigInt(value) << BigInt(field(224, label).offset * 8)) } } });
     const cases = [
       ['wrong operator', { ...request, from: owners[0] }, overrides],
       ['not authorized owner', request, { ...overrides, [GOV]: { stateDiff: { ...overrides[GOV].stateDiff, [ownerKey]: slot(0) } } }],
@@ -111,19 +127,64 @@ async function main() {
       ['arbitrary governance selector', { ...request, data: g.interface.encodeFunctionData('approveTransaction', [225]) }, overrides],
       ['native value attached', { ...request, value: '0x1' }, overrides],
       ['governance code mismatch', request, { ...overrides, [GOV]: { ...overrides[GOV], code: '0x00' } }],
+      ['insufficient existing founder approvals', request, changedField('confirmations', 2)],
+      ['timelock not expired', request, changedField('executeAfter', b.timestamp + 3600)],
+      ['proposal cancelled', request, changedField('cancelled', 1)],
+      ['proposal already executed', request, changedField('executed', 1)],
     ];
     const negative = [];
     for (const [name, call, stateOverrides] of cases) {
       const result = await p.send('debug_traceCall', [call, at, { tracer: 'callTracer', stateOverrides }]);
       assert(result.error, `${name} did not revert`); negative.push({ name, error: result.error, reason: result.revertReason || null });
     }
+    // Rehearse actual self-governance calls through executeTransaction, not direct
+    // privileged add/remove calls. Synthetic proposal storage exists only in RPC simulation.
+    const nextId = await g.getTransactionCount({ blockTag: b.number });
+    const governanceRehearsals = [];
+    for (const action of ['addOwner', 'removeOwner']) {
+      const proposalData = g.interface.encodeFunctionData(action, [RELAY]);
+      const proposalState = { [slot(BigInt(transactionsLayout.slot))]: slot(nextId + 1n) };
+      const set = (label, value) => { proposalState[field(nextId, label).key] = slot(BigInt(value) << BigInt(field(nextId, label).offset * 8)); };
+      set('to', BigInt(GOV)); set('value', 0); set('executed', 0); set('cancelled', 0);
+      set('confirmations', 3); set('submittedAt', b.timestamp - 120); set('executeAfter', b.timestamp - 1);
+      const bytes = E.getBytes(proposalData), dataKey = field(nextId, 'data').key;
+      proposalState[dataKey] = slot(bytes.length * 2 + 1);
+      const dataBase = BigInt(E.keccak256(dataKey));
+      for (let i = 0; i < bytes.length; i += 32) proposalState[slot(dataBase + BigInt(i / 32))] =
+        E.hexlify(bytes.slice(i, i + 32)).padEnd(66, '0');
+      const startState = action === 'addOwner' ? {} : overrides[GOV].stateDiff;
+      const selfOverrides = { [GOV]: { stateDiff: { ...startState, ...proposalState } } };
+      const selfRequest = { from: owners[0], to: GOV, data: g.interface.encodeFunctionData('executeTransaction', [nextId]), gas: E.toQuantity(10_000_000) };
+      const selfTrace = await p.send('debug_traceCall', [selfRequest, at, { tracer: 'callTracer', stateOverrides: selfOverrides }]);
+      assert(!selfTrace.error, `${action}: ${selfTrace.revertReason || selfTrace.error}`);
+      const selfDiff = await p.send('debug_traceCall', [selfRequest, at, { tracer: 'prestateTracer', tracerConfig: { diffMode: true }, stateOverrides: selfOverrides }]);
+      const post = selfDiff.post[GOV.toLowerCase()]?.storage || {};
+      // diffMode reports a cleared slot only in pre, not in post.
+      const cleared = Object.fromEntries(Object.keys(selfDiff.pre[GOV.toLowerCase()]?.storage || {}).filter(k => !(k in post)).map(k => [k, slot(0)]));
+      const finalState = { [GOV]: { stateDiff: { ...selfOverrides[GOV].stateDiff, ...cleared, ...post } } };
+      const getAfter = async name => g.interface.decodeFunctionResult(name,
+        await p.send('eth_call', [{ to: GOV, data: g.interface.encodeFunctionData(name) }, at, finalState]))[0];
+      const afterOwners = Array.from(await getAfter('getOwners')).map(a => a.toLowerCase());
+      assert.deepEqual(afterOwners, [...owners.map(a => a.toLowerCase()), ...(action === 'addOwner' ? [RELAY] : [])]);
+      assert.equal(await getAfter('requiredConfirmations'), 3n);
+      const ownerResult = await p.send('eth_call', [{ to: GOV, data: g.interface.encodeFunctionData('isOwner', [RELAY]) }, at, finalState]);
+      assert.equal(g.interface.decodeFunctionResult('isOwner', ownerResult)[0], action === 'addOwner');
+      if (action === 'removeOwner') {
+        const afterRemoval = await p.send('debug_traceCall', [request, at, { tracer: 'callTracer', stateOverrides: {
+          ...overrides, [GOV]: finalState[GOV],
+        } }]);
+        assert.equal(afterRemoval.revertReason, 'Not owner');
+      }
+      governanceRehearsals.push({ action, gasUsed: Number(BigInt(selfTrace.gasUsed)), originalOwnersPreserved: true, threshold: 3,
+        ownerCountAfter: afterOwners.length, simulationOnly: true });
+    }
     const report = { status: 'candidate-only-read-only-state-override-simulation', chainId: 137,
-      block: b.number, utc: new Date(b.timestamp * 1000).toISOString(), syntheticAddress: RELAY,
+      block: b.number, utc: new Date(b.timestamp * 1000).toISOString(), simulationAddress: RELAY,
       runtimeHash: E.keccak256('0x' + artifact.evm.deployedBytecode.object),
       sourceSha256: crypto.createHash('sha256').update(source).digest('hex'), compiler: '0.8.24+commit.e11b9ed9',
       gasUsed: gas, gasLimit: GAS_LIMIT, protocolMaxTxGas: 33554432, headroom: GAS_LIMIT - gas, accessListKeys: 3900,
       maximumPacketBytes: packetBytes, identicalRepairEvents: logs.length, identicalRepairStorage: true,
-      negative, requiresExplicitGovernanceApproval: true, deployed: false, liveWrites: 0 };
+      negative, governanceRehearsals, liveDeploymentPresent: liveCode !== '0x', authorized: false, liveWrites: 0 };
     fs.writeFileSync(path.join(ROOT, 'tmp/repair224-relay-candidate-simulation.json'), JSON.stringify(report, null, 2) + '\n');
     fs.writeFileSync(path.join(ROOT, 'tmp/repair224-relay-candidate-artifact.json'), JSON.stringify(artifact, null, 2) + '\n');
     console.log(JSON.stringify(report, null, 2));
