@@ -1,11 +1,56 @@
 # Combined repair: founder execution checkpoints
 
-Latest checkpoint: the pauses are complete and the post-pause guarded-record
-check passed at block 97355943, 15 November 2026, 10:43:04 UTC. Proposal 212
-was executed before 204; no later-phase proposal was executed. See the
-[execution-order incident record](COMBINED_REPAIR_PAUSE_ORDER_CHECK_2026-11-15.md).
-The next-action section below records the earlier permission checkpoint, not
-an instruction to repeat already executed pauses.
+Latest checkpoint: proposals **216-223 are executed**, the eight temporary
+repair implementations are verified, and the starting records still match.
+Next: **224 then 225**, followed by verification of the repair results before
+final operating installations. Keep the programs paused. See the installation
+checkpoint below. Earlier next-action sections are historical, not instructions
+to repeat completed proposals.
+
+## Temporary implementation checkpoint
+
+Verified at block **97357977**, 15 November 2026, **11:33:55 UTC**.
+Block hash: `0x80a2136e7c90761b8b278432958b56aa68ccbba8bae9eec82b3a4d34f5dc3f41`.
+
+- Mainnet chain ID and governance runtime matched the recorded bindings.
+- Governance logs since block 97355944 show 216-223 executed in ascending order.
+- All proposal targets, zero values and calldata hashes for 216-256 match the
+  submitted package. Governance proposal count remains 257.
+- Proposals 224-256 remain unexecuted, uncancelled and without confirmations.
+- All twelve affected program contracts remain paused.
+- All eight installed temporary implementation addresses and runtime hashes
+  match the recorded deployed package.
+- Each temporary implementation's proxy, executor, plan hash and chain binding
+  matches its deployment arguments; each reports repairExecuted = false.
+- Both repair executors report executed = false.
+- Direct reads through the installed implementations confirm all six F-Freedom
+  and five Freedom Plus guarded orbit hashes still match the required prestate.
+- F-Freedom permanent sponsors, previous matrix parents, registrations and
+  required level activations still match the registration repair prerequisites.
+- This pass only read chain state. It did not sign or broadcast transactions.
+
+| Proposal | Block | Installation execution transaction |
+| ---: | ---: | --- |
+| 216 | 97356787 | `0x46fa66cbea156cdd6a20b9d8998d006d5283186e2e51d83e29f0a01cdd84ea9a` |
+| 217 | 97356804 | `0x246c859a71e2611c7274850f61a35130e280c96a31da9371b783897e1c91bd84` |
+| 218 | 97356832 | `0x4da9487b16ba9a9e6e0cd8adbace06c79592ea4dec09881c87646ab3a04d48bf` |
+| 219 | 97356849 | `0xbe650adecf645ba9b1719044cccfcec9fe404a5de862c32fe8e4c497ede824c1` |
+| 220 | 97356879 | `0xe80d04a5d70c5f1d71a5bd4fa94a793516a85d060235d851b8e216cd23dd80da` |
+| 221 | 97356896 | `0xbee984ede1cf7a2b2b33b94ee3f4b80a1baf1dfe48e472db8b4039cf133931f6` |
+| 222 | 97356933 | `0x92b392adcdf6d8495e53a79c2b21055640d630e2591e11510b1217a97e95205a` |
+| 223 | 97356965 | `0x1e57a9c9f3b1e0764e2929e3d6e9c284808a9aa00c2d3c55f85b6e89ab445404` |
+
+Founders can next approve and execute **224 (F-Freedom repair), then 225
+(Freedom Plus repair)**. Report the results for read-only receipt, position and
+accounting verification before proceeding to final operating installations.
+Do not skip to reopening; 245-256 remain on hold. This checkpoint is not proof
+that either historical repair has already run.
+
+## Earlier pause checkpoint
+
+The post-pause guarded-record check passed at block 97355943, 15 November 2026,
+10:43:04 UTC. Proposal 212 was executed before 204; no later-phase proposal was
+executed then. See the [execution-order incident record](COMBINED_REPAIR_PAUSE_ORDER_CHECK_2026-11-15.md).
 
 ## Scope
 
