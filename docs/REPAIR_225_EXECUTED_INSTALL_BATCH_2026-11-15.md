@@ -84,3 +84,18 @@ outstanding until the sequence has completed and those checks pass.
   supplied `REPAIR_MAINNET_RPC`; it cannot sign or broadcast.
 - No new proposal, smart-contract deployment, production database operation,
   Render environment change, NFT change or staging-service restart was performed.
+
+## Publication confirmed
+
+- Production frontend commit `e335657`, pushed to `ffn-frontend/main`.
+- Full governance test suite: 81 tests passed. Reopening tests include missing
+  final implementation/router bindings, remaining temporary permissions,
+  missing bytecode and out-of-sequence pause state.
+- Vercel deployment `ffnfrontendv1-r3yp41bfg` is Ready; production build took 48 seconds.
+- Official `https://www.finfreedomnetwork.io/admin` serves
+  `/assets/index-CcGRg5lU.js`. Verified markers include the full 226-256 release,
+  mined 225 receipt, ordered execution guard, automated reopening guard, and
+  production API binding `fin-freedom-backend-3.onrender.com`.
+- No additional on-chain transaction was sent by the assistant. Publication
+  does not mean 226-256 have been approved or executed.
+- Unrelated pre-existing working-tree changes remain untouched and uncommitted.
