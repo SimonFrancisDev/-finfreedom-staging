@@ -80,3 +80,17 @@ temporary implementation revocation 237-244, post-repair backend/UI and financia
 reconciliation, then explicitly authorized reopening 245-256. None is released
 automatically by this checkpoint. No Render service, database, environment
 variable, NFT setting or unrelated frontend change is included in this release.
+
+## Production publication verified
+
+- Production frontend commit: `a3d7994`, pushed to `ffn-frontend/main`.
+- Verification/source commit: `6460634`, pushed on the existing repair branch.
+- Focused governance suite: 73 passed, zero failed. Local production build passed
+  with the existing bundle-size warning.
+- Vercel production deployment: `ffnfrontendv1-p2ffhdzki`, Ready in 43 seconds.
+- Official `/admin` serves `/assets/index-DehVnYHk.js`; the bundle contains the
+  225-only release, verified 258 receipt, live 225 execution guard, and production
+  API binding `fin-freedom-backend-3.onrender.com`.
+- Only task files were committed. Unrelated pre-existing work remains untouched.
+- Publication is not 225 execution. Founder execution and its receipt verification
+  are the next gate; no later proposal was released by this publication.
