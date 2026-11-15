@@ -1,5 +1,10 @@
 # Proposal 224 restricted helper: deployed, awaiting founder authorization
 
+Historical deployment milestone. Proposal 257 was subsequently executed by the
+founders and 224 was executed and verified through the helper. See
+[the mined execution record](REPAIR_224_EXECUTED_2026-11-15.md) for evidence and
+the current next step: proposal 258 only.
+
 ## Scope and status
 
 The user explicitly approved deployment of the restricted helper and submission
