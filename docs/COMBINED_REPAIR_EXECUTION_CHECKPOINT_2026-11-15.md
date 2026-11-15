@@ -1,5 +1,12 @@
 # Combined repair: founder execution checkpoints
 
+Latest checkpoint: the pauses are complete and the post-pause guarded-record
+check passed at block 97355943, 15 November 2026, 10:43:04 UTC. Proposal 212
+was executed before 204; no later-phase proposal was executed. See the
+[execution-order incident record](COMBINED_REPAIR_PAUSE_ORDER_CHECK_2026-11-15.md).
+The next-action section below records the earlier permission checkpoint, not
+an instruction to repeat already executed pauses.
+
 ## Scope
 
 Read-only verification on Polygon mainnet, chain ID 137. No signing key was
