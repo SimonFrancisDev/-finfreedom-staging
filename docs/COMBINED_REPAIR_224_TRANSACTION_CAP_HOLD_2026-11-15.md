@@ -1,5 +1,11 @@
 # Mainnet proposal 224: transaction cap and production hold
 
+UPDATE: The [validated bounded access-list path](COMBINED_REPAIR_224_BOUNDED_ACCESS_LIST_2026-11-15.md)
+supersedes the 224 hold only. Original contracts, proposal contents and approvals
+are unchanged. Proposals 225-256 stay held pending the actual 224 receipt/state
+verification. Bor's exact MaxTxGas is 33,554,432; the new signing ceiling is
+31,800,000, below both that and the previously used 32-million safety threshold.
+
 ## Verified facts
 
 At Polygon mainnet block 97361306, 2026-11-15 12:57:08 UTC:

@@ -1,0 +1,84 @@
+{
+  "summary": {
+    "status": "identical-repair-state-and-events-read-only",
+    "chainId": 137,
+    "block": 97361857,
+    "baselineGas": 44094863,
+    "boundedGas": 30602763,
+    "gasLimit": 31800000,
+    "maximumPacketBytes": 129080,
+    "accessListKeys": 3900,
+    "eventsCompared": 46,
+    "tokenTransfers": 0,
+    "contractsWithStorageChanges": [
+      "0x02eca97e944ac66b0444fd5f61a716917e83cff5",
+      "0x1ed0b443c880ba88f732c3f5915561a07b21f6b4",
+      "0x785cc854ce9e13ce1140cbfd7c08620713e1711d",
+      "0xcf998d8f7e9dd4f3facfba45e656de07142f824b",
+      "0xd952d21b114f54c1259470b1693893f4d0dd50ed",
+      "0xead39819b8c4dbb0669320542b6b847d4c31b8fb"
+    ],
+    "storageChangesIdentical": true,
+    "eventPayloadsIdentical": true,
+    "excludedExpectedDifference": "Native POL gas accounting and LogFeeTransfer only; lower gas costs change these, not program payments.",
+    "liveWrites": 0
+  },
+  "frontend": {
+    "chainId": 137,
+    "block": 97362487,
+    "readOnly": true,
+    "signerType": "VoidSigner",
+    "results": [
+      {
+        "owner": "0x04eaa54e7896C24aF2622b804Bf35E4C662bf12f",
+        "simulation": "passed",
+        "gasLimit": "31800000",
+        "keys": 3900,
+        "maximumPacketBytes": 129080,
+        "maxFeePOL": "12.740773066185"
+      },
+      {
+        "owner": "0x67E138a2f46AEF2a0031CfCb5Ae843b41c973f41",
+        "simulation": "passed",
+        "gasLimit": "31800000",
+        "keys": 3900,
+        "maximumPacketBytes": 129080,
+        "maxFeePOL": "12.7294714692192"
+      }
+    ]
+  },
+  "evidence": [
+    {
+      "file": "combined-repair-execution-gas-breakdown-2026-11-15.json",
+      "sha256": "62ce782220b2cf1dd5b04b11f31de798d0ea75525a64fbe705e86fbcdf19687d",
+      "bytes": 49775
+    },
+    {
+      "file": "id1-repair-hash-opcode-profile.json",
+      "sha256": "549bbc2b8a1d06c57aabea0187d230404682b8188ad3b164b3fa27b9bd7be695",
+      "bytes": 7463
+    },
+    {
+      "file": "combined-repair-224-access-list-diagnostic.json",
+      "sha256": "02893121fabc2c6a9213897f2fc82f7a2198d619b2fb763e08196a834ade0dc3",
+      "bytes": 464716
+    },
+    {
+      "file": "combined-repair-224-bounded-access-list-validated.json",
+      "sha256": "ac4c671bd6998a8c24f2b231bf525c439c42e2f859a7f9eede8215449ce9cf1e",
+      "bytes": 960481
+    },
+    {
+      "file": "combined-repair-224-access-list-equivalence.json",
+      "sha256": "a09b9927d503c843cb8a766f992e2251aab1c52a61100cab202e4aa0346dfd5b",
+      "bytes": 221974
+    },
+    {
+      "file": "repair224-frontend-access-list-live.json",
+      "sha256": "c107c15f6d876150d75a2b981f7b62004203f792f8ee5f22f52fd395da7229bf",
+      "bytes": 566
+    }
+  ],
+  "liveTransactions": 0,
+  "receiptVerified": false
+}
