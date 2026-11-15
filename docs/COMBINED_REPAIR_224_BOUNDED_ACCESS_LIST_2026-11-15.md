@@ -1,5 +1,9 @@
 # Mainnet 224 bounded access-list validation
 
+SUPERSEDED AS EXECUTION GUIDANCE: [Mined retries and signed-output gate](COMBINED_REPAIR_224_MINED_REVERT_AND_SIGNED_GATE_2026-11-15.md).
+The simulation passed but the actual wallet submissions omitted the access list
+and reverted. The former broadcast-first retry instructions must not be used.
+
 This record supersedes the 224 gas-cap hold, but not the hold on 225-256.
 Network: Polygon mainnet, chain 137. No staging service is restarted. No new
 contract, implementation, proposal or historical payment is created.
